@@ -67,11 +67,11 @@ public class NcAppHelper {
                     + strForDisk[(int) Math.round(Math.random()*12)]
                     + strForDisk[(int) Math.round(Math.random()*12)]
                     + strForDisk[(int) Math.round(Math.random()*12)];
-                    outMessage("alias_" + itemDisk.getValue().diskID + "="
+                    outMessageToConsole("alias_" + itemDisk.getValue().diskID + "="
                     + strFirst);
                 }
                 else{
-                    outMessage("alias_" + itemDisk.getValue().diskID + "="
+                    outMessageToConsole("alias_" + itemDisk.getValue().diskID + "="
                     + strForDisk[(int) Math.round(Math.random()*12)]
                     + strForDisk[(int) Math.round(Math.random()*12)]
                     + strForDisk[(int) Math.round(Math.random()*12)]
