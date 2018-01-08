@@ -34,13 +34,10 @@ public class NcParamFvWriter {
     public static boolean wirteDataInWorkCfg(NcParamFv paramInFuncToWriteCfg){
         String strDataInAppDir = NcIdxFileManager.getWorkCfgPath();
         if( strDataInAppDir.length() < 1 ){
-            NcAppHelper.outMessage("Path length < 1, is: " + strDataInAppDir.length()
-            + "\npath string is: " + strDataInAppDir);
             return false;
         }
         if( NcParamFvManager.isNcParamFvDataEmpty(paramInFuncToWriteCfg)
                 || paramInFuncToWriteCfg == null ){
-            NcAppHelper.outMessage("Data is Empty and not writed");
             return false;
         }
         boolean isHash = NcParamFvManager.isNcParamFvDataHashTrue(paramInFuncToWriteCfg);
