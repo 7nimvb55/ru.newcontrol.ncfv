@@ -39,7 +39,10 @@ import java.util.logging.Logger;
 import javax.xml.bind.DatatypeConverter;
 
 /**
- *
+ * @todo when start search in root / has error fixit
+ * @todo directory in/out search not functional
+ * @todo make index has output to console diagnostic messages
+ * @todo make index in threads
  * @author Администратор
  */
 public class NcIndexPreProcessFiles {
