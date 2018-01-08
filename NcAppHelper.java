@@ -258,7 +258,6 @@ public class NcAppHelper {
      * @param strMessage
      */
     public static void outMessageToConsole(String strMessage){
-        
         System.out.println(strMessage);
     }
 
