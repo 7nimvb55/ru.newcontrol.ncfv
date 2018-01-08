@@ -42,8 +42,8 @@ public class NcAppHelper {
     public static void outPutToConsoleDiskInfo(){
         TreeMap<Long, NcDiskInfo> sysDisk = NcParamJournalDisk.getFromJournalDiskOrCreateIt();
         if( !sysDisk.isEmpty() ){
-            outMessage("If your need to write alias parameter into Configuration file");
-            outMessage("write it in this example format:");
+            outMessageToConsole("If your need to write alias parameter into Configuration file");
+            outMessageToConsole("write it in this example format:");
             String[] strForDisk = {"USB",
             "Black",
             "Document",
@@ -78,25 +78,25 @@ public class NcAppHelper {
                     + strForDisk[(int) Math.round(Math.random()*12)]
                     + strForDisk[(int) Math.round(Math.random()*12)]);
                 }
-                outMessage("Disk name and letter: " + itemDisk.getValue().strFileStore);
-                outMessage("Disk name: " + itemDisk.getValue().strFileStoreName);
+                outMessageToConsole("Disk name and letter: " + itemDisk.getValue().strFileStore);
+                outMessageToConsole("Disk name: " + itemDisk.getValue().strFileStoreName);
                 if(isWindows()){
-                    outMessage("Serial number: " + itemDisk.getValue().strHexSerialNumber);
+                    outMessageToConsole("Serial number: " + itemDisk.getValue().strHexSerialNumber);
                 }
-                outMessage("File system: " + itemDisk.getValue().diskFStype);
-                outMessage("Total space in bytes: " + Long.toString(itemDisk.getValue().totalSpace));
-                outMessage("Total space in Kb: " + Long.toString(Math.round(itemDisk.getValue().totalSpace/1024)));
-                outMessage("Total space in Mb: " + Long.toString(Math.round(itemDisk.getValue().totalSpace/(1024*1024))));
-                outMessage(" ");
+                outMessageToConsole("File system: " + itemDisk.getValue().diskFStype);
+                outMessageToConsole("Total space in bytes: " + Long.toString(itemDisk.getValue().totalSpace));
+                outMessageToConsole("Total space in Kb: " + Long.toString(Math.round(itemDisk.getValue().totalSpace/1024)));
+                outMessageToConsole("Total space in Mb: " + Long.toString(Math.round(itemDisk.getValue().totalSpace/(1024*1024))));
+                outMessageToConsole(" ");
                 i++;
             }
 
-            outMessage("where " + sysDisk.firstEntry().getValue().diskID + " is diskID and " + strFirst);
-            outMessage("is User alias label returned in search results");
+            outMessageToConsole("where " + sysDisk.firstEntry().getValue().diskID + " is diskID and " + strFirst);
+            outMessageToConsole("is User alias label returned in search results");
             
         }
         else{
-            outMessage("Information about disks is Empty, contact your system Administrator");
+            outMessageToConsole("Information about disks is Empty, contact your system Administrator");
             System.exit(0);
         }
     }
@@ -127,93 +127,93 @@ public class NcAppHelper {
         Properties sProp = System.getProperties();
         Set<String> strPropName = sProp.stringPropertyNames();
         Map<String, String> sEnv = System.getenv();
-        outMessage("");
-        outMessage("");
-        outMessage("System.getProperties");
-        outMessage("");
+        outMessageToConsole("");
+        outMessageToConsole("");
+        outMessageToConsole("System.getProperties");
+        outMessageToConsole("");
         for( String itemPorperties : strPropName ){
-            outMessage("Property name: \t" + itemPorperties);
-            outMessage("Property value: \t" + sProp.getProperty(itemPorperties));
+            outMessageToConsole("Property name: \t" + itemPorperties);
+            outMessageToConsole("Property value: \t" + sProp.getProperty(itemPorperties));
         }
-        outMessage("");
-        outMessage("");
-        outMessage("System.getenv");
-        outMessage("");
+        outMessageToConsole("");
+        outMessageToConsole("");
+        outMessageToConsole("System.getenv");
+        outMessageToConsole("");
         for(Map.Entry<String, String> itemEnv : sEnv.entrySet()){
-            outMessage("Key of environment: \t" + itemEnv.getKey());
-            outMessage("Value of environment: \t" + itemEnv.getValue());
+            outMessageToConsole("Key of environment: \t" + itemEnv.getKey());
+            outMessageToConsole("Value of environment: \t" + itemEnv.getValue());
         }
         
         File[] fileRoots = File.listRoots();
-        outMessage("");
-        outMessage("");
-        outMessage("File.listRoots");
-        outMessage("");
+        outMessageToConsole("");
+        outMessageToConsole("");
+        outMessageToConsole("File.listRoots");
+        outMessageToConsole("");
         for(File itemFile : fileRoots){
             try {
-                outMessage("getAbsolutePath: " + itemFile.getAbsolutePath());
-                outMessage("getCanonicalPath: " + itemFile.getCanonicalPath());
-                outMessage("toString: " + itemFile.toString());
+                outMessageToConsole("getAbsolutePath: " + itemFile.getAbsolutePath());
+                outMessageToConsole("getCanonicalPath: " + itemFile.getCanonicalPath());
+                outMessageToConsole("toString: " + itemFile.toString());
             
-                outMessage("getName: " + itemFile.getName());
-                outMessage("getFreeSpace: " + itemFile.getFreeSpace());
-                outMessage("getUsableSpace: " + itemFile.getUsableSpace());
-                outMessage("getTotalSpace: " + itemFile.getTotalSpace());
+                outMessageToConsole("getName: " + itemFile.getName());
+                outMessageToConsole("getFreeSpace: " + itemFile.getFreeSpace());
+                outMessageToConsole("getUsableSpace: " + itemFile.getUsableSpace());
+                outMessageToConsole("getTotalSpace: " + itemFile.getTotalSpace());
             } catch (IOException ex) {
                 Logger.getLogger(NcPreRunFileViewer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
         FileSystem fs = FileSystems.getDefault();
-        outMessage("");
-        outMessage("");
-        outMessage("FileSystems.getDefault.getFileStores");
-        outMessage("");
+        outMessageToConsole("");
+        outMessageToConsole("");
+        outMessageToConsole("FileSystems.getDefault.getFileStores");
+        outMessageToConsole("");
         for (FileStore store : fs.getFileStores()) {
-            outMessage("FileStore: " + store.toString());
-            outMessage("name: " + store.name());
+            outMessageToConsole("FileStore: " + store.toString());
+            outMessageToConsole("name: " + store.name());
             
-            outMessage("type: " + store.type());
-            outMessage("isReadOnly: " + store.isReadOnly());
+            outMessageToConsole("type: " + store.type());
+            outMessageToConsole("isReadOnly: " + store.isReadOnly());
                 
             try {
-                outMessage("getTotalSpace: " + store.getTotalSpace());
-                outMessage("getUsableSpace: " + store.getUsableSpace());
-                outMessage("getUnallocatedSpace: " + store.getUnallocatedSpace());
+                outMessageToConsole("getTotalSpace: " + store.getTotalSpace());
+                outMessageToConsole("getUsableSpace: " + store.getUsableSpace());
+                outMessageToConsole("getUnallocatedSpace: " + store.getUnallocatedSpace());
             } catch (IOException ex) {
                 Logger.getLogger(NcPreRunFileViewer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        outMessage("");
-        outMessage("");
-        outMessage("FileSystems.getDefault.getRootDirectories");
-        outMessage("");
+        outMessageToConsole("");
+        outMessageToConsole("");
+        outMessageToConsole("FileSystems.getDefault.getRootDirectories");
+        outMessageToConsole("");
         for (Path storePath : fs.getRootDirectories()) {
-            outMessage("getNameCount: " + storePath.getNameCount());
-            outMessage("Path.toString: " + storePath.toString());
-            outMessage("getFileSystem.toString: " + storePath.getFileSystem().toString());
+            outMessageToConsole("getNameCount: " + storePath.getNameCount());
+            outMessageToConsole("Path.toString: " + storePath.toString());
+            outMessageToConsole("getFileSystem.toString: " + storePath.getFileSystem().toString());
         }
-        outMessage("");
-        outMessage("");
-        outMessage("NcDiskUtils.getDiskInfo");
-        outMessage("");
+        outMessageToConsole("");
+        outMessageToConsole("");
+        outMessageToConsole("NcDiskUtils.getDiskInfo");
+        outMessageToConsole("");
         TreeMap<Long, NcDiskInfo> sysDisk = NcParamJournalDisk.getFromJournalDiskOrCreateIt();
         for( Map.Entry<Long, NcDiskInfo> itemDisk : sysDisk.entrySet() ){
-            NcAppHelper.outMessage("");
-            NcAppHelper.outMessage("diskID: \t" + Long.toString(itemDisk.getValue().diskID));
-            NcAppHelper.outMessage("humanAlias: \t" + itemDisk.getValue().humanAlias);
-            NcAppHelper.outMessage("programAlias: \t" + itemDisk.getValue().programAlias);
-            NcAppHelper.outMessage("strFileStore: \t" + itemDisk.getValue().strFileStore);
-            NcAppHelper.outMessage("strFileStoreName: \t" + itemDisk.getValue().strFileStoreName);
-            NcAppHelper.outMessage("DiskLetter: \t" + itemDisk.getValue().diskLetter);
-            NcAppHelper.outMessage("longSerialNumber: \t" + Long.toString(itemDisk.getValue().longSerialNumber));
-            NcAppHelper.outMessage("strHexSerialNumber: \t" + itemDisk.getValue().strHexSerialNumber);
-            NcAppHelper.outMessage("DiskFStype: \t" + itemDisk.getValue().diskFStype);
-            NcAppHelper.outMessage("isReadonly: \t" + itemDisk.getValue().isReadonly);
-            NcAppHelper.outMessage("availSpace: \t" + Long.toString(itemDisk.getValue().availSpace));
-            NcAppHelper.outMessage("totalSpace: \t" + Long.toString(itemDisk.getValue().totalSpace));
-            NcAppHelper.outMessage("unAllocatedSpace: \t" + Long.toString(itemDisk.getValue().unAllocatedSpace));
-            NcAppHelper.outMessage("usedSpace: \t" + Long.toString(itemDisk.getValue().usedSpace));
+            NcAppHelper.outMessageToConsole("");
+            NcAppHelper.outMessageToConsole("diskID: \t" + Long.toString(itemDisk.getValue().diskID));
+            NcAppHelper.outMessageToConsole("humanAlias: \t" + itemDisk.getValue().humanAlias);
+            NcAppHelper.outMessageToConsole("programAlias: \t" + itemDisk.getValue().programAlias);
+            NcAppHelper.outMessageToConsole("strFileStore: \t" + itemDisk.getValue().strFileStore);
+            NcAppHelper.outMessageToConsole("strFileStoreName: \t" + itemDisk.getValue().strFileStoreName);
+            NcAppHelper.outMessageToConsole("DiskLetter: \t" + itemDisk.getValue().diskLetter);
+            NcAppHelper.outMessageToConsole("longSerialNumber: \t" + Long.toString(itemDisk.getValue().longSerialNumber));
+            NcAppHelper.outMessageToConsole("strHexSerialNumber: \t" + itemDisk.getValue().strHexSerialNumber);
+            NcAppHelper.outMessageToConsole("DiskFStype: \t" + itemDisk.getValue().diskFStype);
+            NcAppHelper.outMessageToConsole("isReadonly: \t" + itemDisk.getValue().isReadonly);
+            NcAppHelper.outMessageToConsole("availSpace: \t" + Long.toString(itemDisk.getValue().availSpace));
+            NcAppHelper.outMessageToConsole("totalSpace: \t" + Long.toString(itemDisk.getValue().totalSpace));
+            NcAppHelper.outMessageToConsole("unAllocatedSpace: \t" + Long.toString(itemDisk.getValue().unAllocatedSpace));
+            NcAppHelper.outMessageToConsole("usedSpace: \t" + Long.toString(itemDisk.getValue().usedSpace));
         }
         
     }
