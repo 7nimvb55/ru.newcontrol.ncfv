@@ -67,14 +67,14 @@ public class Ncfv {
                     NcParamFv appWorkCfg = NcPreRunFileViewer.getCurrentWorkCfg();
                     NcParamFv appEmpty = new NcParamFv();
                     if( NcParamFvManager.isNcParamFvDataHashTrue(appEmpty) ){
-                        NcAppHelper.outMessage("Empty NcParamFv hash true");
+                        NcAppHelper.outMessageToConsole("Empty NcParamFv hash true");
                     }
                     else{
-                        NcAppHelper.outMessage("Empty NcParamFv hash false");
+                        NcAppHelper.outMessageToConsole("Empty NcParamFv hash false");
                         NcParamFvManager.ncParamFvDataOutPut(appEmpty);
                     }
                     if( !NcParamFvManager.isNcParamFvDataHashTrue(appWorkCfg) ){
-                        NcAppHelper.outMessage("Work config values");
+                        NcAppHelper.outMessageToConsole("Work config values");
                         NcParamFvManager.ncParamFvDataOutPut(appWorkCfg);
                         NcAppHelper.appExitWithMessage("Work config hash is not valid, exit");
                     }
@@ -108,8 +108,8 @@ public class Ncfv {
                     String strPath = args[1].trim().toString();
                     if(NcIdxFileManager.dirOrFileExistRAccessChecker(strPath)){
                         oneofAppRun = true;
-                        NcAppHelper.outMessage(getMessageRunIn());
-                        NcAppHelper.outMessage("Init before start...");
+                        NcAppHelper.outMessageToConsole(getMessageRunIn());
+                        NcAppHelper.outMessageToConsole("Init before start...");
                         NcParamFv appWorkCfg = NcPreRunFileViewer.getCurrentWorkCfg();
                         if( !NcParamFvManager.isNcParamFvDataHashTrue(appWorkCfg) ){
                             NcAppHelper.appExitWithMessage("Work config hash is not valid, exit");
@@ -118,22 +118,22 @@ public class Ncfv {
                             NcAppHelper.appExitWithMessage("Work config Empty, exit");
                         }
                         NcParamFvManager.ncParamFvDataOutPut(appWorkCfg);
-                        NcAppHelper.outMessage("Start make index for: " + strPath + " ... wait for end of process");
+                        NcAppHelper.outMessageToConsole("Start make index for: " + strPath + " ... wait for end of process");
                         NcIndexPreProcessFiles ncIdxPreReturn = new NcIndexPreProcessFiles();
                         long count = ncIdxPreReturn.makeIndexRecursive(new File(strPath));
-                        NcAppHelper.outMessage("For directory: " + strPath + " create " + count + " records in index");
+                        NcAppHelper.outMessageToConsole("For directory: " + strPath + " create " + count + " records in index");
                     }
                     else{
-                        NcAppHelper.outMessage("Directory: " + strPath + " not exist or has not access to read");
+                        NcAppHelper.outMessageToConsole("Directory: " + strPath + " not exist or has not access to read");
                     }
                     break;
                 case "-pv":
                     oneofAppRun = true;
-                    NcAppHelper.outMessage(NcPathFromUserChecker.strInputAppWorkDirFromUser(args[1].trim().toString(), "/defaultValueDir"));
+                    NcAppHelper.outMessageToConsole(NcPathFromUserChecker.strInputAppWorkDirFromUser(args[1].trim().toString(), "/defaultValueDir"));
                     break;
                 case "-fv":
                     oneofAppRun = true;
-                    NcAppHelper.outMessage(NcPathFromUserChecker.strInputAppWorkFileFromUser(args[1].trim().toString(), "defaultValue.File"));
+                    NcAppHelper.outMessageToConsole(NcPathFromUserChecker.strInputAppWorkFileFromUser(args[1].trim().toString(), "defaultValue.File"));
                     break;
                 case "-s":
                     oneofAppRun = true;
@@ -166,25 +166,25 @@ public class Ncfv {
  * Method for putput in console "help to usage" messages
  */    
     private static void consoleOutHelpUsageMessage(){
-        NcAppHelper.outMessage("Help to usage:");
-        NcAppHelper.outMessage("Run this Application without parameters in command line to");
-        NcAppHelper.outMessage(" use GUI (Graphics User Interface\n");
-        NcAppHelper.outMessage("\t-help for output this message");
-        NcAppHelper.outMessage("\t-help-dev for output help message for developers");
-        NcAppHelper.outMessage("\t-getenv param to run Application in console with output environment and System properties");
-        NcAppHelper.outMessage(" mode, for functional and additional parameters in this");
-        NcAppHelper.outMessage(" mode see Aplication code, or wait for changes this messages");
-        NcAppHelper.outMessage(" in new releases");
+        NcAppHelper.outMessageToConsole("Help to usage:");
+        NcAppHelper.outMessageToConsole("Run this Application without parameters in command line to");
+        NcAppHelper.outMessageToConsole(" use GUI (Graphics User Interface\n");
+        NcAppHelper.outMessageToConsole("\t-help for output this message");
+        NcAppHelper.outMessageToConsole("\t-help-dev for output help message for developers");
+        NcAppHelper.outMessageToConsole("\t-getenv param to run Application in console with output environment and System properties");
+        NcAppHelper.outMessageToConsole(" mode, for functional and additional parameters in this");
+        NcAppHelper.outMessageToConsole(" mode see Aplication code, or wait for changes this messages");
+        NcAppHelper.outMessageToConsole(" in new releases");
     }
     private static void consoleOutHelpUsageMessageForDev(){
-        NcAppHelper.outMessage("Help to usage:");
-        NcAppHelper.outMessage("Run this Application without parameters in command line to");
-        NcAppHelper.outMessage(" use GUI (Graphics User Interface\n");
-        NcAppHelper.outMessage("\t-console param to run Application in console");
-        NcAppHelper.outMessage("\t-getenv param to run Application in console with output environment and System properties");
-        NcAppHelper.outMessage(" mode, for functional and additional parameters in this");
-        NcAppHelper.outMessage(" mode see Aplication code, or wait for changes this messages");
-        NcAppHelper.outMessage(" in new releases");
+        NcAppHelper.outMessageToConsole("Help to usage:");
+        NcAppHelper.outMessageToConsole("Run this Application without parameters in command line to");
+        NcAppHelper.outMessageToConsole(" use GUI (Graphics User Interface\n");
+        NcAppHelper.outMessageToConsole("\t-console param to run Application in console");
+        NcAppHelper.outMessageToConsole("\t-getenv param to run Application in console with output environment and System properties");
+        NcAppHelper.outMessageToConsole(" mode, for functional and additional parameters in this");
+        NcAppHelper.outMessageToConsole(" mode see Aplication code, or wait for changes this messages");
+        NcAppHelper.outMessageToConsole(" in new releases");
     }
     /**
      *
