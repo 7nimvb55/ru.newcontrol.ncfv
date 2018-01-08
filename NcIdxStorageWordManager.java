@@ -55,11 +55,6 @@ public class NcIdxStorageWordManager {
                         readedData.put(foundedData.firstEntry().getKey(), foundedData.firstEntry().getValue());
                         int countOfWrited = NcIdxStorageWordFileWriter.ncUpdateData(itemFile.getValue(), readedData);
                         foundAndUpdated = countOfWrited == readedData.size();
-                        NcAppHelper.outMessage("In Exist file: " + itemFile.getValue().getAbsolutePath());
-                        NcAppHelper.outMessage("Update record for id: " + foundedData.firstEntry().getValue().wordId + " word: "
-                                + word + ", wordInHex: " + wordInHex + ", inFileRecordId: "
-                                + foundedData.firstEntry().getKey() + ", count words change to: "
-                                + foundedData.firstEntry().getValue().wordCount);
                     }
                     if( !readedData.isEmpty() ){
                         lastRecordId = readedData.lastKey();
