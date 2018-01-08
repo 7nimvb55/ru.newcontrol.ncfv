@@ -320,8 +320,14 @@ public class NcSwingIndexManagerApp {
         for(File itemDisk : ncDisks){
             
             Icon itemIcon = fileSystemView.getSystemIcon(itemDisk);
-            String itemDisplayName = itemDisk.getAbsolutePath().substring(0, 2) + " - " +
+            String itemDisplayName = itemDisk.getAbsolutePath() + " - " +
                     fileSystemView.getSystemTypeDescription(itemDisk);
+            
+            if(itemDisk.getAbsolutePath().length() > 2){
+                itemDisplayName = itemDisk.getAbsolutePath().substring(0, 2) + " - " +
+                    fileSystemView.getSystemTypeDescription(itemDisk);
+            }
+            
                     
 
             
