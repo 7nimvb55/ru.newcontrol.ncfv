@@ -15,10 +15,93 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.ArrayList;
+import java.util.TreeMap;
+
+
 /**
  *
  * @author wladimirowichbiaran
  */
 public class NcSrchKeyWordInput {
-    
+    /**
+     * Filter and split KeyWords into words format used in index folder
+     * file names with id data
+     * @param inFuncKeyWord
+     * @return 
+     */
+    public static TreeMap<Long, NcDcIdxWordToFile> getDirListRecordByKeyWord(String inFuncKeyWord){
+        TreeMap<Long, NcDcIdxWordToFile> idsDataForKeyWord = new TreeMap<Long, NcDcIdxWordToFile>();
+        
+        ArrayList<String> strABC = NcPathToArrListStr.NCLVLABC.retArrListStr(inFuncKeyWord);
+        idsDataForKeyWord.putAll(getIdDataForSplittedKeyWord(strABC));
+        
+        ArrayList<String> strRABC = NcPathToArrListStr.NCLVLRABC.retArrListStr(inFuncKeyWord);
+        idsDataForKeyWord.putAll(getIdDataForSplittedKeyWord(strRABC));
+
+        ArrayList<String> strNUM = NcPathToArrListStr.NCLVLNUM.retArrListStr(inFuncKeyWord);
+        idsDataForKeyWord.putAll(getIdDataForSplittedKeyWord(strNUM));
+        
+        ArrayList<String> strSYM = NcPathToArrListStr.NCLVLSYM.retArrListStr(inFuncKeyWord);
+        idsDataForKeyWord.putAll(getIdDataForSplittedKeyWord(strSYM));
+        
+        //ArrayList<String> strSPACE = NcPathToArrListStr.NCLVLSPACE.retArrListStr(inFuncKeyWord);
+        return idsDataForKeyWord;
+    }
+    /**
+     * Input in function splitted strings of keywords for create
+     * file names with id data in word subDirs
+     * Output from function data from keywords files 
+     * @param inFuncListWord
+     * @return 
+     */
+    private static TreeMap<Long, NcDcIdxWordToFile> getIdDataForSplittedKeyWord(ArrayList<String> inFuncListWord){
+        
+        ArrayList<String> strHexKeyWord = new ArrayList<String>();
+        ArrayList<String> strWordForVar = new ArrayList<String>();
+        ArrayList<String> strLongWord = new ArrayList<String>();
+        ArrayList<String> strUpperLowerVar = new ArrayList<String>();
+        
+        TreeMap<Long, NcDcIdxWordToFile> idsDataForReturn = new TreeMap<Long, NcDcIdxWordToFile>();
+        
+        for( String strItem : inFuncListWord ){
+            if( NcIdxLongWordManager.isLongWord(strItem) ){
+                strLongWord.add(strItem);
+            }
+            else{
+                
+                String strLow = strItem.toLowerCase().toString();
+                String strUp = strItem.toUpperCase().toString();
+                
+                if( !strLow.equals(strUp) ){
+                    strWordForVar.add(strItem);
+                }
+                else{
+                    strHexKeyWord.add(NcPathToArrListStr.toStrUTFinHEX(strItem));
+                }
+            }
+        }
+        /**
+         * @TODO search for LongWord Structure
+         */
+        if( !strLongWord.isEmpty() ){
+            NcAppHelper.outMessage("Not in search: " + strLongWord.size());
+        }
+        
+        TreeMap<Long, NcIdxSubStringVariant> strSearchWordVarList = NcSrchVariantMaker.getUpperLowerCaseVariant(strWordForVar);
+        
+        strUpperLowerVar = NcSrchVariantMaker.getUpLowerCaseCombineKeyWord(strSearchWordVarList);
+        
+        for(String itemHexVar : strUpperLowerVar){
+            strHexKeyWord.add(itemHexVar);
+        }
+        
+        for( String strHexItemRABC : strHexKeyWord ){
+            
+            idsDataForReturn.putAll(NcIdxWordManager.getAllDataForWord(strHexItemRABC));
+        }
+        
+        return idsDataForReturn;
+    }
+
 }

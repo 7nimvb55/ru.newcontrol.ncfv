@@ -17,8 +17,6 @@
 package ru.newcontrol.ncfv;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -62,22 +60,22 @@ public class NcSearchInIndex {
         
         ArrayList<String> arrKeyWordInSearch = NcEtcKeyWordListManage.getKeyWordInSearchFromFile();
         for( String strItemIn : arrKeyWordInSearch ){
-            strHexForInVar.putAll(getHexViewForSearchKeyWord(strItemIn));
+            strHexForInVar.putAll(NcSrchKeyWordInput.getDirListRecordByKeyWord(strItemIn));
         }
-        NcAppHelper.outMessage("keyInwords count: " + arrKeyWordInSearch.size());
-        strDistInResult = getDistictIDs(strHexForInVar);
-        NcAppHelper.outMessage("Distinct for IN count: " + strDistInResult.size());
+        
+        strDistInResult = NcSrchFileDataCompare.getDistictIDs(strHexForInVar);
+        
         ArrayList<String> arrKeyWordOutSearch = NcEtcKeyWordListManage.getKeyWordOutSearchFromFile();
         for( String strItemOut : arrKeyWordOutSearch ){
-            strHexForOutVar.putAll(getHexViewForSearchKeyWord(strItemOut));
+            strHexForOutVar.putAll(NcSrchKeyWordInput.getDirListRecordByKeyWord(strItemOut));
         }
-        NcAppHelper.outMessage("keyOutwords count: " + arrKeyWordOutSearch.size());
-        strDistOutResult = getDistictIDs(strHexForOutVar);
-        NcAppHelper.outMessage("Distinct for OUT count: " + strDistOutResult.size());
+        
+        strDistOutResult = NcSrchFileDataCompare.getDistictIDs(strHexForOutVar);
         
         
-        TreeMap<Long, NcDcIdxWordToFile> CleanResult = getIdInWithoutOfOutSearchResult(strDistInResult, strDistOutResult);
-        NcAppHelper.outMessage("Clean records count: " + CleanResult.size());
+        
+        TreeMap<Long, NcDcIdxWordToFile> CleanResult = NcSrchFileDataCompare.getIdInWithoutOfOutSearchResult(strDistInResult, strDistOutResult);
+        
         
         TreeMap<Long, NcDcIdxDirListToFileAttr> readedData = new TreeMap<Long, NcDcIdxDirListToFileAttr>();
         
@@ -88,47 +86,7 @@ public class NcSearchInIndex {
         }
     }
     
-    public static void outToConsoleSearchedIDs(TreeMap<Long, NcDcIdxWordToFile> strHexForInVar){
-        for( Map.Entry<Long, NcDcIdxWordToFile> itemID : strHexForInVar.entrySet() ){
-            NcAppHelper.outMessage("id: " + itemID.getValue().dirListID);
-        }
-        
-    }
-    public static TreeMap<Long, NcDcIdxWordToFile> getDistictIDs(TreeMap<Long, NcDcIdxWordToFile> strHexForInVar){
-        TreeMap<Long, NcDcIdxWordToFile> inList = new TreeMap<Long, NcDcIdxWordToFile>();
-        long newRecId = 0;
-        for( Map.Entry<Long, NcDcIdxWordToFile> itemID : strHexForInVar.entrySet() ){
-            boolean isExistID = false;
-            for( Map.Entry<Long, NcDcIdxWordToFile> itemInListID : inList.entrySet() ){
-                isExistID = itemInListID.getValue().dirListID == itemID.getValue().dirListID;
-            }
-            if( !isExistID ){
-                inList.put(newRecId, itemID.getValue());
-                newRecId++;
-            }
-        }
-        return inList;
-        
-    }
-    public static TreeMap<Long, NcDcIdxWordToFile> getIdInWithoutOfOutSearchResult(TreeMap<Long, NcDcIdxWordToFile> strHexForInVar, TreeMap<Long, NcDcIdxWordToFile> strHexForOutVar){
-        TreeMap<Long, NcDcIdxWordToFile> inList = new TreeMap<Long, NcDcIdxWordToFile>();
-        long newRecId = 0;
-        for( Map.Entry<Long, NcDcIdxWordToFile> itemID : strHexForInVar.entrySet() ){
-            boolean isExistID = false;
-            for( Map.Entry<Long, NcDcIdxWordToFile> itemInListForOutID : strHexForOutVar.entrySet() ){
-                isExistID = itemInListForOutID.getValue().dirListID == itemID.getValue().dirListID;
-            }
-            if( !isExistID ){
-                inList.put(newRecId, itemID.getValue());
-                newRecId++;
-            }
-        }
-        return inList;
-    }
-    public static void outSearchResult(TreeMap<Long, NcDcIdxWordToFile> strHexForInVar, TreeMap<Long, NcDcIdxWordToFile> strHexForOutVar){
-        TreeMap<Long, NcDcIdxWordToFile> CleanResult = getIdInWithoutOfOutSearchResult(strHexForInVar, strHexForOutVar);
-        NcAppHelper.outMessage("Count CleanResult records out: " + CleanResult.size());
-    }
+
     
     public TreeMap<Long, NcDcIdxDirListToFileAttr> getWordSearchResult(ArrayList<String> strKeyWordInSearch, ArrayList<String> strKeyWordOutSearch){
         TreeMap<Long, NcDcIdxWordToFile> dataForInKeyWord = new TreeMap<Long, NcDcIdxWordToFile>();
@@ -294,227 +252,5 @@ public class NcSearchInIndex {
         LongWord = new TreeMap<Long, NcDcIdxDirListToFileAttr>();
 
         return Word;
-    }
-
-    /**
-     *
-     * @param inFuncKeyWord
-     */
-    public static TreeMap<Long, NcDcIdxWordToFile> getHexViewForSearchKeyWord(String inFuncKeyWord){
-        TreeMap<Long, NcDcIdxWordToFile> idsDataForKeyWord = new TreeMap<Long, NcDcIdxWordToFile>();
-        
-        ArrayList<String> strABC = NcPathToArrListStr.NCLVLABC.retArrListStr(inFuncKeyWord);
-        idsDataForKeyWord.putAll(getIDsForKeyWord(strABC));
-        
-        ArrayList<String> strRABC = NcPathToArrListStr.NCLVLRABC.retArrListStr(inFuncKeyWord);
-        idsDataForKeyWord.putAll(getIDsForKeyWord(strRABC));
-
-        ArrayList<String> strNUM = NcPathToArrListStr.NCLVLNUM.retArrListStr(inFuncKeyWord);
-        idsDataForKeyWord.putAll(getIDsForKeyWord(strNUM));
-        
-        ArrayList<String> strSYM = NcPathToArrListStr.NCLVLSYM.retArrListStr(inFuncKeyWord);
-        idsDataForKeyWord.putAll(getIDsForKeyWord(strSYM));
-        
-        //ArrayList<String> strSPACE = NcPathToArrListStr.NCLVLSPACE.retArrListStr(inFuncKeyWord);
-        return idsDataForKeyWord;
-    }
-    public static TreeMap<Long, NcDcIdxWordToFile> getIDsForKeyWord(ArrayList<String> inFuncListWord){
-        
-        ArrayList<String> strHexKeyWord = new ArrayList<String>();
-        ArrayList<String> strWordForVar = new ArrayList<String>();
-        ArrayList<String> strLongWord = new ArrayList<String>();
-        ArrayList<String> strUpperLowerVar = new ArrayList<String>();
-        
-        TreeMap<Long, NcDcIdxWordToFile> idsDataForReturn = new TreeMap<Long, NcDcIdxWordToFile>();
-        
-        for( String strItem : inFuncListWord ){
-            if( NcIdxLongWordManager.isLongWord(strItem) ){
-                strLongWord.add(strItem);
-            }
-            else{
-                
-                String strLow = strItem.toLowerCase().toString();
-                String strUp = strItem.toUpperCase().toString();
-                
-                if( !strLow.equals(strUp) ){
-                    strWordForVar.add(strItem);
-                }
-                else{
-                    strHexKeyWord.add(NcPathToArrListStr.toStrUTFinHEX(strItem));
-                }
-            }
-        }
-        /**
-         * @TODO search for LongWord Structure
-         */
-        if( !strLongWord.isEmpty() ){
-            NcAppHelper.outMessage("Not in search: " + strLongWord.size());
-        }
-        
-        TreeMap<Long, NcIdxSubStringVariant> strSearchWordVarList = getUpperLowerCaseVariant(strWordForVar);
-        
-        strUpperLowerVar = getUpLowerCaseCombineKeyWord(strSearchWordVarList);
-        
-        for(String itemHexVar : strUpperLowerVar){
-            strHexKeyWord.add(itemHexVar);
-        }
-        
-        for( String strHexItemRABC : strHexKeyWord ){
-            
-            idsDataForReturn.putAll(NcIdxWordManager.getAllDataForWord(strHexItemRABC));
-        }
-        
-        return idsDataForReturn;
-    }
-    /**
-     *
-     * @param toSearchABC
-     */
-    public static ArrayList<String> getUpLowerCaseCombineKeyWord(TreeMap<Long, NcIdxSubStringVariant> toSearchABC){
-        ArrayList<String> strWordsVar = new ArrayList<String>();
-        
-        for(Map.Entry<Long, NcIdxSubStringVariant> itemKeyWord : toSearchABC.entrySet()){
-            String strLower = itemKeyWord.getValue().hexForLowerCase;
-            String strUpper = itemKeyWord.getValue().hexForUpperCase;
-            String toChange = "";
-            
-            strWordsVar.add(strLower);
-            
-            String[] strArrLower = strToArray(strLower);
-            String[] strArrUpper = strToArray(strUpper);
-            String[] strArrChange = new String[strArrUpper.length];
-            strArrChange = Arrays.copyOf(strArrLower, strArrLower.length);
-            int idx = 0;
-            do{
-                strArrChange = strArrChangeState(strArrChange, strArrLower, strArrUpper);
-                toChange = arrToStr(strArrChange);
-                strWordsVar.add(toChange);
-                idx++;
-            }
-            while( !strUpper.equalsIgnoreCase(toChange) ); 
-        }
-        return strWordsVar;
-    }
-    /**
-     * 
-     * @param strArrChange
-     * @param strArrDown
-     * @param strArrUp
-     * @return 
-     */
-    public static String[] strArrChangeState(String[] strArrChange, String[] strArrDown, String[] strArrUp){
-        if( (strArrDown.length == strArrUp.length)
-                && (strArrChange.length == strArrDown.length) ){
-            boolean changeFlow = false;
-            boolean changeNext = false;
-            boolean changeFar  = false;
-            int prevElSay = -1;
-            int nextElSay = -1;
-            for(int arrIdx = 0; arrIdx < strArrChange.length; arrIdx++){
-                if(arrIdx == 0){
-                    changeFlow = strIfUpToDownTrue(strArrChange[arrIdx], strArrDown[arrIdx], strArrUp[arrIdx]);
-                    if( changeFlow ){
-                        prevElSay = arrIdx + 1;
-                        changeFlow = false;
-                    }
-                    strArrChange[arrIdx] = strArrChangeElement(strArrChange[arrIdx], strArrDown[arrIdx], strArrUp[arrIdx]);
-                }
-                if( arrIdx == prevElSay ){
-                    changeNext = strIfUpToDownTrue(strArrChange[arrIdx], strArrDown[arrIdx], strArrUp[arrIdx]);
-                    if( changeNext ){
-                        prevElSay = 0;
-                        nextElSay = arrIdx + 1;
-                        changeNext = false;
-                    }
-                    strArrChange[arrIdx] = strArrChangeElement(strArrChange[arrIdx], strArrDown[arrIdx], strArrUp[arrIdx]);
-                }
-                if( arrIdx == nextElSay ){
-                    changeFar = strIfUpToDownTrue(strArrChange[arrIdx], strArrDown[arrIdx], strArrUp[arrIdx]);
-                    if( changeFar ){
-                        prevElSay = arrIdx + 1;
-                        changeFar = false;
-                    }
-                    strArrChange[arrIdx] = strArrChangeElement(strArrChange[arrIdx], strArrDown[arrIdx], strArrUp[arrIdx]);
-                }
-            }
-        }
-        return strArrChange;
-    }
-    /**
-     * 
-     * @param strChange
-     * @param strDown
-     * @param strUp
-     * @return 
-     */
-    public static String strArrChangeElement(String strChange, String strDown, String strUp){
-        if(strDown.equalsIgnoreCase(strChange)){
-            return strUp;
-        }
-        return strDown;
-    }
-    /**
-     * 
-     * @param strForCompare
-     * @param strDown
-     * @param strUp
-     * @return 
-     */
-    public static boolean strIfUpToDownTrue(String strForCompare, String strDown, String strUp){
-        if( strUp.equalsIgnoreCase(strForCompare) ){
-            return true;
-        }
-        return false;
-    }
-    /**
-     * 
-     * @param inputArrStr
-     * @return 
-     */
-    public static String arrToStr(String[] inputArrStr){
-        String toReturn = "";
-        for(int i = 0; i < inputArrStr.length ; i++){
-            toReturn = toReturn + inputArrStr[i];
-        }
-        return toReturn;
-    }
-    /**
-     * 
-     * @param inputHexStr
-     * @return 
-     */
-    public static String[] strToArray(String inputHexStr){
-        int idxStart = 0;
-        int idxEnd = idxStart + 4;
-        int idx = 0;
-        String[] strToRet = new String[inputHexStr.length() / 4];
-        do{
-            strToRet [idx] = inputHexStr.substring(idxStart, idxEnd);
-            idxStart = idxStart + 4;
-            idxEnd = idxStart + 4;
-            idx++;
-        }
-        while( idxEnd <= inputHexStr.length() ); 
-        return strToRet;        
-    }
-    /**
-     *
-     * @param strInFunc
-     * @return
-     */
-    public static TreeMap<Long, NcIdxSubStringVariant> getUpperLowerCaseVariant(ArrayList<String> strInFunc){
-        TreeMap<Long, NcIdxSubStringVariant> strToRet = new TreeMap<Long, NcIdxSubStringVariant>();
-        if( strInFunc.isEmpty() ){
-            return strToRet;
-        }
-        long idx = 0;
-        for(String itemStr : strInFunc ){
-            String toLowerResultStr = itemStr.toLowerCase().toString();
-            String toUpperResultStr = itemStr.toUpperCase().toString();
-            NcIdxSubStringVariant toAddToReturn = new NcIdxSubStringVariant(toLowerResultStr, toUpperResultStr);
-            strToRet.put(idx, toAddToReturn);
-            idx++;
-        }
-        return strToRet;
     }
 }

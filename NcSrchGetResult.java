@@ -15,10 +15,31 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 /**
  *
  * @author wladimirowichbiaran
  */
 public class NcSrchGetResult {
-    
+    /**
+     * 
+     * @param strHexForInVar 
+     */
+    public static void outToConsoleSearchedIDs(TreeMap<Long, NcDcIdxWordToFile> strHexForInVar){
+        for( Map.Entry<Long, NcDcIdxWordToFile> itemID : strHexForInVar.entrySet() ){
+            NcAppHelper.outMessage("id: " + itemID.getValue().dirListID);
+        }
+        
+    }
+    /**
+     * 
+     * @param strHexForInVar
+     * @param strHexForOutVar 
+     */
+    public static void outSearchResult(TreeMap<Long, NcDcIdxWordToFile> strHexForInVar, TreeMap<Long, NcDcIdxWordToFile> strHexForOutVar){
+        TreeMap<Long, NcDcIdxWordToFile> CleanResult = NcSrchFileDataCompare.getIdInWithoutOfOutSearchResult(strHexForInVar, strHexForOutVar);
+        NcAppHelper.outMessage("Count CleanResult records out: " + CleanResult.size());
+    }
 }
