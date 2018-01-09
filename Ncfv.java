@@ -96,6 +96,10 @@ public class Ncfv {
                     oneofAppRun = true;
                     NcPreIdxWork.getNotEqualsRecordDirListAttrVsExist();
                     break;
+                case "-sf":
+                    oneofAppRun = true;
+                    NcSrchGetResult.outToConsoleSearchByKeyFromFile();
+                    break;
                 default:
                     consoleOutHelpUsageMessage();
                     break;
@@ -137,7 +141,8 @@ public class Ncfv {
                     break;
                 case "-s":
                     oneofAppRun = true;
-                    NcSearchInIndex.searchWordInIndex();
+                    String strKeyWord = args[1].trim().toString();
+                    NcSrchGetResult.outToConsoleSearchByKeyFromInput(strKeyWord);
                     break;
                 default:
                     consoleOutHelpUsageMessage();
@@ -169,10 +174,11 @@ public class Ncfv {
         NcAppHelper.outMessageToConsole("Help to usage:");
         NcAppHelper.outMessageToConsole("Run this Application without parameters in command line to");
         NcAppHelper.outMessageToConsole(" use GUI (Graphics User Interface\n");
-        NcAppHelper.outMessageToConsole("\t-help for output this message");
-        NcAppHelper.outMessageToConsole("\t-help-dev for output help message for developers");
-        NcAppHelper.outMessageToConsole("\t-getenv param to run Application in console with output environment and System properties");
-        NcAppHelper.outMessageToConsole(" mode, for functional and additional parameters in this");
+        NcAppHelper.outMessageToConsole("\t-help\n for output this message");
+        NcAppHelper.outMessageToConsole("\t-m path\n for make index of path folder");
+        NcAppHelper.outMessageToConsole("\t-sf\n for search in index by keyWords from files");
+        NcAppHelper.outMessageToConsole("\t-s keyWord\n for search in index by keyWord input from parameter");
+        NcAppHelper.outMessageToConsole("for functional and additional parameters in this");
         NcAppHelper.outMessageToConsole(" mode see Aplication code, or wait for changes this messages");
         NcAppHelper.outMessageToConsole(" in new releases");
     }

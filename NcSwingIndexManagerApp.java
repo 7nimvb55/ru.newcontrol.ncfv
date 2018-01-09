@@ -57,6 +57,7 @@ public class NcSwingIndexManagerApp {
     private static TableModel ncTableModel;
     private static JScrollPane ncScrollTable;
     private static JTable ncTable;
+    private static JPanel centerPanel;
     /**
      *
      */
@@ -151,6 +152,7 @@ public class NcSwingIndexManagerApp {
             public void run(){
                 ncTableModel = new NcSIMASearchResultTableModel(strSrch);
                 ncTable.setModel(ncTableModel);
+                centerPanel.repaint();
                 ncScrollTable.revalidate();
             }
         }
@@ -283,7 +285,7 @@ public class NcSwingIndexManagerApp {
      * @return
      */
     public static JPanel getCenterPanel(){
-        JPanel centerPanel = new JPanel();
+        centerPanel = new JPanel();
         Border centerBorder = BorderFactory.createTitledBorder("CENTER panel");
         centerPanel.setBorder(centerBorder);
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
