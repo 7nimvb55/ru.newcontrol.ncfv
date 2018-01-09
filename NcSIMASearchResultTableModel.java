@@ -138,9 +138,20 @@ public class NcSIMASearchResultTableModel implements TableModel {
             case 3:
                 return rowForOutPut.diskLetter;
             case 4:
-                return rowForOutPut.diskLetter + ":\\" + rowForOutPut.path;
+                if( NcAppHelper.isWindows() ){
+                    return rowForOutPut.diskLetter + ":\\" + rowForOutPut.path;
+                }
+                else{
+                    return rowForOutPut.path;
+                }
+                
             case 5:
-                return (rowForOutPut.diskLetter + ":\\" + rowForOutPut.path).hashCode();
+                if( NcAppHelper.isWindows() ){
+                    return (rowForOutPut.diskLetter + ":\\" + rowForOutPut.path).hashCode();
+                }
+                else{
+                    return (rowForOutPut.path).hashCode();
+                }    
             case 6:
                 return rowForOutPut.path;
             case 7:
