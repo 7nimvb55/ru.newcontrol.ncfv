@@ -148,16 +148,7 @@ public class NcSwingIndexManagerApp {
         return northPanel;
     }
     public static void setToViewSearchedResult(String strSrch){
-        SwingUtilities.invokeLater(new Runnable(){
-            public void run(){
                 ncTableModel = new NcSIMASearchResultTableModel(strSrch);
-                ncTable.setModel(ncTableModel);
-                centerPanel.repaint();
-                ncScrollTable.revalidate();
-            }
-        }
-        
-        );
     }
     /**
      *
