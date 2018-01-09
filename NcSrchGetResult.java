@@ -15,6 +15,7 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -23,6 +24,41 @@ import java.util.TreeMap;
  * @author wladimirowichbiaran
  */
 public class NcSrchGetResult {
+    /**
+     * Get KeyWordIn(Out)Search from file and output serch results
+     * @return 
+     */
+    public static TreeMap<Long, NcDcIdxDirListToFileAttr> makeSearchByKeyFromFile(){
+        TreeMap<Long, NcDcIdxWordToFile> strHexForInVar = new TreeMap<Long, NcDcIdxWordToFile>();
+        TreeMap<Long, NcDcIdxWordToFile> strHexForOutVar = new TreeMap<Long, NcDcIdxWordToFile>();
+        TreeMap<Long, NcDcIdxWordToFile> strDistInResult = new TreeMap<Long, NcDcIdxWordToFile>();
+        TreeMap<Long, NcDcIdxWordToFile> strDistOutResult = new TreeMap<Long, NcDcIdxWordToFile>();
+        
+        ArrayList<String> arrKeyWordInSearch = NcEtcKeyWordListManage.getKeyWordInSearchFromFile();
+        for( String strItemIn : arrKeyWordInSearch ){
+            strHexForInVar.putAll(NcSrchKeyWordInput.getDirListRecordByKeyWord(strItemIn));
+        }
+        
+        strDistInResult = NcSrchFileDataCompare.getDistictIDs(strHexForInVar);
+        
+        ArrayList<String> arrKeyWordOutSearch = NcEtcKeyWordListManage.getKeyWordOutSearchFromFile();
+        for( String strItemOut : arrKeyWordOutSearch ){
+            strHexForOutVar.putAll(NcSrchKeyWordInput.getDirListRecordByKeyWord(strItemOut));
+        }
+        
+        strDistOutResult = NcSrchFileDataCompare.getDistictIDs(strHexForOutVar);
+        
+        
+        
+        TreeMap<Long, NcDcIdxWordToFile> CleanResult = NcSrchFileDataCompare.getIdInWithoutOfOutSearchResult(strDistInResult, strDistOutResult);
+        
+        
+        TreeMap<Long, NcDcIdxDirListToFileAttr> readedData = new TreeMap<Long, NcDcIdxDirListToFileAttr>();
+        
+        readedData.putAll(NcIdxDirListManager.getByListIDs(CleanResult));
+        
+        return readedData;
+    }
     /**
      * 
      * @param strHexForInVar 

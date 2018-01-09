@@ -38,9 +38,9 @@ public class NcSIMASearchResultTableModel implements TableModel {
      *
      */
     public NcSIMASearchResultTableModel() {
-        
-        ncDirectoryListReader = new TreeMap<Long, NcDcIdxDirListToFileAttr>();
+        ncDirectoryListReader = NcSrchGetResult.makeSearchByKeyFromFile();
     }
+    
 
     /**
      *
@@ -49,7 +49,7 @@ public class NcSIMASearchResultTableModel implements TableModel {
      */
     public NcSIMASearchResultTableModel(ArrayList<String> strKeyWordInSearch,ArrayList<String>  strKeyWordOutSearch) {
         NcSearchInIndex ncSearchInIndex = new NcSearchInIndex();
-        ncDirectoryListReader = ncSearchInIndex.getWordSearchResult(strKeyWordInSearch, strKeyWordOutSearch);
+        ncDirectoryListReader = NcSrchGetResult.makeSearchByKeyFromFile();
     }
     
     
