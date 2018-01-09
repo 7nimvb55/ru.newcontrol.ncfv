@@ -41,6 +41,12 @@ public class NcSIMASearchResultTableModel implements TableModel {
         ncDirectoryListReader = NcSrchGetResult.makeSearchByKeyFromFile();
     }
     
+    /**
+     *
+     */
+    public NcSIMASearchResultTableModel(String strSearchInput) {
+        ncDirectoryListReader = NcSrchGetResult.makeSearchByKeyFromInput(strSearchInput);
+    }
 
     /**
      *

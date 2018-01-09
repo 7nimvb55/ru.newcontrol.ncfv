@@ -24,6 +24,20 @@ import java.util.TreeMap;
  * @author wladimirowichbiaran
  */
 public class NcSrchGetResult {
+    
+    public static TreeMap<Long, NcDcIdxDirListToFileAttr> makeSearchByKeyFromInput(String strForSearch){
+        TreeMap<Long, NcDcIdxWordToFile> strHexForInVar = new TreeMap<Long, NcDcIdxWordToFile>();
+        TreeMap<Long, NcDcIdxWordToFile> strDistInResult = new TreeMap<Long, NcDcIdxWordToFile>();
+        
+        strHexForInVar.putAll(NcSrchKeyWordInput.getDirListRecordByKeyWord(strForSearch));
+        strDistInResult = NcSrchFileDataCompare.getDistictIDs(strHexForInVar);
+
+        TreeMap<Long, NcDcIdxDirListToFileAttr> readedData = new TreeMap<Long, NcDcIdxDirListToFileAttr>();
+        
+        readedData.putAll(NcIdxDirListManager.getByListIDs(strDistInResult));
+        
+        return readedData;
+    }
     /**
      * Get KeyWordIn(Out)Search from file and output serch results
      * @return 

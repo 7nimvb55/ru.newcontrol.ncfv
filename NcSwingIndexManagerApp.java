@@ -19,6 +19,8 @@ package ru.newcontrol.ncfv;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
@@ -30,6 +32,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -51,6 +54,8 @@ public class NcSwingIndexManagerApp {
     private static final String APP_TITLE = "Index Managment";
     private static final long ncForGB = 1024*1024*1024;
     private static JFrame frame;
+    private static TableModel ncTableModel;
+    private static JScrollPane ncScrollTable;
     
     /**
      *
@@ -127,7 +132,21 @@ public class NcSwingIndexManagerApp {
         addNorthWordSearch.setPreferredSize(new Dimension(300, 20));
         
         northPanel.add(addNorthWordSearch);
-        northPanel.add(createButton("Search",null,""));
+        JButton btnSearch = createButton("Search",null,"");
+        
+        btnSearch.addActionListener(new ActionListener(){
+            public void  actionPerformed(ActionEvent e){
+                String strSearch = addNorthWordSearch.getText();
+                int reply = JOptionPane.showConfirmDialog(null, strSearch, "Title", JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION){
+                  ncTableModel = new NcSIMASearchResultTableModel(strSearch);
+                  JTable ncTable = new JTable(ncTableModel);
+                  ncScrollTable = new JScrollPane(ncTable);
+                  ncScrollTable.revalidate();
+                }
+            }
+        });
+        northPanel.add(btnSearch);
         return northPanel;
     }
     
@@ -271,10 +290,10 @@ public class NcSwingIndexManagerApp {
 //        strKeyWordInSearch.add("freebsd");
 //        strKeyWordOutSearch.add("newcontrol");
         
-        TableModel ncTableModel = new NcSIMASearchResultTableModel(strKeyWordInSearch, strKeyWordOutSearch);
+        ncTableModel = new NcSIMASearchResultTableModel(strKeyWordInSearch, strKeyWordOutSearch);
         
         JTable ncTable = new JTable(ncTableModel);
-        JScrollPane ncScrollTable= new JScrollPane(ncTable);
+        ncScrollTable = new JScrollPane(ncTable);
         
         
         centerPanel.add(ncScrollTable);
