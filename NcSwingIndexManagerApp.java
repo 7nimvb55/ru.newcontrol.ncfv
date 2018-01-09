@@ -379,8 +379,15 @@ public class NcSwingIndexManagerApp {
      */
     public static JList createJListWordInSearch(){
         DefaultListModel listWordInSearch = new DefaultListModel();
-          
-        listWordInSearch.addElement("* All *");
+        ArrayList<String> arrKeyIn = NcEtcKeyWordListManage.getKeyWordInSearchFromFile();
+        if( arrKeyIn.size() == 0 ){
+            listWordInSearch.addElement("* None *");
+        }
+        else{
+            for(String itemKey : arrKeyIn){
+                listWordInSearch.addElement(itemKey);
+            }
+        }
         
         JList ncList = new JList(listWordInSearch);
         ncList.setVisibleRowCount(7);
@@ -394,7 +401,16 @@ public class NcSwingIndexManagerApp {
      */
     public static JList createJListWordNotInSearch(){
         DefaultListModel listWordNotInSearch = new DefaultListModel();
-        listWordNotInSearch.addElement("* Nothing *");
+        
+        ArrayList<String> arrKeyOut = NcEtcKeyWordListManage.getKeyWordOutSearchFromFile();
+        if( arrKeyOut.size() == 0 ){
+            listWordNotInSearch.addElement("* None *");
+        }
+        else{
+            for(String itemKey : arrKeyOut){
+                listWordNotInSearch.addElement(itemKey);
+            }
+        }
         JList ncList = new JList(listWordNotInSearch);
         ncList.setVisibleRowCount(7);
         ncList.setFocusable(false);
