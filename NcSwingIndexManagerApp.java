@@ -56,7 +56,7 @@ public class NcSwingIndexManagerApp {
     private static JFrame frame;
     private static TableModel ncTableModel;
     private static JScrollPane ncScrollTable;
-    
+    private static JTable ncTable;
     /**
      *
      */
@@ -139,17 +139,24 @@ public class NcSwingIndexManagerApp {
                 String strSearch = addNorthWordSearch.getText();
                 int reply = JOptionPane.showConfirmDialog(null, strSearch, "Title", JOptionPane.YES_NO_OPTION);
                 if (reply == JOptionPane.YES_OPTION){
-                  ncTableModel = new NcSIMASearchResultTableModel(strSearch);
-                  JTable ncTable = new JTable(ncTableModel);
-                  ncScrollTable = new JScrollPane(ncTable);
-                  ncScrollTable.revalidate();
+                  setToViewSearchedResult(strSearch);
                 }
             }
         });
         northPanel.add(btnSearch);
         return northPanel;
     }
-    
+    public static void setToViewSearchedResult(String strSrch){
+        SwingUtilities.invokeLater(new Runnable(){
+            public void run(){
+                ncTableModel = new NcSIMASearchResultTableModel(strSrch);
+                ncTable.setModel(ncTableModel);
+                ncScrollTable.revalidate();
+            }
+        }
+        
+        );
+    }
     /**
      *
      * @return
@@ -292,7 +299,7 @@ public class NcSwingIndexManagerApp {
         
         ncTableModel = new NcSIMASearchResultTableModel(strKeyWordInSearch, strKeyWordOutSearch);
         
-        JTable ncTable = new JTable(ncTableModel);
+        ncTable = new JTable(ncTableModel);
         ncScrollTable = new JScrollPane(ncTable);
         
         
