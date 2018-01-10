@@ -22,6 +22,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -148,7 +149,17 @@ public class NcSwingIndexManagerApp {
         return northPanel;
     }
     public static void setToViewSearchedResult(String strSrch){
-                ncTableModel = new NcSIMASearchResultTableModel(strSrch);
+        Thread t = Thread.currentThread();
+        
+        NcThProcGUICallbackImpl cbLoc = new NcThProcGUICallbackImpl(ncTable);
+        NcThProcInvocationHandler ncInvHandler = 
+            new NcThProcInvocationHandler(cbLoc);
+        NcThProcGUICallback thGui = (NcThProcGUICallback)
+        Proxy.newProxyInstance(
+        t.getClass().getClassLoader(),
+        new Class[]{NcThProcGUICallback.class},
+        ncInvHandler);
+        //ncTableModel = new NcSIMASearchResultTableModel(strSrch);
     }
     /**
      *
@@ -443,5 +454,38 @@ public class NcSwingIndexManagerApp {
      */
     public static JList addJListElement(JList ncJList){
         return ncJList;
+    }
+    
+    public class NcThProcGUICallbackLocalImpl implements NcThProcGUICallback {
+
+        @Override
+        public void appendSrchResult() {
+
+        }
+
+        @Override
+        public void setSrcResult() {
+
+        }
+
+        @Override
+        public void showProgressSwitch() {
+
+        }
+
+        @Override
+        public void startSrch() {
+
+        }
+
+        @Override
+        public void stopSrch() {
+
+        }
+
+        @Override
+        public void showError(String strMessage) {
+
+        }
     }
 }
