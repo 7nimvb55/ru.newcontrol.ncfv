@@ -15,7 +15,10 @@
  */
 package ru.newcontrol.ncfv;
 
-import javax.swing.JTable;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Developed based on the publications found on the Internet at
@@ -24,41 +27,13 @@ import javax.swing.JTable;
  * 
  * @author wladimirowichbiaran
  */
-public class NcThProcGUICallback implements NcThProcGUICallbackInterface {
-    private JTable ncTable;
-    
-    public NcThProcGUICallback(JTable ncTable){
-        this.ncTable = ncTable;
-    }
-
-    @Override
-    public void appendSrchResult() {
-        
-    }
-
-    @Override
-    public void setSrcResult() {
-        
-    }
-
-    @Override
-    public void showProgressSwitch() {
-        
-    }
-
-    @Override
-    public void startSrch() {
-        
-    }
-
-    @Override
-    public void stopSrch() {
-        
-    }
-
-    @Override
-    public void showError(String strMessage) {
-        
-    }
-    
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface NcThProcTypeDetectInterface {
+    /**
+     * Process types defined in the
+     * {@link ru.newcontrol.ncfv.NcThProcType}
+     * @return type of process 
+     */
+    NcThProcType value() default NcThProcType.ASYNC;
 }

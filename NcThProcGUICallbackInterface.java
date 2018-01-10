@@ -15,8 +15,6 @@
  */
 package ru.newcontrol.ncfv;
 
-import javax.swing.JTable;
-
 /**
  * Developed based on the publications found on the Internet at
  * http://www.skipy.ru/technics/gui_sync.html
@@ -24,41 +22,22 @@ import javax.swing.JTable;
  * 
  * @author wladimirowichbiaran
  */
-public class NcThProcGUICallbackImpl implements NcThProcGUICallback {
-    private JTable ncTable;
+public interface NcThProcGUICallbackInterface {
+    @NcThProcTypeDetectInterface
+    void appendSrchResult();
     
-    public NcThProcGUICallbackImpl(JTable ncTable){
-        this.ncTable = ncTable;
-    }
-
-    @Override
-    public void appendSrchResult() {
-        
-    }
-
-    @Override
-    public void setSrcResult() {
-        
-    }
-
-    @Override
-    public void showProgressSwitch() {
-        
-    }
-
-    @Override
-    public void startSrch() {
-        
-    }
-
-    @Override
-    public void stopSrch() {
-        
-    }
-
-    @Override
-    public void showError(String strMessage) {
-        
-    }
+    @NcThProcTypeDetectInterface
+    void setSrcResult();
     
+    @NcThProcTypeDetectInterface
+    void showProgressSwitch();
+    
+    @NcThProcTypeDetectInterface
+    void startSrch();
+    
+    @NcThProcTypeDetectInterface
+    void stopSrch();
+    
+    @NcThProcTypeDetectInterface(NcThProcType.SYNC)
+    void showError(String strMessage);
 }

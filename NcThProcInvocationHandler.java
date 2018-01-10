@@ -28,15 +28,15 @@ import javax.swing.SwingUtilities;
  */
 public class NcThProcInvocationHandler implements InvocationHandler {
     private Object invocationResult = null;
-    private NcThProcGUICallback ui;
+    private NcThProcGUICallbackInterface ui;
     
-    public NcThProcInvocationHandler(NcThProcGUICallback ui){
+    public NcThProcInvocationHandler(NcThProcGUICallbackInterface ui){
         this.ui = ui;
     }
     
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        NcThProcTypeDetect typeProc = method.getAnnotation(NcThProcTypeDetect.class);
+        NcThProcTypeDetectInterface typeProc = method.getAnnotation(NcThProcTypeDetectInterface.class);
         if( typeProc != null ){
             if( SwingUtilities.isEventDispatchThread() ){
                 invocationResult = method.invoke(ui, args);

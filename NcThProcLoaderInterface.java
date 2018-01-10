@@ -15,11 +15,6 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 /**
  * Developed based on the publications found on the Internet at
  * http://www.skipy.ru/technics/gui_sync.html
@@ -27,13 +22,25 @@ import java.lang.annotation.Target;
  * 
  * @author wladimirowichbiaran
  */
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface NcThProcTypeDetect {
+public interface NcThProcLoaderInterface {
     /**
-     * Process types defined in the
-     * {@link ru.newcontrol.ncfv.NcThProcType}
-     * @return type of process 
+     * Loading operation in new Thread for run
      */
-    NcThProcType value() default NcThProcType.ASYNC;
+    void execute();
+    /**
+     * Cancel run thread
+     */
+    void cancel();
+    /**
+     * Get status of current operation if avalable
+     */
+    void state();
+    /**
+     * Get errors in runned process if generated
+     */
+    void error();
+    /**
+     * Get statistics of executed operations if avalable
+     */
+    void stats();
 }

@@ -14,22 +14,58 @@
  * limitations under the License.
  */
 package ru.newcontrol.ncfv;
-
+import java.io.IOException;
 /**
- * Developed based on the publications found on the Internet at
- * http://www.skipy.ru/technics/gui_sync.html
- * Thanks and best regards to author of publishing
- * 
+ *
  * @author wladimirowichbiaran
  */
-public interface NcThProcLoader {
-    /**
-     * Loading operation in new Thread for run
-     * search by input KeyWord
-     */
-    void execSrchByInputKeyWord();
-    /**
-     * Cancel search by input KeyWord
-     */
-    void cancelSrchByInputKeyWord();
+public class NcThProcLoader implements Runnable, NcThProcLoaderInterface {
+    private boolean executed = false;
+    private NcThProcGUICallbackInterface proxyInstGuiCB;
+    private boolean canceled = false;
+    
+    public NcThProcLoader(){
+        
+    }
+
+    @Override
+    public void run() {
+        
+        
+    }
+
+    @Override
+    public synchronized void execute() {
+        if( executed ){
+            throw new IllegalStateException("Process is run");
+        }
+        executed = true;
+        long nowTime = System.nanoTime();
+        Thread t = new Thread(this, "NcThProcAt-" + nowTime);
+        t.start();
+    }
+
+    @Override
+    public synchronized void cancel() {
+        canceled = true;
+    }
+    public synchronized boolean isCanceled(){
+        return canceled;
+    }
+
+    @Override
+    public synchronized void state() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public synchronized void error() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public synchronized void stats() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
 }

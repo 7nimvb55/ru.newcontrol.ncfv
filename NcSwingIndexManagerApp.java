@@ -149,17 +149,19 @@ public class NcSwingIndexManagerApp {
         return northPanel;
     }
     public static void setToViewSearchedResult(String strSrch){
-        Thread t = Thread.currentThread();
-        
-        NcThProcGUICallbackImpl cbLoc = new NcThProcGUICallbackImpl(ncTable);
+        NcThProcGUICallbackInterface proxyInstGuiCb = getProxyInstanceGUICallback();
+        //ncTableModel = new NcSIMASearchResultTableModel(strSrch);
+    }
+    public static NcThProcGUICallbackInterface getProxyInstanceGUICallback(){
+        NcThProcGUICallback cbLoc = new NcThProcGUICallback(ncTable);
         NcThProcInvocationHandler ncInvHandler = 
             new NcThProcInvocationHandler(cbLoc);
-        NcThProcGUICallback thGui = (NcThProcGUICallback)
+        NcThProcGUICallbackInterface proxyInstGui = (NcThProcGUICallbackInterface)
         Proxy.newProxyInstance(
-        t.getClass().getClassLoader(),
-        new Class[]{NcThProcGUICallback.class},
+        NcThProcGUICallbackInterface.class.getClassLoader(),
+        new Class[]{NcThProcGUICallbackInterface.class},
         ncInvHandler);
-        //ncTableModel = new NcSIMASearchResultTableModel(strSrch);
+        return proxyInstGui;
     }
     /**
      *
@@ -455,37 +457,5 @@ public class NcSwingIndexManagerApp {
     public static JList addJListElement(JList ncJList){
         return ncJList;
     }
-    
-    public class NcThProcGUICallbackLocalImpl implements NcThProcGUICallback {
 
-        @Override
-        public void appendSrchResult() {
-
-        }
-
-        @Override
-        public void setSrcResult() {
-
-        }
-
-        @Override
-        public void showProgressSwitch() {
-
-        }
-
-        @Override
-        public void startSrch() {
-
-        }
-
-        @Override
-        public void stopSrch() {
-
-        }
-
-        @Override
-        public void showError(String strMessage) {
-
-        }
-    }
 }
