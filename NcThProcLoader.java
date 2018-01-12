@@ -16,7 +16,10 @@
 package ru.newcontrol.ncfv;
 import java.io.IOException;
 /**
- *
+ * Developed based on the publications found on the Internet at
+ * http://www.skipy.ru/technics/gui_sync.html
+ * Thanks and best regards to author of publishing
+ * 
  * @author wladimirowichbiaran
  */
 public class NcThProcLoader implements Runnable, NcThProcLoaderInterface {
