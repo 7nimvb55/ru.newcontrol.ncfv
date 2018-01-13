@@ -149,11 +149,14 @@ public class NcSwingIndexManagerApp {
         return northPanel;
     }
     public static void setToViewSearchedResult(String strSrch){
-        NcThProcGUICallbackInterface proxyInstGuiCb = getProxyInstanceGUICallback();
-        //ncTableModel = new NcSIMASearchResultTableModel(strSrch);
+        //NcThProcGUICallbackInterface proxyInstGuiCb = getProxyInstanceGUICallback();
+        ncTableModel = new NcSIMASearchResultTableModel(strSrch);
+        ncTable.setModel(ncTableModel);
+        centerPanel.repaint();
     }
     public static NcThProcGUICallbackInterface getProxyInstanceGUICallback(){
-        NcThProcGUICallback cbLoc = new NcThProcGUICallback(ncTable);
+        
+        NcThProcGUICallback cbLoc = new NcThProcGUICallback(centerPanel, ncTable);
         NcThProcInvocationHandler ncInvHandler = 
             new NcThProcInvocationHandler(cbLoc);
         NcThProcGUICallbackInterface proxyInstGui = (NcThProcGUICallbackInterface)

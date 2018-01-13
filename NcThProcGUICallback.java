@@ -15,6 +15,7 @@
  */
 package ru.newcontrol.ncfv;
 
+import javax.swing.JPanel;
 import javax.swing.JTable;
 
 /**
@@ -25,20 +26,23 @@ import javax.swing.JTable;
  * @author wladimirowichbiaran
  */
 public class NcThProcGUICallback implements NcThProcGUICallbackInterface {
+    private JPanel ncPanel;
     private JTable ncTable;
     
-    public NcThProcGUICallback(JTable ncTable){
+    public NcThProcGUICallback(JPanel ncPanel, JTable ncTable){
+        this.ncPanel = ncPanel;
         this.ncTable = ncTable;
     }
 
     @Override
     public void appendSrchResult() {
-        
+        ncTable.getModel();
+        ncPanel.repaint();
     }
 
     @Override
     public void setSrcResult() {
-        
+        ncPanel.repaint();
     }
 
     @Override
