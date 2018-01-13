@@ -1,13 +1,13 @@
 # ru.newcontrol.ncfv
 Java application for make index of disk or directory storage and find files in his path or name
-<p>for make index</p>
+<h2>for make index</h2
 <ul>
 <li><code>java -jar ru.newcontrol.ncfv.jar -m c:\somepath</code>
 <li><code>java -jar ru.newcontrol.ncfv.jar -m /somepath</code>
 </ul>
-<p>for search in index</p>
+<h2>for search in index</h2>
 <code>java -jar ru.newcontrol.ncfv.jar -s somekeyword</code>
-<p>for start in gui mode</p>
+<h2>for start in gui mode</h2>
 <ul>
 <li><code>java -jar ru.newcontrol.ncfv.jar</code>
 <li>search in index by keyword from user input
