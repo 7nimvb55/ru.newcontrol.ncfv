@@ -15,10 +15,29 @@
  */
 package ru.newcontrol.ncfv;
 
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
+
+
 /**
  *
  * @author wladimirowichbiaran
  */
 public class NcSwPanelPageEnd {
-    
+        /**
+     *
+     * @return
+     */
+    public static JPanel getSouthPanel(){
+        JPanel southPanel = new JPanel();
+        Border southBorder = BorderFactory.createTitledBorder("SOUTH panel");
+        southPanel.setBorder(southBorder);
+        
+        JLabel txtFromIndex = NcSwGUIComponent.createEmptyLabel();
+        
+        southPanel.add(txtFromIndex);
+        return southPanel;
+    }
 }

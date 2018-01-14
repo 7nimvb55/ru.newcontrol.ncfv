@@ -29,9 +29,9 @@ public class NcThProcGUICallback implements NcThProcGUICallbackInterface {
     private JPanel ncPanel;
     private JTable ncTable;
     
-    public NcThProcGUICallback(JPanel ncPanel, JTable ncTable){
-        this.ncPanel = ncPanel;
-        this.ncTable = ncTable;
+    public NcThProcGUICallback(NcSwGUIComponentStatus inGuiComponents){
+        this.ncPanel = inGuiComponents.centerPanel;
+        this.ncTable = inGuiComponents.ncTable;
     }
 
     @Override

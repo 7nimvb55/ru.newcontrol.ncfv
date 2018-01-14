@@ -15,10 +15,109 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.awt.Dimension;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.border.Border;
+
+
+
 /**
  *
  * @author wladimirowichbiaran
  */
 public class NcSwPanelLineEnd {
+    /**
+     *
+     * @return
+     */
+    public static JPanel getEastPanel(){
+        String[] forTextToolTip = {
+            "For search with keyword, input it and press \"+\" Button",
+            "For search with out keyword, input it and press \"+\" Button",
+            "Help about keyword in Search",
+            "Help about keyword out of Search",
+        };
+        String[] forComponentText = {
+            "How to use",
+        };
     
+        Dimension textFiledForSearchDimension = new Dimension(100, 20);        
+        
+        JPanel eastPanel = new JPanel();
+        Border eastBorder = BorderFactory.createTitledBorder("EAST panel");
+        eastPanel.setBorder(eastBorder);
+        eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.PAGE_AXIS));
+        
+        eastPanel.setAlignmentX(JComponent.TOP_ALIGNMENT);
+        eastPanel.setAlignmentY(JComponent.CENTER_ALIGNMENT);
+        
+        JButton ncHowToInSearch = NcSwGUIComponent.createButton(forComponentText[0],null,forTextToolTip[2]);
+        
+        eastPanel.add(ncHowToInSearch);
+        
+        JPanel textInSearchPanel = NcSwGUIComponent.getTextFieldForSearchPanel(textFiledForSearchDimension, forTextToolTip[0]);
+        eastPanel.add(textInSearchPanel);
+        
+        eastPanel.add(getAndOrButtonPanel());
+        
+        JList wiSearch = NcSwGUIComponent.createJListWordInSearch();
+        JScrollPane wiScroll = new JScrollPane(wiSearch);
+        wiScroll.setPreferredSize(new Dimension(100, 100));
+        
+        eastPanel.add(wiScroll);
+        
+        JPanel buttonPanel1 = getAddDelButtonPanel();
+        eastPanel.add(buttonPanel1);
+        
+        JSeparator ncSeparator = new JSeparator(JSeparator.HORIZONTAL);
+        eastPanel.add(ncSeparator);
+        
+        eastPanel.add(NcSwGUIComponent.createButton(forComponentText[0],null,forTextToolTip[3]));
+        
+        JPanel textOutSearchPanel = NcSwGUIComponent.getTextFieldForSearchPanel(textFiledForSearchDimension, forTextToolTip[1]);
+        eastPanel.add(textOutSearchPanel);
+        
+        eastPanel.add(getAndOrButtonPanel());
+        
+        JList wniSearch = NcSwGUIComponent.createJListWordNotInSearch();
+        JScrollPane wniScroll = new JScrollPane(wniSearch);
+        wniScroll.setPreferredSize(new Dimension(100, 100));
+        
+        eastPanel.add(wniScroll);
+        
+        JPanel buttonPanel2 = getAddDelButtonPanel();
+        eastPanel.add(buttonPanel2);
+        return eastPanel;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static JPanel getAndOrButtonPanel(){
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        buttonPanel.add(NcSwGUIComponent.createButton("&&",null,""));
+        buttonPanel.add(NcSwGUIComponent.createButton("||",null,""));
+        return buttonPanel;
+    }    
+
+    /**
+     *
+     * @return
+     */
+    public static JPanel getAddDelButtonPanel(){
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        buttonPanel.add(NcSwGUIComponent.createButton("+",null,""));
+        buttonPanel.add(NcSwGUIComponent.createButton("-",null,""));
+        return buttonPanel;
+    }
 }

@@ -15,34 +15,36 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
-
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.TableModel;
 
 /**
  *
  * @author wladimirowichbiaran
  */
-public class NcSwPanelLineStart {
-        /**
-     *
-     * @return
-     */
-    public static JPanel getWestPanel(){
-        JPanel westPanel = new JPanel();
-        Border westBorder = BorderFactory.createTitledBorder("WEST panel");
-        westPanel.setBorder(westBorder);
-        westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.PAGE_AXIS));
-        
-        ArrayList<JButton> ncAllDisk = NcSwGUIComponent.getRootButtons();
+public class NcSwGUIComponentStatus {
+    
+    public TableModel ncTableModel;
+    public JScrollPane ncScrollTable;
+    public JTable ncTable;
+    public JPanel centerPanel;
 
-        for(JButton itemDisk : ncAllDisk){
-            westPanel.add(itemDisk);
-        }
-        return westPanel;
+    public NcSwGUIComponentStatus(
+        TableModel ncTableModel,
+        JScrollPane ncScrollTable,
+        JTable ncTable,
+        JPanel centerPanel) {
+        
+        this.ncTableModel = ncTableModel;
+        this.ncScrollTable = ncScrollTable;
+        this.ncTable = ncTable;
+        this.centerPanel = centerPanel;
     }
+
+    
+    
+    
 }

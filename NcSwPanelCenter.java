@@ -15,10 +15,57 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.Border;
+import javax.swing.table.TableModel;
+
 /**
  *
  * @author wladimirowichbiaran
  */
 public class NcSwPanelCenter {
     
+    /**
+     *
+     * @return
+     */
+    public static NcSwGUIComponentStatus getCenterPanel(){
+        JPanel centerPanel = new JPanel();
+        Border centerBorder = BorderFactory.createTitledBorder("CENTER panel");
+        centerPanel.setBorder(centerBorder);
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        
+        ArrayList<String> strKeyWordInSearch = new ArrayList<String>();
+        ArrayList<String> strKeyWordOutSearch = new ArrayList<String>();
+        
+//        strKeyWordInSearch.add(" ");
+        strKeyWordInSearch.add("01");
+//       strKeyWordInSearch.add("freebsd");
+//        strKeyWordInSearch.add("freebsd");
+//        strKeyWordOutSearch.add("newcontrol");
+        
+        TableModel ncTableModel = new NcSIMASearchResultTableModel(strKeyWordInSearch, strKeyWordOutSearch);
+        
+        JTable ncTable = new JTable(ncTableModel);
+        JScrollPane ncScrollTable = new JScrollPane(ncTable);
+        
+        
+        centerPanel.add(ncScrollTable);
+        
+        ncScrollTable.revalidate();
+        
+        NcSwGUIComponentStatus retComp = new NcSwGUIComponentStatus(
+        
+        ncTableModel,
+        ncScrollTable,
+        ncTable,
+        centerPanel);
+        
+        return retComp;
+    }
 }
