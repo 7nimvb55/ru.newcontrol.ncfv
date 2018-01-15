@@ -149,10 +149,16 @@ public class NcIdxFileManager {
      * @return
      */
     public static String getWorkCfgPath(){
+        String strToReturnDataInAppDir = getOrCreateAppDataSubDir();
+        String strToReturnDataInAppDirFile = strPathCombiner(strToReturnDataInAppDir, "workcfg.dat");
+        return strToReturnDataInAppDirFile;
+    }
+    /**
+     * 
+     * @return 
+     */
+    public static String getOrCreateAppDataSubDir(){
         String strAppPath = getAppWorkDirStrPath();
-        if( strAppPath.length() < 1 ){
-            NcAppHelper.appExitWithMessage("Error on stage of detect work application directory");
-        }
         String strToReturnDataInAppDir = strPathCombiner(strAppPath, "/appdata");
         File dirForAppData = new File(strToReturnDataInAppDir);
         if( !dirExistRWAccessChecker(dirForAppData) ){
@@ -160,8 +166,7 @@ public class NcIdxFileManager {
                 NcAppHelper.appExitWithMessageFSAccess(dirForAppData.getAbsolutePath());
             }
         }
-        String strToReturnDataInAppDirFile = strPathCombiner(strToReturnDataInAppDir, "workcfg.dat");
-        return strToReturnDataInAppDirFile;
+        return dirForAppData.getAbsolutePath();
     }
     /**
      * From system properties get application path, after that get parent path
@@ -185,7 +190,7 @@ public class NcIdxFileManager {
      * @return
      */
     public static String getUserHomeDirStrPath(){
-        String appPath = System.getProperty("user.dir");
+        String appPath = System.getProperty("user.home");
         File pathToApp = new File(appPath);
         if( !dirExistRWAccessChecker(pathToApp) ){
             return getErrorForFileOperation().getAbsolutePath();
@@ -214,12 +219,7 @@ public class NcIdxFileManager {
      * @return
      */
     public static String getJournalDiskPath(){
-        String strAppPath = getAppWorkDirStrPath();
-        String strToReturnDataInAppDir = strPathCombiner(strAppPath, "/appdata");
-        File dirForAppData = new File(strToReturnDataInAppDir);
-        if( !dirExistRWAccessChecker(dirForAppData) ){
-            dirForAppData.mkdirs();
-        }
+        String strToReturnDataInAppDir = getOrCreateAppDataSubDir();
         String strToReturnDataInAppDirFile = strPathCombiner(strToReturnDataInAppDir, "jdisk.dat");
         return strToReturnDataInAppDirFile;
     }

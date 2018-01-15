@@ -224,32 +224,32 @@ public class NcAppHelper {
      */
     public static void outMessage(String strMessage){
         if( NcfvRunVariables.getStage() ){
-        if(!Ncfv.getRunIsSwing()){
-            if( NcfvRunVariables.getWithTrace() ){
-                String strNowTime = java.time.LocalDateTime.now().toString();
-                outMessageToConsole("at " + strNowTime + "\n");
-                Thread t = Thread.currentThread();
-                StackTraceElement[] nowT = t.getStackTrace();
-                int idx = 0;
-                for(StackTraceElement itemT : nowT ){
-                    if( idx > 1 || NcfvRunVariables.getTraceWithPrintFunc() ){
-                        String strOutFile = "";
-                        if( NcfvRunVariables.getIncludeFile() ){
-                            strOutFile = itemT.getFileName() + "\t";
+            if(!Ncfv.getRunIsSwing()){
+                if( NcfvRunVariables.getWithTrace() ){
+                    String strNowTime = java.time.LocalDateTime.now().toString();
+                    outMessageToConsole("at " + strNowTime + "\n");
+                    Thread t = Thread.currentThread();
+                    StackTraceElement[] nowT = t.getStackTrace();
+                    int idx = 0;
+                    for(StackTraceElement itemT : nowT ){
+                        if( idx > 1 || NcfvRunVariables.getTraceWithPrintFunc() ){
+                            String strOutFile = "";
+                            if( NcfvRunVariables.getIncludeFile() ){
+                                strOutFile = itemT.getFileName() + "\t";
+                            }
+                            String strOut = 
+                                "\t" + itemT.getClassName()
+                                + "." + itemT.getMethodName()
+                                + "\t[" + itemT.getLineNumber() + "]"
+                                + (itemT.isNativeMethod() ? "-native" : "");
+                            outMessageToConsole(strOutFile + strOut);
                         }
-                        String strOut = 
-                            "\t" + itemT.getClassName()
-                            + "." + itemT.getMethodName()
-                            + "\t[" + itemT.getLineNumber() + "]"
-                            + (itemT.isNativeMethod() ? "-native" : "");
-                        outMessageToConsole(strOutFile + strOut);
+                        idx++;
                     }
-                    idx++;
                 }
+                outMessageToConsole(strMessage);
             }
-            outMessageToConsole(strMessage);
-        }
-        outMessageToAppLogFile(strMessage);
+            outMessageToAppLogFile(strMessage);
         }
     }
 
@@ -266,8 +266,53 @@ public class NcAppHelper {
      * @param strMessage
      */
     public static void outMessageToAppLogFile(String strMessage){
-        
-        //System.out.println(strMessage);
+        if( NcfvRunVariables.isOutToLogFile() ){
+            
+            String strNowTime = java.time.LocalDateTime.now().toString() + ": ";
+            String strTrace = "";
+            if( NcfvRunVariables.isOutToLogFileWithTrace() ){
+                TreeMap<Long, String> strForLog = new TreeMap<Long, String>();
+                Thread t = Thread.currentThread();
+                
+                StackTraceElement[] nowT = t.getStackTrace();
+                long idx = 0;
+                strForLog.put(idx, strNowTime + "recorded time");
+                idx++;
+                strForLog.put(idx, t.toString() + ": " + "Thread to string");
+                idx++;
+                strForLog.put(idx, t.getName() + ": " + "Thread name");
+                idx++;
+                strForLog.put(idx, t.getClass().getCanonicalName() + ": " + "Thread canonical name");
+                idx++;
+                strForLog.put(idx, t.getId() + ": " + "Thread id");
+                idx++;
+                strForLog.put(idx, t.getState().name() + ": " + "Thread state name");
+                idx++;
+                for(StackTraceElement itemT : nowT ){
+                    if( idx > 1 || NcfvRunVariables.isOutToLogFileTraceWithPrintFunc() ){
+                        String strOutFile = "";
+                        if( NcfvRunVariables.isOutToLogFileIncludeFile() ){
+                            strOutFile = itemT.getFileName() + ": ";
+                        }
+                        String strOut = 
+                            ": " + itemT.getClassName()
+                            + "." + itemT.getMethodName()
+                            + ": (" + itemT.getLineNumber() + ")"
+                            + (itemT.isNativeMethod() ? "-native: " : ": ");
+                        strTrace = strOutFile + strOut;
+                    }
+                    strForLog.put(idx, strTrace + ": " + "Thread stack trace element");
+                    idx++;
+                }
+                strForLog.put(idx, strMessage + ": message");
+                idx++;
+                NcLogFileManager.putToLog(strForLog);
+            }
+            else{
+                NcLogFileManager.putToLog(strNowTime + ": "
+                + strMessage + ": message");
+            }
+        }
     }
     
 /**

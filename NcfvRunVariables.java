@@ -25,6 +25,11 @@ public class NcfvRunVariables {
     private static boolean outWithTrace = false;
     private static boolean outWithPrintFunc = false;
     private static boolean outWithFileName = false;
+    private static final int LOGLINES = 1000;
+    private static boolean outToLogFile = true;
+    private static boolean outToLogWithTrace = true;
+    private static boolean outToLogPrintFunc = true;
+    private static boolean outToLogFileName = true;
     public static boolean getIncludeFile(){
         return outWithFileName;
     }
@@ -36,5 +41,20 @@ public class NcfvRunVariables {
     }
     public static boolean getStage(){
         return devStage;
+    }
+    public static int getLogLinesCount(){
+        return LOGLINES;
+    }
+    public static boolean isOutToLogFile(){
+        return outToLogFile;
+    }
+    public static boolean isOutToLogFileIncludeFile(){
+        return outToLogFileName;
+    }
+    public static boolean isOutToLogFileTraceWithPrintFunc(){
+        return outToLogPrintFunc;
+    }
+    public static boolean isOutToLogFileWithTrace(){
+        return outToLogWithTrace;
     }
 }
