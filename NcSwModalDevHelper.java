@@ -22,7 +22,6 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import static ru.newcontrol.ncfv.NcAppHelper.outMessageToConsole;
 
 /**
  *
@@ -31,38 +30,62 @@ import static ru.newcontrol.ncfv.NcAppHelper.outMessageToConsole;
 public class NcSwModalDevHelper {
     public static void showModalEnvironment(){
         String strTitle = "Environment variables";
-        JComponent forShow = getEnvVarTable();
+        JComponent[] forShow = new JComponent[1];
+        forShow[0] = getEnvVarTable();
         
-        int reply  = JOptionPane.showConfirmDialog(null, forShow, strTitle, JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, forShow, strTitle, JOptionPane.INFORMATION_MESSAGE);
     }
     private static JComponent getEnvVarTable(){
-        String[] columnName = {"Property", "Value"};
-        JTable toRetTable = new JTable(getEnvArrStr(), columnName);
-        JScrollPane toRetPane = new JScrollPane(toRetTable);
-        toRetTable.setFillsViewportHeight(true);
+        JTable toViewTable = getEnvArrStr();
+        JScrollPane toRetPane = new JScrollPane(toViewTable);
+        toViewTable.setFillsViewportHeight(true);
         return toRetPane;
     }
-    private static String[][] getEnvArrStr(){
-        Properties sProp = System.getProperties();
-        Set<String> strPropName = sProp.stringPropertyNames();
+    private static JTable getEnvArrStr(){
+        String[] columnName = {"Property", "Value"};
+        
         Map<String, String> sEnv = System.getenv();
-        int toRetSize = sProp.size() + sEnv.size() + 2;
+        int toRetSize = sEnv.size();
         String[][] toRetStr = new String[toRetSize][2];
+        
         int idx = 0;
-        toRetStr[idx][0] = "Properties";
-        idx++;
-        for( String itemPorperties : strPropName ){
-            toRetStr[idx][0] =  itemPorperties;
-            toRetStr[idx][1] = sProp.getProperty(itemPorperties);
-            idx++;
-        }
-        toRetStr[idx][0] = "Environments";
-        idx++;
         for(Map.Entry<String, String> itemEnv : sEnv.entrySet()){
             toRetStr[idx][0] = itemEnv.getKey();
             toRetStr[idx][1] = itemEnv.getValue();
             idx++;
         }
-        return toRetStr;
+        
+        JTable toRetTable = new JTable(toRetStr, columnName);
+        return toRetTable;
+    }
+    public static void showModalProperties(){
+        String strTitle = "System properties";
+        JComponent[] forShow = new JComponent[1];
+        forShow[0] = getPropVarTable();
+        JOptionPane.showMessageDialog(null, forShow, strTitle, JOptionPane.INFORMATION_MESSAGE);
+    }
+    private static JComponent getPropVarTable(){
+        JTable toViewTable = getPropArrStr();
+        JScrollPane toRetPane = new JScrollPane(toViewTable);
+        toViewTable.setFillsViewportHeight(true);
+        return toRetPane;
+    }
+    private static JTable getPropArrStr(){
+        String[] columnName = {"Property", "Value"};
+        
+        Properties sProp = System.getProperties();
+        Set<String> strPropName = sProp.stringPropertyNames();
+        
+        int toRetSize = sProp.size();
+        String[][] toRetStr = new String[toRetSize][2];
+        
+        int idx = 0;
+        for( String itemPorperties : strPropName ){
+            toRetStr[idx][0] =  itemPorperties;
+            toRetStr[idx][1] = sProp.getProperty(itemPorperties);
+            idx++;
+        }
+        JTable toRetTable = new JTable(toRetStr, columnName);
+        return toRetTable;
     }
 }

@@ -40,6 +40,7 @@ public class NcSwMainMenu {
         JMenu menuDevelop = new JMenu("Development");
         menuDevelop.add(NcSwMenuItems.getLogFileReader());
         menuDevelop.add(NcSwMenuItems.getEnvironmentViewer());
+        menuDevelop.add(NcSwMenuItems.getPropertiesViewer());
         return menuDevelop;
     }
     public static JMenu getMenuHelp(){

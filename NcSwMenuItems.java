@@ -45,6 +45,21 @@ public class NcSwMenuItems {
         });
         return toRetMi;
     }
+    
+    /**
+     * For Development
+     * @return 
+     */
+    public static JMenuItem getPropertiesViewer(){
+        JMenuItem toRetMi = new JMenuItem("Properties View");
+        toRetMi.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                NcSwModalDevHelper.showModalProperties();
+            }
+        });
+        return toRetMi;
+    }
     /**
      * For Settings
      * @return 
