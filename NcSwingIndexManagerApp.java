@@ -18,32 +18,10 @@ package ru.newcontrol.ncfv;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.filechooser.FileSystemView;
-import javax.swing.table.TableModel;
 
 
 
@@ -54,10 +32,7 @@ import javax.swing.table.TableModel;
 public class NcSwingIndexManagerApp {
     private static final String APP_TITLE = "Index Managment";
     private static NcSwGUIComponentStatus centerPanelInClass;
-    private static TableModel ncTableModel;
-    private static JScrollPane ncScrollTable;
-    private static JTable ncTable;
-    private static JPanel centerPanel;
+
     /**
      *
      */
@@ -96,6 +71,7 @@ public class NcSwingIndexManagerApp {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         
+        frame.setJMenuBar(NcSwMainMenu.getMainMenu());
         mainPanel.add(NcSwPanelPageStart.getNorthPanel(), BorderLayout.NORTH);
         mainPanel.add(NcSwPanelPageEnd.getSouthPanel(), BorderLayout.SOUTH);
         mainPanel.add(NcSwPanelLineStart.getWestPanel(), BorderLayout.WEST);

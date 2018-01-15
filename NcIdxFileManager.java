@@ -16,13 +16,10 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -191,7 +188,7 @@ public class NcIdxFileManager {
         String appPath = System.getProperty("user.dir");
         File pathToApp = new File(appPath);
         if( !dirExistRWAccessChecker(pathToApp) ){
-            return "";
+            return getErrorForFileOperation().getAbsolutePath();
         }
         return pathToApp.getAbsolutePath();
     }
@@ -205,11 +202,11 @@ public class NcIdxFileManager {
         if( fileExistRWAccessChecker(pathToApp) ){
             File dirToApp = pathToApp.getParentFile();
             if( !dirExistRWAccessChecker(dirToApp) ){
-                return null;
+                return getErrorForFileOperation();
             }
             return dirToApp;
         }
-        return null;
+        return getErrorForFileOperation();
     }
 
     /**
@@ -259,7 +256,7 @@ public class NcIdxFileManager {
      */
     public static String strPathCombiner(String strFirst, String strSecond){
         if( (strFirst.length() < 1) && (strSecond.length() < 1) ){
-            return "";
+            return getErrorForFileOperation().getAbsolutePath();
         }
         if( strFirst.substring(strFirst.length() - 1).equalsIgnoreCase("\\")
             || strFirst.substring(strFirst.length() - 1).equalsIgnoreCase("/") ){
@@ -290,10 +287,10 @@ public class NcIdxFileManager {
                     || strSecond.substring(1, 2).equalsIgnoreCase(".") ){
                     return strFirst + strSecond.substring(1);
                 }
-                return "";
+                return getErrorForFileOperation().getAbsolutePath();
             }
         }
-        return "";
+        return getErrorForFileOperation().getAbsolutePath();
     }
     /**
      * Methods of this application, generate errors (exeptions) in operation with
