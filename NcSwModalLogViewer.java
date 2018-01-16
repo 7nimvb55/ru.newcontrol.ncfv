@@ -19,10 +19,16 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map;
+import java.util.TreeMap;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  *
@@ -32,9 +38,12 @@ public class NcSwModalLogViewer {
     private static String modalTitle = "View log file";
     
     public static JDialog getDialogLogViewer(JFrame mainFrame){
+        NcSwGUIComponentStatus compIndex = new NcSwGUIComponentStatus();
+        compIndex.putComponents("JFrame-mainFrame", mainFrame);
         JDialog modalWindow = new JDialog(mainFrame, modalTitle, true);
-        JPanel modalPanelPageStart = getPanelPageStart(modalWindow);
-        JPanel modalPanelCenter = getPanelCenter(modalWindow);
+        compIndex.putComponents("JDialog-modalWindow", modalWindow);
+        JPanel modalPanelPageStart = getPanelPageStart(compIndex);
+        JPanel modalPanelCenter = getPanelCenter(compIndex);
         JPanel modalPanelPageEnd = getPanelPageEnd(modalWindow);
         
         modalWindow.add(modalPanelPageStart, BorderLayout.PAGE_START);
@@ -44,18 +53,59 @@ public class NcSwModalLogViewer {
         modalWindow.setSize(pSize);
         modalWindow.setPreferredSize(pSize);
         modalWindow.setLocationRelativeTo(mainFrame);
+        modalWindow.repaint();
         return modalWindow;
     }
-    private static JPanel getPanelCenter(JDialog modalWindowInFunc){
+    private static JPanel getPanelCenter(NcSwGUIComponentStatus compLocalIndex){
         JPanel modalPanelInFunc = new JPanel();
-        JButton buttonClose = getButtonClose(modalWindowInFunc);
-        modalPanelInFunc.add(buttonClose);
+        compLocalIndex.putComponents("JPanel-PanelCenter", modalPanelInFunc);
+        JScrollPane treeScroll = getScrolledTree(compLocalIndex);
+        modalPanelInFunc.add(treeScroll);
         return modalPanelInFunc;
     }
-    private static JPanel getPanelPageStart(JDialog modalWindowInFunc){
+    private static JScrollPane getScrolledTree(NcSwGUIComponentStatus compLocalIndex){
+        DefaultMutableTreeNode treeTop = 
+                new DefaultMutableTreeNode("Log file contained:");
+        JTree treeNodes = getTreeNodes(treeTop);
+        compLocalIndex.putComponents("JTree-treeNodes", treeNodes);
+        JScrollPane treeView = new JScrollPane(treeNodes);
+        compLocalIndex.putComponents("JScrollPane-treeView", treeView);
+        return treeView;
+    }
+    private static JTree getTreeNodes(DefaultMutableTreeNode forTreeTop){
+        TreeMap<Long, String> strLogReaded = new TreeMap<Long, String>();
+        strLogReaded.putAll(NcLogFileManager.readFromLog());
+        DefaultMutableTreeNode strReadedTime = null;
+        DefaultMutableTreeNode strReadedParent = getNN("Lines count (" + strLogReaded.size() + ") " + NcLogFileManager.getLogFile().getAbsolutePath());
+        DefaultMutableTreeNode strReadedChild = null;
+        
+        forTreeTop.add(strReadedParent);
+        
+        boolean isAdd = false;
+        for( Map.Entry<Long, String> strItem : strLogReaded.entrySet() ){
+            strReadedChild = getNN(strItem.getValue());
+            strReadedParent.add(strReadedChild);
+            if( strItem.getValue().indexOf(": [time]") > -1 ){
+                strReadedParent = getNN(strItem.getValue());
+                forTreeTop.add(strReadedParent);
+            }
+           
+        }
+        forTreeTop.add(strReadedParent);
+        return new JTree(forTreeTop);
+    }
+    private static DefaultMutableTreeNode getNN(String strNodeName){
+        return new DefaultMutableTreeNode(strNodeName);
+    }
+    private static JPanel getPanelPageStart(NcSwGUIComponentStatus compLocalIndex){
         JPanel modalPanelInFunc = new JPanel();
-        JButton buttonClose = getButtonClose(modalWindowInFunc);
-        modalPanelInFunc.add(buttonClose);
+        JTextField textSearch = new JTextField();
+        textSearch.setColumns(25);
+        modalPanelInFunc.add(textSearch);
+        JButton buttonSearch = getButtonSearch();
+        modalPanelInFunc.add(buttonSearch);
+        JButton buttonUpdate = getButtonUpdate(compLocalIndex);
+        modalPanelInFunc.add(buttonUpdate);
         return modalPanelInFunc;
     }
     private static JPanel getPanelPageEnd(JDialog modalWindowInFunc){
@@ -72,6 +122,31 @@ public class NcSwModalLogViewer {
             }
         });
         return buttonClose;
+    }
+    private static JButton getButtonSearch(){
+        JButton buttonSearch = new JButton("Search");
+        buttonSearch.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent event){
+                
+            }
+        });
+        return buttonSearch;
+    }
+    private static JButton getButtonUpdate(NcSwGUIComponentStatus compLocalIndex){
+        JButton buttonSearch = new JButton("Update");
+        buttonSearch.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent event){
+                JScrollPane scrollPane = (JScrollPane) compLocalIndex.getComponentsByType("JScrollPane-treeView");
+                scrollPane.setVisible(false);
+                scrollPane = null;
+                scrollPane = getScrolledTree(compLocalIndex);
+                scrollPane.setVisible(true);
+                scrollPane.repaint();
+                JPanel centralPanel = (JPanel) compLocalIndex.getComponentsByType("JPanel-PanelCenter");
+                centralPanel.repaint();
+            }
+        });
+        return buttonSearch;
     }
     
 }

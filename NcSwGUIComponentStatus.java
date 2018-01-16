@@ -15,6 +15,8 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.awt.Component;
+import java.util.TreeMap;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -31,6 +33,12 @@ public class NcSwGUIComponentStatus {
     public JScrollPane ncScrollTable;
     public JTable ncTable;
     public JPanel centerPanel;
+    
+    private TreeMap<Integer, Component> modalLogView;
+    
+    public NcSwGUIComponentStatus(){
+        modalLogView = new TreeMap<Integer, Component>();
+    }
 
     public NcSwGUIComponentStatus(
         TableModel ncTableModel,
@@ -43,8 +51,20 @@ public class NcSwGUIComponentStatus {
         this.ncTable = ncTable;
         this.centerPanel = centerPanel;
     }
-
-    
+    public TreeMap<Integer, Component> getComponentsList(){
+        return modalLogView;
+    }
+    public Component getComponentsByType(String typeToGet){
+        return modalLogView.get(typeToGet.hashCode());
+    }
+    public void putComponents(String typeToAdd, Component compToAdd){
+        if( modalLogView == null ){
+            modalLogView = new TreeMap<Integer, Component>();
+        }
+        Component toUnset = modalLogView.get(typeToAdd.hashCode());
+        toUnset = null;
+        modalLogView.put(typeToAdd.hashCode(), compToAdd);
+    }
     
     
 }

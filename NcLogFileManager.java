@@ -43,7 +43,7 @@ public class NcLogFileManager {
     }
     private static void createLogFile(String ncStrCfgPath){
         String strTime = java.time.LocalDateTime.now().toString();
-        String text = strTime + ": log file created";
+        String text = ": [time]: " + strTime + ": log file created";
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(ncStrCfgPath)))
         {
             bw.write(text);
