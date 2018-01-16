@@ -74,7 +74,7 @@ public enum NcTypeOfWord {
     public TreeMap<Long, File> getStorageWordExistFileName(String wordInHex, String word){
         
         TreeMap<Integer, File> listDirs = NcIdxFileManager.getIndexWorkSubDirFilesList();
-        String strPathSubDir = NcIdxFileManager.strPathCombiner(listDirs.get("/sw".hashCode()).getAbsolutePath(), getName());
+        String strPathSubDir = NcIdxFileManager.strPathCombiner(NcIdxFileManager.getStrCanPathFromFile(listDirs.get("/sw".hashCode())), getName());
         File filePathSubDir = new File(strPathSubDir);
         boolean boolCheck = NcIdxFileManager.dirExistRWAccessChecker(filePathSubDir);
         if( !boolCheck ){
@@ -106,7 +106,7 @@ public enum NcTypeOfWord {
      */
     public String getStorageWordByIdFileName(String wordInHex, String word, long recordId){
         TreeMap<Integer, File> listDirs = NcIdxFileManager.getIndexWorkSubDirFilesList();
-        String strPathSubDir = NcIdxFileManager.strPathCombiner(listDirs.get("/sw".hashCode()).getAbsolutePath(), getName());
+        String strPathSubDir = NcIdxFileManager.strPathCombiner(NcIdxFileManager.getStrCanPathFromFile(listDirs.get("/sw".hashCode())), getName());
         File filePathSubDir = new File(strPathSubDir);
         boolean boolCheck = NcIdxFileManager.dirExistRWAccessChecker(filePathSubDir);
         if( !boolCheck ){

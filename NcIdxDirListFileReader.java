@@ -35,7 +35,7 @@ public class NcIdxDirListFileReader {
      */ 
     public static TreeMap<Long, NcDcIdxDirListToFileAttr> ncReadFromDirListFile(long dirListID){
         TreeMap<Long, NcDcIdxDirListToFileAttr> ncDataFromDirList;
-        String strCfgPath = NcIdxFileManager.getFileNameToRecord(NcManageCfg.getDirList().getAbsolutePath()+"/dl", dirListID);
+        String strCfgPath = NcIdxFileManager.getFileNameToRecord(NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirList())+"/dl", dirListID);
 
         if ( !NcIdxFileManager.fileExistRWAccessChecker(new File(strCfgPath))){
             return new TreeMap<>();
@@ -59,7 +59,7 @@ public class NcIdxDirListFileReader {
      */
     public static TreeMap<Long, NcDcIdxDirListToFileExist> ncReadFromDirListExist(long dirListID){
         TreeMap<Long, NcDcIdxDirListToFileExist> ncDataFromDirList;
-        String strCfgPath = NcIdxFileManager.getFileNameToRecord(NcManageCfg.getDirListExist().getAbsolutePath() + "/e", dirListID);
+        String strCfgPath = NcIdxFileManager.getFileNameToRecord(NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirListExist()) + "/e", dirListID);
 
         if ( !NcIdxFileManager.fileExistRWAccessChecker(new File(strCfgPath))){
             return new TreeMap<>();

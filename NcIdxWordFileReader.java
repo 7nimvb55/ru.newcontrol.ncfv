@@ -37,7 +37,7 @@ public class NcIdxWordFileReader {
     public static TreeMap<Long, NcDcIdxWordToFile> ncReadFromWord(String readedWord, long rID){
         TreeMap<Long, NcDcIdxWordToFile> ncDataFromWordFile;
         String strCfgPath =  NcIdxFileManager.getFileNameToRecord(
-                NcManageCfg.getDirWords().getAbsolutePath() + "/w-" + readedWord, rID);
+                NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirWords()) + "/w-" + readedWord, rID);
         if ( !NcIdxFileManager.fileExistRWAccessChecker(new File(strCfgPath))){
             return new TreeMap<Long, NcDcIdxWordToFile>();
         };

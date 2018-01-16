@@ -55,7 +55,7 @@ public class NcIdxDirListManager {
                 //After increment record ID, check for work file to new record, has limit of records and
                 //used new file or append data into early recorded file
                 String strWorkFileName = ncNewManageIDs.listname;
-                String strWorkFileNameForNextRecord = NcIdxFileManager.getFileNameToRecord(NcManageCfg.getDirList().getAbsolutePath()+"/dl",nextID);
+                String strWorkFileNameForNextRecord = NcIdxFileManager.getFileNameToRecord(NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirList())+"/dl",nextID);
                 if(strWorkFileName.equalsIgnoreCase(strWorkFileNameForNextRecord)){
                     ncDataToDirList.putAll(ncDataReadedFromDirList);
                 }
@@ -66,7 +66,7 @@ public class NcIdxDirListManager {
             writedSize = NcIdxDirListFileWriter.ncWriteToDirListFile(ncDataToDirList, nextID);
             if(writedSize > 0){
                 ncNewManageIDs.listnameid = nextID;
-                ncNewManageIDs.listname = NcIdxFileManager.getFileNameToRecord(NcManageCfg.getDirList().getAbsolutePath()+"/dl",nextID);
+                ncNewManageIDs.listname = NcIdxFileManager.getFileNameToRecord(NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirList())+"/dl",nextID);
                 ncThisManagmentIDs.setNewIdsData(ncNewManageIDs);
             }
         }
@@ -235,7 +235,7 @@ public class NcIdxDirListManager {
         TreeMap<Long, NcDcIdxDirListToFileAttr> readedData = new TreeMap<Long, NcDcIdxDirListToFileAttr>();
         long idx = 0;
         for( Map.Entry<Long, NcDcIdxWordToFile> itemIDs : inFuncData.entrySet() ){
-            String strFileName = NcIdxFileManager.getFileNameToRecord(NcManageCfg.getDirList().getAbsolutePath()+"/dl", itemIDs.getValue().dirListID);
+            String strFileName = NcIdxFileManager.getFileNameToRecord(NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirList())+"/dl", itemIDs.getValue().dirListID);
             boolean inListName = false;
             for( Map.Entry<Long, String> itemName : filesList.entrySet() ){
                 inListName = itemName.getValue().equalsIgnoreCase(strFileName);

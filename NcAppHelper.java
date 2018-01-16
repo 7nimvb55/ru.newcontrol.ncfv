@@ -151,7 +151,7 @@ public class NcAppHelper {
         outMessageToConsole("");
         for(File itemFile : fileRoots){
             try {
-                outMessageToConsole("getAbsolutePath: " + itemFile.getAbsolutePath());
+                outMessageToConsole("getAbsolutePath: " + NcIdxFileManager.getStrCanPathFromFile(itemFile));
                 outMessageToConsole("getCanonicalPath: " + itemFile.getCanonicalPath());
                 outMessageToConsole("toString: " + itemFile.toString());
             

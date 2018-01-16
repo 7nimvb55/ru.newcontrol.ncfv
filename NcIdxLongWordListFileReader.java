@@ -37,7 +37,7 @@ public class NcIdxLongWordListFileReader {
     public static TreeMap<Long, NcDcIdxLongWordListToFile> ncReadFileContainedId(NcDcIdxLongWordListToFile dataForRead, long rID){
         TreeMap<Long, NcDcIdxLongWordListToFile> ncDataFromDirList;
         String strCfgPath = NcIdxFileManager.getFileNameToRecord(
-                NcManageCfg.getDirLongWordList().getAbsolutePath() + "/wl-"
+                NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirLongWordList()) + "/wl-"
                 + dataForRead.name.substring(0, 4),rID);
         if ( !NcIdxFileManager.fileExistRWAccessChecker(new File(strCfgPath))){
             return new TreeMap<Long, NcDcIdxLongWordListToFile>();

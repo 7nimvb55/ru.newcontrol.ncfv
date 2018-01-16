@@ -262,19 +262,19 @@ public class NcIndexManageIDs {
         File ncmfsDFL = indexWorkSubDirFilesList.get("/fl".hashCode());
         if( NcIdxFileManager.isErrorForFileOperation(ncmfsDFL) ){
             NcAppHelper.outMessage("/fl directory check error"
-            + ncmfsDFL.getAbsolutePath());
+            + NcIdxFileManager.getStrCanPathFromFile(ncmfsDFL));
             return new NcTmpNowProcessInfo();
         }
         File ncmfsDFHL = indexWorkSubDirFilesList.get("/fx".hashCode());
         if( NcIdxFileManager.isErrorForFileOperation(ncmfsDFHL) ){
             NcAppHelper.outMessage("/fx directory check error"
-            + ncmfsDFHL.getAbsolutePath());
+            + NcIdxFileManager.getStrCanPathFromFile(ncmfsDFHL));
             return new NcTmpNowProcessInfo();
         }
         File ncmfsDLWL = indexWorkSubDirFilesList.get("/lw".hashCode());
         if( NcIdxFileManager.isErrorForFileOperation(ncmfsDLWL) ){
             NcAppHelper.outMessage("/lw directory check error"
-            + ncmfsDLWL.getAbsolutePath());
+            + NcIdxFileManager.getStrCanPathFromFile(ncmfsDLWL));
             return new NcTmpNowProcessInfo();
         }
         
@@ -324,8 +324,8 @@ public class NcIndexManageIDs {
             return retLastName;
         }
         for(Map.Entry<Integer, File> itemName : filesList.entrySet()){
-            if ( itemName.getValue().getAbsolutePath().compareToIgnoreCase(retLastName) > 0){
-                retLastName = itemName.getValue().getAbsolutePath();
+            if ( NcIdxFileManager.getStrCanPathFromFile(itemName.getValue()).compareToIgnoreCase(retLastName) > 0){
+                retLastName = NcIdxFileManager.getStrCanPathFromFile(itemName.getValue());
             }
         }
         return retLastName;

@@ -342,7 +342,7 @@ public class NcPreRunFileViewer {
      */
     public static ArrayList<String> getReadedLinesFromEtcCfg(){
         File fileCfg = NcIdxFileManager.getOrCreateCfgFile();
-        return readCfg(fileCfg.getAbsolutePath());
+        return readCfg(NcIdxFileManager.getStrCanPathFromFile(fileCfg));
     }
 
     /**
@@ -452,7 +452,7 @@ public class NcPreRunFileViewer {
      * @return
      */
     public static int updateEtcCfg(ArrayList<String> linesParametersForUpdateCfg){
-        String pathToCfg = NcIdxFileManager.getOrCreateCfgFile().getAbsolutePath();
+        String pathToCfg = NcIdxFileManager.getStrCanPathFromFile(NcIdxFileManager.getOrCreateCfgFile());
         ArrayList<String> strTextRemark = getRemTextForCfgFile();
         ArrayList<String> strParameters = linesParametersForUpdateCfg;
         int lines = 0;

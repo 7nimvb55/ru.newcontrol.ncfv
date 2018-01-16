@@ -47,14 +47,14 @@ public class NcIdxWordManager {
             do{
                 inDiskWordRecord = NcIdxWordFileReader.ncReadFromWord(hexWord,recID);
                 oldName = NcIdxFileManager.getFileNameToRecord(
-                        NcManageCfg.getDirWords().getAbsolutePath() + "/w-" + hexWord,recID);
+                        NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirWords()) + "/w-" + hexWord,recID);
                 if(inDiskWordRecord.isEmpty()){
                     break;
                 }
                 recID = inDiskWordRecord.lastEntry().getValue().recordID;
                 recID++;
                 forRecName = NcIdxFileManager.getFileNameToRecord(
-                        NcManageCfg.getDirWords().getAbsolutePath() + "/w-" + hexWord,recID);
+                        NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirWords()) + "/w-" + hexWord,recID);
                 isEqualNames = ! oldName.equalsIgnoreCase(forRecName);
                 if(isEqualNames){
                     inDiskWordRecord.clear();
@@ -93,14 +93,14 @@ public class NcIdxWordManager {
             do{
                 inDiskWordRecord.clear();
                 inDiskWordRecord = NcIdxWordFileReader.ncReadFromWord(hexWord,recID);
-                oldName = NcIdxFileManager.getFileNameToRecord(NcManageCfg.getDirWords().getAbsolutePath() + "/w-" + hexWord,recID);
+                oldName = NcIdxFileManager.getFileNameToRecord(NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirWords()) + "/w-" + hexWord,recID);
                 if(inDiskWordRecord.isEmpty()){
                     break;
                 }
                 retInDiskWordRecord.putAll(inDiskWordRecord);
                 recID = inDiskWordRecord.lastEntry().getValue().recordID;
                 recID++;
-                forRecName = NcIdxFileManager.getFileNameToRecord(NcManageCfg.getDirWords().getAbsolutePath() + "/w-" + hexWord,recID);
+                forRecName = NcIdxFileManager.getFileNameToRecord(NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirWords()) + "/w-" + hexWord,recID);
                 isEqualNames = ! oldName.equalsIgnoreCase(forRecName);
                 if(isEqualNames){
                     if( !NcIdxFileManager.fileExistRWAccessChecker(new File(forRecName))){
@@ -218,7 +218,7 @@ public class NcIdxWordManager {
         do{
             String fileName = NcIdxFileManager.getFileNameToRecord("/w-" + wordInHex, recordID);
             
-            String strPathFile = NcIdxFileManager.strPathCombiner(filePathDir.getAbsolutePath(), fileName);
+            String strPathFile = NcIdxFileManager.strPathCombiner(NcIdxFileManager.getStrCanPathFromFile(filePathDir), fileName);
             
             fileWithRecords = new File(strPathFile);
             if( fileWithRecords.exists() ){

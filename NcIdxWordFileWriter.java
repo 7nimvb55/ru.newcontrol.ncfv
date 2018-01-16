@@ -41,7 +41,7 @@ public class NcIdxWordFileWriter {
         try(ObjectOutputStream oos = 
                 new ObjectOutputStream(
                 new FileOutputStream(NcIdxFileManager.getFileNameToRecord(
-                        NcManageCfg.getDirWords().getAbsolutePath() + "/w-" + recHexWord,recID))))
+                        NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirWords()) + "/w-" + recHexWord,recID))))
         {
             oos.writeObject(ncWordToRec);
         }

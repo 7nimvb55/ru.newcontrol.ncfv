@@ -39,7 +39,7 @@ public class NcIdxDirListFileWriter {
         }
         try(ObjectOutputStream oos = 
                 new ObjectOutputStream(
-                new FileOutputStream(NcIdxFileManager.getFileNameToRecord(NcManageCfg.getDirList().getAbsolutePath()+"/dl",recID))))
+                new FileOutputStream(NcIdxFileManager.getFileNameToRecord(NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirList())+"/dl",recID))))
         {
             oos.writeObject(ncDataToDirListFile);
         }
@@ -57,7 +57,7 @@ public class NcIdxDirListFileWriter {
      * @return
      */
     public static int ncWriteToDirListExist(TreeMap<Long, NcDcIdxDirListToFileExist> ncDataToDirListFile, long dirListID){
-        String strCfgPath = NcIdxFileManager.getFileNameToRecord(NcManageCfg.getDirListExist().getAbsolutePath() + "/e", dirListID);
+        String strCfgPath = NcIdxFileManager.getFileNameToRecord(NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirListExist()) + "/e", dirListID);
         if( ncDataToDirListFile == null ){
             return -1;
         }

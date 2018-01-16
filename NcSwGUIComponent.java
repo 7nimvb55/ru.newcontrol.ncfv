@@ -76,11 +76,11 @@ public class NcSwGUIComponent {
         for(File itemDisk : ncDisks){
             
             Icon itemIcon = fileSystemView.getSystemIcon(itemDisk);
-            String itemDisplayName = itemDisk.getAbsolutePath() + " - " +
+            String itemDisplayName = NcIdxFileManager.getStrCanPathFromFile(itemDisk) + " - " +
                     fileSystemView.getSystemTypeDescription(itemDisk);
             
-            if(itemDisk.getAbsolutePath().length() > 2){
-                itemDisplayName = itemDisk.getAbsolutePath().substring(0, 2) + " - " +
+            if( NcIdxFileManager.getStrCanPathFromFile(itemDisk).length() > 2 ){
+                itemDisplayName = NcIdxFileManager.getStrCanPathFromFile(itemDisk).substring(0, 2) + " - " +
                     fileSystemView.getSystemTypeDescription(itemDisk);
             }
             

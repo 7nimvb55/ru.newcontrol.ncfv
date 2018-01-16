@@ -60,7 +60,7 @@ public class NcIdxLongWordListManager {
         long recID = dataForWrite.nameID;
         long countReadedFiles = 0;
         nameLongWordList = NcIdxFileManager.getFileNameToRecord(
-                NcManageCfg.getDirLongWordList().getAbsolutePath() + "/wl-"
+                NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirLongWordList()) + "/wl-"
                 + dataForWrite.name.substring(0, 4),recID);
         boolean isNamesEquals = false;
         boolean isNameEquals = false;
@@ -89,7 +89,7 @@ public class NcIdxLongWordListManager {
             }
             recID = readFromDiskData.lastEntry().getValue().nameID + 1; 
             nameNextLongWordList = NcIdxFileManager.getFileNameToRecord(
-                    NcManageCfg.getDirLongWordList().getAbsolutePath() + "/wl-"
+                    NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirLongWordList()) + "/wl-"
                     + dataForWrite.name.substring(0, 4),recID);
             isNamesEquals = ! nameLongWordList.equalsIgnoreCase(nameNextLongWordList);
             if(isNamesEquals){

@@ -54,7 +54,7 @@ public class NcParamCfgToDiskReleaser {
      * @return
      */
     public static boolean createSubDir(File existParentDir, String subDirName){
-        String strPathName = NcIdxFileManager.strPathCombiner(existParentDir.getAbsolutePath(), subDirName);
+        String strPathName = NcIdxFileManager.strPathCombiner(NcIdxFileManager.getStrCanPathFromFile(existParentDir), subDirName);
         File fileForCreateDir = new File(strPathName);
         boolean boolCheck = NcIdxFileManager.dirExistRWAccessChecker(fileForCreateDir);
         if( !boolCheck ){
@@ -98,7 +98,7 @@ public class NcParamCfgToDiskReleaser {
     public static void getWorkFileParams(String strFileName){
         File fileWork = new File(strFileName);
         
-        NcAppHelper.outMessage("Path of work file: \n" + fileWork.getAbsolutePath()
+        NcAppHelper.outMessage("Path of work file: \n" + NcIdxFileManager.getStrCanPathFromFile(fileWork)
                 + "Exist: " + fileWork.exists() + "\n"
                 + "canRead: " + fileWork.canRead() + "\n"
                 + "canWrite: " + fileWork.canWrite() + "\n");
@@ -112,7 +112,7 @@ public class NcParamCfgToDiskReleaser {
     public static void getIdxDirStructure(String strIndexPath){
         File fileWorkDir = new File(strIndexPath);
         
-        NcAppHelper.outMessage("Path of index directory: \n" + fileWorkDir.getAbsolutePath()
+        NcAppHelper.outMessage("Path of index directory: \n" + NcIdxFileManager.getStrCanPathFromFile(fileWorkDir)
                 + "Exist: " + fileWorkDir.exists() + "\n"
                 + "canRead: " + fileWorkDir.canRead() + "\n"
                 + "canWrite: " + fileWorkDir.canWrite() + "\n");
@@ -120,9 +120,9 @@ public class NcParamCfgToDiskReleaser {
         
         String[] strSubDirs = NcManageCfg.getWorkSubDirList();
         for( String itemSubDir : strSubDirs ){
-            String strPathSubDir = NcIdxFileManager.strPathCombiner(fileWorkDir.getAbsolutePath(), itemSubDir);
+            String strPathSubDir = NcIdxFileManager.strPathCombiner(NcIdxFileManager.getStrCanPathFromFile(fileWorkDir), itemSubDir);
             File pathSubDir = new File(strPathSubDir);
-            NcAppHelper.outMessage("Path of subDir: \n" + pathSubDir.getAbsolutePath()
+            NcAppHelper.outMessage("Path of subDir: \n" + NcIdxFileManager.getStrCanPathFromFile(pathSubDir)
                     + "Exist: " + pathSubDir.exists() + "\n"
                     + "canRead: " + pathSubDir.canRead() + "\n"
                     + "canWrite: " + pathSubDir.canWrite() + "\n");

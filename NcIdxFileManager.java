@@ -320,6 +320,7 @@ public class NcIdxFileManager {
      * @return 
      */
     public static File getErrorForFileOperation(){
+        NcAppHelper.outMessage("Error in file operation, NcIdxFileManager.getErrorForFileOperation() called");
         return new File("notExistFileError");
     }
     /**
@@ -355,7 +356,7 @@ public class NcIdxFileManager {
         TreeMap<Long, File> listFiles = new TreeMap<Long, File>();
         do{
             String fileName = NcIdxFileManager.getFileNameToRecord("/e", recordID);
-            String strPathFile = strPathCombiner(filePathSubDir.getAbsolutePath(), fileName);
+            String strPathFile = strPathCombiner(getStrCanPathFromFile(filePathSubDir), fileName);
             fileWithRecords = new File(strPathFile);
             if( fileExistRWAccessChecker(fileWithRecords) ){
                 listFiles.put(recordID, fileWithRecords);
@@ -555,6 +556,20 @@ public class NcIdxFileManager {
             return fileForTmpIds;
         }
         return getErrorForFileOperation();
+    }
+    
+    public static String getStrCanPathFromFile(File inFuncFile){
+        String strCanonicalPath = "";
+        
+        try {
+            strCanonicalPath = inFuncFile.getCanonicalPath();
+        } catch (IOException ex) {
+            NcAppHelper.outMessage("Can not getCanonicalPath() for: "
+                    + inFuncFile.getAbsolutePath());
+            NcAppHelper.outMessage(ex.getMessage());
+            strCanonicalPath = getErrorForFileOperation().getAbsolutePath();
+        }
+        return strCanonicalPath;
     }
     
 

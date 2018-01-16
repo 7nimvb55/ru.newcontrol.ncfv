@@ -41,7 +41,7 @@ public class NcIdxLongWordListFileWriter {
         try(ObjectOutputStream oos = 
                 new ObjectOutputStream(
                 new FileOutputStream(NcIdxFileManager.getFileNameToRecord(
-                        NcManageCfg.getDirLongWordList().getAbsolutePath() + "/wl-"
+                        NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirLongWordList()) + "/wl-"
                         + dataForWrite.name.substring(0, 4),recID))))
         {
             oos.writeObject(ncDataToDirListFile);

@@ -67,7 +67,7 @@ public class NcIdxStorageWordManager {
                 if( !foundAndUpdated ){
                     long forNewRecordId = lastRecordId + 1;
                     String strFileNameForRecord = getStorageWordByIdFile(typeWords, wordInHex, word, forNewRecordId);
-                    if( lastRecordFile.getAbsolutePath().equalsIgnoreCase(strFileNameForRecord) ){
+                    if( NcIdxFileManager.getStrCanPathFromFile(lastRecordFile).equalsIgnoreCase(strFileNameForRecord) ){
                         long nextWordId = readedDataFormLastFile.lastEntry().getValue().wordId++;
                         NcDcIdxStorageWordToFile toRecordData = convertFormOperationToFileData(itemWord.getValue(), nextWordId);
                         readedDataFormLastFile.put(forNewRecordId, toRecordData);

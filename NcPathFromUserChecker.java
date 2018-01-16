@@ -251,7 +251,7 @@ public class NcPathFromUserChecker {
             if( itemFile.canRead() && itemFile.canWrite() ){
                 if( itemFile.getFreeSpace() > longFreeSpace ){
                     longFreeSpace = itemFile.getFreeSpace();
-                    strAppRoot = itemFile.getAbsolutePath();
+                    strAppRoot = NcIdxFileManager.getStrCanPathFromFile(itemFile);
                 }
             }
         }

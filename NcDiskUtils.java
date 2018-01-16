@@ -211,7 +211,7 @@ public class NcDiskUtils {
  * diskID provided by class {@link ru.newcontrol.ncfv.NcDiskInfo#diskID NcDiskInfo}
  */
     public static long getDiskIDbyLetterTotalSpace(File ncFile){
-        String strForDisk = ncFile.getAbsolutePath().toUpperCase().substring(0);
+        String strForDisk = NcIdxFileManager.getStrCanPathFromFile(ncFile).toUpperCase().substring(0);
         char ncDiskLetterFromPath = strForDisk.charAt(0);
         long ncNowStrorageIndex = -1;
         for(Map.Entry<Long, NcDiskInfo> ncOneOfDisk : ncDiskInfo.entrySet()){

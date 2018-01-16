@@ -98,6 +98,7 @@ public class NcLogFileManager {
             long strIdx = 0;
             while((s=br.readLine())!=null){
                 strForReturn.put(strIdx, s);
+                strIdx++;
             }
         }
          catch(IOException ex){
@@ -117,8 +118,9 @@ public class NcLogFileManager {
                 
             }
             catch(IOException ex){
+                
                 String strMsg = "Can not create log file in:\n"
-                        + fileLog.getAbsolutePath() + "\n";
+                        + NcIdxFileManager.getStrCanPathFromFile(fileLog) + "\n";
                 NcAppHelper.appExitWithMessage(strMsg + ex.getMessage());
             }
         }

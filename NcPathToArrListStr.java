@@ -336,7 +336,7 @@ public enum NcPathToArrListStr {
     public static String getExtention(File ncFile){
         String outExt = "";
         if(ncFile.isFile()){
-            String inStrPath = ncFile.getAbsolutePath();
+            String inStrPath = NcIdxFileManager.getStrCanPathFromFile(ncFile);
             String[] Ext = inStrPath.split("\\.");
             if( Ext.length != 1 ){   
                 for(String strExt : Ext){

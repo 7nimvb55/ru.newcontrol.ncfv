@@ -43,7 +43,7 @@ public class NcIdxLongWordManager {
             boolean isEqualNames = false;
             do{
                 oldName = NcIdxFileManager.getFileNameToRecordLongWord(
-                        NcManageCfg.getDirLongWord().getAbsolutePath() + "/n-"
+                        NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirLongWord()) + "/n-"
                         + dataFuncForWrite.name.substring(0, 4), dataFuncForWrite.nameID, recID);
                 inDiskWordRecord = NcIdxLongWordFileReader.ncReadFromLongWordFile(oldName,recID);
                 
@@ -53,7 +53,7 @@ public class NcIdxLongWordManager {
                 recID = inDiskWordRecord.lastEntry().getValue().recordID;
                 recID++;
                 forRecName = NcIdxFileManager.getFileNameToRecordLongWord(
-                        NcManageCfg.getDirLongWord().getAbsolutePath() + "/n-"
+                        NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirLongWord()) + "/n-"
                         + dataFuncForWrite.name.substring(0, 4), dataFuncForWrite.nameID, recID);
                 isEqualNames = ! oldName.equalsIgnoreCase(forRecName);
                 if(isEqualNames){
@@ -71,7 +71,7 @@ public class NcIdxLongWordManager {
                     item.getValue().lengthSubString);
             inDiskWordRecord.put(recID, forRec);
             forRecName = NcIdxFileManager.getFileNameToRecordLongWord(
-                NcManageCfg.getDirLongWord().getAbsolutePath() + "/n-"
+                NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirLongWord()) + "/n-"
                 + dataFuncForWrite.name.substring(0, 4), dataFuncForWrite.nameID, recID);
             countWritedIDs = countWritedIDs + NcIdxLongWordFileWriter.ncWriteForLongWord(
                 inDiskWordRecord, forRecName, recID);
@@ -125,7 +125,7 @@ public class NcIdxLongWordManager {
         String nameNextLongWordList = "";
         long recID = dataForRead.nameID;
         nameLongWordList = NcIdxFileManager.getFileNameToRecord(
-                NcManageCfg.getDirLongWordList().getAbsolutePath() + "/wl-"
+                NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirLongWordList()) + "/wl-"
                 + dataForRead.name.substring(0, 4),recID);
         boolean isNamesEquals = false;
         boolean isNameEquals = false;
@@ -152,7 +152,7 @@ public class NcIdxLongWordManager {
           
             recID = readFromDiskData.lastEntry().getValue().nameID + 1; 
             nameNextLongWordList = NcIdxFileManager.getFileNameToRecord(
-                    NcManageCfg.getDirLongWordList().getAbsolutePath() + "/wl-"
+                    NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirLongWordList()) + "/wl-"
                     + dataForRead.name.substring(0, 4),recID);
             isNamesEquals = ! nameLongWordList.equalsIgnoreCase(nameNextLongWordList);
             if(isNamesEquals){
@@ -184,7 +184,7 @@ public class NcIdxLongWordManager {
             boolean isEqualNames = false;
             do{
                 oldName = NcIdxFileManager.getFileNameToRecordLongWord(
-                        NcManageCfg.getDirLongWord().getAbsolutePath() + "/n-"
+                        NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirLongWord()) + "/n-"
                         + dataFuncForWrite.name.substring(0, 4), dataFuncForWrite.nameID, recID);
                 inDiskWordRecord = NcIdxLongWordFileReader.ncReadFromLongWordFile(oldName,recID);
                 if(inDiskWordRecord.isEmpty()){
@@ -194,7 +194,7 @@ public class NcIdxLongWordManager {
                 recID = inDiskWordRecord.lastEntry().getValue().recordID;
                 recID++;
                 forRecName = NcIdxFileManager.getFileNameToRecordLongWord(
-                        NcManageCfg.getDirLongWord().getAbsolutePath() + "/n-"
+                        NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirLongWord()) + "/n-"
                         + dataFuncForWrite.name.substring(0, 4), dataFuncForWrite.nameID, recID);
                 isEqualNames = ! oldName.equalsIgnoreCase(forRecName);
                 if(isEqualNames){

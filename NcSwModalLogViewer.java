@@ -19,8 +19,12 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -74,9 +78,18 @@ public class NcSwModalLogViewer {
     }
     private static JTree getTreeNodes(DefaultMutableTreeNode forTreeTop){
         TreeMap<Long, String> strLogReaded = new TreeMap<Long, String>();
+        File logFile = NcLogFileManager.getLogFile();
+        String strLogFile = logFile.getName();
+        try {
+            strLogFile = logFile.getCanonicalPath();
+        } catch (IOException ex) {
+            Logger.getLogger(NcSwModalLogViewer.class.getName()).log(Level.SEVERE, null, ex);
+        }
         strLogReaded.putAll(NcLogFileManager.readFromLog());
         DefaultMutableTreeNode strReadedTime = null;
-        DefaultMutableTreeNode strReadedParent = getNN("Lines count (" + strLogReaded.size() + ") " + NcLogFileManager.getLogFile().getAbsolutePath());
+        DefaultMutableTreeNode strReadedParent = getNN("Lines count ("
+                + strLogReaded.size() + ") "
+                + strLogFile + " (" + logFile.length() + ")");
         DefaultMutableTreeNode strReadedChild = null;
         
         forTreeTop.add(strReadedParent);
@@ -140,9 +153,11 @@ public class NcSwModalLogViewer {
                 scrollPane.setVisible(false);
                 scrollPane = null;
                 scrollPane = getScrolledTree(compLocalIndex);
-                scrollPane.setVisible(true);
-                scrollPane.repaint();
                 JPanel centralPanel = (JPanel) compLocalIndex.getComponentsByType("JPanel-PanelCenter");
+                centralPanel.add(scrollPane);
+                scrollPane.setVisible(true);
+                scrollPane.revalidate();
+                scrollPane.repaint();
                 centralPanel.repaint();
             }
         });

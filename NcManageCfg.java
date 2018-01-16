@@ -197,10 +197,12 @@ public class NcManageCfg {
  */    
     private File mcCreateWorkDir(NcDiskInfo ncdiskToCreate) throws IOException{
         File createdDir = new File(ncdiskToCreate.diskLetter + ":" + indexPath);
-        if(createdDir.mkdir()){
+        if( createdDir.mkdir() ){
             return createdDir;
         }
-        throw new IOException("Can not create: " + createdDir.getAbsolutePath());
+        String strMsg = "Can not create: " + NcIdxFileManager.getStrCanPathFromFile(createdDir);
+        NcAppHelper.outMessage(strMsg);
+        throw new IOException(strMsg);
     }
 /**
  * @deprecated 
@@ -212,12 +214,14 @@ public class NcManageCfg {
             mcFoundCfgOnDisk();
             mcSearchOrSetWorkDir();
         }
-        String strPathWorkDir = ncfvdi.getAbsolutePath();
+        String strPathWorkDir = NcIdxFileManager.getStrCanPathFromFile(ncfvdi);
         for(String strSubDir : workSubDir){
-            File cwsd = new File(strPathWorkDir+strSubDir);
-            if( ! cwsd.exists() ){
-                if( !cwsd.mkdir() ){
-                    throw new IOException("Can not create: " + cwsd.getAbsolutePath());
+            File fileWorkSubDir = new File(strPathWorkDir+strSubDir);
+            if( !fileWorkSubDir.exists() ){
+                if( !fileWorkSubDir.mkdir() ){
+                    String strMsg = "Can not create: " + NcIdxFileManager.getStrCanPathFromFile(fileWorkSubDir);
+                    NcAppHelper.outMessage(strMsg);
+                    throw new IOException(strMsg);
                 }
             }
         }
@@ -248,13 +252,13 @@ public class NcManageCfg {
             try {
                 mcSearchOrSetWorkDir();
             } catch (IOException ex) {
-                Logger.getLogger(NcManageCfg.class.getName()).log(Level.SEVERE, null, ex);
+                NcAppHelper.outMessage(ex.getMessage());
             }
         }
         if(ncfvdi == null){
-            return null;
+            return NcIdxFileManager.getStrCanPathFromFile(NcIdxFileManager.getErrorForFileOperation());
         }
-        return ncfvdi.getAbsolutePath()+workSubDir[1];
+        return NcIdxFileManager.strPathCombiner(NcIdxFileManager.getStrCanPathFromFile(ncfvdi), workSubDir[1]);
     }
     /**
      * @deprecated 
@@ -325,7 +329,7 @@ public class NcManageCfg {
   */
     public static boolean mcCheckRWEfSubDir(String subDir){
         if( isCfgLoadAndReady ){
-                String potentialWorkPath = ncfvdi.getAbsolutePath();
+                String potentialWorkPath = NcIdxFileManager.getStrCanPathFromFile(ncfvdi);
                 boolean ifInArray = false;
                 for( String strDir : workSubDir ){
                     if( subDir.equalsIgnoreCase(strDir) ){
