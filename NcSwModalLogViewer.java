@@ -150,12 +150,12 @@ public class NcSwModalLogViewer {
         buttonSearch.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
                 JScrollPane scrollPane = (JScrollPane) compLocalIndex.getComponentsByType("JScrollPane-treeView");
-                scrollPane.setVisible(false);
-                scrollPane = null;
+                //scrollPane.setVisible(false);
+                //scrollPane = null;
                 scrollPane = getScrolledTree(compLocalIndex);
                 JPanel centralPanel = (JPanel) compLocalIndex.getComponentsByType("JPanel-PanelCenter");
-                centralPanel.add(scrollPane);
-                scrollPane.setVisible(true);
+                //centralPanel.add(scrollPane);
+                //scrollPane.setVisible(true);
                 scrollPane.revalidate();
                 scrollPane.repaint();
                 centralPanel.repaint();
