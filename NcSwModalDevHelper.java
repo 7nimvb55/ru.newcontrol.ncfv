@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -28,12 +29,12 @@ import javax.swing.JTable;
  * @author wladimirowichbiaran
  */
 public class NcSwModalDevHelper {
-    public static void showModalEnvironment(){
+    public static void showModalEnvironment(JFrame mainGUI){
         String strTitle = "Environment variables";
         JComponent[] forShow = new JComponent[1];
         forShow[0] = getEnvVarTable();
         
-        JOptionPane.showMessageDialog(null, forShow, strTitle, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(mainGUI, forShow, strTitle, JOptionPane.INFORMATION_MESSAGE);
     }
     private static JComponent getEnvVarTable(){
         JTable toViewTable = getEnvArrStr();
@@ -58,11 +59,11 @@ public class NcSwModalDevHelper {
         JTable toRetTable = new JTable(toRetStr, columnName);
         return toRetTable;
     }
-    public static void showModalProperties(){
+    public static void showModalProperties(JFrame mainGUI){
         String strTitle = "System properties";
         JComponent[] forShow = new JComponent[1];
         forShow[0] = getPropVarTable();
-        JOptionPane.showMessageDialog(null, forShow, strTitle, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(mainGUI, forShow, strTitle, JOptionPane.INFORMATION_MESSAGE);
     }
     private static JComponent getPropVarTable(){
         JTable toViewTable = getPropArrStr();

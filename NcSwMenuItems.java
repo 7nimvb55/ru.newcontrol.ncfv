@@ -17,6 +17,8 @@ package ru.newcontrol.ncfv;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 
 /**
@@ -28,19 +30,29 @@ public class NcSwMenuItems {
      * For Development
      * @return 
      */
-    public static JMenuItem getLogFileReader(){
-        return new JMenuItem("Log View");
+    public static JMenuItem getLogFileReader(JFrame mainGUI){
+        
+        JMenuItem toRetMi = new JMenuItem("Log View");
+        toRetMi.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                JDialog modalLogViewer = NcSwModalLogViewer.getDialogLogViewer(mainGUI);
+                modalLogViewer.pack();
+                modalLogViewer.setVisible(true);
+            }
+        });
+        return toRetMi;
     }
     /**
      * For Development
      * @return 
      */
-    public static JMenuItem getEnvironmentViewer(){
+    public static JMenuItem getEnvironmentViewer(JFrame mainGUI){
         JMenuItem toRetMi = new JMenuItem("Env View");
         toRetMi.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                NcSwModalDevHelper.showModalEnvironment();
+                NcSwModalDevHelper.showModalEnvironment(mainGUI);
             }
         });
         return toRetMi;
@@ -50,12 +62,12 @@ public class NcSwMenuItems {
      * For Development
      * @return 
      */
-    public static JMenuItem getPropertiesViewer(){
+    public static JMenuItem getPropertiesViewer(JFrame mainGUI){
         JMenuItem toRetMi = new JMenuItem("Properties View");
         toRetMi.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                NcSwModalDevHelper.showModalProperties();
+                NcSwModalDevHelper.showModalProperties(mainGUI);
             }
         });
         return toRetMi;

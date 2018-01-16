@@ -71,7 +71,7 @@ public class NcSwingIndexManagerApp {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         
-        frame.setJMenuBar(NcSwMainMenu.getMainMenu());
+        frame.setJMenuBar(NcSwMainMenu.getMainMenu(frame));
         mainPanel.add(NcSwPanelPageStart.getNorthPanel(), BorderLayout.NORTH);
         mainPanel.add(NcSwPanelPageEnd.getSouthPanel(), BorderLayout.SOUTH);
         mainPanel.add(NcSwPanelLineStart.getWestPanel(), BorderLayout.WEST);

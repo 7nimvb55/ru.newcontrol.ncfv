@@ -15,6 +15,7 @@
  */
 package ru.newcontrol.ncfv;
 
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 
@@ -23,10 +24,10 @@ import javax.swing.JMenuBar;
  * @author wladimirowichbiaran
  */
 public class NcSwMainMenu {
-    public static JMenuBar getMainMenu(){
+    public static JMenuBar getMainMenu(JFrame mainGUI){
         JMenuBar menuMain = new JMenuBar();
         menuMain.add(getMenuFile());
-        menuMain.add(getMenuDevelop());
+        menuMain.add(getMenuDevelop(mainGUI));
         menuMain.add(getMenuService());
         menuMain.add(getMenuHelp());
         return menuMain;
@@ -36,11 +37,11 @@ public class NcSwMainMenu {
         menuFile.add(NcSwMenuItems.getSubDirChecker());
         return menuFile;
     }
-    public static JMenu getMenuDevelop(){
+    public static JMenu getMenuDevelop(JFrame mainGUI){
         JMenu menuDevelop = new JMenu("Development");
-        menuDevelop.add(NcSwMenuItems.getLogFileReader());
-        menuDevelop.add(NcSwMenuItems.getEnvironmentViewer());
-        menuDevelop.add(NcSwMenuItems.getPropertiesViewer());
+        menuDevelop.add(NcSwMenuItems.getLogFileReader(mainGUI));
+        menuDevelop.add(NcSwMenuItems.getEnvironmentViewer(mainGUI));
+        menuDevelop.add(NcSwMenuItems.getPropertiesViewer(mainGUI));
         return menuDevelop;
     }
     public static JMenu getMenuHelp(){
