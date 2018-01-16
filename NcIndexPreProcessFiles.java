@@ -119,7 +119,7 @@ public class NcIndexPreProcessFiles {
  */    
 public String[] getFileDataToSwing(File ncFile) throws IOException{
         
-        String strAbsolutlePath = ncFile.getAbsolutePath();
+        String strAbsolutlePath = NcIdxFileManager.getStrCanPathFromFile(ncFile);
         
         char strDisk = (char) strAbsolutlePath.charAt(0);
         String strPath = strAbsolutlePath.substring(2);
@@ -158,7 +158,7 @@ public String[] getFileDataToSwing(File ncFile) throws IOException{
             "getLoadLastIDsStatus: " + ncThisManageIDs.getLoadLastIDsStatus(),
             "Current Directory List File Name: " + ncIDsDAta.listname,
             "Last Recorded ID: " + ncIDsDAta.listnameid,
-            "toUrl: " + ncFile.getAbsolutePath(),
+            "toUrl: " + NcIdxFileManager.getStrCanPathFromFile(ncFile),
             //"Char: " + String.valueOf('A'),
             "Ext:" + NcPathToArrListStr.getExtention(ncFile),
             "SRC(aP): " + ap,
@@ -208,7 +208,7 @@ public String[] getFileDataToSwing(File ncFile) throws IOException{
 //        ncDiskInfo.size();
 //        ncDiskInfo.iterator().hasNext();
         
-        String strAbsolutlePath = ncFile.getAbsolutePath();
+        String strAbsolutlePath = NcIdxFileManager.getStrCanPathFromFile(ncFile);
         String strPath = strAbsolutlePath.substring(2);
         
 
@@ -368,7 +368,7 @@ public String[] getFileDataToSwing(File ncFile) throws IOException{
      * @return 
  */    
     public NcDcIdxDirListToFileAttr getDataToDL(TreeMap<Long, NcDiskInfo> ncDiskInfo, File ncFile, long DirListIdx){
-        String strForDisk = ncFile.getAbsolutePath().toUpperCase().substring(0);
+        String strForDisk = NcIdxFileManager.getStrCanPathFromFile(ncFile).toUpperCase().substring(0);
         char ncDiskLetterFromPath = strForDisk.charAt(0);
         int ncDiskIndexes = 0;
         int ncNowStrorageIndex = -1;
@@ -403,7 +403,7 @@ public String[] getFileDataToSwing(File ncFile) throws IOException{
             diskProgramAlias,    
             strDiskSerialNumber,
             ncDiskLetterFromPath,
-            ncFile.getAbsolutePath().substring(2),
+            NcIdxFileManager.getStrCanPathFromFile(ncFile).substring(2),
             ncFile.length(),
             ncFile.canRead(),
             ncFile.canWrite(),
@@ -498,7 +498,7 @@ public String[] getFileDataToSwing(File ncFile) throws IOException{
         NcTmpNowProcessInfo ncIDsDAta = ncThisManageIDs.getIdsReadedData();
         
         TreeMap<Long, NcDiskInfo> ncDiskInfo = ncwd.getDiskInfo();
-        String strAbsolutlePath = ncFile.getAbsolutePath();
+        String strAbsolutlePath = NcIdxFileManager.getStrCanPathFromFile(ncFile);
         
         String strPath = strAbsolutlePath;
         

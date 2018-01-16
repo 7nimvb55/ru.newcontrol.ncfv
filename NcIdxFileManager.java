@@ -123,11 +123,11 @@ public class NcIdxFileManager {
         if( !NcIdxFileManager.fileExistRWAccessChecker(fileCfg) ){
             try {
                 if( fileCfg.createNewFile() ){
-                    NcPreRunFileViewer.createCfg(fileCfg.getAbsolutePath());
+                    NcPreRunFileViewer.createCfg(getStrCanPathFromFile(fileCfg));
                 }
             } catch (IOException ex) {
                 Logger.getLogger(NcPreRunFileViewer.class.getName()).log(Level.SEVERE, null, ex);
-                NcAppHelper.appExitWithMessageFSAccess(fileCfg.getAbsolutePath());
+                NcAppHelper.appExitWithMessageFSAccess(getStrCanPathFromFile(fileCfg));
             }
         }
         return fileCfg;
@@ -138,7 +138,7 @@ public class NcIdxFileManager {
         File dirToCfg = new File(newSubDirEtc);
         if( !NcIdxFileManager.dirExistRWAccessChecker(dirToCfg) ){
             if( !dirToCfg.mkdir() ){
-                NcAppHelper.appExitWithMessageFSAccess(dirToCfg.getAbsolutePath());
+                NcAppHelper.appExitWithMessageFSAccess(getStrCanPathFromFile(dirToCfg));
             }
         }
         return strPathCombiner(newSubDirEtc, "/ncfv.conf");
@@ -163,10 +163,10 @@ public class NcIdxFileManager {
         File dirForAppData = new File(strToReturnDataInAppDir);
         if( !dirExistRWAccessChecker(dirForAppData) ){
             if( !dirForAppData.mkdirs() ){
-                NcAppHelper.appExitWithMessageFSAccess(dirForAppData.getAbsolutePath());
+                NcAppHelper.appExitWithMessageFSAccess(getStrCanPathFromFile(dirForAppData));
             }
         }
-        return dirForAppData.getAbsolutePath();
+        return getStrCanPathFromFile(dirForAppData);
     }
     /**
      * From system properties get application path, after that get parent path
@@ -180,10 +180,10 @@ public class NcIdxFileManager {
         File pathToApp = new File(appPath);
         File dirToApp = pathToApp.getParentFile();
         if( dirExistRWAccessChecker(dirToApp) ){
-            return dirToApp.getAbsolutePath();
+            return getStrCanPathFromFile(dirToApp);
         }
-        NcAppHelper.appExitWithMessageFSAccess(dirToApp.getAbsolutePath());
-        return getErrorForFileOperation().getAbsolutePath();
+        NcAppHelper.appExitWithMessageFSAccess(getStrCanPathFromFile(dirToApp));
+        return getStrCanPathFromFile(getErrorForFileOperation());
     }
     /**
      *
@@ -193,9 +193,9 @@ public class NcIdxFileManager {
         String appPath = System.getProperty("user.home");
         File pathToApp = new File(appPath);
         if( !dirExistRWAccessChecker(pathToApp) ){
-            return getErrorForFileOperation().getAbsolutePath();
+            return getStrCanPathFromFile(getErrorForFileOperation());
         }
-        return pathToApp.getAbsolutePath();
+        return getStrCanPathFromFile(pathToApp);
     }
     /**
      *
@@ -236,7 +236,7 @@ public class NcIdxFileManager {
         TreeMap<Long, File> listFiles = new TreeMap<Long, File>();
         do{
             String fileName = getFileNameToRecord("/dl", recordID);
-            String strPathFile = strPathCombiner(filePathSubDir.getAbsolutePath(), fileName);
+            String strPathFile = strPathCombiner(getStrCanPathFromFile(filePathSubDir), fileName);
             fileWithRecords = new File(strPathFile);
             if( fileExistRWAccessChecker(fileWithRecords) ){
                 listFiles.put(recordID, fileWithRecords);
@@ -256,7 +256,7 @@ public class NcIdxFileManager {
      */
     public static String strPathCombiner(String strFirst, String strSecond){
         if( (strFirst.length() < 1) && (strSecond.length() < 1) ){
-            return getErrorForFileOperation().getAbsolutePath();
+            return getStrCanPathFromFile(getErrorForFileOperation());
         }
         if( strFirst.substring(strFirst.length() - 1).equalsIgnoreCase("\\")
             || strFirst.substring(strFirst.length() - 1).equalsIgnoreCase("/") ){
@@ -287,10 +287,10 @@ public class NcIdxFileManager {
                     || strSecond.substring(1, 2).equalsIgnoreCase(".") ){
                     return strFirst + strSecond.substring(1);
                 }
-                return getErrorForFileOperation().getAbsolutePath();
+                return getStrCanPathFromFile(getErrorForFileOperation());
             }
         }
-        return getErrorForFileOperation().getAbsolutePath();
+        return getStrCanPathFromFile(getErrorForFileOperation());
     }
     /**
      * Methods of this application, generate errors (exeptions) in operation with
@@ -303,7 +303,7 @@ public class NcIdxFileManager {
      * @return true for found error object
      */
     public static boolean isErrorForFileOperation(File inputFile){
-        return ( inputFile.getAbsolutePath().indexOf("notExistFileError") > -1 );
+        return ( getStrCanPathFromFile(inputFile).indexOf("notExistFileError") > -1 );
     }
     /**
      * Analogue for {@link ru.newcontrol.ncfv.NcIdxFileManager#isErrorForFileOperation(java.io.File)}
@@ -336,7 +336,7 @@ public class NcIdxFileManager {
         TreeMap<Integer, File> indexWorkSubDirFilesList = getIndexWorkSubDirFilesList();
         File filePathSubDir = indexWorkSubDirFilesList.get("/fl".hashCode());
         String fileName = NcIdxFileManager.getFileNameToRecord("/dl", recordID);
-        String strPathFile = strPathCombiner(filePathSubDir.getAbsolutePath(), fileName);
+        String strPathFile = strPathCombiner(getStrCanPathFromFile(filePathSubDir), fileName);
         fileWithRecords = new File(strPathFile);
         if( fileExistRWAccessChecker(fileWithRecords) ){
             return fileWithRecords;
@@ -379,7 +379,7 @@ public class NcIdxFileManager {
         TreeMap<Integer, File> indexWorkSubDirFilesList = getIndexWorkSubDirFilesList();
         File filePathSubDir = indexWorkSubDirFilesList.get("/fx".hashCode());
         String fileName = NcIdxFileManager.getFileNameToRecord("/e", recordID);
-        String strPathFile = strPathCombiner(filePathSubDir.getAbsolutePath(), fileName);
+        String strPathFile = strPathCombiner(getStrCanPathFromFile(filePathSubDir), fileName);
         fileWithRecords = new File(strPathFile);
         if( fileExistRWAccessChecker(fileWithRecords) ){
             return fileWithRecords;
@@ -425,7 +425,7 @@ public class NcIdxFileManager {
         String[] strSubDirs = NcManageCfg.getWorkSubDirList();
         
         for( String itemSubDir : strSubDirs ){
-            String strPathName = NcIdxFileManager.strPathCombiner(fileWorkDir.getAbsolutePath(), itemSubDir);
+            String strPathName = NcIdxFileManager.strPathCombiner(getStrCanPathFromFile(fileWorkDir), itemSubDir);
             File fileForCreateDir = new File(strPathName);
             boolean tmpCheck = NcIdxFileManager.dirExistRWAccessChecker(fileForCreateDir);
             if( !tmpCheck ){
@@ -549,7 +549,7 @@ public class NcIdxFileManager {
         TreeMap<Integer, File> listSubDirs = new TreeMap<Integer, File>();
         listSubDirs.putAll(readedWorkCfg.tmIndexSubDirs);
         File fileT = listSubDirs.get("/t".hashCode());
-        String strFilePath = strPathCombiner(fileT.getAbsolutePath(), NcManageCfg.getWorkFileNames()[1]);
+        String strFilePath = strPathCombiner(getStrCanPathFromFile(fileT), NcManageCfg.getWorkFileNames()[1]);
         File fileForTmpIds = new File(strFilePath);
         boolean boolCheck = NcIdxFileManager.fileExistRWAccessChecker(fileForTmpIds);
         if( boolCheck ){

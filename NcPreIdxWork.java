@@ -32,19 +32,19 @@ public class NcPreIdxWork {
         listSubDirs.putAll(currentWorkCfg.tmIndexSubDirs);
         listSubDirs.put("index".hashCode(), new File(currentWorkCfg.indexPath));
         for( Map.Entry<Integer, File> items : listSubDirs.entrySet() ){
-            NcAppHelper.outMessage(items.getValue().getAbsolutePath());
+            NcAppHelper.outMessage(NcIdxFileManager.getStrCanPathFromFile(items.getValue()));
         }
         NcAppHelper.outMessage("Next way");
         TreeMap<Integer, File> indexWorkSubDirFilesList = NcIdxFileManager.getIndexWorkSubDirFilesList();
         for( Map.Entry<Integer, File> itemsNextWay : indexWorkSubDirFilesList.entrySet() ){
             NcAppHelper.outMessage("key: " + itemsNextWay.getKey());
-            NcAppHelper.outMessage(itemsNextWay.getValue().getAbsolutePath());
+            NcAppHelper.outMessage(NcIdxFileManager.getStrCanPathFromFile(itemsNextWay.getValue()));
         }
         NcAppHelper.outMessage("By name");
         String[] arrStrCode = NcManageCfg.getWorkSubDirList();
         for( String itemSubDir : arrStrCode ){
             NcAppHelper.outMessage("key name: " + itemSubDir + "\tkey value: " + itemSubDir.hashCode() );
-            NcAppHelper.outMessage(indexWorkSubDirFilesList.get(itemSubDir.hashCode()).getAbsolutePath());
+            NcAppHelper.outMessage(NcIdxFileManager.getStrCanPathFromFile(indexWorkSubDirFilesList.get(itemSubDir.hashCode())));
         }
     }
     /**
@@ -95,8 +95,8 @@ public class NcPreIdxWork {
         File recordsExist = NcIdxFileManager.getFileForDirListExistContainedRecordId(recordId);
         int countError = 0;
         do{
-            NcAppHelper.outMessage("In file: " + recordsAttr.getAbsolutePath());
-            NcAppHelper.outMessage("In file: " + recordsExist.getAbsolutePath());
+            NcAppHelper.outMessage("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsAttr));
+            NcAppHelper.outMessage("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsExist));
             if( NcIdxFileManager.isErrorForFileOperation(recordsAttr) ){
                 if( countError > 3 ){
                     break;
@@ -210,22 +210,22 @@ public class NcPreIdxWork {
             recordsExist = NcIdxFileManager.getFileForDirListExistContainedRecordId(recordLastExistId + 1);
             
             if( !badDiskIdDirListAttr.isEmpty() ){
-                NcAppHelper.outMessage("In file: " + recordsAttr.getAbsolutePath() + "\n BadDiskID count of records " + badDiskIdDirListAttr.size());
+                NcAppHelper.outMessage("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsAttr) + "\n BadDiskID count of records " + badDiskIdDirListAttr.size());
             }
             if( !badDirIdDirListAttr.isEmpty() ){
-                NcAppHelper.outMessage("In file: " + recordsAttr.getAbsolutePath() + "\n BadDiskID count of records " + badDirIdDirListAttr.size());
+                NcAppHelper.outMessage("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsAttr) + "\n BadDiskID count of records " + badDirIdDirListAttr.size());
             }
             if( !badPathHashDirListAttr.isEmpty() ){
-                NcAppHelper.outMessage("In file: " + recordsAttr.getAbsolutePath() + "\n BadDiskID count of records " + badPathHashDirListAttr.size());
+                NcAppHelper.outMessage("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsAttr) + "\n BadDiskID count of records " + badPathHashDirListAttr.size());
             }
             if( !badDiskIdDirListExist.isEmpty() ){
-                NcAppHelper.outMessage("In file: " + recordsExist.getAbsolutePath() + "\n BadDiskID count of records " + badDiskIdDirListExist.size());
+                NcAppHelper.outMessage("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsExist) + "\n BadDiskID count of records " + badDiskIdDirListExist.size());
             }
             if( !badDirIdDirListExist.isEmpty() ){
-                NcAppHelper.outMessage("In file: " + recordsExist.getAbsolutePath() + "\n BadDiskID count of records " + badDirIdDirListExist.size());
+                NcAppHelper.outMessage("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsExist) + "\n BadDiskID count of records " + badDirIdDirListExist.size());
             }    
             if( !badPathHashDirListExist.isEmpty() ){
-                NcAppHelper.outMessage("In file: " + recordsExist.getAbsolutePath() + "\n BadDiskID count of records " + badPathHashDirListExist.size());
+                NcAppHelper.outMessage("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsExist) + "\n BadDiskID count of records " + badPathHashDirListExist.size());
             }    
         }
         while(NcIdxFileManager.isErrorForFileOperation(recordsAttr) ||
@@ -323,7 +323,7 @@ public class NcPreIdxWork {
                 int recordsInFile = NcIdxFileManager.getCountRecordDataInFile(itemFile.getValue());
                 if( recordsInFile < 0 ){
                     if ( itemFile.getValue().delete() ){
-                        NcAppHelper.outMessage(itemFile.getValue().getAbsolutePath() +
+                        NcAppHelper.outMessage(NcIdxFileManager.getStrCanPathFromFile(itemFile.getValue()) +
                         "_|_|_|_deleted");
                     }
                 }
@@ -348,7 +348,7 @@ public class NcPreIdxWork {
             else{
                 if( !NcIdxFileManager.isDataInFileNotWrong(itemFile.getValue()) ){
                     if ( itemFile.getValue().delete() ){
-                        NcAppHelper.outMessage(itemFile.getValue().getAbsolutePath() +
+                        NcAppHelper.outMessage(NcIdxFileManager.getStrCanPathFromFile(itemFile.getValue()) +
                         "_|_|_|_deleted");
                     }
                 }
@@ -400,7 +400,7 @@ public class NcPreIdxWork {
     public static void outFilesFromSubDirToConsole(File inFuncSubDir){
         File[] inDirFiles = inFuncSubDir.listFiles();
         NcAppHelper.outMessage("");
-        NcAppHelper.outMessage("Directory path: " + inFuncSubDir.getAbsolutePath());
+        NcAppHelper.outMessage("Directory path: " + NcIdxFileManager.getStrCanPathFromFile(inFuncSubDir));
         NcAppHelper.outMessage("Count files in directory: " + inDirFiles.length);
         for( File itemFile : inDirFiles){
             NcAppHelper.outMessage("" + itemFile.getName());
