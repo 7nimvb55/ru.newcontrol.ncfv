@@ -21,7 +21,8 @@ package ru.newcontrol.ncfv;
  */
 public enum NcStrLogMsgText {
     APP_GUI_START("Application start in GUI mode"),
-    APP_ERROR_EXIT("Application stop with critical error");
+    APP_ERROR_EXIT("Application stop with critical error"),
+    LOG_CREATE("Log file created");
     private String strMsg;
     NcStrLogMsgText(String strMsg){
         this.strMsg = strMsg;
