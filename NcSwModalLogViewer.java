@@ -96,6 +96,8 @@ public class NcSwModalLogViewer {
         }
         strLogReaded.putAll(NcLogFileManager.readFromLog());
         DefaultMutableTreeNode strReadedTime = null;
+        DefaultMutableTreeNode strReadedState = null;
+        DefaultMutableTreeNode strReadedElement = null;
         DefaultMutableTreeNode strReadedParent = getNN("Lines count ("
                 + strLogReaded.size() + ") "
                 + strLogFile + " (" + logFile.length() + ")");
@@ -103,15 +105,26 @@ public class NcSwModalLogViewer {
         
         forTreeTop.add(strReadedParent);
         
-        boolean isAdd = false;
+
         for( Map.Entry<Long, String> strItem : strLogReaded.entrySet() ){
-            strReadedChild = getNN(strItem.getValue());
-            strReadedParent.add(strReadedChild);
             if( strItem.getValue().contains(NcStrLogMsgField.TIME.getStr()) ){
-                strReadedParent = getNN(strItem.getValue());
-                forTreeTop.add(strReadedParent);
+                strReadedTime = getNN(strItem.getValue());
+                strReadedParent.add(strReadedTime);
+                continue;
             }
-           
+            if( strItem.getValue().contains(NcStrLogMsgField.STATE.getStr()) ){
+                strReadedState = getNN(strItem.getValue());
+                strReadedTime.add(strReadedState);
+                continue;
+            }
+            if( strItem.getValue().contains(NcStrLogMsgField.ELEMENTNUM.getStr()) ){
+                strReadedElement = getNN(strItem.getValue());
+                strReadedState.add(strReadedElement);
+                continue;
+            }
+            
+            strReadedChild = getNN(strItem.getValue());
+            strReadedTime.add(strReadedChild);
         }
         forTreeTop.add(strReadedParent);
         return new JTree(forTreeTop);
