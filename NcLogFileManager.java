@@ -63,14 +63,14 @@ public class NcLogFileManager {
             int logCountLines = NcfvRunVariables.getLogLinesCount();
             TreeMap<Long, String> strCurrentLog = new TreeMap<Long, String>();
             strCurrentLog.putAll(readFromLog());
-            if( (strCurrentLog.size() + 1) > logCountLines ){
+            /*if( (strCurrentLog.size() + 1) > logCountLines ){
                 long idx = 0;
                 TreeMap<Long, String> strNewLog = new TreeMap<Long, String>();
                 strNewLog.putAll(strCurrentLog.tailMap(idx));
                 strCurrentLog.clear();
                 strCurrentLog = null;
                 strCurrentLog.putAll(strNewLog);
-            }
+            }*/
             strCurrentLog.put((long) strCurrentLog.size(), strToLog);
             writeLogLines(strCurrentLog);
         }
@@ -80,14 +80,14 @@ public class NcLogFileManager {
             int logCountLines = NcfvRunVariables.getLogLinesCount();
             TreeMap<Long, String> strCurrentLog = new TreeMap<Long, String>();
             strCurrentLog.putAll(readFromLog());
-            if( (strCurrentLog.size() + toLogStr.size()) > logCountLines ){
+            /*if( (strCurrentLog.size() + toLogStr.size()) > logCountLines ){
                 long idx = toLogStr.size() - 1;
                 TreeMap<Long, String> strNewLog = new TreeMap<Long, String>();
                 strNewLog.putAll(strCurrentLog.tailMap(idx));
                 strCurrentLog.clear();
                 strCurrentLog = null;
                 strCurrentLog.putAll(strNewLog);
-            }
+            }*/
             strCurrentLog.putAll(toLogStr);
             writeLogLines(strCurrentLog);
         }
