@@ -63,6 +63,15 @@ public class NcLogFileManager {
             int logCountLines = NcfvRunVariables.getLogLinesCount();
             TreeMap<Long, String> strCurrentLog = new TreeMap<Long, String>();
             strCurrentLog.putAll(readFromLog());
+            if( NcfvRunVariables.isOutToLogNewRecordAppend() ){
+                String strTime = java.time.LocalDateTime.now().toString();
+                String text = NcStrLogMsgField.TIME.getStr() + strTime;
+                String strMsg = NcStrLogMsgField.MSG.getStr()
+                    + NcStrLogMsgText.LOG_RECORD_APPEND.getStr();
+                strCurrentLog.put((long) strCurrentLog.size(), text);
+                strCurrentLog.put((long) strCurrentLog.size(), strMsg);
+            }
+            
             /*if( (strCurrentLog.size() + 1) > logCountLines ){
                 long idx = 0;
                 TreeMap<Long, String> strNewLog = new TreeMap<Long, String>();
@@ -80,6 +89,14 @@ public class NcLogFileManager {
             int logCountLines = NcfvRunVariables.getLogLinesCount();
             TreeMap<Long, String> strCurrentLog = new TreeMap<Long, String>();
             strCurrentLog.putAll(readFromLog());
+            if( NcfvRunVariables.isOutToLogNewRecordAppend() ){
+                String strTime = java.time.LocalDateTime.now().toString();
+                String text = NcStrLogMsgField.TIME.getStr() + strTime;
+                String strMsg = NcStrLogMsgField.MSG.getStr()
+                    + NcStrLogMsgText.LOG_RECORD_APPEND.getStr();
+                strCurrentLog.put((long) strCurrentLog.size(), text);
+                strCurrentLog.put((long) strCurrentLog.size(), strMsg);
+            }
             /*if( (strCurrentLog.size() + toLogStr.size()) > logCountLines ){
                 long idx = toLogStr.size() - 1;
                 TreeMap<Long, String> strNewLog = new TreeMap<Long, String>();
