@@ -34,8 +34,8 @@ public class NcSwThreadManager {
             + NcStrGUIComponent.SCENTER.getStr();
         JPanel centerPanel =
             (JPanel) lComp.getComponentByPath(componentPath);
-                
-        NcSwGUIComponentStatus guiComponents = NcSwingIndexManagerApp.getComponentStatus();
+        
+        
         //NcThProcGUICallbackInterface proxyInstGuiCb = getProxyInstanceGUICallback();
         TableModel locNewTableModel = new NcSIMASearchResultTableModel(strSrch);
         
@@ -50,8 +50,8 @@ public class NcSwThreadManager {
         centerPanel.repaint();
     }
     public static NcThProcGUICallbackInterface getProxyInstanceGUICallback(){
-        NcSwGUIComponentStatus guiComponents = NcSwingIndexManagerApp.getComponentStatus();
-        NcThProcGUICallback cbLoc = new NcThProcGUICallback(guiComponents);
+        
+        NcThProcGUICallback cbLoc = new NcThProcGUICallback();
         NcThProcInvocationHandler ncInvHandler = 
             new NcThProcInvocationHandler(cbLoc);
         NcThProcGUICallbackInterface proxyInstGui = (NcThProcGUICallbackInterface)

@@ -268,7 +268,7 @@ public class NcAppHelper {
     public static void outMessageToAppLogFile(String strMessage){
         if( NcfvRunVariables.isOutToLogFile() ){
             
-            String strNowTime =  NcStrLogMessages.TIME.getStr()
+            String strNowTime =  NcStrLogMsgField.TIME.getStr()
                 + java.time.LocalDateTime.now().toString();
             String strTrace = "";
             if( NcfvRunVariables.isOutToLogFileWithTrace() ){
@@ -279,19 +279,19 @@ public class NcAppHelper {
                 long idx = 0;
                 strForLog.put(idx, strNowTime);
                 idx++;
-                strForLog.put(idx, NcStrLogMessages.TOSTRING.getStr()
+                strForLog.put(idx, NcStrLogMsgField.TOSTRING.getStr()
                     + t.toString());
                 idx++;
-                strForLog.put(idx, NcStrLogMessages.NAME.getStr()
+                strForLog.put(idx, NcStrLogMsgField.NAME.getStr()
                     + t.getName());
                 idx++;
-                strForLog.put(idx, NcStrLogMessages.CANONICALNAME.getStr()
+                strForLog.put(idx, NcStrLogMsgField.CANONICALNAME.getStr()
                     + t.getClass().getCanonicalName());
                 idx++;
-                strForLog.put(idx, NcStrLogMessages.ID.getStr() + t.getId());
+                strForLog.put(idx, NcStrLogMsgField.ID.getStr() + t.getId());
                 idx++;
-                strForLog.put(idx, NcStrLogMessages.STATE.getStr()
-                    + NcStrLogMessages.NAME.getStr() + t.getState().name());
+                strForLog.put(idx, NcStrLogMsgField.STATE.getStr()
+                    + NcStrLogMsgField.NAME.getStr() + t.getState().name());
                 idx++;
                 for(StackTraceElement itemT : nowT ){
                     if( idx > 1
@@ -300,20 +300,20 @@ public class NcAppHelper {
                         String strOutFile = "";
                         if( NcfvRunVariables.isOutToLogFileIncludeFile() ){
                             
-                            strOutFile = NcStrLogMessages.FILENAME.getStr()
+                            strOutFile = NcStrLogMsgField.FILENAME.getStr()
                                 + itemT.getFileName();
                         }
                         String strOut = 
-                            NcStrLogMessages.CLASSNAME.getStr()
+                            NcStrLogMsgField.CLASSNAME.getStr()
                             + itemT.getClassName()
-                            + NcStrLogMessages.METHODNAME.getStr()
+                            + NcStrLogMsgField.METHODNAME.getStr()
                             + itemT.getMethodName()
-                            + NcStrLogMessages.LINENUM.getStr()
+                            + NcStrLogMsgField.LINENUM.getStr()
                             + itemT.getLineNumber()
                             + (itemT.isNativeMethod()
-                                ? NcStrLogMessages.NATIVE.getStr() : "");
+                                ? NcStrLogMsgField.NATIVE.getStr() : "");
                         
-                        strTrace = NcStrLogMessages.ELEMENTNUM.getStr() + idx + strOutFile + strOut;
+                        strTrace = NcStrLogMsgField.ELEMENTNUM.getStr() + idx + strOutFile + strOut;
                     }
                     if( strTrace.length() > 0 ){
                         
@@ -322,13 +322,13 @@ public class NcAppHelper {
                     strTrace = "";
                     idx++;
                 }
-                strForLog.put(idx, NcStrLogMessages.MSG.getStr() + strMessage);
+                strForLog.put(idx, NcStrLogMsgField.MSG.getStr() + strMessage);
                 idx++;
                 NcLogFileManager.putToLog(strForLog);
             }
             else{
                 NcLogFileManager.putToLog(strNowTime
-                    + NcStrLogMessages.MSG.getStr() + strMessage);
+                    + NcStrLogMsgField.MSG.getStr() + strMessage);
             }
         }
     }

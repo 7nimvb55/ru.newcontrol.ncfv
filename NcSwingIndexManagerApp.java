@@ -31,7 +31,7 @@ import javax.swing.UIManager;
  */
 public class NcSwingIndexManagerApp {
     
-    private static NcSwGUIComponentStatus centerPanelInClass;
+    
 
     /**
      *
@@ -96,7 +96,5 @@ public class NcSwingIndexManagerApp {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-    public static NcSwGUIComponentStatus getComponentStatus(){
-        return centerPanelInClass;
-    }
+
 }

@@ -19,31 +19,11 @@ package ru.newcontrol.ncfv;
  *
  * @author wladimirowichbiaran
  */
-public enum NcStrLogMessages {
-    ERROR("[ERROR]"),
-    WARNING("[WARNING]"),
-    INFO("[INFO]"),
-    VARVAL("[VARVAL]"),
-    VARNAME("[VARNAME]"),
-    DELIMITER("[]"),
-    TIME("[TIME]"),
-    THREAD("[THREAD]"),
-    TOSTRING("[TOSTRING]"),
-    NAME("[NAME]"),
-    CANONICALNAME("[CANONICALNAME]"),
-    ID("[ID]"),
-    STATE("[STATE]"),
-    STACK("[STACK]"),
-    TRACE("[TRACE]"),
-    FILENAME("[FILENAME]"),
-    CLASSNAME("[CLASSNAME]"),
-    METHODNAME("[METHODNAME]"),
-    LINENUM("[LINENUM]"),
-    NATIVE("[NATIVE]"),
-    ELEMENTNUM("[ELEMENTNUM]"),
-    MSG("[MSG]");
+public enum NcStrLogMsgText {
+    APP_GUI_START("Application start in GUI mode"),
+    APP_ERROR_EXIT("Application stop with critical error");
     private String strMsg;
-    NcStrLogMessages(String strMsg){
+    NcStrLogMsgText(String strMsg){
         this.strMsg = strMsg;
     }
     public String getStr(){

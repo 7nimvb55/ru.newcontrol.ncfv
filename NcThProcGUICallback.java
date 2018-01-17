@@ -28,7 +28,7 @@ import javax.swing.JTable;
 public class NcThProcGUICallback implements NcThProcGUICallbackInterface {
     
     
-    public NcThProcGUICallback(NcSwGUIComponentStatus lComp){
+    public NcThProcGUICallback(){
         
     }
 

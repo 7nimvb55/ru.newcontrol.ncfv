@@ -46,6 +46,9 @@ public class Ncfv {
         if (args.length == 0){
             isRunInSwing = true;
             oneofAppRun = true;
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgText.APP_GUI_START.getStr();
+            NcAppHelper.outMessage(strLogMsg);
             NcSwingIndexManagerApp.NcRunSIMA();
         }
         if (args.length > 0){
