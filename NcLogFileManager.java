@@ -58,7 +58,7 @@ public class NcLogFileManager {
             NcAppHelper.appExitWithMessage(strExitMsg + ex.getMessage());
         }
     }
-    public static void putToLog(String strToLog){
+    public static void putToLogStr(String strToLog){
         if( strToLog.length() > 0 ){
             int logCountLines = NcfvRunVariables.getLogLinesCount();
             TreeMap<Long, String> strCurrentLog = new TreeMap<Long, String>();

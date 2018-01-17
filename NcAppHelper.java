@@ -327,7 +327,7 @@ public class NcAppHelper {
                 NcLogFileManager.putToLog(strForLog);
             }
             else{
-                NcLogFileManager.putToLog(strNowTime
+                NcLogFileManager.putToLogStr(strNowTime
                     + NcStrLogMsgField.MSG.getStr() + strMessage);
             }
         }
