@@ -48,7 +48,7 @@ public class Ncfv {
             oneofAppRun = true;
             String strLogMsg = NcStrLogMsgField.INFO.getStr()
                 + NcStrLogMsgText.APP_GUI_START.getStr();
-            NcAppHelper.outMessage(strLogMsg);
+            NcAppHelper.outMessageToAppLogFile(strLogMsg);
             NcSwingIndexManagerApp.NcRunSIMA();
         }
         if (args.length > 0){
