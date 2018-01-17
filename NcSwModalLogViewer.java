@@ -87,7 +87,12 @@ public class NcSwModalLogViewer {
         try {
             strLogFile = logFile.getCanonicalPath();
         } catch (IOException ex) {
-            Logger.getLogger(NcSwModalLogViewer.class.getName()).log(Level.SEVERE, null, ex);
+            
+            String strMsgText = NcStrLogMsgField.CLASSNAME.getStr()
+                + NcSwModalLogViewer.class.getName()
+                + NcStrLogMsgField.MSG.getStr()
+                + ex.getMessage();
+            NcAppHelper.outMessage(strMsgText);
         }
         strLogReaded.putAll(NcLogFileManager.readFromLog());
         DefaultMutableTreeNode strReadedTime = null;
@@ -102,7 +107,7 @@ public class NcSwModalLogViewer {
         for( Map.Entry<Long, String> strItem : strLogReaded.entrySet() ){
             strReadedChild = getNN(strItem.getValue());
             strReadedParent.add(strReadedChild);
-            if( strItem.getValue().indexOf(": [time]") > -1 ){
+            if( strItem.getValue().contains(NcStrLogMsgField.TIME.getStr()) ){
                 strReadedParent = getNN(strItem.getValue());
                 forTreeTop.add(strReadedParent);
             }
