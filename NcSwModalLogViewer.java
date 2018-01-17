@@ -125,6 +125,7 @@ public class NcSwModalLogViewer {
             
             strReadedChild = getNN(strItem.getValue());
             strReadedTime.add(strReadedChild);
+            
         }
         forTreeTop.add(strReadedParent);
         return new JTree(forTreeTop);

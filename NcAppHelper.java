@@ -279,18 +279,37 @@ public class NcAppHelper {
                 long idx = 0;
                 strForLog.put(idx, strNowTime);
                 idx++;
-                strForLog.put(idx, NcStrLogMsgField.TOSTRING.getStr()
+                String strThread = NcStrLogMsgField.THREAD.getStr()
+                + NcStrLogMsgField.COUNT.getStr()
+                + Thread.activeCount()
+                + NcStrLogMsgField.THREAD_GROUP_NAME.getStr()
+                + t.getThreadGroup().getName()
+                + NcStrLogMsgField.COUNT.getStr()
+                + t.getThreadGroup().activeCount();
+                strForLog.put(idx, strThread);
+                idx++;
+                String strLoader = NcStrLogMsgField.CLASSLOADER.getStr()
+                    + NcStrLogMsgField.CANONICALNAME.getStr()
+                    + t.getContextClassLoader().getClass().getCanonicalName();
+                strForLog.put(idx, strLoader);
+                idx++;
+                strForLog.put(idx, NcStrLogMsgField.THREAD.getStr()
+                    + NcStrLogMsgField.TOSTRING.getStr()
                     + t.toString());
                 idx++;
-                strForLog.put(idx, NcStrLogMsgField.NAME.getStr()
+                strForLog.put(idx, NcStrLogMsgField.THREAD.getStr()
+                    + NcStrLogMsgField.NAME.getStr()
                     + t.getName());
                 idx++;
-                strForLog.put(idx, NcStrLogMsgField.CANONICALNAME.getStr()
+                strForLog.put(idx, NcStrLogMsgField.THREAD.getStr()
+                    + NcStrLogMsgField.CANONICALNAME.getStr()
                     + t.getClass().getCanonicalName());
                 idx++;
-                strForLog.put(idx, NcStrLogMsgField.ID.getStr() + t.getId());
+                strForLog.put(idx, NcStrLogMsgField.THREAD.getStr()
+                        + NcStrLogMsgField.ID.getStr() + t.getId());
                 idx++;
-                strForLog.put(idx, NcStrLogMsgField.STATE.getStr()
+                strForLog.put(idx, NcStrLogMsgField.THREAD.getStr()
+                    + NcStrLogMsgField.STATE.getStr()
                     + NcStrLogMsgField.NAME.getStr() + t.getState().name());
                 idx++;
                 for(StackTraceElement itemT : nowT ){
