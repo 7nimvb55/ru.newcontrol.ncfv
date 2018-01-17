@@ -30,13 +30,14 @@ public class NcSwMenuItems {
      * For Development
      * @return 
      */
-    public static JMenuItem getLogFileReader(JFrame mainGUI){
+    public static JMenuItem getLogFileReader(NcSwGUIComponentStatus lComp){
         
-        JMenuItem toRetMi = new JMenuItem("Log View");
+        JMenuItem toRetMi = new JMenuItem(NcStrGUILabel.LOG_VIEW.getStr());
         toRetMi.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                JDialog modalLogViewer = NcSwModalLogViewer.getDialogLogViewer(mainGUI);
+                JDialog modalLogViewer =
+                    NcSwModalLogViewer.getDialogLogViewer(lComp);
                 modalLogViewer.pack();
                 modalLogViewer.setVisible(true);
             }
@@ -47,12 +48,16 @@ public class NcSwMenuItems {
      * For Development
      * @return 
      */
-    public static JMenuItem getEnvironmentViewer(JFrame mainGUI){
-        JMenuItem toRetMi = new JMenuItem("Env View");
+    public static JMenuItem getEnvironmentViewer(NcSwGUIComponentStatus lComp){
+        JMenuItem toRetMi = new JMenuItem(NcStrGUILabel.ENV_VIEW.getStr());
         toRetMi.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                NcSwModalDevHelper.showModalEnvironment(mainGUI);
+                String componentPath = NcStrGUIComponent.SMAIN.getStr()
+                    + NcStrGUIComponent.SJFRAME.getStr();
+                JFrame mainFrame =
+                    (JFrame) lComp.getComponentByPath(componentPath);
+                NcSwModalDevHelper.showModalEnvironment(mainFrame);
             }
         });
         return toRetMi;
@@ -62,12 +67,16 @@ public class NcSwMenuItems {
      * For Development
      * @return 
      */
-    public static JMenuItem getPropertiesViewer(JFrame mainGUI){
-        JMenuItem toRetMi = new JMenuItem("Properties View");
+    public static JMenuItem getPropertiesViewer(NcSwGUIComponentStatus lComp){
+        JMenuItem toRetMi = new JMenuItem(NcStrGUILabel.PROPERTIES_VIEW.getStr());
         toRetMi.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                NcSwModalDevHelper.showModalProperties(mainGUI);
+                String componentPath = NcStrGUIComponent.SMAIN.getStr()
+                    + NcStrGUIComponent.SJFRAME.getStr();
+                JFrame mainFrame =
+                    (JFrame) lComp.getComponentByPath(componentPath);
+                NcSwModalDevHelper.showModalProperties(mainFrame);
             }
         });
         return toRetMi;
@@ -77,34 +86,34 @@ public class NcSwMenuItems {
      * @return 
      */
     public static JMenuItem getEtcEditor(){
-        return new JMenuItem("Settings");
+        return new JMenuItem(NcStrGUILabel.SETTINGS.getStr());
     }
     /**
      * For File
      * @return 
      */
     public static JMenuItem getSubDirChecker(){
-        return new JMenuItem("Check SubDir");
+        return new JMenuItem(NcStrGUILabel.CHECK_SUBDIR.getStr());
     }
     /**
      * For Settings
      * @return 
      */
     public static JMenuItem getDirInEditor(){
-        return new JMenuItem("Dir in search list");
+        return new JMenuItem(NcStrGUILabel.DIR_IN_INDEX.getStr());
     }
     /**
      * For Settings
      * @return 
      */
     public static JMenuItem getDirOutEditor(){
-        return new JMenuItem("Dir out search list");
+        return new JMenuItem(NcStrGUILabel.DIR_OUT_INDEX.getStr());
     }
     /**
      * For Help
      * @return 
      */
     public static JMenuItem getAbout(){
-        return new JMenuItem("About");
+        return new JMenuItem(NcStrGUILabel.ABOUT.getStr());
     }
 }

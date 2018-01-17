@@ -268,7 +268,8 @@ public class NcAppHelper {
     public static void outMessageToAppLogFile(String strMessage){
         if( NcfvRunVariables.isOutToLogFile() ){
             
-            String strNowTime = ": [time]: " + java.time.LocalDateTime.now().toString() + ": ";
+            String strNowTime =  NcStrLogMessages.TIME.getStr()
+                + java.time.LocalDateTime.now().toString();
             String strTrace = "";
             if( NcfvRunVariables.isOutToLogFileWithTrace() ){
                 TreeMap<Long, String> strForLog = new TreeMap<Long, String>();
@@ -276,41 +277,58 @@ public class NcAppHelper {
                 
                 StackTraceElement[] nowT = t.getStackTrace();
                 long idx = 0;
-                strForLog.put(idx, strNowTime + "recorded time");
+                strForLog.put(idx, strNowTime);
                 idx++;
-                strForLog.put(idx, ": [thToString]: " + t.toString() + ": Thread to string");
+                strForLog.put(idx, NcStrLogMessages.TOSTRING.getStr()
+                    + t.toString());
                 idx++;
-                strForLog.put(idx, ": [thName]: " + t.getName() + ": Thread name");
+                strForLog.put(idx, NcStrLogMessages.NAME.getStr()
+                    + t.getName());
                 idx++;
-                strForLog.put(idx, ": [thCanonicalName]: " + t.getClass().getCanonicalName() + ": Thread canonical name");
+                strForLog.put(idx, NcStrLogMessages.CANONICALNAME.getStr()
+                    + t.getClass().getCanonicalName());
                 idx++;
-                strForLog.put(idx, ": [thId]: " + t.getId() + ": Thread id");
+                strForLog.put(idx, NcStrLogMessages.ID.getStr() + t.getId());
                 idx++;
-                strForLog.put(idx, ": [thStateName]: " + t.getState().name() + ": Thread state name");
+                strForLog.put(idx, NcStrLogMessages.STATE.getStr()
+                    + NcStrLogMessages.NAME.getStr() + t.getState().name());
                 idx++;
                 for(StackTraceElement itemT : nowT ){
-                    if( idx > 1 || NcfvRunVariables.isOutToLogFileTraceWithPrintFunc() ){
+                    if( idx > 1
+                        || NcfvRunVariables.isOutToLogFileTraceWithPrintFunc() ){
+                        
                         String strOutFile = "";
                         if( NcfvRunVariables.isOutToLogFileIncludeFile() ){
-                            strOutFile = ": [traceFileName]: " + itemT.getFileName();
+                            
+                            strOutFile = NcStrLogMessages.FILENAME.getStr()
+                                + itemT.getFileName();
                         }
                         String strOut = 
-                            ": [traceClassName.MethodName(strNum)]: " + itemT.getClassName()
-                            + "." + itemT.getMethodName()
-                            + ": (" + itemT.getLineNumber() + ")"
-                            + (itemT.isNativeMethod() ? "-native: " : ": ");
-                        strTrace = ": [thStackTrace#" + idx + "]: " + strOutFile + strOut;
+                            NcStrLogMessages.CLASSNAME.getStr()
+                            + itemT.getClassName()
+                            + NcStrLogMessages.METHODNAME.getStr()
+                            + itemT.getMethodName()
+                            + NcStrLogMessages.LINENUM.getStr()
+                            + itemT.getLineNumber()
+                            + (itemT.isNativeMethod()
+                                ? NcStrLogMessages.NATIVE.getStr() : "");
+                        
+                        strTrace = NcStrLogMessages.ELEMENTNUM.getStr() + idx + strOutFile + strOut;
                     }
-                    strForLog.put(idx, strTrace + ": " + "Thread stack trace element");
+                    if( strTrace.length() > 0 ){
+                        
+                        strForLog.put(idx, strTrace);
+                    }
+                    strTrace = "";
                     idx++;
                 }
-                strForLog.put(idx, ": [msg]: " + strMessage + ": message");
+                strForLog.put(idx, NcStrLogMessages.MSG.getStr() + strMessage);
                 idx++;
                 NcLogFileManager.putToLog(strForLog);
             }
             else{
-                NcLogFileManager.putToLog(": [time]: " + strNowTime + ": [msg]: "
-                + strMessage + ": message");
+                NcLogFileManager.putToLog(strNowTime
+                    + NcStrLogMessages.MSG.getStr() + strMessage);
             }
         }
     }

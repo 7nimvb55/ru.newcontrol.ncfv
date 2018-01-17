@@ -30,8 +30,13 @@ public class NcSwPanelPageEnd {
      *
      * @return
      */
-    public static JPanel getSouthPanel(){
+    public static JPanel getPanel(NcSwGUIComponentStatus lComp){
         JPanel southPanel = new JPanel();
+        String componentPath = NcStrGUIComponent.SMAIN.getStr()
+            + NcStrGUIComponent.SJFRAME.getStr()
+            + NcStrGUIComponent.SJPANEL.getStr()
+            + NcStrGUIComponent.SPAGEEND.getStr();
+        lComp.putComponents(componentPath, southPanel);
         Border southBorder = BorderFactory.createTitledBorder("SOUTH panel");
         southPanel.setBorder(southBorder);
         

@@ -41,7 +41,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class NcSwModalLogViewer {
     private static String modalTitle = "View log file";
     
-    public static JDialog getDialogLogViewer(JFrame mainFrame){
+    public static JDialog getDialogLogViewer(NcSwGUIComponentStatus lComp){
+        String componentPath = NcStrGUIComponent.SMAIN.getStr()
+            + NcStrGUIComponent.SJFRAME.getStr();
+        JFrame mainFrame = (JFrame) lComp.getComponentByPath(componentPath);
+        
         NcSwGUIComponentStatus compIndex = new NcSwGUIComponentStatus();
         compIndex.putComponents("JFrame-mainFrame", mainFrame);
         JDialog modalWindow = new JDialog(mainFrame, modalTitle, true);
@@ -149,11 +153,11 @@ public class NcSwModalLogViewer {
         JButton buttonSearch = new JButton("Update");
         buttonSearch.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
-                JScrollPane scrollPane = (JScrollPane) compLocalIndex.getComponentsByType("JScrollPane-treeView");
+                JScrollPane scrollPane = (JScrollPane) compLocalIndex.getComponentByPath("JScrollPane-treeView");
                 //scrollPane.setVisible(false);
                 //scrollPane = null;
                 scrollPane = getScrolledTree(compLocalIndex);
-                JPanel centralPanel = (JPanel) compLocalIndex.getComponentsByType("JPanel-PanelCenter");
+                JPanel centralPanel = (JPanel) compLocalIndex.getComponentByPath("JPanel-PanelCenter");
                 //centralPanel.add(scrollPane);
                 //scrollPane.setVisible(true);
                 scrollPane.revalidate();

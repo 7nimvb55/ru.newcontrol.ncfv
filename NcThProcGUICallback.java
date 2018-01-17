@@ -26,23 +26,20 @@ import javax.swing.JTable;
  * @author wladimirowichbiaran
  */
 public class NcThProcGUICallback implements NcThProcGUICallbackInterface {
-    private JPanel ncPanel;
-    private JTable ncTable;
     
-    public NcThProcGUICallback(NcSwGUIComponentStatus inGuiComponents){
-        this.ncPanel = inGuiComponents.centerPanel;
-        this.ncTable = inGuiComponents.ncTable;
+    
+    public NcThProcGUICallback(NcSwGUIComponentStatus lComp){
+        
     }
 
     @Override
     public void appendSrchResult() {
-        ncTable.getModel();
-        ncPanel.repaint();
+        
     }
 
     @Override
     public void setSrcResult() {
-        ncPanel.repaint();
+        
     }
 
     @Override

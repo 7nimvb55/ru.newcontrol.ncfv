@@ -34,24 +34,37 @@ public class NcSwPanelCenter {
      *
      * @return
      */
-    public static NcSwGUIComponentStatus getCenterPanel(){
+    public static JPanel getPanel(NcSwGUIComponentStatus lComp){
         JPanel centerPanel = new JPanel();
+        String componentPath = NcStrGUIComponent.SMAIN.getStr()
+            + NcStrGUIComponent.SJFRAME.getStr()
+            + NcStrGUIComponent.SJPANEL.getStr()
+            + NcStrGUIComponent.SCENTER.getStr();
+        lComp.putComponents(componentPath, centerPanel);
         Border centerBorder = BorderFactory.createTitledBorder("CENTER panel");
         centerPanel.setBorder(centerBorder);
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         
-        ArrayList<String> strKeyWordInSearch = new ArrayList<String>();
-        ArrayList<String> strKeyWordOutSearch = new ArrayList<String>();
+//        ArrayList<String> strKeyWordInSearch = new ArrayList<String>();
+//        ArrayList<String> strKeyWordOutSearch = new ArrayList<String>();
         
 //        strKeyWordInSearch.add(" ");
-        strKeyWordInSearch.add("01");
+//       strKeyWordInSearch.add("01");
 //       strKeyWordInSearch.add("freebsd");
 //        strKeyWordInSearch.add("freebsd");
 //        strKeyWordOutSearch.add("newcontrol");
         
-        TableModel ncTableModel = new NcSIMASearchResultTableModel(strKeyWordInSearch, strKeyWordOutSearch);
+        TableModel ncTableModel = new NcSIMASearchResultTableModel(new ArrayList<String>(), new ArrayList<String>());
         
         JTable ncTable = new JTable(ncTableModel);
+        componentPath = NcStrGUIComponent.SMAIN.getStr()
+            + NcStrGUIComponent.SJFRAME.getStr()
+            + NcStrGUIComponent.SJPANEL.getStr()
+            + NcStrGUIComponent.SCENTER.getStr()
+            + NcStrGUIComponent.SJTABLE.getStr();
+        lComp.putComponents(componentPath, ncTable);
+        
+        
         JScrollPane ncScrollTable = new JScrollPane(ncTable);
         
         
@@ -59,13 +72,8 @@ public class NcSwPanelCenter {
         
         ncScrollTable.revalidate();
         
-        NcSwGUIComponentStatus retComp = new NcSwGUIComponentStatus(
         
-        ncTableModel,
-        ncScrollTable,
-        ncTable,
-        centerPanel);
         
-        return retComp;
+        return centerPanel;
     }
 }

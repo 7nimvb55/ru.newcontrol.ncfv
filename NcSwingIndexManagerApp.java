@@ -30,7 +30,7 @@ import javax.swing.UIManager;
  * @author Администратор
  */
 public class NcSwingIndexManagerApp {
-    private static final String APP_TITLE = "Index Managment";
+    
     private static NcSwGUIComponentStatus centerPanelInClass;
 
     /**
@@ -65,20 +65,30 @@ public class NcSwingIndexManagerApp {
      *
      */
     public static void createGui(){
-        JFrame frame = new JFrame(APP_TITLE);
+        NcSwGUIComponentStatus listComponents = new NcSwGUIComponentStatus();
+        JFrame frame = new JFrame(NcStrGUILabel.TITLE_APP.getStr());
+        String componentPath = NcStrGUIComponent.SMAIN.getStr()
+            + NcStrGUIComponent.SJFRAME.getStr();
+        listComponents.putComponents(componentPath, frame);  
+            
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         JPanel mainPanel = new JPanel();
+        componentPath = NcStrGUIComponent.SMAIN.getStr()
+                + NcStrGUIComponent.SJFRAME.getStr()
+                + NcStrGUIComponent.SJPANEL.getStr();
+        listComponents.putComponents(componentPath, mainPanel);
+        
         mainPanel.setLayout(new BorderLayout());
         
-        frame.setJMenuBar(NcSwMainMenu.getMainMenu(frame));
-        mainPanel.add(NcSwPanelPageStart.getNorthPanel(), BorderLayout.NORTH);
-        mainPanel.add(NcSwPanelPageEnd.getSouthPanel(), BorderLayout.SOUTH);
-        mainPanel.add(NcSwPanelLineStart.getWestPanel(), BorderLayout.WEST);
-        mainPanel.add(NcSwPanelLineEnd.getEastPanel(), BorderLayout.EAST);
+        frame.setJMenuBar(NcSwMainMenu.getMainMenu(listComponents));
+        mainPanel.add(NcSwPanelPageStart.getPanel(listComponents), BorderLayout.NORTH);
+        mainPanel.add(NcSwPanelPageEnd.getPanel(listComponents), BorderLayout.SOUTH);
+        mainPanel.add(NcSwPanelLineStart.getPanel(listComponents), BorderLayout.WEST);
+        mainPanel.add(NcSwPanelLineEnd.getPanel(listComponents), BorderLayout.EAST);
 
-        centerPanelInClass = NcSwPanelCenter.getCenterPanel();
-        mainPanel.add(centerPanelInClass.centerPanel, BorderLayout.CENTER);
+        
+        mainPanel.add(NcSwPanelCenter.getPanel(listComponents), BorderLayout.CENTER);
         
         frame.getContentPane().add(mainPanel);
         frame.setPreferredSize(new Dimension(800, 600));

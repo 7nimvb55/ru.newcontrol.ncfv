@@ -29,32 +29,16 @@ import javax.swing.table.TableModel;
  */
 public class NcSwGUIComponentStatus {
     
-    public TableModel ncTableModel;
-    public JScrollPane ncScrollTable;
-    public JTable ncTable;
-    public JPanel centerPanel;
-    
     private TreeMap<Integer, Component> modalLogView;
     
     public NcSwGUIComponentStatus(){
         modalLogView = new TreeMap<Integer, Component>();
     }
 
-    public NcSwGUIComponentStatus(
-        TableModel ncTableModel,
-        JScrollPane ncScrollTable,
-        JTable ncTable,
-        JPanel centerPanel) {
-        
-        this.ncTableModel = ncTableModel;
-        this.ncScrollTable = ncScrollTable;
-        this.ncTable = ncTable;
-        this.centerPanel = centerPanel;
-    }
     public TreeMap<Integer, Component> getComponentsList(){
         return modalLogView;
     }
-    public Component getComponentsByType(String typeToGet){
+    public Component getComponentByPath(String typeToGet){
         return modalLogView.get(typeToGet.hashCode());
     }
     public void putComponents(String typeToAdd, Component compToAdd){

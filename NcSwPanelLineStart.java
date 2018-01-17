@@ -32,8 +32,13 @@ public class NcSwPanelLineStart {
      *
      * @return
      */
-    public static JPanel getWestPanel(){
+    public static JPanel getPanel(NcSwGUIComponentStatus lComp){
         JPanel westPanel = new JPanel();
+        String componentPath = NcStrGUIComponent.SMAIN.getStr()
+            + NcStrGUIComponent.SJFRAME.getStr()
+            + NcStrGUIComponent.SJPANEL.getStr()
+            + NcStrGUIComponent.SLINESTART.getStr();
+        lComp.putComponents(componentPath, westPanel);
         Border westBorder = BorderFactory.createTitledBorder("WEST panel");
         westPanel.setBorder(westBorder);
         westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.PAGE_AXIS));

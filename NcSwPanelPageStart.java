@@ -36,8 +36,13 @@ public class NcSwPanelPageStart {
      *
      * @return
      */
-    public static JPanel getNorthPanel(){
+    public static JPanel getPanel(NcSwGUIComponentStatus lComp){
         JPanel northPanel = new JPanel();
+        String componentPath = NcStrGUIComponent.SMAIN.getStr()
+            + NcStrGUIComponent.SJFRAME.getStr()
+            + NcStrGUIComponent.SJPANEL.getStr()
+            + NcStrGUIComponent.SPAGESTART.getStr();
+        lComp.putComponents(componentPath, northPanel);
         Border northBorder = BorderFactory.createTitledBorder("NORTH panel");
         northPanel.setBorder(northBorder);
         northPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -51,10 +56,7 @@ public class NcSwPanelPageStart {
         btnSearch.addActionListener(new ActionListener(){
             public void  actionPerformed(ActionEvent e){
                 String strSearch = addNorthWordSearch.getText();
-                int reply = JOptionPane.showConfirmDialog(null, strSearch, "Title", JOptionPane.YES_NO_OPTION);
-                if (reply == JOptionPane.YES_OPTION){
-                  NcSwThreadManager.setToViewSearchedResult(strSearch);
-                }
+                NcSwThreadManager.setToViewSearchedResult(lComp, strSearch);
             }
         });
         northPanel.add(btnSearch);

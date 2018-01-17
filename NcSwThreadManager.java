@@ -16,6 +16,7 @@
 package ru.newcontrol.ncfv;
 
 import java.lang.reflect.Proxy;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
@@ -26,12 +27,27 @@ import javax.swing.table.TableModel;
  */
 public class NcSwThreadManager {
      
-    public static void setToViewSearchedResult(String strSrch){
+    public static void setToViewSearchedResult(NcSwGUIComponentStatus lComp, String strSrch){
+        String componentPath = NcStrGUIComponent.SMAIN.getStr()
+            + NcStrGUIComponent.SJFRAME.getStr()
+            + NcStrGUIComponent.SJPANEL.getStr()
+            + NcStrGUIComponent.SCENTER.getStr();
+        JPanel centerPanel =
+            (JPanel) lComp.getComponentByPath(componentPath);
+                
         NcSwGUIComponentStatus guiComponents = NcSwingIndexManagerApp.getComponentStatus();
         //NcThProcGUICallbackInterface proxyInstGuiCb = getProxyInstanceGUICallback();
-        guiComponents.ncTableModel = new NcSIMASearchResultTableModel(strSrch);
-        guiComponents.ncTable.setModel(guiComponents.ncTableModel);
-        guiComponents.centerPanel.repaint();
+        TableModel locNewTableModel = new NcSIMASearchResultTableModel(strSrch);
+        
+        componentPath = NcStrGUIComponent.SMAIN.getStr()
+            + NcStrGUIComponent.SJFRAME.getStr()
+            + NcStrGUIComponent.SJPANEL.getStr()
+            + NcStrGUIComponent.SCENTER.getStr()
+            + NcStrGUIComponent.SJTABLE.getStr();
+        JTable guiTable = (JTable) lComp.getComponentByPath(componentPath);
+        
+        guiTable.setModel(locNewTableModel);
+        centerPanel.repaint();
     }
     public static NcThProcGUICallbackInterface getProxyInstanceGUICallback(){
         NcSwGUIComponentStatus guiComponents = NcSwingIndexManagerApp.getComponentStatus();

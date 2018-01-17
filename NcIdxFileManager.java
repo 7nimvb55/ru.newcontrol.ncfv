@@ -320,7 +320,8 @@ public class NcIdxFileManager {
      * @return 
      */
     public static File getErrorForFileOperation(){
-        NcAppHelper.outMessage("Error in file operation, NcIdxFileManager.getErrorForFileOperation() called");
+        NcAppHelper.outMessage(NcStrLogMessages.ERROR.getStr()
+            + "Error in file operation, NcIdxFileManager.getErrorForFileOperation() called");
         return new File("notExistFileError");
     }
     /**

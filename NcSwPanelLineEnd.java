@@ -37,7 +37,7 @@ public class NcSwPanelLineEnd {
      *
      * @return
      */
-    public static JPanel getEastPanel(){
+    public static JPanel getPanel(NcSwGUIComponentStatus lComp){
         String[] forTextToolTip = {
             "For search with keyword, input it and press \"+\" Button",
             "For search with out keyword, input it and press \"+\" Button",
@@ -51,6 +51,11 @@ public class NcSwPanelLineEnd {
         Dimension textFiledForSearchDimension = new Dimension(100, 20);        
         
         JPanel eastPanel = new JPanel();
+        String componentPath = NcStrGUIComponent.SMAIN.getStr()
+            + NcStrGUIComponent.SJFRAME.getStr()
+            + NcStrGUIComponent.SJPANEL.getStr()
+            + NcStrGUIComponent.SLINEEND.getStr();
+        lComp.putComponents(componentPath, eastPanel);
         Border eastBorder = BorderFactory.createTitledBorder("EAST panel");
         eastPanel.setBorder(eastBorder);
         eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.PAGE_AXIS));
