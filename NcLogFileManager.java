@@ -43,12 +43,10 @@ public class NcLogFileManager {
     private static void createLogFile(String ncStrCfgPath){
         String strTime = java.time.LocalDateTime.now().toString();
         String text = NcStrLogMsgField.TIME.getStr() + strTime;
-        String strMsg = NcStrLogMsgField.MSG.getStr()
+        String strMsg = text + NcStrLogMsgField.MSG.getStr()
             + NcStrLogMsgText.LOG_CREATE.getStr();
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(ncStrCfgPath)))
         {
-            bw.write(text);
-            bw.newLine();
             bw.write(strMsg);
             bw.newLine();
         }
@@ -68,10 +66,8 @@ public class NcLogFileManager {
             if( NcfvRunVariables.isOutToLogNewRecordAppend() ){
                 String strTime = java.time.LocalDateTime.now().toString();
                 String text = NcStrLogMsgField.TIME.getStr() + strTime;
-                String strMsg = NcStrLogMsgField.MSG.getStr()
+                String strMsg = text + NcStrLogMsgField.MSG.getStr()
                     + NcStrLogMsgText.LOG_RECORD_APPEND.getStr();
-                strCurrentLog.put((long) idx, text);
-                idx++;
                 strCurrentLog.put((long) idx, strMsg);
                 idx++;
             }
@@ -100,10 +96,8 @@ public class NcLogFileManager {
             if( NcfvRunVariables.isOutToLogNewRecordAppend() ){
                 String strTime = java.time.LocalDateTime.now().toString();
                 String text = NcStrLogMsgField.TIME.getStr() + strTime;
-                String strMsg = NcStrLogMsgField.MSG.getStr()
+                String strMsg = text + NcStrLogMsgField.MSG.getStr()
                     + NcStrLogMsgText.LOG_RECORD_APPEND.getStr();
-                strCurrentLog.put((long) idx, text);
-                idx++;
                 strCurrentLog.put((long) idx, strMsg);
                 idx++;
             }
