@@ -23,6 +23,10 @@ public enum NcStrLogMsgField {
     ERROR("[ERROR]"),
     WARNING("[WARNING]"),
     INFO("[INFO]"),
+    MSG_ERROR("[MSG][ERROR]"),
+    MSG_WARNING("[MSG][WARNING]"),
+    MSG_INFO("[MSG][INFO]"),
+
     VARVAL("[VARVAL]"),
     VARNAME("[VARNAME]"),
     DELIMITER("[]"),

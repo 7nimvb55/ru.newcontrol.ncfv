@@ -109,16 +109,40 @@ public class NcSwModalLogViewer {
         for( Map.Entry<Long, String> strItem : strLogReaded.entrySet() ){
             if( strItem.getValue().contains(NcStrLogMsgField.TIME.getStr()) ){
                 strReadedTime = getNN(strItem.getValue());
+                if( strReadedParent == null ){
+                            forTreeTop.add(strReadedElement);
+                            continue;
+                }
                 strReadedParent.add(strReadedTime);
                 continue;
             }
             if( strItem.getValue().contains(NcStrLogMsgField.STATE.getStr()) ){
                 strReadedState = getNN(strItem.getValue());
+                if( strReadedTime == null ){
+                        if( strReadedParent == null ){
+                            forTreeTop.add(strReadedElement);
+                            continue;
+                        }
+                        strReadedParent.add(strReadedElement);
+                        continue;
+                }
                 strReadedTime.add(strReadedState);
                 continue;
             }
             if( strItem.getValue().contains(NcStrLogMsgField.ELEMENTNUM.getStr()) ){
                 strReadedElement = getNN(strItem.getValue());
+                if( strReadedState == null ){
+                    if( strReadedTime == null ){
+                        if( strReadedParent == null ){
+                            forTreeTop.add(strReadedElement);
+                            continue;
+                        }
+                        strReadedParent.add(strReadedElement);
+                        continue;
+                    }
+                    strReadedTime.add(strReadedElement);
+                    continue;
+                }
                 strReadedState.add(strReadedElement);
                 continue;
             }

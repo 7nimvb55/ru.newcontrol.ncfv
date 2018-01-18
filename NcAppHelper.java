@@ -314,8 +314,9 @@ public class NcAppHelper {
                     + NcStrLogMsgField.STATE.getStr()
                     + NcStrLogMsgField.NAME.getStr() + t.getState().name());
                 idx++;
+                int stackIdx = 0;
                 for(StackTraceElement itemT : nowT ){
-                    if( idx > 1
+                    if( stackIdx > 1
                         || NcfvRunVariables.isOutToLogFileTraceWithPrintFunc() ){
                         
                         String strOutFile = "";
@@ -334,7 +335,9 @@ public class NcAppHelper {
                             + (itemT.isNativeMethod()
                                 ? NcStrLogMsgField.NATIVE.getStr() : "");
                         
-                        strTrace = NcStrLogMsgField.ELEMENTNUM.getStr() + idx + strOutFile + strOut;
+                        strTrace = NcStrLogMsgField.ELEMENTNUM.getStr()
+                                + stackIdx + strOutFile + strOut;
+                        stackIdx++;
                     }
                     if( strTrace.length() > 0 ){
                         

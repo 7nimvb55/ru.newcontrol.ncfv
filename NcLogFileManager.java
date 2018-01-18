@@ -43,7 +43,7 @@ public class NcLogFileManager {
     private static void createLogFile(String ncStrCfgPath){
         String strTime = java.time.LocalDateTime.now().toString();
         String text = NcStrLogMsgField.TIME.getStr() + strTime;
-        String strMsg = text + NcStrLogMsgField.MSG.getStr()
+        String strMsg = text + NcStrLogMsgField.MSG_INFO.getStr()
             + NcStrLogMsgText.LOG_CREATE.getStr();
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(ncStrCfgPath)))
         {
@@ -58,63 +58,43 @@ public class NcLogFileManager {
     }
     public static void putToLogStr(String strToLog){
         if( strToLog.length() > 0 ){
-            int logCountLines = NcfvRunVariables.getLogLinesCount();
+            
             TreeMap<Long, String> strCurrentLog = new TreeMap<Long, String>();
             strCurrentLog.putAll(readFromLog());
             int idx = strCurrentLog.size();
-            idx++;
+
             if( NcfvRunVariables.isOutToLogNewRecordAppend() ){
                 String strTime = java.time.LocalDateTime.now().toString();
                 String text = NcStrLogMsgField.TIME.getStr() + strTime;
-                String strMsg = text + NcStrLogMsgField.MSG.getStr()
+                String strMsg = text + NcStrLogMsgField.MSG_INFO.getStr()
                     + NcStrLogMsgText.LOG_RECORD_APPEND.getStr();
                 strCurrentLog.put((long) idx, strMsg);
                 idx++;
             }
-            
-            /*if( (strCurrentLog.size() + 1) > logCountLines ){
-                long idx = 0;
-                TreeMap<Long, String> strNewLog = new TreeMap<Long, String>();
-                strNewLog.putAll(strCurrentLog.tailMap(idx));
-                strCurrentLog.clear();
-                strCurrentLog = null;
-                strCurrentLog.putAll(strNewLog);
-            }*/
-            
             strCurrentLog.put((long) idx, strToLog);
             idx++;
-            writeLogLines(strCurrentLog);
+            writeInLogLimitLines(strCurrentLog);
         }
     }
     public static void putToLog(TreeMap<Long, String> toLogStr){
         if( toLogStr.size() > 0 ){
-            int logCountLines = NcfvRunVariables.getLogLinesCount();
             TreeMap<Long, String> strCurrentLog = new TreeMap<Long, String>();
             strCurrentLog.putAll(readFromLog());
             int idx = strCurrentLog.size();
-            idx++;
+
             if( NcfvRunVariables.isOutToLogNewRecordAppend() ){
                 String strTime = java.time.LocalDateTime.now().toString();
                 String text = NcStrLogMsgField.TIME.getStr() + strTime;
-                String strMsg = text + NcStrLogMsgField.MSG.getStr()
+                String strMsg = text + NcStrLogMsgField.MSG_INFO.getStr()
                     + NcStrLogMsgText.LOG_RECORD_APPEND.getStr();
                 strCurrentLog.put((long) idx, strMsg);
                 idx++;
             }
-            /*if( (strCurrentLog.size() + toLogStr.size()) > logCountLines ){
-                long idx = toLogStr.size() - 1;
-                TreeMap<Long, String> strNewLog = new TreeMap<Long, String>();
-                strNewLog.putAll(strCurrentLog.tailMap(idx));
-                strCurrentLog.clear();
-                strCurrentLog = null;
-                strCurrentLog.putAll(strNewLog);
-            }*/
             for(Map.Entry<Long, String> strItem : toLogStr.entrySet()){
                 strCurrentLog.put((long) idx, strItem.getValue());
                 idx++;
             }
-            //strCurrentLog.putAll(toLogStr);
-            writeLogLines(strCurrentLog);
+            writeInLogLimitLines(strCurrentLog);
         }
         
     }
@@ -134,6 +114,25 @@ public class NcLogFileManager {
             NcAppHelper.outMessage(ex.getMessage());
         }
         return strForReturn;
+    }
+    private static void writeInLogLimitLines(TreeMap<Long, String> toLogAllStr){
+        int logCountLines = NcfvRunVariables.getLogLinesCount();
+        if( (toLogAllStr.size()) > logCountLines ){
+                long idxLimit = toLogAllStr.size() - logCountLines;
+                if( idxLimit < 1 ){
+                    idxLimit = 0;
+                }
+                if( !toLogAllStr.containsKey(idxLimit) ){
+                    idxLimit = toLogAllStr.firstKey();
+                }
+                TreeMap<Long, String> strNewLog = new TreeMap<Long, String>();
+                strNewLog.putAll(toLogAllStr.tailMap(idxLimit));
+                toLogAllStr.clear();
+                toLogAllStr = null;
+                toLogAllStr = new TreeMap<Long, String>();
+                toLogAllStr.putAll(strNewLog);
+        }
+        writeLogLines(toLogAllStr);
     }
     private static void writeLogLines(TreeMap<Long, String> toLogStr){
         File fileLog = getLogFile();
