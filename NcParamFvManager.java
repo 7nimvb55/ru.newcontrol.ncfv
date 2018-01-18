@@ -154,16 +154,24 @@ public class NcParamFvManager {
     }
     public static void checkToWrite(NcParamFv inWorkCfg){
         boolean isHash = isNcParamFvDataHashTrue(inWorkCfg);
-        NcAppHelper.outMessage(
-        NcStrServiceMsg.WORK_CFG_HASH.getStr()
+        String strLvl = NcStrLogMsgField.INFO.getStr();
+        if( !isHash ){
+            strLvl = NcStrLogMsgField.ERROR.getStr();
+        }
+        NcAppHelper.outMessage(strLvl
+        + NcStrServiceMsg.WORK_CFG_HASH.getStr()
         + NcStrServiceMsg.FOR_WRITE.getStr()
         + isHash);
         
     }
     public static void checkFromRead(NcParamFv inWorkCfg){
         boolean isHash = isNcParamFvDataHashTrue(inWorkCfg);
-        NcAppHelper.outMessage(
-        NcStrServiceMsg.WORK_CFG_HASH.getStr()
+        String strLvl = NcStrLogMsgField.INFO.getStr();
+        if( !isHash ){
+            strLvl = NcStrLogMsgField.ERROR.getStr();
+        }
+        NcAppHelper.outMessage(strLvl
+        + NcStrServiceMsg.WORK_CFG_HASH.getStr()
         + NcStrServiceMsg.FROM_READ.getStr()
         + isHash);
     }
