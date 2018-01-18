@@ -270,6 +270,8 @@ public class NcAppHelper {
             
             String strNowTime =  NcStrLogMsgField.TIME.getStr()
                 + java.time.LocalDateTime.now().toString();
+            String strTimeAndMsg = strNowTime
+                    + NcStrLogMsgField.MSG.getStr() + strMessage;
             String strTrace = "";
             if( NcfvRunVariables.isOutToLogFileWithTrace() ){
                 TreeMap<Long, String> strForLog = new TreeMap<Long, String>();
@@ -277,7 +279,7 @@ public class NcAppHelper {
                 
                 StackTraceElement[] nowT = t.getStackTrace();
                 long idx = 0;
-                strForLog.put(idx, strNowTime);
+                strForLog.put(idx, strTimeAndMsg);
                 idx++;
                 String strThread = NcStrLogMsgField.THREAD.getStr()
                 + NcStrLogMsgField.COUNT.getStr()
@@ -341,13 +343,11 @@ public class NcAppHelper {
                     strTrace = "";
                     idx++;
                 }
-                strForLog.put(idx, NcStrLogMsgField.MSG.getStr() + strMessage);
-                idx++;
+                
                 NcLogFileManager.putToLog(strForLog);
             }
             else{
-                NcLogFileManager.putToLogStr(strNowTime
-                    + NcStrLogMsgField.MSG.getStr() + strMessage);
+                NcLogFileManager.putToLogStr(strTimeAndMsg);
             }
         }
     }
