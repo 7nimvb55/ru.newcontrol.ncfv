@@ -25,12 +25,12 @@ public class NcfvRunVariables {
     private static boolean outWithTrace = false;
     private static boolean outWithPrintFunc = false;
     private static boolean outWithFileName = false;
-    private static final int LOGLINES = 700;
+    private static final int LOGLINES = 10000;
     private static boolean outToLogFile = true;
     private static boolean outToLogWithTrace = true;
     private static boolean outToLogPrintFunc = true;
     private static boolean outToLogFileName = true;
-    private static boolean outToLogNewRecordAppend = true;
+    private static boolean outToLogNewRecordAppend = false;
     public static boolean getIncludeFile(){
         return outWithFileName;
     }

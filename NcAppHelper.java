@@ -106,7 +106,8 @@ public class NcAppHelper {
      * @param pathErr
      */
     public static void appExitWithMessageFSAccess(String pathErr){
-        outMessage("For run application in the path: " + pathErr
+        outMessage(NcStrLogMsgField.ERROR_CRITICAL.getStr()
+            + "For run application in the path: " + pathErr
             + "\n application must have permission on read, write on the file system"
             + "\n for use functions of this application your must have run it in the"
             + "\n system administrator privilegies, this application, read files on"
@@ -116,7 +117,7 @@ public class NcAppHelper {
         System.exit(0);
     }
     public static void appExitWithMessage(String strErrMessage){
-        NcAppHelper.outMessage(strErrMessage);
+        NcAppHelper.outMessage(NcStrLogMsgField.ERROR_CRITICAL.getStr() + strErrMessage);
         System.exit(0);
     }
 
@@ -416,7 +417,9 @@ public class NcAppHelper {
     }
     public static void strArrToConsoleOutPut(String[] strArrForOutPut){
         for(int i = 0; i < strArrForOutPut.length ; i++){
-                NcAppHelper.outMessage( i + "\t" + strArrForOutPut[i]);
+                NcAppHelper.outMessage(
+                    NcStrLogMsgField.INFO.getStr()
+                    + i + "\t" + strArrForOutPut[i]);
         }
     }
 }

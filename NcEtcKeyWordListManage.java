@@ -38,7 +38,9 @@ public class NcEtcKeyWordListManage {
             }
         }
          catch(IOException ex){
-            NcAppHelper.outMessage(ex.getMessage());
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.ERROR.getStr()
+                + ex.getMessage());
         }   
         return strForReturn;
     }
@@ -54,7 +56,9 @@ public class NcEtcKeyWordListManage {
             }
         }
          catch(IOException ex){
-            NcAppHelper.outMessage(ex.getMessage());
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.ERROR.getStr()
+                + ex.getMessage());
         }   
         return strForReturn;
     }

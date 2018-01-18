@@ -19,17 +19,6 @@ package ru.newcontrol.ncfv;
  *
  * @author wladimirowichbiaran
  */
-public enum NcStrLogMsgText {
-    APP_GUI_START("Application start in GUI mode"),
-    APP_ERROR_EXIT("Application stop with critical error"),
-    LOG_CREATE("Log file created"),
-    LOG_RECORD_APPEND("Append new record"),
-    CALLED_ERROR_FOR_FILE_OPERATION("Error in file operation, NcIdxFileManager.getErrorForFileOperation() called");
-    private String strMsg;
-    NcStrLogMsgText(String strMsg){
-        this.strMsg = strMsg;
-    }
-    public String getStr(){
-        return strMsg;
-    }
+public class NcStrUserMsg {
+    
 }

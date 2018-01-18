@@ -21,12 +21,14 @@ package ru.newcontrol.ncfv;
  */
 public enum NcStrLogMsgField {
     ERROR("[ERROR]"),
+    ERROR_CRITICAL("[ERROR][CRITICAL]"),
     WARNING("[WARNING]"),
     INFO("[INFO]"),
     MSG_ERROR("[MSG][ERROR]"),
+    MSG_ERROR_CRITICAL("[MSG][ERROR][CRITICAL]"),
     MSG_WARNING("[MSG][WARNING]"),
     MSG_INFO("[MSG][INFO]"),
-
+    
     VARVAL("[VARVAL]"),
     VARNAME("[VARNAME]"),
     DELIMITER("[]"),

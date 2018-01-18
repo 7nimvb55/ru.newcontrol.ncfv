@@ -19,6 +19,14 @@ package ru.newcontrol.ncfv;
  *
  * @author wladimirowichbiaran
  */
-public class NcStrUserMessages {
-    
+public enum NcStrServiceMsg {
+    ERROR_FILE_NOT_EXIST("notExistFileError"),
+    ERROR_FILE_NOT_CANONICAL_PATH("Can not File.getCanonicalPath() for: ");
+    private String strMsg;
+    NcStrServiceMsg(String strMsg){
+        this.strMsg = strMsg;
+    }
+    public String getStr(){
+        return strMsg;
+    }
 }

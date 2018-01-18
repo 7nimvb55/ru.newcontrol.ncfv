@@ -303,7 +303,7 @@ public class NcIdxFileManager {
      * @return true for found error object
      */
     public static boolean isErrorForFileOperation(File inputFile){
-        return ( getStrCanPathFromFile(inputFile).indexOf("notExistFileError") > -1 );
+        return ( getStrCanPathFromFile(inputFile).contains(NcStrServiceMsg.ERROR_FILE_NOT_EXIST.getStr()) );
     }
     /**
      * Analogue for {@link ru.newcontrol.ncfv.NcIdxFileManager#isErrorForFileOperation(java.io.File)}
@@ -311,7 +311,7 @@ public class NcIdxFileManager {
      * @return true if input param has error of operation path
      */
     public static boolean isErrorForFileOperationByString(String inputFilePath){
-        return ( inputFilePath.indexOf("notExistFileError") > -1 );
+        return ( inputFilePath.contains(NcStrServiceMsg.ERROR_FILE_NOT_EXIST.getStr()) );
     }
     /**
      * When File operation has exception, function will return generated this
@@ -321,8 +321,8 @@ public class NcIdxFileManager {
      */
     public static File getErrorForFileOperation(){
         NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
-            + "Error in file operation, NcIdxFileManager.getErrorForFileOperation() called");
-        return new File("notExistFileError");
+            + NcStrLogMsgText.CALLED_ERROR_FOR_FILE_OPERATION.getStr());
+        return new File(NcStrServiceMsg.ERROR_FILE_NOT_EXIST.getStr());
     }
     /**
      * For directory /fl, this method generated name for file contained Id
@@ -565,9 +565,11 @@ public class NcIdxFileManager {
         try {
             strCanonicalPath = inFuncFile.getCanonicalPath();
         } catch (IOException ex) {
-            NcAppHelper.outMessage("Can not getCanonicalPath() for: "
-                    + inFuncFile.getAbsolutePath());
-            NcAppHelper.outMessage(ex.getMessage());
+            NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
+                + NcStrServiceMsg.ERROR_FILE_NOT_CANONICAL_PATH.getStr()
+                + inFuncFile.getAbsolutePath());
+            NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
+                + ex.getMessage());
             strCanonicalPath = getErrorForFileOperation().getAbsolutePath();
         }
         return strCanonicalPath;

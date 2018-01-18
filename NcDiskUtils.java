@@ -288,7 +288,8 @@ public class NcDiskUtils {
             + inFuncData.unAllocatedSpace
             + inFuncData.isReadonly
             + inFuncData.recordCreationTime).hashCode();
-        NcAppHelper.outMessage("ID:\t" + inFuncData.diskID
+        NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+        + "ID:\t" + inFuncData.diskID
         + "\nCalculated hash of record: " + calcHash
         + "\nIn record hash: " + inFuncData.reordHash
         + "\ncompare result: "
