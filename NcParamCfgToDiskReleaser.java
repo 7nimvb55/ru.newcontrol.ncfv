@@ -98,10 +98,19 @@ public class NcParamCfgToDiskReleaser {
     public static void getWorkFileParams(String strFileName){
         File fileWork = new File(strFileName);
         
-        NcAppHelper.outMessage("Path of work file: \n" + NcIdxFileManager.getStrCanPathFromFile(fileWork)
-                + "Exist: " + fileWork.exists() + "\n"
-                + "canRead: " + fileWork.canRead() + "\n"
-                + "canWrite: " + fileWork.canWrite() + "\n");
+        NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+            + NcStrServiceMsg.PATH_WORK_FILE.getStr()
+            + NcStrServiceMsg.NEWLINE.getStr()
+            + NcIdxFileManager.getStrCanPathFromFile(fileWork)
+            + NcStrServiceMsg.EXIST.getStr()
+            + fileWork.exists() 
+            + NcStrServiceMsg.NEWLINE.getStr()
+            + NcStrServiceMsg.CANREAD.getStr()
+            + fileWork.canRead() 
+            + NcStrServiceMsg.NEWLINE.getStr()
+            + NcStrServiceMsg.CANWRITE.getStr()
+            + fileWork.canWrite() 
+            + NcStrServiceMsg.NEWLINE.getStr());
         
     }    
 
@@ -112,20 +121,38 @@ public class NcParamCfgToDiskReleaser {
     public static void getIdxDirStructure(String strIndexPath){
         File fileWorkDir = new File(strIndexPath);
         
-        NcAppHelper.outMessage("Path of index directory: \n" + NcIdxFileManager.getStrCanPathFromFile(fileWorkDir)
-                + "Exist: " + fileWorkDir.exists() + "\n"
-                + "canRead: " + fileWorkDir.canRead() + "\n"
-                + "canWrite: " + fileWorkDir.canWrite() + "\n");
+        NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+            + NcStrServiceMsg.PATH_INDEX_DIRECTORY.getStr()
+            + NcStrServiceMsg.NEWLINE.getStr()
+            + NcIdxFileManager.getStrCanPathFromFile(fileWorkDir)
+            + NcStrServiceMsg.EXIST.getStr()
+            + fileWorkDir.exists()
+            + NcStrServiceMsg.NEWLINE.getStr()
+            + NcStrServiceMsg.CANREAD.getStr()
+            + fileWorkDir.canRead()
+            + NcStrServiceMsg.NEWLINE.getStr()
+            + NcStrServiceMsg.CANWRITE.getStr()
+            + fileWorkDir.canWrite()
+            + NcStrServiceMsg.NEWLINE.getStr());
         
         
         String[] strSubDirs = NcManageCfg.getWorkSubDirList();
         for( String itemSubDir : strSubDirs ){
             String strPathSubDir = NcIdxFileManager.strPathCombiner(NcIdxFileManager.getStrCanPathFromFile(fileWorkDir), itemSubDir);
             File pathSubDir = new File(strPathSubDir);
-            NcAppHelper.outMessage("Path of subDir: \n" + NcIdxFileManager.getStrCanPathFromFile(pathSubDir)
-                    + "Exist: " + pathSubDir.exists() + "\n"
-                    + "canRead: " + pathSubDir.canRead() + "\n"
-                    + "canWrite: " + pathSubDir.canWrite() + "\n");
+            NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+                + NcStrServiceMsg.PATH_SUBDIR.getStr()
+                + NcStrServiceMsg.NEWLINE.getStr()
+                + NcIdxFileManager.getStrCanPathFromFile(pathSubDir)
+                + NcStrServiceMsg.EXIST.getStr()
+                + pathSubDir.exists()
+                + NcStrServiceMsg.NEWLINE.getStr()
+                + NcStrServiceMsg.CANREAD.getStr()
+                + pathSubDir.canRead()
+                + NcStrServiceMsg.NEWLINE.getStr()
+                + NcStrServiceMsg.CANWRITE.getStr()
+                + pathSubDir.canWrite()
+                + NcStrServiceMsg.NEWLINE.getStr());
         }
         
     }

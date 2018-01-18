@@ -63,11 +63,14 @@ public class NcParamFvManager {
         boolean boolCompareResult = inWorkCfg.recordHash == calcHash;
         
         if( !boolCompareResult ){
-            String strOut = "Calculated hash: "
+            String strOut = NcStrLogMsgField.INFO.getStr()
+                + NcStrServiceMsg.HASH_CALC.getStr()
                 + calcHash
-                + "\tin record hash: "
+                + NcStrServiceMsg.TAB.getStr()
+                + NcStrServiceMsg.HASH_RECORD.getStr()
                 + inWorkCfg.recordHash
-                + "\tresult: " + boolCompareResult;
+                + NcStrServiceMsg.TAB.getStr()
+                + NcStrServiceMsg.RESULT.getStr() + boolCompareResult;
             NcAppHelper.outMessage(strOut);
         }
         
@@ -96,35 +99,72 @@ public class NcParamFvManager {
         return forOutParam;
     }
     public static void ncParamFvDataOutPut(NcParamFv inWorkCfg){
-        NcAppHelper.outMessage("RecordHash is: " + isNcParamFvDataHashTrue(inWorkCfg));
-        NcAppHelper.outMessage("indexPath: " + inWorkCfg.indexPath);
-        NcAppHelper.outMessage("keywordsOutOfSearch: " + inWorkCfg.keywordsOutOfSearch);
-        NcAppHelper.outMessage("keywordsInSearch: " + inWorkCfg.keywordsInSearch);
-        NcAppHelper.outMessage("dirOutOfIndex: " + inWorkCfg.dirOutOfIndex);
-        NcAppHelper.outMessage("diskUserAlias.size: " + inWorkCfg.diskUserAlias.size());
-        NcAppHelper.outMessage("For cfg file strHexMD5: " + inWorkCfg.strHexMD5);
-        NcAppHelper.outMessage("For cfg file strHexSHA1: " + inWorkCfg.strHexSHA1);
-        NcAppHelper.outMessage("For cfg file strHexSHA256: " + inWorkCfg.strHexSHA256);
-        NcAppHelper.outMessage("For cfg file strHexSHA512: " + inWorkCfg.strHexSHA512);
-        NcAppHelper.outMessage("tmIndexSubDirs.size: " + inWorkCfg.tmIndexSubDirs.size());
-        NcAppHelper.outMessage("recordTime: " + inWorkCfg.recordTime);
+        NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+            + NcStrVarDescription.NCPARAMFV.getStr()
+            + NcStrServiceMsg.HASH_RECORD_IS.getStr()
+            + isNcParamFvDataHashTrue(inWorkCfg));
+        NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+            + NcStrVarDescription.NCPARAMFV.getStr()
+            + NcStrVarDescription.INDEX_PATH.getStr()
+            + inWorkCfg.indexPath);
+        NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+            + NcStrVarDescription.NCPARAMFV.getStr()
+            + NcStrVarDescription.KEYWORD_OUT_SEARCH.getStr()
+            + inWorkCfg.keywordsOutOfSearch);
+        NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+            + NcStrVarDescription.NCPARAMFV.getStr()
+            + NcStrVarDescription.KEYWORD_IN_SEARCH.getStr()
+            + inWorkCfg.keywordsInSearch);
+        NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+            + NcStrVarDescription.NCPARAMFV.getStr()
+            + NcStrVarDescription.DIR_OUT_INDEX.getStr()
+            + inWorkCfg.dirOutOfIndex);
+        NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+            + NcStrVarDescription.NCPARAMFV.getStr()
+            + NcStrVarDescription.DIR_IN_INDEX.getStr()
+            + inWorkCfg.dirInIndex);
+        NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+            + NcStrVarDescription.NCPARAMFV.getStr()
+            + NcStrVarDescription.DISK_USER_ALIAS_SIZE.getStr()
+            + inWorkCfg.diskUserAlias.size());
+        NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+            + NcStrVarDescription.NCPARAMFV.getStr()
+            + NcStrVarDescription.STR_HEX_MD5.getStr()
+            + inWorkCfg.strHexMD5);
+        NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+            + NcStrVarDescription.NCPARAMFV.getStr()
+            + NcStrVarDescription.STR_HEX_SHA1.getStr()
+            + inWorkCfg.strHexSHA1);
+        NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+            + NcStrVarDescription.NCPARAMFV.getStr()
+            + NcStrVarDescription.STR_HEX_SHA256.getStr()
+            + inWorkCfg.strHexSHA256);
+        NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+            + NcStrVarDescription.NCPARAMFV.getStr()
+            + NcStrVarDescription.STR_HEX_SHA512.getStr()
+            + inWorkCfg.strHexSHA512);
+        NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+            + NcStrVarDescription.NCPARAMFV.getStr()
+            + NcStrVarDescription.TM_INDEX_SUBDIRS.getStr()
+            + inWorkCfg.tmIndexSubDirs.size());
+        NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+            + NcStrVarDescription.NCPARAMFV.getStr()
+            + NcStrVarDescription.RECORD_TIME.getStr()
+            + inWorkCfg.recordTime);
     }
     public static void checkToWrite(NcParamFv inWorkCfg){
         boolean isHash = isNcParamFvDataHashTrue(inWorkCfg);
-        /*if( isHash ){
-            NcAppHelper.outMessage("Work config hash for write is ok");
-        }
-        else{
-            NcAppHelper.outMessage("Work config hash for write has error");
-        }*/
+        NcAppHelper.outMessage(
+        NcStrServiceMsg.WORK_CFG_HASH.getStr()
+        + NcStrServiceMsg.FOR_WRITE.getStr()
+        + isHash);
+        
     }
     public static void checkFromRead(NcParamFv inWorkCfg){
         boolean isHash = isNcParamFvDataHashTrue(inWorkCfg);
-        /*if( isHash ){
-            NcAppHelper.outMessage("Work config hash from read is ok");
-        }
-        else{
-            NcAppHelper.outMessage("Work config hash from read has error");
-        }*/
+        NcAppHelper.outMessage(
+        NcStrServiceMsg.WORK_CFG_HASH.getStr()
+        + NcStrServiceMsg.FROM_READ.getStr()
+        + isHash);
     }
 }

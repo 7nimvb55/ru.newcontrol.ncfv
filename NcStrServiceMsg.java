@@ -21,7 +21,24 @@ package ru.newcontrol.ncfv;
  */
 public enum NcStrServiceMsg {
     ERROR_FILE_NOT_EXIST("notExistFileError"),
-    ERROR_FILE_NOT_CANONICAL_PATH("Can not File.getCanonicalPath() for: ");
+    ERROR_FILE_NOT_CANONICAL_PATH("Can not File.getCanonicalPath() for: "),
+    ERROR_NOT_CREATE("Can not create: "),
+    PATH_INDEX_DIRECTORY("Path of index directory: "),
+    PATH_WORK_FILE("Path of work file: "),
+    PATH_SUBDIR("Path of subDir: "),
+    EXIST("Exist: "),
+    CANREAD("canRead: "),
+    CANWRITE("canWrite: "),
+    NEWLINE("\n"),
+    TAB("\t"),
+    HASH_CALC("Calculated hash: "),
+    HASH_RECORD("in record hash: "),
+    RESULT("result: "),
+    HASH_RECORD_IS("RecordHash is: "),
+    WORK_CFG_HASH("Work config hash: "),
+    FOR_WRITE("for write: "),
+    FROM_READ("from read: ");
+    
     private String strMsg;
     NcStrServiceMsg(String strMsg){
         this.strMsg = strMsg;

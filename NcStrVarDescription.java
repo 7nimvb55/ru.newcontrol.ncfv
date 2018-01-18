@@ -21,7 +21,20 @@ package ru.newcontrol.ncfv;
  */
 public enum NcStrVarDescription {
     IDX("[INDEX]"),
-    ID("[IDENTIFICATION_NUMBER]");
+    ID("[IDENTIFICATION_NUMBER]"),
+    INDEX_PATH("[indexPath]"),
+    KEYWORD_OUT_SEARCH("[keywordOutSearch]"),
+    KEYWORD_IN_SEARCH("[keywordInSearch]"),
+    DIR_OUT_INDEX("[dirOutIndex]"),
+    DIR_IN_INDEX("[dirInIndex]"),
+    DISK_USER_ALIAS_SIZE("[diskUserAlias.size]"),
+    STR_HEX_MD5("[strHexMD5]"),
+    STR_HEX_SHA1("[strHexSHA1]"),
+    STR_HEX_SHA256("[strHexSHA256]"),
+    STR_HEX_SHA512("[strHexSHA512]"),
+    TM_INDEX_SUBDIRS("[tmIndexSubDirs.size]"),
+    RECORD_TIME("[recordTime]"),
+    NCPARAMFV("[NcParamFv]");
     private String strMsg;
     NcStrVarDescription(String strMsg){
         this.strMsg = strMsg;

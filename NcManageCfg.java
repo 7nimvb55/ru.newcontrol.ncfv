@@ -200,8 +200,9 @@ public class NcManageCfg {
         if( createdDir.mkdir() ){
             return createdDir;
         }
-        String strMsg = "Can not create: " + NcIdxFileManager.getStrCanPathFromFile(createdDir);
-        NcAppHelper.outMessage(strMsg);
+        String strMsg = NcStrServiceMsg.ERROR_NOT_CREATE.getStr() + NcIdxFileManager.getStrCanPathFromFile(createdDir);
+        NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
+            + strMsg);
         throw new IOException(strMsg);
     }
 /**
@@ -219,8 +220,9 @@ public class NcManageCfg {
             File fileWorkSubDir = new File(strPathWorkDir+strSubDir);
             if( !fileWorkSubDir.exists() ){
                 if( !fileWorkSubDir.mkdir() ){
-                    String strMsg = "Can not create: " + NcIdxFileManager.getStrCanPathFromFile(fileWorkSubDir);
-                    NcAppHelper.outMessage(strMsg);
+                    String strMsg = NcStrServiceMsg.ERROR_NOT_CREATE.getStr() + NcIdxFileManager.getStrCanPathFromFile(fileWorkSubDir);
+                    NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
+                    + strMsg);
                     throw new IOException(strMsg);
                 }
             }
@@ -252,7 +254,8 @@ public class NcManageCfg {
             try {
                 mcSearchOrSetWorkDir();
             } catch (IOException ex) {
-                NcAppHelper.outMessage(ex.getMessage());
+                NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
+                + ex.getMessage());
             }
         }
         if(ncfvdi == null){

@@ -261,19 +261,22 @@ public class NcIndexManageIDs {
         TreeMap<Integer, File> indexWorkSubDirFilesList = NcIdxFileManager.getIndexWorkSubDirFilesList();
         File ncmfsDFL = indexWorkSubDirFilesList.get("/fl".hashCode());
         if( NcIdxFileManager.isErrorForFileOperation(ncmfsDFL) ){
-            NcAppHelper.outMessage("/fl directory check error"
+            NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
+            + "/fl directory check error"
             + NcIdxFileManager.getStrCanPathFromFile(ncmfsDFL));
             return new NcTmpNowProcessInfo();
         }
         File ncmfsDFHL = indexWorkSubDirFilesList.get("/fx".hashCode());
         if( NcIdxFileManager.isErrorForFileOperation(ncmfsDFHL) ){
-            NcAppHelper.outMessage("/fx directory check error"
+            NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
+            + "/fx directory check error"
             + NcIdxFileManager.getStrCanPathFromFile(ncmfsDFHL));
             return new NcTmpNowProcessInfo();
         }
         File ncmfsDLWL = indexWorkSubDirFilesList.get("/lw".hashCode());
         if( NcIdxFileManager.isErrorForFileOperation(ncmfsDLWL) ){
-            NcAppHelper.outMessage("/lw directory check error"
+            NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
+            + "/lw directory check error"
             + NcIdxFileManager.getStrCanPathFromFile(ncmfsDLWL));
             return new NcTmpNowProcessInfo();
         }
