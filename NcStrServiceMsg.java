@@ -51,7 +51,10 @@ public enum NcStrServiceMsg {
     PATH_CONTINUE_NOT_VALID("Path continue not valid"),
     PATH_START_NOT_VALID("Path start not valid"),
     PATH_FOR_NOT_WINDOWS_SYSTEM("Path for not windows system"),
-    DEFAULT_STAGE("default stage");
+    DEFAULT_STAGE("default stage"),
+    COUNT_OF_SEARCHED_RECORDS("Count of searched records: "),
+    FUNCTIONAL_NOT_RELEASED("Functional not released "),
+    NOT_IN_SEARCH_COUNT("Not in search: ");
     
     private String strMsg;
     NcStrServiceMsg(String strMsg){

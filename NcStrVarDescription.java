@@ -54,7 +54,8 @@ public enum NcStrVarDescription {
     TOTAL_SPACE("[totalSpace]"),
     UN_ALLOCATED_SPACE("[unAllocatedSpace]"),
     USED_SPACE("[usedSpace]"),
-    STR_CFG_PATH("[strCfgPath]");
+    STR_CFG_PATH("[strCfgPath]"),
+    CLEAN_RESULT("[CleanResult]");
     private String strMsg;
     NcStrVarDescription(String strMsg){
         this.strMsg = strMsg;

@@ -85,7 +85,11 @@ public class NcSrchKeyWordInput {
          * @TODO search for LongWord Structure
          */
         if( !strLongWord.isEmpty() ){
-            NcAppHelper.outMessage("Not in search: " + strLongWord.size());
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.ERROR_CRITICAL.getStr()
+                + NcStrServiceMsg.FUNCTIONAL_NOT_RELEASED.getStr()
+                + NcStrServiceMsg.NOT_IN_SEARCH_COUNT
+                + strLongWord.size());
         }
         
         TreeMap<Long, NcIdxSubStringVariant> strSearchWordVarList = NcSrchVariantMaker.getUpperLowerCaseVariant(strWordForVar);

@@ -94,7 +94,7 @@ public class NcSrchGetResult {
      */
     public static void outToConsoleSearchedIDs(TreeMap<Long, NcDcIdxWordToFile> strHexForInVar){
         for( Map.Entry<Long, NcDcIdxWordToFile> itemID : strHexForInVar.entrySet() ){
-            NcAppHelper.outMessage("id: " + itemID.getValue().dirListID);
+            NcAppHelper.outMessageToConsole("id: " + itemID.getValue().dirListID);
         }
         
     }
@@ -105,6 +105,9 @@ public class NcSrchGetResult {
      */
     public static void outSearchResult(TreeMap<Long, NcDcIdxWordToFile> strHexForInVar, TreeMap<Long, NcDcIdxWordToFile> strHexForOutVar){
         TreeMap<Long, NcDcIdxWordToFile> CleanResult = NcSrchFileDataCompare.getIdInWithoutOfOutSearchResult(strHexForInVar, strHexForOutVar);
-        NcAppHelper.outMessage("Count CleanResult records out: " + CleanResult.size());
+        NcAppHelper.outMessage(
+            NcStrLogMsgField.INFO.getStr()
+            + NcStrVarDescription.CLEAN_RESULT.getStr()
+            + NcStrServiceMsg.COUNT_OF_SEARCHED_RECORDS.getStr() + CleanResult.size());
     }
 }
