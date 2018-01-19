@@ -31,13 +31,21 @@ public enum NcStrServiceMsg {
     CANWRITE("canWrite: "),
     NEWLINE("\n"),
     TAB("\t"),
+    SPACE(" "),
+    COLON(":"),
     HASH_CALC("Calculated hash: "),
     HASH_RECORD("in record hash: "),
     RESULT("result: "),
     HASH_RECORD_IS("RecordHash is: "),
     WORK_CFG_HASH("Work config hash: "),
     FOR_WRITE("for write: "),
-    FROM_READ("from read: ");
+    FROM_READ("from read: "),
+    
+    STRING_EQUAL("String equal"),
+    PATH_INPUT("Path input: "),
+    PATH_DEFAULT("Path default: "),
+    PATH_CONTINUE_NOT_VALID("Path continue not valid"),
+    PATH_START_NOT_VALID("Path start not valid");
     
     private String strMsg;
     NcStrServiceMsg(String strMsg){

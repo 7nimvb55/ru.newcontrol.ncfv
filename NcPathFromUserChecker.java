@@ -268,21 +268,37 @@ public class NcPathFromUserChecker {
     public static String strInputPathFormatFilter(String strInput, String strInputDefault){
         String strDefault = strInputPathFormatFilterForDefault(strInputDefault);
         if( strDefault.equalsIgnoreCase(strInput)){
-            NcAppHelper.outMessage("String equal");
-            NcAppHelper.outMessage("return Default: " + strDefault);
-            NcAppHelper.outMessage("or return Input: " + strInput);
+            NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+            + NcStrLogMsgField.CHECK_RESULT.getStr()
+            + NcStrServiceMsg.STRING_EQUAL.getStr()
+            + NcStrLogMsgField.TO_RETURN.getStr()
+            + NcStrLogMsgField.VARVAL.getStr()
+            + NcStrVarDescription.STR_DEFAULT.getStr() + strDefault
+            + NcStrVarDescription.STR_INPUT.getStr() + strInput);
             return strDefault;
         }
         if( !strPathValidContinue(strInput) ){
-            NcAppHelper.outMessage("Continue not valid");
-            NcAppHelper.outMessage("return Default: " + strDefault);
-            NcAppHelper.outMessage("Breaked: " + strInput);
+            NcAppHelper.outMessage(NcStrLogMsgField.WARNING.getStr()
+            + NcStrLogMsgField.CHECK_RESULT.getStr()
+            + NcStrServiceMsg.PATH_CONTINUE_NOT_VALID.getStr()
+            + NcStrLogMsgField.TO_RETURN.getStr()
+            + NcStrLogMsgField.VARVAL.getStr()
+            + NcStrVarDescription.STR_DEFAULT.getStr() + strDefault
+            + NcStrLogMsgField.DISCARDED.getStr()
+            + NcStrLogMsgField.VARVAL.getStr()
+            + NcStrVarDescription.STR_INPUT.getStr() + strInput);
             return strDefault;
         }
         if( !strPathValidStart(strInput) ){
-            NcAppHelper.outMessage("Start not valid");
-            NcAppHelper.outMessage("return Default: " + strDefault);
-            NcAppHelper.outMessage("Breaked: " + strInput);
+            NcAppHelper.outMessage(NcStrLogMsgField.WARNING.getStr()
+            + NcStrLogMsgField.CHECK_RESULT.getStr()
+            + NcStrServiceMsg.PATH_START_NOT_VALID.getStr()
+            + NcStrLogMsgField.TO_RETURN.getStr()
+            + NcStrLogMsgField.VARVAL.getStr()
+            + NcStrVarDescription.STR_DEFAULT.getStr() + strDefault
+            + NcStrLogMsgField.DISCARDED.getStr()
+            + NcStrLogMsgField.VARVAL.getStr()
+            + NcStrVarDescription.STR_INPUT.getStr() + strInput);
             return strDefault;
         }
         if( !NcAppHelper.isWindows() ){

@@ -34,7 +34,9 @@ public enum NcStrVarDescription {
     STR_HEX_SHA512("[strHexSHA512]"),
     TM_INDEX_SUBDIRS("[tmIndexSubDirs.size]"),
     RECORD_TIME("[recordTime]"),
-    NCPARAMFV("[NcParamFv]");
+    NCPARAMFV("[NcParamFv]"),
+    STR_DEFAULT("[strDefault]"),
+    STR_INPUT("[strInput]");
     private String strMsg;
     NcStrVarDescription(String strMsg){
         this.strMsg = strMsg;

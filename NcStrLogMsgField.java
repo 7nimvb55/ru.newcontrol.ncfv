@@ -31,6 +31,11 @@ public enum NcStrLogMsgField {
     
     VARVAL("[VARVAL]"),
     VARNAME("[VARNAME]"),
+    CHECK_RESULT("[CHECK_RESULT]"),
+    
+    TO_RETURN("[TO_RETURN]"),
+    DISCARDED("[DISCARDED]"),
+    
     DELIMITER("[]"),
     TIME("[TIME]"),
     THREAD("[THREAD]"),
