@@ -228,12 +228,15 @@ public class NcPreRunFileViewer {
      *
      * @param forCheck
      */
-    public static void checkInDirFileReadable(File forCheck){
-        if(forCheck.isFile()){
-            NcAppHelper.outMessage(forCheck.getName());
+    public static void checkInDirFileReadable(File fileForCheck){
+        if( fileForCheck.isFile() ){
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.INFO.getStr()
+                + NcStrVarDescription.FILE_FOR_CHECK.getStr()
+                + fileForCheck.getName());
         }
-        if(forCheck.isDirectory()){
-            File[] filesListFromDir = forCheck.listFiles();
+        if( fileForCheck.isDirectory() ){
+            File[] filesListFromDir = fileForCheck.listFiles();
             for(File itemOfFiles : filesListFromDir){
                 checkInDirFileReadable(itemOfFiles);
             }
@@ -247,19 +250,58 @@ public class NcPreRunFileViewer {
     public static TreeMap<Long, NcDiskInfo> initDiskInfo(){
         TreeMap<Long, NcDiskInfo> sysDisk = NcParamJournalDisk.getFromJournalDiskOrCreateIt();
         for( Map.Entry<Long, NcDiskInfo> itemDisk : sysDisk.entrySet() ){
-            NcAppHelper.outMessage("diskID: \t" + Long.toString(itemDisk.getValue().diskID));
-            NcAppHelper.outMessage("humanAlias: \t" + itemDisk.getValue().humanAlias);
-            NcAppHelper.outMessage("programAlias: \t" + itemDisk.getValue().programAlias);
-            NcAppHelper.outMessage("strFileStore: \t" + itemDisk.getValue().strFileStore);
-            NcAppHelper.outMessage("DiskLetter: \t" + itemDisk.getValue().diskLetter);
-            NcAppHelper.outMessage("longSerialNumber: \t" + Long.toString(itemDisk.getValue().longSerialNumber));
-            NcAppHelper.outMessage("strHexSerialNumber: \t" + itemDisk.getValue().strHexSerialNumber);
-            NcAppHelper.outMessage("DiskFStype: \t" + itemDisk.getValue().diskFStype);
-            NcAppHelper.outMessage("isReadonly: \t" + itemDisk.getValue().isReadonly);
-            NcAppHelper.outMessage("availSpace: \t" + Long.toString(itemDisk.getValue().availSpace));
-            NcAppHelper.outMessage("totalSpace: \t" + Long.toString(itemDisk.getValue().totalSpace));
-            NcAppHelper.outMessage("unAllocatedSpace: \t" + Long.toString(itemDisk.getValue().unAllocatedSpace));
-            NcAppHelper.outMessage("usedSpace: \t" + Long.toString(itemDisk.getValue().usedSpace));
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.INFO.getStr()
+                + NcStrVarDescription.DISK_ID.getStr()
+                + Long.toString(itemDisk.getValue().diskID));
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.INFO.getStr()
+                + NcStrVarDescription.HUMAN_ALIAS.getStr()
+                + itemDisk.getValue().humanAlias);
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.INFO.getStr()
+                + NcStrVarDescription.PROGRAM_ALIAS.getStr()
+                + itemDisk.getValue().programAlias);
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.INFO.getStr()
+                + NcStrVarDescription.STR_FILE_STORE.getStr()
+                + itemDisk.getValue().strFileStore);
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.INFO.getStr()
+                + NcStrVarDescription.DISK_LETTER.getStr()
+                + itemDisk.getValue().diskLetter);
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.INFO.getStr()
+                + NcStrVarDescription.LONG_SERIAL_NUMBER.getStr()
+                + Long.toString(itemDisk.getValue().longSerialNumber));
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.INFO.getStr()
+                + NcStrVarDescription.STR_HEX_SERIAL_NUMBER.getStr()
+                + itemDisk.getValue().strHexSerialNumber);
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.INFO.getStr()
+                + NcStrVarDescription.DISK_FS_TYPE.getStr()
+                + itemDisk.getValue().diskFStype);
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.INFO.getStr()
+                + NcStrVarDescription.IS_READ_ONLY.getStr()
+                + itemDisk.getValue().isReadonly);
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.INFO.getStr()
+                + NcStrVarDescription.AVAIL_SPACE.getStr()
+                + Long.toString(itemDisk.getValue().availSpace));
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.INFO.getStr()
+                + NcStrVarDescription.TOTAL_SPACE.getStr()
+                + Long.toString(itemDisk.getValue().totalSpace));
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.INFO.getStr()
+                + NcStrVarDescription.UN_ALLOCATED_SPACE.getStr()
+                + Long.toString(itemDisk.getValue().unAllocatedSpace));
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.INFO.getStr()
+                + NcStrVarDescription.USED_SPACE.getStr()
+                + Long.toString(itemDisk.getValue().usedSpace));
         }
         return sysDisk;
     }
@@ -423,10 +465,10 @@ public class NcPreRunFileViewer {
      *
      * @param ncStrCfgPath
      */
-    public static void createCfg(String ncStrCfgPath){
+    public static void createCfg(String strCfgPath){
         ArrayList<String> strTextRemark = getRemTextForCfgFile();
         ArrayList<String> strParameters = getDefaultParametersForCfg();
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(ncStrCfgPath)))
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(strCfgPath)))
         {
             for(String itemStr : strTextRemark){
                 String text = itemStr.toString();
@@ -440,10 +482,15 @@ public class NcPreRunFileViewer {
             }
         }
         catch(IOException ex){
-            String strForExit = "Can't write parameters into file: "
-                    + ncStrCfgPath;
+            String strForExit =
+                NcStrLogMsgField.ERROR_CRITICAL.getStr()
+                + NcStrServiceMsg.NOT_WRITE_INTO_FILE.getStr()
+                + NcStrVarDescription.STR_CFG_PATH.getStr()
+                + strCfgPath;
             NcAppHelper.outMessage(strForExit);
-            NcAppHelper.appExitWithMessage(ex.getMessage());
+            NcAppHelper.appExitWithMessage(
+                NcStrLogMsgField.ERROR_CRITICAL.getStr()
+                + ex.getMessage());
         }
     }
     /**
@@ -452,11 +499,11 @@ public class NcPreRunFileViewer {
      * @return
      */
     public static int updateEtcCfg(ArrayList<String> linesParametersForUpdateCfg){
-        String pathToCfg = NcIdxFileManager.getStrCanPathFromFile(NcIdxFileManager.getOrCreateCfgFile());
+        String strCfgPath = NcIdxFileManager.getStrCanPathFromFile(NcIdxFileManager.getOrCreateCfgFile());
         ArrayList<String> strTextRemark = getRemTextForCfgFile();
         ArrayList<String> strParameters = linesParametersForUpdateCfg;
         int lines = 0;
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(pathToCfg)))
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(strCfgPath)))
         {
             for(String itemStr : strTextRemark){
                 String text = itemStr.toString();
@@ -472,7 +519,15 @@ public class NcPreRunFileViewer {
             }
         }
         catch(IOException ex){
-            NcAppHelper.outMessage(ex.getMessage());
+            String strForExit =
+                NcStrLogMsgField.ERROR_CRITICAL.getStr()
+                + NcStrServiceMsg.NOT_WRITE_INTO_FILE.getStr()
+                + NcStrVarDescription.STR_CFG_PATH.getStr()
+                + strCfgPath;
+            NcAppHelper.outMessage(strForExit);
+            NcAppHelper.appExitWithMessage(
+                NcStrLogMsgField.ERROR_CRITICAL.getStr()
+                + ex.getMessage());
         }
         return lines;
     }

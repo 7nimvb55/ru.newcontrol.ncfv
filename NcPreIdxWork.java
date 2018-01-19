@@ -32,19 +32,19 @@ public class NcPreIdxWork {
         listSubDirs.putAll(currentWorkCfg.tmIndexSubDirs);
         listSubDirs.put("index".hashCode(), new File(currentWorkCfg.indexPath));
         for( Map.Entry<Integer, File> items : listSubDirs.entrySet() ){
-            NcAppHelper.outMessage(NcIdxFileManager.getStrCanPathFromFile(items.getValue()));
+            NcAppHelper.outMessageToConsole(NcIdxFileManager.getStrCanPathFromFile(items.getValue()));
         }
         NcAppHelper.outMessage("Next way");
         TreeMap<Integer, File> indexWorkSubDirFilesList = NcIdxFileManager.getIndexWorkSubDirFilesList();
         for( Map.Entry<Integer, File> itemsNextWay : indexWorkSubDirFilesList.entrySet() ){
-            NcAppHelper.outMessage("key: " + itemsNextWay.getKey());
-            NcAppHelper.outMessage(NcIdxFileManager.getStrCanPathFromFile(itemsNextWay.getValue()));
+            NcAppHelper.outMessageToConsole("key: " + itemsNextWay.getKey());
+            NcAppHelper.outMessageToConsole(NcIdxFileManager.getStrCanPathFromFile(itemsNextWay.getValue()));
         }
-        NcAppHelper.outMessage("By name");
+        NcAppHelper.outMessageToConsole("By name");
         String[] arrStrCode = NcManageCfg.getWorkSubDirList();
         for( String itemSubDir : arrStrCode ){
-            NcAppHelper.outMessage("key name: " + itemSubDir + "\tkey value: " + itemSubDir.hashCode() );
-            NcAppHelper.outMessage(NcIdxFileManager.getStrCanPathFromFile(indexWorkSubDirFilesList.get(itemSubDir.hashCode())));
+            NcAppHelper.outMessageToConsole("key name: " + itemSubDir + "\tkey value: " + itemSubDir.hashCode() );
+            NcAppHelper.outMessageToConsole(NcIdxFileManager.getStrCanPathFromFile(indexWorkSubDirFilesList.get(itemSubDir.hashCode())));
         }
     }
     /**
@@ -95,8 +95,8 @@ public class NcPreIdxWork {
         File recordsExist = NcIdxFileManager.getFileForDirListExistContainedRecordId(recordId);
         int countError = 0;
         do{
-            NcAppHelper.outMessage("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsAttr));
-            NcAppHelper.outMessage("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsExist));
+            NcAppHelper.outMessageToConsole("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsAttr));
+            NcAppHelper.outMessageToConsole("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsExist));
             if( NcIdxFileManager.isErrorForFileOperation(recordsAttr) ){
                 if( countError > 3 ){
                     break;
@@ -130,8 +130,8 @@ public class NcPreIdxWork {
             dataFromDirListExist.putAll((Map<? extends Long, ? extends NcDcIdxDirListToFileExist>) 
                     NcIdxFileManager.getDataFromFile(recordsExist));
             
-            NcAppHelper.outMessage("Start check for Attr count of records: " + dataFromDirList.size());
-            NcAppHelper.outMessage("Start check for Exist count of records: " + dataFromDirListExist.size());
+            NcAppHelper.outMessageToConsole("Start check for Attr count of records: " + dataFromDirList.size());
+            NcAppHelper.outMessageToConsole("Start check for Exist count of records: " + dataFromDirListExist.size());
             
             long DirListAttrId = dataFromDirList.firstEntry().getValue().dirListID;
             long DirListExistId = dataFromDirListExist.firstEntry().getValue().dirListID;
@@ -204,28 +204,28 @@ public class NcPreIdxWork {
                 }
 
                 
-                NcAppHelper.outMessage("Attr dirListID: " + dataAttr.dirListID + " Exist dirListID:" + dataExist.dirListID);
+                NcAppHelper.outMessageToConsole("Attr dirListID: " + dataAttr.dirListID + " Exist dirListID:" + dataExist.dirListID);
             }
             recordsAttr = NcIdxFileManager.getFileForDirListAttrContainedRecordId(recordLastAttrId + 1);
             recordsExist = NcIdxFileManager.getFileForDirListExistContainedRecordId(recordLastExistId + 1);
             
             if( !badDiskIdDirListAttr.isEmpty() ){
-                NcAppHelper.outMessage("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsAttr) + "\n BadDiskID count of records " + badDiskIdDirListAttr.size());
+                NcAppHelper.outMessageToConsole("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsAttr) + "\n BadDiskID count of records " + badDiskIdDirListAttr.size());
             }
             if( !badDirIdDirListAttr.isEmpty() ){
-                NcAppHelper.outMessage("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsAttr) + "\n BadDiskID count of records " + badDirIdDirListAttr.size());
+                NcAppHelper.outMessageToConsole("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsAttr) + "\n BadDiskID count of records " + badDirIdDirListAttr.size());
             }
             if( !badPathHashDirListAttr.isEmpty() ){
-                NcAppHelper.outMessage("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsAttr) + "\n BadDiskID count of records " + badPathHashDirListAttr.size());
+                NcAppHelper.outMessageToConsole("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsAttr) + "\n BadDiskID count of records " + badPathHashDirListAttr.size());
             }
             if( !badDiskIdDirListExist.isEmpty() ){
-                NcAppHelper.outMessage("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsExist) + "\n BadDiskID count of records " + badDiskIdDirListExist.size());
+                NcAppHelper.outMessageToConsole("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsExist) + "\n BadDiskID count of records " + badDiskIdDirListExist.size());
             }
             if( !badDirIdDirListExist.isEmpty() ){
-                NcAppHelper.outMessage("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsExist) + "\n BadDiskID count of records " + badDirIdDirListExist.size());
+                NcAppHelper.outMessageToConsole("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsExist) + "\n BadDiskID count of records " + badDirIdDirListExist.size());
             }    
             if( !badPathHashDirListExist.isEmpty() ){
-                NcAppHelper.outMessage("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsExist) + "\n BadDiskID count of records " + badPathHashDirListExist.size());
+                NcAppHelper.outMessageToConsole("In file: " + NcIdxFileManager.getStrCanPathFromFile(recordsExist) + "\n BadDiskID count of records " + badPathHashDirListExist.size());
             }    
         }
         while(NcIdxFileManager.isErrorForFileOperation(recordsAttr) ||
@@ -247,10 +247,10 @@ public class NcPreIdxWork {
         for(Map.Entry<Long, File> itemFromDirListExist : inFuncFileFromDirListExist.entrySet() ){
             dataFromDirListExist.putAll((Map<? extends Long, ? extends NcDcIdxDirListToFileExist>) NcIdxFileManager.getDataFromFile(itemFromDirListExist.getValue()));
         }
-        NcAppHelper.outMessage("DirList record count: " + dataFromDirList.size());
-        NcAppHelper.outMessage("Files count: " + inFuncFileFromDirList.size());
-        NcAppHelper.outMessage("DirList Exist record count: " + dataFromDirListExist.size());
-        NcAppHelper.outMessage("Files count: " + inFuncFileFromDirListExist.size());
+        NcAppHelper.outMessageToConsole("DirList record count: " + dataFromDirList.size());
+        NcAppHelper.outMessageToConsole("Files count: " + inFuncFileFromDirList.size());
+        NcAppHelper.outMessageToConsole("DirList Exist record count: " + dataFromDirListExist.size());
+        NcAppHelper.outMessageToConsole("Files count: " + inFuncFileFromDirListExist.size());
         
         for(Map.Entry<Long, NcDcIdxDirListToFileExist> itemFromDirListExist : dataFromDirListExist.entrySet() ){
             outToConsoleDirListExist(itemFromDirListExist.getValue());
@@ -268,28 +268,28 @@ public class NcPreIdxWork {
      * @param inFuncData {@link ru.newcontrol.ncfv.NcDcIdxDirListToFileAttr}
      */
     public static void outToConsoleDirListAttr(NcDcIdxDirListToFileAttr inFuncData){
-        NcAppHelper.outMessage("dirListID: " + inFuncData.dirListID);
-        NcAppHelper.outMessage("diskID: " + inFuncData.diskID);
-        NcAppHelper.outMessage("diskSnLong: " + inFuncData.diskSnLong);
-        NcAppHelper.outMessage("diskTotalSpace: " + inFuncData.diskTotalSpace);
-        NcAppHelper.outMessage("diskProgramAlias: " + inFuncData.diskProgramAlias);
-        NcAppHelper.outMessage("diskProgramAliasHash: " + inFuncData.diskProgramAliasHash);
-        NcAppHelper.outMessage("diskSnHex: " + inFuncData.diskSnHex);
-        NcAppHelper.outMessage("diskSnHexHash: " + inFuncData.diskSnHexHash);
-        NcAppHelper.outMessage("diskLetter: " + inFuncData.diskLetter);
-        NcAppHelper.outMessage("path: " + inFuncData.path);
-        NcAppHelper.outMessage("pathHash: " + inFuncData.pathHash);
-        NcAppHelper.outMessage("fileLength: " + inFuncData.fileLength);
-        NcAppHelper.outMessage("fileCanRead: " + inFuncData.fileCanRead);
-        NcAppHelper.outMessage("fileCanWrite: " + inFuncData.fileCanWrite);
-        NcAppHelper.outMessage("fileCanExecute: " + inFuncData.fileCanExecute);
-        NcAppHelper.outMessage("fileIsHidden: " + inFuncData.fileIsHidden);
-        NcAppHelper.outMessage("fileLastModified: " + inFuncData.fileLastModified);
-        NcAppHelper.outMessage("fileIsDirectory: " + inFuncData.fileIsDirectory);
-        NcAppHelper.outMessage("fileIsFile: " + inFuncData.fileIsFile);
-        NcAppHelper.outMessage("recordTime: " + inFuncData.recordTime);
-        NcAppHelper.outMessage("deletedRec: " + inFuncData.deletedRec);
-        NcAppHelper.outMessage("changedRecordID: " + inFuncData.changedRecordID);
+        NcAppHelper.outMessageToConsole("dirListID: " + inFuncData.dirListID);
+        NcAppHelper.outMessageToConsole("diskID: " + inFuncData.diskID);
+        NcAppHelper.outMessageToConsole("diskSnLong: " + inFuncData.diskSnLong);
+        NcAppHelper.outMessageToConsole("diskTotalSpace: " + inFuncData.diskTotalSpace);
+        NcAppHelper.outMessageToConsole("diskProgramAlias: " + inFuncData.diskProgramAlias);
+        NcAppHelper.outMessageToConsole("diskProgramAliasHash: " + inFuncData.diskProgramAliasHash);
+        NcAppHelper.outMessageToConsole("diskSnHex: " + inFuncData.diskSnHex);
+        NcAppHelper.outMessageToConsole("diskSnHexHash: " + inFuncData.diskSnHexHash);
+        NcAppHelper.outMessageToConsole("diskLetter: " + inFuncData.diskLetter);
+        NcAppHelper.outMessageToConsole("path: " + inFuncData.path);
+        NcAppHelper.outMessageToConsole("pathHash: " + inFuncData.pathHash);
+        NcAppHelper.outMessageToConsole("fileLength: " + inFuncData.fileLength);
+        NcAppHelper.outMessageToConsole("fileCanRead: " + inFuncData.fileCanRead);
+        NcAppHelper.outMessageToConsole("fileCanWrite: " + inFuncData.fileCanWrite);
+        NcAppHelper.outMessageToConsole("fileCanExecute: " + inFuncData.fileCanExecute);
+        NcAppHelper.outMessageToConsole("fileIsHidden: " + inFuncData.fileIsHidden);
+        NcAppHelper.outMessageToConsole("fileLastModified: " + inFuncData.fileLastModified);
+        NcAppHelper.outMessageToConsole("fileIsDirectory: " + inFuncData.fileIsDirectory);
+        NcAppHelper.outMessageToConsole("fileIsFile: " + inFuncData.fileIsFile);
+        NcAppHelper.outMessageToConsole("recordTime: " + inFuncData.recordTime);
+        NcAppHelper.outMessageToConsole("deletedRec: " + inFuncData.deletedRec);
+        NcAppHelper.outMessageToConsole("changedRecordID: " + inFuncData.changedRecordID);
     }
     /**
      * Print to console data from {@link ru.newcontrol.ncfv.NcDcIdxDirListToFileExist}
@@ -297,13 +297,13 @@ public class NcPreIdxWork {
      */
     public static void outToConsoleDirListExist(NcDcIdxDirListToFileExist inFuncData){
         if( inFuncData.nanoTimeEndAddToIndex < 0 ){
-            NcAppHelper.outMessage("dirListID: " + inFuncData.dirListID);
-            NcAppHelper.outMessage("diskID: " + inFuncData.diskID);
-            NcAppHelper.outMessage("pathWithOutDiskLetter: " + inFuncData.pathWithOutDiskLetter);
-            NcAppHelper.outMessage("pathHash: " + inFuncData.pathHash);
-            NcAppHelper.outMessage("nanoTimeStartAddToIndex: " + inFuncData.nanoTimeStartAddToIndex);
-            NcAppHelper.outMessage("nanoTimeEndAddToIndex: " + inFuncData.nanoTimeEndAddToIndex);
-            NcAppHelper.outMessage("recordTime: " + inFuncData.recordTime);
+            NcAppHelper.outMessageToConsole("dirListID: " + inFuncData.dirListID);
+            NcAppHelper.outMessageToConsole("diskID: " + inFuncData.diskID);
+            NcAppHelper.outMessageToConsole("pathWithOutDiskLetter: " + inFuncData.pathWithOutDiskLetter);
+            NcAppHelper.outMessageToConsole("pathHash: " + inFuncData.pathHash);
+            NcAppHelper.outMessageToConsole("nanoTimeStartAddToIndex: " + inFuncData.nanoTimeStartAddToIndex);
+            NcAppHelper.outMessageToConsole("nanoTimeEndAddToIndex: " + inFuncData.nanoTimeEndAddToIndex);
+            NcAppHelper.outMessageToConsole("recordTime: " + inFuncData.recordTime);
         }
         
     }
@@ -399,11 +399,11 @@ public class NcPreIdxWork {
      */
     public static void outFilesFromSubDirToConsole(File inFuncSubDir){
         File[] inDirFiles = inFuncSubDir.listFiles();
-        NcAppHelper.outMessage("");
-        NcAppHelper.outMessage("Directory path: " + NcIdxFileManager.getStrCanPathFromFile(inFuncSubDir));
-        NcAppHelper.outMessage("Count files in directory: " + inDirFiles.length);
+        NcAppHelper.outMessageToConsole("");
+        NcAppHelper.outMessageToConsole("Directory path: " + NcIdxFileManager.getStrCanPathFromFile(inFuncSubDir));
+        NcAppHelper.outMessageToConsole("Count files in directory: " + inDirFiles.length);
         for( File itemFile : inDirFiles){
-            NcAppHelper.outMessage("" + itemFile.getName());
+            NcAppHelper.outMessageToConsole("" + itemFile.getName());
         }
     }
     
@@ -414,7 +414,10 @@ public class NcPreIdxWork {
         File fileTmpIDs = NcIdxFileManager.getTmpIdsFile();
         boolean fileGet = NcIdxFileManager.isErrorForFileOperation(fileTmpIDs);
         if( fileGet ){
-            NcAppHelper.outMessage("TmpIDsFile not exist or wrong");
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.ERROR_CRITICAL.getStr()
+                + NcStrVarDescription.TMP_IDS_FILE.getStr()
+                + NcStrServiceMsg.NOT_EXIST_OR_WRONG.getStr());
         }
         if( !fileGet ){
             NcTmpNowProcessInfo readedTmpIDsData= NcIndexManageIDs.getTmpIDsData(fileTmpIDs);
@@ -424,7 +427,10 @@ public class NcPreIdxWork {
             }
             boolean isEmpty = NcIndexManageIDs.isTmpIDsDataEmpty(readedTmpIDsData);
             if( isEmpty ){
-                NcAppHelper.outMessage("TmpIDsFile readed data is Empty");
+                NcAppHelper.outMessage(
+                    NcStrLogMsgField.ERROR.getStr()
+                    + NcStrVarDescription.TMP_IDS_FILE.getStr()
+                    + NcStrServiceMsg.READED_DATA_IS_EMPTY.getStr());
             }
         }
     }
@@ -434,11 +440,11 @@ public class NcPreIdxWork {
      * @param readedTmpIDsData
      */
     public static void getTmpIdsDataToConsole(NcTmpNowProcessInfo readedTmpIDsData){
-        NcAppHelper.outMessage("TmpIdsData: ");
-                NcAppHelper.outMessage("journalid: " + readedTmpIDsData.journalid + " \tjournalname: " + readedTmpIDsData.journalname);
-                NcAppHelper.outMessage("listnameid: " + readedTmpIDsData.listnameid + " \tlistnameid: " + readedTmpIDsData.listname);
-                NcAppHelper.outMessage("hashlistnnameid: " + readedTmpIDsData.hashlistnameid + " \thashlistname: " + readedTmpIDsData.hashlistname);
-                NcAppHelper.outMessage("longwordlistnameid: " + readedTmpIDsData.longwordlistnameid + " \tlongwordlistname: " + readedTmpIDsData.longwordlistname);
+        NcAppHelper.outMessageToConsole("TmpIdsData: ");
+        NcAppHelper.outMessageToConsole("journalid: " + readedTmpIDsData.journalid + " \tjournalname: " + readedTmpIDsData.journalname);
+        NcAppHelper.outMessageToConsole("listnameid: " + readedTmpIDsData.listnameid + " \tlistnameid: " + readedTmpIDsData.listname);
+        NcAppHelper.outMessageToConsole("hashlistnnameid: " + readedTmpIDsData.hashlistnameid + " \thashlistname: " + readedTmpIDsData.hashlistname);
+        NcAppHelper.outMessageToConsole("longwordlistnameid: " + readedTmpIDsData.longwordlistnameid + " \tlongwordlistname: " + readedTmpIDsData.longwordlistname);
     }
 
     

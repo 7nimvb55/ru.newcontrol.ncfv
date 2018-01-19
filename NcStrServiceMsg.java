@@ -23,6 +23,10 @@ public enum NcStrServiceMsg {
     ERROR_FILE_NOT_EXIST("notExistFileError"),
     ERROR_FILE_NOT_CANONICAL_PATH("Can not File.getCanonicalPath() for: "),
     ERROR_NOT_CREATE("Can not create: "),
+    NOT_EXIST_OR_WRONG("not exist or wrong"),
+    NOT_WRITE_INTO_FILE("Can not write into file: "),
+    
+    READED_DATA_IS_EMPTY("readed data is Empty"),
     PATH_INDEX_DIRECTORY("Path of index directory: "),
     PATH_WORK_FILE("Path of work file: "),
     PATH_SUBDIR("Path of subDir: "),

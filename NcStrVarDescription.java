@@ -37,7 +37,24 @@ public enum NcStrVarDescription {
     NCPARAMFV("[NcParamFv]"),
     STR_DEFAULT("[strDefault]"),
     STR_INPUT("[strInput]"),
-    STR_GENERATE_ERROR_VAL("[strGenerateErrorVal]");
+    STR_GENERATE_ERROR_VAL("[strGenerateErrorVal]"),
+    TMP_IDS_FILE("[TmpIDsFile]"),
+    FILE_FOR_CHECK("[fileForCheck]"),
+    
+    DISK_ID("[diskID]"),
+    HUMAN_ALIAS("[humanAlias]"),
+    PROGRAM_ALIAS("[programAlias]"),
+    STR_FILE_STORE("[strFileStore]"),
+    DISK_LETTER("[diskLetter]"),
+    LONG_SERIAL_NUMBER("[longSerialNumber]"),
+    STR_HEX_SERIAL_NUMBER("[strHexSerialNumber]"),
+    DISK_FS_TYPE("[diskFStype]"),
+    IS_READ_ONLY("[isReadonly]"),
+    AVAIL_SPACE("[availSpace]"),
+    TOTAL_SPACE("[totalSpace]"),
+    UN_ALLOCATED_SPACE("[unAllocatedSpace]"),
+    USED_SPACE("[usedSpace]"),
+    STR_CFG_PATH("[strCfgPath]");
     private String strMsg;
     NcStrVarDescription(String strMsg){
         this.strMsg = strMsg;
