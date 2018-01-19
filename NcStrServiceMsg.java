@@ -45,7 +45,9 @@ public enum NcStrServiceMsg {
     PATH_INPUT("Path input: "),
     PATH_DEFAULT("Path default: "),
     PATH_CONTINUE_NOT_VALID("Path continue not valid"),
-    PATH_START_NOT_VALID("Path start not valid");
+    PATH_START_NOT_VALID("Path start not valid"),
+    PATH_FOR_NOT_WINDOWS_SYSTEM("Path for not windows system"),
+    DEFAULT_STAGE("default stage");
     
     private String strMsg;
     NcStrServiceMsg(String strMsg){

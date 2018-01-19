@@ -36,7 +36,8 @@ public enum NcStrVarDescription {
     RECORD_TIME("[recordTime]"),
     NCPARAMFV("[NcParamFv]"),
     STR_DEFAULT("[strDefault]"),
-    STR_INPUT("[strInput]");
+    STR_INPUT("[strInput]"),
+    STR_GENERATE_ERROR_VAL("[strGenerateErrorVal]");
     private String strMsg;
     NcStrVarDescription(String strMsg){
         this.strMsg = strMsg;

@@ -274,6 +274,7 @@ public class NcPathFromUserChecker {
             + NcStrLogMsgField.TO_RETURN.getStr()
             + NcStrLogMsgField.VARVAL.getStr()
             + NcStrVarDescription.STR_DEFAULT.getStr() + strDefault
+            + NcStrLogMsgField.VARVAL.getStr()
             + NcStrVarDescription.STR_INPUT.getStr() + strInput);
             return strDefault;
         }
@@ -303,8 +304,12 @@ public class NcPathFromUserChecker {
         }
         if( !NcAppHelper.isWindows() ){
             if( strPathRootStartForNotWindows(strInput) ){
-                NcAppHelper.outMessage("Path for root creation");
-                NcAppHelper.outMessage("return: " + strInput);
+                NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.CHECK_RESULT.getStr()
+                + NcStrServiceMsg.PATH_FOR_NOT_WINDOWS_SYSTEM.getStr()
+                + NcStrLogMsgField.TO_RETURN.getStr()
+                + NcStrLogMsgField.VARVAL.getStr()
+                + NcStrVarDescription.STR_INPUT.getStr() + strInput);
                 return strInput;
             }
         }
@@ -319,24 +324,56 @@ public class NcPathFromUserChecker {
     public static String strInputPathFormatFilterForDefault(String strDefault){
 
         if( !strPathValidContinue(strDefault) ){
-            NcAppHelper.outMessage("path continue not valid - default stage");
-            NcAppHelper.outMessage("breaked Default: " + strDefault);
-            
-            strDefault = NcIdxFileManager.strPathCombiner(NcIdxFileManager.getAppWorkDirStrPath(), "/wrongDefaults/f_" + System.nanoTime() + ".error");
-            return strDefault;
+            String strGenerateErrorVal = NcIdxFileManager.strPathCombiner(
+                NcIdxFileManager.getAppWorkDirStrPath(),
+                "/wrongDefaults/f_" + System.nanoTime() + ".error");
+            NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
+                + NcStrLogMsgField.CHECK_RESULT.getStr()
+                + NcStrServiceMsg.PATH_CONTINUE_NOT_VALID.getStr()
+                + NcStrLogMsgField.IN_SET_DEFAULT_ERROR_GENERATE_ERROR_VAL.getStr()
+                + NcStrLogMsgField.TO_RETURN.getStr()
+                + NcStrLogMsgField.VARVAL.getStr()
+                + NcStrVarDescription.STR_GENERATE_ERROR_VAL.getStr()
+                + strGenerateErrorVal
+                + NcStrLogMsgField.DISCARDED.getStr()
+                + NcStrLogMsgField.VARVAL.getStr()
+                + NcStrVarDescription.STR_DEFAULT.getStr() + strDefault);
+            return strGenerateErrorVal;
         }
         if( !strPathValidStart(strDefault) ){
-            NcAppHelper.outMessage("path start not valid - default stage");
-            NcAppHelper.outMessage("breaked Default: " + strDefault);
-            strDefault = NcIdxFileManager.strPathCombiner(NcIdxFileManager.getAppWorkDirStrPath(), "/wrongDefaults/f_" + System.nanoTime() + ".error");
-            return strDefault;
+            String strGenerateErrorVal = NcIdxFileManager.strPathCombiner(
+                NcIdxFileManager.getAppWorkDirStrPath(),
+                "/wrongDefaults/f_" + System.nanoTime() + ".error");
+            NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
+                + NcStrLogMsgField.CHECK_RESULT.getStr()
+                + NcStrServiceMsg.PATH_START_NOT_VALID.getStr()
+                + NcStrLogMsgField.IN_SET_DEFAULT_ERROR_GENERATE_ERROR_VAL.getStr()
+                + NcStrLogMsgField.TO_RETURN.getStr()
+                + NcStrLogMsgField.VARVAL.getStr()
+                + NcStrVarDescription.STR_GENERATE_ERROR_VAL.getStr()
+                + strGenerateErrorVal
+                + NcStrLogMsgField.DISCARDED.getStr()
+                + NcStrLogMsgField.VARVAL.getStr()
+                + NcStrVarDescription.STR_DEFAULT.getStr() + strDefault);
+            return strGenerateErrorVal;
         }
         if( !NcAppHelper.isWindows() ){
             if( strPathRootStartForNotWindows(strDefault) ){
-                NcAppHelper.outMessage("Path for root creation - default stage");
-                NcAppHelper.outMessage("breaked Default: " + strDefault);
-                strDefault = NcIdxFileManager.strPathCombiner(NcIdxFileManager.getAppWorkDirStrPath(), strDefault);
-                return strDefault;
+                String strGenerateErrorVal = NcIdxFileManager.strPathCombiner(
+                    NcIdxFileManager.getAppWorkDirStrPath(),
+                    strDefault);
+                NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
+                    + NcStrLogMsgField.CHECK_RESULT.getStr()
+                    + NcStrServiceMsg.PATH_FOR_NOT_WINDOWS_SYSTEM.getStr()
+                    + NcStrLogMsgField.IN_SET_DEFAULT_ERROR_GENERATE_ERROR_VAL.getStr()
+                    + NcStrLogMsgField.TO_RETURN.getStr()
+                    + NcStrLogMsgField.VARVAL.getStr()
+                    + NcStrVarDescription.STR_GENERATE_ERROR_VAL.getStr()
+                    + strGenerateErrorVal
+                    + NcStrLogMsgField.DISCARDED.getStr()
+                    + NcStrLogMsgField.VARVAL.getStr()
+                    + NcStrVarDescription.STR_DEFAULT.getStr() + strDefault);
+                return strGenerateErrorVal;
             }
         }
         return strDefault;
