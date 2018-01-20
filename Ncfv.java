@@ -46,9 +46,7 @@ public class Ncfv {
         if (args.length == 0){
             isRunInSwing = true;
             oneofAppRun = true;
-            String strLogMsg = NcStrLogMsgField.INFO.getStr()
-                + NcStrLogMsgText.APP_GUI_START.getStr();
-            NcAppHelper.outMessageToAppLogFile(strLogMsg);
+            toLALRMain();
             NcSwingIndexManagerApp.NcRunSIMA();
         }
         if (args.length > 0){
@@ -212,6 +210,38 @@ public class Ncfv {
             return "Application runned in window mode provided by Swing";
         }
         return "Application runned in console mode";
+    }
+    /**
+     * toLogAppLogicRecord(LALR) - toLALRMethodName make record in log file
+     * first
+     * second
+     * third
+     * fouth
+     * fifth
+     * sixth
+     * seventh
+     * eigth
+     * ninth
+     * elevrnth
+     * twelfth
+     * tertiary
+     * fourteenth
+     * fifteenth
+     * sixteenth
+     * seventeenth
+     * eighteenth
+     * nineteenth
+     * twentieth
+     */
+    private static void toLALRMain(){
+        if( NcfvRunVariables.isLALRMakeMain() ){
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogMsgText.RUN_WITH_OUT_ARGS.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NEXT_WAY_VAR.getStr()
+                + NcStrLogMsgText.APP_GUI_START.getStr();
+            NcAppHelper.outMessage(strLogMsg);
+        }
     }
     
 }

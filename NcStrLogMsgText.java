@@ -20,11 +20,14 @@ package ru.newcontrol.ncfv;
  * @author wladimirowichbiaran
  */
 public enum NcStrLogMsgText {
+    RUN_WITH_OUT_ARGS("Run with out args"),
     APP_GUI_START("Application start in GUI mode"),
     APP_ERROR_EXIT("Application stop with critical error"),
     LOG_CREATE("Log file created"),
     LOG_RECORD_APPEND("Append new record"),
-    CALLED_ERROR_FOR_FILE_OPERATION("Error in file operation, NcIdxFileManager.getErrorForFileOperation() called");
+    CALLED_ERROR_FOR_FILE_OPERATION("Error in file operation, NcIdxFileManager.getErrorForFileOperation() called"),
+    LA_CHECK("[LA_WORK_CFG]"),
+    LA_CHECK_SUB_DIR("[LA_CHECK_SUB_DIRS]");
     private String strMsg;
     NcStrLogMsgText(String strMsg){
         this.strMsg = strMsg;

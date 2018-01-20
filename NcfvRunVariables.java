@@ -31,6 +31,9 @@ public class NcfvRunVariables {
     private static boolean outToLogPrintFunc = true;
     private static boolean outToLogFileName = true;
     private static boolean outToLogNewRecordAppend = false;
+    
+    private static boolean boolLALRMakeMain = true;
+    
     public static boolean getIncludeFile(){
         return outWithFileName;
     }
@@ -60,5 +63,8 @@ public class NcfvRunVariables {
     }
     public static boolean isOutToLogNewRecordAppend(){
         return outToLogNewRecordAppend;
+    }
+    public static boolean isLALRMakeMain(){
+        return boolLALRMakeMain;
     }
 }

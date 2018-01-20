@@ -20,10 +20,13 @@ package ru.newcontrol.ncfv;
  * @author wladimirowichbiaran
  */
 public enum NcStrLogMsgField {
+    APP_LOGIC_NOW("[APPNOW]"),
+    APP_LOGIC_NEXT_WAY_VAR("[APPNEXTWAYVAR]"),
     ERROR("[ERROR]"),
     ERROR_CRITICAL("[ERROR][CRITICAL]"),
     WARNING("[WARNING]"),
     INFO("[INFO]"),
+    INFO_LOGIC_POSITION("[INFOLOGICPOSITION]"),
     MSG_ERROR("[MSG][ERROR]"),
     MSG_ERROR_CRITICAL("[MSG][ERROR][CRITICAL]"),
     MSG_WARNING("[MSG][WARNING]"),
