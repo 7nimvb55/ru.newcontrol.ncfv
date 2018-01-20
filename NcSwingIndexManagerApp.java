@@ -66,12 +66,15 @@ public class NcSwingIndexManagerApp {
      */
     public static void createGui(){
         NcSwGUIComponentStatus listComponents = new NcSwGUIComponentStatus();
+        
         JFrame frame = new JFrame(NcStrGUILabel.TITLE_APP.getStr());
         String componentPath = NcStrGUIComponent.SMAIN.getStr()
             + NcStrGUIComponent.SJFRAME.getStr();
         listComponents.putComponents(componentPath, frame);  
             
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        toLALRcreateGui();
         
         JPanel mainPanel = new JPanel();
         componentPath = NcStrGUIComponent.SMAIN.getStr()
@@ -82,6 +85,7 @@ public class NcSwingIndexManagerApp {
         mainPanel.setLayout(new BorderLayout());
         
         frame.setJMenuBar(NcSwMainMenu.getMainMenu(listComponents));
+        toLALRcreateGuiPanel();
         mainPanel.add(NcSwPanelPageStart.getPanel(listComponents), BorderLayout.NORTH);
         mainPanel.add(NcSwPanelPageEnd.getPanel(listComponents), BorderLayout.SOUTH);
         mainPanel.add(NcSwPanelLineStart.getPanel(listComponents), BorderLayout.WEST);
@@ -96,5 +100,25 @@ public class NcSwingIndexManagerApp {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
+    private static void toLALRcreateGui(){
+        if( NcfvRunVariables.isLALRNcSwIdxMngAppCreateGui() ){
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogMsgText.APP_GUI_START.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NEXT_WAY_VAR.getStr()
+                + NcStrLogMsgText.GUI_CREATE_JPANEL_FOR_MAIN_FRAME.getStr();
+            NcAppHelper.outMessage(strLogMsg);
+        }
+    }
+    
+    private static void toLALRcreateGuiPanel(){
+        if( NcfvRunVariables.isLALRNcSwIdxMngAppCreateGui() ){
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogMsgText.GUI_CREATE_JPANEL_FOR_MAIN_FRAME.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NEXT_WAY_VAR.getStr()
+                + NcStrLogLogicVar.LA_JPANEL_CENTER.getStr();
+            NcAppHelper.outMessage(strLogMsg);
+        }
+    }
 }

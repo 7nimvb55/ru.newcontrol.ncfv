@@ -25,8 +25,8 @@ import javax.swing.JMenuBar;
  */
 public class NcSwMainMenu {
     public static JMenuBar getMainMenu(NcSwGUIComponentStatus lComp){
-        
         JMenuBar menuMain = new JMenuBar();
+        toLALRMainMenu();
         menuMain.add(getMenuFile());
         menuMain.add(getMenuDevelop(lComp));
         menuMain.add(getMenuService());
@@ -54,5 +54,15 @@ public class NcSwMainMenu {
         JMenu menuService = new JMenu("Service");
         menuService.add(NcSwMenuItems.getEtcEditor());
         return menuService;
+    }
+    private static void toLALRMainMenu(){
+        if( NcfvRunVariables.isLALRNcSwMainMenuMainMenu() ){
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogLogicVar.LA_JMENUBAR.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NEXT_WAY_VAR.getStr()
+                + NcStrLogLogicVar.LA_JMENU.getStr();
+            NcAppHelper.outMessage(strLogMsg);
+        }
     }
 }

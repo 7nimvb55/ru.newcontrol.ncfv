@@ -33,6 +33,8 @@ public class NcfvRunVariables {
     private static boolean outToLogNewRecordAppend = false;
     
     private static boolean boolLALRMakeMain = true;
+    private static boolean boolLALRNcSwIdxMngAppCreateGui = true;
+    private static boolean boolLALRNcSwMainMenuMainMenu = true;
     
     public static boolean getIncludeFile(){
         return outWithFileName;
@@ -66,5 +68,11 @@ public class NcfvRunVariables {
     }
     public static boolean isLALRMakeMain(){
         return boolLALRMakeMain;
+    }
+    public static boolean isLALRNcSwIdxMngAppCreateGui(){
+        return boolLALRNcSwIdxMngAppCreateGui;
+    }
+    public static boolean isLALRNcSwMainMenuMainMenu(){
+        return boolLALRNcSwMainMenuMainMenu;
     }
 }
