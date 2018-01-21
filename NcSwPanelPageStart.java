@@ -59,7 +59,18 @@ public class NcSwPanelPageStart {
                 NcSwThreadManager.setToViewSearchedResult(lComp, strSearch);
             }
         });
+        toLALRgetPanel();
         northPanel.add(btnSearch);
         return northPanel;
+    }
+    private static void toLALRgetPanel(){
+        if( NcfvRunVariables.isLALRNcSwPanelPageStartgetPanel() ){
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogLogicVar.LA_JPANEL_PAGESTART.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NEXT_WAY_VAR.getStr()
+                + NcStrLogLogicVar.LA_JPANEL_PAGEEND.getStr();
+            NcAppHelper.outMessage(strLogMsg);
+        }
     }
 }

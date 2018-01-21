@@ -35,6 +35,7 @@ public class NcfvRunVariables {
     private static boolean boolLALRMakeMain = true;
     private static boolean boolLALRNcSwIdxMngAppCreateGui = true;
     private static boolean boolLALRNcSwMainMenuMainMenu = true;
+    private static boolean boolLALRNcSwPanelPageStartgetPanel = true;
     
     public static boolean getIncludeFile(){
         return outWithFileName;
@@ -74,5 +75,8 @@ public class NcfvRunVariables {
     }
     public static boolean isLALRNcSwMainMenuMainMenu(){
         return boolLALRNcSwMainMenuMainMenu;
+    }
+    public static boolean isLALRNcSwPanelPageStartgetPanel(){
+        return boolLALRNcSwPanelPageStartgetPanel;
     }
 }
