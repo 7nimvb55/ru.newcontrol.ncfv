@@ -59,8 +59,9 @@ public class NcSwPanelPageStart {
                 NcSwThreadManager.setToViewSearchedResult(lComp, strSearch);
             }
         });
-        toLALRgetPanel();
+        
         northPanel.add(btnSearch);
+        toLALRgetPanel();
         return northPanel;
     }
     private static void toLALRgetPanel(){

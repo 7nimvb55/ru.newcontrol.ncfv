@@ -73,7 +73,17 @@ public class NcSwPanelCenter {
         ncScrollTable.revalidate();
         
         
-        
+        toLALRgetPanel();
         return centerPanel;
+    }
+    private static void toLALRgetPanel(){
+        if( NcfvRunVariables.isLALRNcSwPanelPageStartgetPanel() ){
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogLogicVar.LA_JPANEL_CENTER.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NEXT_WAY_VAR.getStr()
+                + NcStrLogLogicVar.LA_SET_VISIBLE_GUI.getStr();
+            NcAppHelper.outMessage(strLogMsg);
+        }
     }
 }

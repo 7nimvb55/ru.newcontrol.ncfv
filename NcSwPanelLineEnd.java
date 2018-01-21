@@ -99,6 +99,7 @@ public class NcSwPanelLineEnd {
         
         JPanel buttonPanel2 = getAddDelButtonPanel();
         eastPanel.add(buttonPanel2);
+        toLALRgetPanel();
         return eastPanel;
     }
 
@@ -124,5 +125,15 @@ public class NcSwPanelLineEnd {
         buttonPanel.add(NcSwGUIComponent.createButton("+",null,""));
         buttonPanel.add(NcSwGUIComponent.createButton("-",null,""));
         return buttonPanel;
+    }
+    private static void toLALRgetPanel(){
+        if( NcfvRunVariables.isLALRNcSwPanelPageStartgetPanel() ){
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogLogicVar.LA_JPANEL_LINEEND.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NEXT_WAY_VAR.getStr()
+                + NcStrLogLogicVar.LA_JPANEL_CENTER.getStr();
+            NcAppHelper.outMessage(strLogMsg);
+        }
     }
 }

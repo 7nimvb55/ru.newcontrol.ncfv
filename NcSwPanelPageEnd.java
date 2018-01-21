@@ -43,6 +43,17 @@ public class NcSwPanelPageEnd {
         JLabel txtFromIndex = NcSwGUIComponent.createEmptyLabel();
         
         southPanel.add(txtFromIndex);
+        toLALRgetPanel();
         return southPanel;
+    }
+    private static void toLALRgetPanel(){
+        if( NcfvRunVariables.isLALRNcSwPanelPageStartgetPanel() ){
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogLogicVar.LA_JPANEL_PAGEEND.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NEXT_WAY_VAR.getStr()
+                + NcStrLogLogicVar.LA_PANEL_LINESTART.getStr();
+            NcAppHelper.outMessage(strLogMsg);
+        }
     }
 }

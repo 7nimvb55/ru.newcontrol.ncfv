@@ -99,6 +99,7 @@ public class NcSwingIndexManagerApp {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        toLALRendOfCreateGUI();
     }
     private static void toLALRcreateGui(){
         if( NcfvRunVariables.isLALRNcSwIdxMngAppCreateGui() ){
@@ -118,6 +119,16 @@ public class NcSwingIndexManagerApp {
                 + NcStrLogMsgText.GUI_CREATE_JPANEL_FOR_MAIN_FRAME.getStr()
                 + NcStrLogMsgField.APP_LOGIC_NEXT_WAY_VAR.getStr()
                 + NcStrLogLogicVar.LA_JPANEL_CENTER.getStr();
+            NcAppHelper.outMessage(strLogMsg);
+        }
+    }
+    private static void toLALRendOfCreateGUI(){
+        if( NcfvRunVariables.isLALRNcSwPanelPageStartgetPanel() ){
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogLogicVar.LA_SET_VISIBLE_GUI.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NEXT_WAY_VAR.getStr()
+                + NcStrLogLogicVar.LA_GUI_WAIT_FOR_USER_INPUT.getStr();
             NcAppHelper.outMessage(strLogMsg);
         }
     }

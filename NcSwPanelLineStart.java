@@ -47,7 +47,18 @@ public class NcSwPanelLineStart {
 
         for(JButton itemDisk : ncAllDisk){
             westPanel.add(itemDisk);
+            toLALRgetPanel();
         }
         return westPanel;
+    }
+    private static void toLALRgetPanel(){
+        if( NcfvRunVariables.isLALRNcSwPanelPageStartgetPanel() ){
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogLogicVar.LA_PANEL_LINESTART.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NEXT_WAY_VAR.getStr()
+                + NcStrLogLogicVar.LA_JPANEL_LINEEND.getStr();
+            NcAppHelper.outMessage(strLogMsg);
+        }
     }
 }
