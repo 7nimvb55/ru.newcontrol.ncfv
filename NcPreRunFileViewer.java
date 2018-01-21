@@ -33,13 +33,13 @@ import java.util.TreeMap;
  * @author Администратор
  */
 public class NcPreRunFileViewer {
-    private boolean messagesToConsole;
+    
     
     /**
      *
      */
     public NcPreRunFileViewer() {
-        messagesToConsole = !Ncfv.getRunIsSwing();
+        
     }
 
     /**

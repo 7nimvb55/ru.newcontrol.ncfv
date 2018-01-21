@@ -52,7 +52,7 @@ public class NcSwPanelLineStart {
         return westPanel;
     }
     private static void toLALRgetPanel(){
-        if( NcfvRunVariables.isLALRNcSwPanelPageStartgetPanel() ){
+        if( NcfvRunVariables.isLALRNcSwPanelLineStartgetPanel() ){
             String strLogMsg = NcStrLogMsgField.INFO.getStr()
                 + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
                 + NcStrLogLogicVar.LA_PANEL_LINESTART.getStr()

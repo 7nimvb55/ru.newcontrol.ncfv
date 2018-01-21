@@ -47,7 +47,7 @@ public class NcSwPanelPageEnd {
         return southPanel;
     }
     private static void toLALRgetPanel(){
-        if( NcfvRunVariables.isLALRNcSwPanelPageStartgetPanel() ){
+        if( NcfvRunVariables.isLALRNcSwPanelPageEndgetPanel() ){
             String strLogMsg = NcStrLogMsgField.INFO.getStr()
                 + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
                 + NcStrLogLogicVar.LA_JPANEL_PAGEEND.getStr()

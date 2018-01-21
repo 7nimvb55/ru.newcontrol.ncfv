@@ -127,7 +127,7 @@ public class NcSwPanelLineEnd {
         return buttonPanel;
     }
     private static void toLALRgetPanel(){
-        if( NcfvRunVariables.isLALRNcSwPanelPageStartgetPanel() ){
+        if( NcfvRunVariables.isLALRNcSwPanelLineEndgetPanel() ){
             String strLogMsg = NcStrLogMsgField.INFO.getStr()
                 + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
                 + NcStrLogLogicVar.LA_JPANEL_LINEEND.getStr()

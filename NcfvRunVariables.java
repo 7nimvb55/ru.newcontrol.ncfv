@@ -36,6 +36,10 @@ public class NcfvRunVariables {
     private static boolean boolLALRNcSwIdxMngAppCreateGui = true;
     private static boolean boolLALRNcSwMainMenuMainMenu = true;
     private static boolean boolLALRNcSwPanelPageStartgetPanel = true;
+    private static boolean boolLALRNcSwPanelPageEndgetPanel = true;
+    private static boolean boolLALRNcSwPanelLineStartgetPanel = true;
+    private static boolean boolLALRNcSwPanelLineEndgetPanel = true;
+    private static boolean boolLALRNcSwPanelCentergetPanel = true;
     
     public static boolean getIncludeFile(){
         return outWithFileName;
@@ -78,5 +82,17 @@ public class NcfvRunVariables {
     }
     public static boolean isLALRNcSwPanelPageStartgetPanel(){
         return boolLALRNcSwPanelPageStartgetPanel;
+    }
+    public static boolean isLALRNcSwPanelPageEndgetPanel(){
+        return boolLALRNcSwPanelPageEndgetPanel;
+    }
+    public static boolean isLALRNcSwPanelLineStartgetPanel(){
+        return boolLALRNcSwPanelLineStartgetPanel;
+    }
+    public static boolean isLALRNcSwPanelLineEndgetPanel(){
+        return boolLALRNcSwPanelLineEndgetPanel;
+    }
+    public static boolean isLALRNcSwPanelCentergetPanel(){
+        return boolLALRNcSwPanelCentergetPanel;
     }
 }
