@@ -44,16 +44,7 @@ public class NcSwPanelCenter {
         Border centerBorder = BorderFactory.createTitledBorder("CENTER panel");
         centerPanel.setBorder(centerBorder);
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        
-//        ArrayList<String> strKeyWordInSearch = new ArrayList<String>();
-//        ArrayList<String> strKeyWordOutSearch = new ArrayList<String>();
-        
-//        strKeyWordInSearch.add(" ");
-//       strKeyWordInSearch.add("01");
-//       strKeyWordInSearch.add("freebsd");
-//        strKeyWordInSearch.add("freebsd");
-//        strKeyWordOutSearch.add("newcontrol");
-        
+
         TableModel ncTableModel = new NcSIMASearchResultTableModel(new ArrayList<String>(), new ArrayList<String>());
         
         JTable ncTable = new JTable(ncTableModel);
