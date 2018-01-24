@@ -26,8 +26,6 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.DatatypeConverter;
 
 
@@ -74,10 +72,11 @@ public class NcDiskUtils {
             }
         }
         catch(IOException ex) {
-            Logger.getLogger(NcDiskUtils.class.getName()).log(Level.SEVERE, null, ex);
+            NcAppHelper.logException(NcDiskUtils.class.getCanonicalName(), ex);
         }
         return result.trim();
     }
+
     /**
      * Get now information about disks in the system
      * @return 
@@ -137,7 +136,7 @@ public class NcDiskUtils {
                     diskID++;
             }
         } catch (IOException ex) {
-                Logger.getLogger(NcDiskUtils.class.getName()).log(Level.SEVERE, null, ex);
+                NcAppHelper.logException(NcDiskUtils.class.getCanonicalName(), ex);
                 return new TreeMap<Long, NcDiskInfo>();
         }
         boolean isDiskHashTrue = NcDiskUtils.isDiskInfoRecordsHashTure(toRetDI);
@@ -192,12 +191,12 @@ public class NcDiskUtils {
             outsn = Long.parseLong(indSN);
         }
         catch(NumberFormatException ex){
-            Logger.getLogger(NcDiskUtils.class.getName()).log(Level.SEVERE, null, ex);
+            NcAppHelper.logException(NcDiskUtils.class.getCanonicalName(), ex);
             try{
                 outsn = DatatypeConverter.parseLong(indSN);
             }
             catch(NumberFormatException extwo){
-                Logger.getLogger(NcDiskUtils.class.getName()).log(Level.SEVERE, null, extwo);
+                NcAppHelper.logException(NcDiskUtils.class.getCanonicalName(), extwo);
                 return 0;
             }
         }

@@ -18,8 +18,6 @@ package ru.newcontrol.ncfv;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -52,7 +50,8 @@ public class NcParamFvWriter {
             oos.writeObject(paramInFuncToWriteCfg);
         }
         catch(Exception ex){
-            Logger.getLogger(NcPreRunFileViewer.class.getName()).log(Level.SEVERE, null, ex); 
+            NcAppHelper.logException(
+                    NcPreRunFileViewer.class.getCanonicalName(), ex);
             return false;
         } 
         return true;

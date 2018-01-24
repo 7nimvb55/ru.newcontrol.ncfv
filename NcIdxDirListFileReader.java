@@ -20,8 +20,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -46,7 +44,8 @@ public class NcIdxDirListFileReader {
             ncDataFromDirList = (TreeMap<Long, NcDcIdxDirListToFileAttr>)ois.readObject();
         }
         catch(Exception ex){
-            Logger.getLogger(NcIdxDirListFileReader.class.getName()).log(Level.SEVERE, null, ex); 
+            NcAppHelper.logException(
+                    NcIdxDirListFileReader.class.getCanonicalName(), ex);
             return new TreeMap<>();
         } 
         return ncDataFromDirList;
@@ -70,7 +69,8 @@ public class NcIdxDirListFileReader {
             ncDataFromDirList = (TreeMap<Long, NcDcIdxDirListToFileExist>)ois.readObject();
         }
         catch(Exception ex){
-            Logger.getLogger(NcIdxDirListFileReader.class.getName()).log(Level.SEVERE, null, ex); 
+            NcAppHelper.logException(
+                    NcIdxDirListFileReader.class.getCanonicalName(), ex);
             return new TreeMap<>();
         } 
         return ncDataFromDirList;
@@ -88,7 +88,8 @@ public class NcIdxDirListFileReader {
             ncDataFromDirList = (TreeMap<Long, NcDcIdxDirListToFileAttr>)ois.readObject();
         }
         catch(Exception ex){
-            Logger.getLogger(NcIdxDirListFileReader.class.getName()).log(Level.SEVERE, null, ex); 
+            NcAppHelper.logException(
+                    NcIdxDirListFileReader.class.getCanonicalName(), ex);
             return new TreeMap<>();
         } 
         return ncDataFromDirList;

@@ -19,8 +19,6 @@ package ru.newcontrol.ncfv;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -44,7 +42,8 @@ public class NcIdxDirListFileWriter {
             oos.writeObject(ncDataToDirListFile);
         }
         catch(Exception ex){
-            Logger.getLogger(NcIdxDirListFileWriter.class.getName()).log(Level.SEVERE, null, ex); 
+            NcAppHelper.logException(
+                    NcIdxDirListFileWriter.class.getCanonicalName(), ex);
             return -1;
         } 
         return ncDataToDirListFile.size();
@@ -68,7 +67,8 @@ public class NcIdxDirListFileWriter {
             oos.writeObject(ncDataToDirListFile);
         }
         catch(Exception ex){
-            Logger.getLogger(NcIdxDirListFileWriter.class.getName()).log(Level.SEVERE, null, ex); 
+            NcAppHelper.logException(
+                    NcIdxDirListFileWriter.class.getCanonicalName(), ex);
             return -1;
         } 
         return ncDataToDirListFile.size();

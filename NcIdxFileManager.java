@@ -127,6 +127,7 @@ public class NcIdxFileManager {
                 }
             } catch (IOException ex) {
                 Logger.getLogger(NcPreRunFileViewer.class.getName()).log(Level.SEVERE, null, ex);
+                
                 NcAppHelper.appExitWithMessageFSAccess(getStrCanPathFromFile(fileCfg));
             }
         }

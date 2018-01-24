@@ -20,8 +20,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -48,7 +46,8 @@ public class NcIdxLongWordListFileReader {
             ncDataFromDirList = (TreeMap<Long, NcDcIdxLongWordListToFile>)ois.readObject();
         }
         catch(Exception ex){
-            Logger.getLogger(NcIdxLongWordListFileReader.class.getName()).log(Level.SEVERE, null, ex); 
+            NcAppHelper.logException(
+                    NcIdxLongWordListFileReader.class.getCanonicalName(), ex);
             return new TreeMap<Long, NcDcIdxLongWordListToFile>();
         } 
         return ncDataFromDirList;

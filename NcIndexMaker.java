@@ -16,22 +16,8 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharsetEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.bind.DatatypeConverter;
 /**
  *
  * @author Администратор
@@ -60,7 +46,8 @@ public class NcIndexMaker {
         try {
             toRet = ncIdxPreReturn.getFileDataToSwing(fncFile);
         } catch (IOException ex) {
-            Logger.getLogger(NcIndexMaker.class.getName()).log(Level.SEVERE, null, ex);
+            NcAppHelper.logException(
+                    NcIndexMaker.class.getCanonicalName(), ex);
         }
         return toRet;
     }
@@ -78,7 +65,8 @@ public class NcIndexMaker {
         try {
             toRet = ncIdxPreReturn.getResultMakeIndex(fncFile);
         } catch (IOException ex) {
-            Logger.getLogger(NcIndexMaker.class.getName()).log(Level.SEVERE, null, ex);
+            NcAppHelper.logException(
+                    NcIndexMaker.class.getCanonicalName(), ex);
         }
         return toRet;
     }

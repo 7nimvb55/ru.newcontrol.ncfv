@@ -253,6 +253,13 @@ public class NcAppHelper {
             outMessageToAppLogFile(strMessage);
         }
     }
+    public static void logException(String strClassName, Exception ex){
+        NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
+                + NcStrLogMsgField.CLASSNAME.getStr()
+                + strClassName
+                + NcStrLogMsgField.EXCEPTION_MSG.getStr()
+                + ex.getMessage());
+    }
 
     /**
      *

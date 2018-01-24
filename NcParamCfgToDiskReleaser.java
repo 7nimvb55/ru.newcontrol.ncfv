@@ -18,8 +18,6 @@ package ru.newcontrol.ncfv;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -84,7 +82,8 @@ public class NcParamCfgToDiskReleaser {
                     return fileForCreateDir.createNewFile();
                 }
             } catch (IOException ex) {
-                Logger.getLogger(NcParamCfgToDiskReleaser.class.getName()).log(Level.SEVERE, null, ex);
+                NcAppHelper.logException(
+                    NcParamCfgToDiskReleaser.class.getCanonicalName(), ex);
                 return false;
             }
         }

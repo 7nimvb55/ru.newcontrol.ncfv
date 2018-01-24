@@ -27,8 +27,6 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * 
@@ -71,7 +69,8 @@ public class NcParamJournalDisk {
             try {
                 tmpTotalSpace = itemFS.getTotalSpace();
             } catch (IOException ex) {
-                Logger.getLogger(NcParamJournalDisk.class.getName()).log(Level.SEVERE, null, ex);
+                NcAppHelper.logException(
+                    NcParamJournalDisk.class.getCanonicalName(), ex);
             }
             fsName = itemFS.name();
             for( Map.Entry<Long, NcDiskInfo> itemInFuncDisk : inFuncDiskInfo.entrySet() ){
@@ -232,7 +231,8 @@ public class NcParamJournalDisk {
             oos.writeObject(inFuncSysDisk);
         }
         catch(Exception ex){
-            Logger.getLogger(NcParamJournalDisk.class.getName()).log(Level.SEVERE, null, ex); 
+            NcAppHelper.logException(
+                    NcParamJournalDisk.class.getCanonicalName(), ex);
             return -1;
         } 
         return inFuncSysDisk.size();
@@ -257,7 +257,8 @@ public class NcParamJournalDisk {
             }
         }
         catch(Exception ex){
-            Logger.getLogger(NcParamJournalDisk.class.getName()).log(Level.SEVERE, null, ex); 
+            NcAppHelper.logException(
+                    NcParamJournalDisk.class.getCanonicalName(), ex);
             return new TreeMap<Long, NcDiskInfo>();
         } 
         return readedDiskInfo;

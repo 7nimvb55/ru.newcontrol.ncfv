@@ -19,8 +19,6 @@ package ru.newcontrol.ncfv;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -47,7 +45,8 @@ public class NcIdxLongWordListFileWriter {
             oos.writeObject(ncDataToDirListFile);
         }
         catch(Exception ex){
-            Logger.getLogger(NcIdxLongWordListFileWriter.class.getName()).log(Level.SEVERE, null, ex); 
+            NcAppHelper.logException(
+                    NcIdxLongWordListFileWriter.class.getCanonicalName(), ex);
             return -1;
         } 
         return ncDataToDirListFile.size();

@@ -108,7 +108,26 @@ public class NcSwModalLogViewer {
 
         for( Map.Entry<Long, String> strItem : strLogReaded.entrySet() ){
             if( strItem.getValue().contains(NcStrLogMsgField.TIME.getStr()) ){
-                strReadedTime = getNN(strItem.getValue());
+                String strForOut = strItem.getValue();
+                boolean isHTML = false;
+                if( strForOut.contains(NcStrLogMsgField.ERROR.getStr()) ){
+                    strForOut = "<b>" + strForOut + "</b>" ;
+                    isHTML = true;
+                }
+                if( strForOut.contains("[LA_") ){
+                    strForOut = "<i>" + strForOut + "</i>";
+                    isHTML = true;
+                }
+                if( strForOut.contains("[LA_CFG") ){
+                    strForOut = "<u background-color=#f5f5f5>" + strForOut + "</u>";
+                    isHTML = true;
+                }
+                if(isHTML){
+                    strForOut = "<html>" + strForOut + "</html>";
+                    isHTML = false;
+                }
+                
+                strReadedTime = getNN(strForOut);
                 if( strReadedParent == null ){
                             forTreeTop.add(strReadedElement);
                             continue;

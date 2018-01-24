@@ -50,11 +50,8 @@ public class NcParamFvReader {
             NcParamFvManager.checkFromRead(readedDiskInfo);
         }
         catch(Exception ex){
-            NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
-                + NcStrLogMsgField.CLASSNAME.getStr()
-                + NcPreRunFileViewer.class.getCanonicalName()
-                + NcStrLogMsgField.EXCEPTION_MSG.getStr()
-                + ex.getMessage());
+            NcAppHelper.logException(
+                    NcPreRunFileViewer.class.getCanonicalName(), ex);
             
             toLALRreadDataFromWorkCfgPgenerate();
             return new NcParamFv();
@@ -62,6 +59,7 @@ public class NcParamFvReader {
         toLALRreadDataFromWorkCfgPread();
         return readedDiskInfo;
     }
+
     private static void toLALRreadDataFromWorkCfgPread(){
         if( NcfvRunVariables.isLALRNcParamFvReaderReadDataFromWorkCfg() ){
             String strLogMsg = NcStrLogMsgField.INFO.getStr()
