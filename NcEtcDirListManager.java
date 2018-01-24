@@ -20,6 +20,6 @@ package ru.newcontrol.ncfv;
  *
  * @author wladimirowichbiaran
  */
-public class NcEtcDirListManage {
+public class NcEtcDirListManager {
     
 }

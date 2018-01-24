@@ -139,7 +139,7 @@ public class NcSwGUIComponent {
     public static JList createJListWordInSearch(){
         DefaultListModel listWordInSearch = new DefaultListModel();
         ArrayList<String> arrKeyIn = 
-                NcEtcKeyWordListManage.getKeyWordInSearchFromFile();
+                NcEtcKeyWordListManager.getKeyWordInSearchFromFile();
         if( arrKeyIn.size() == 0 ){
             listWordInSearch.addElement("* None *");
         }
@@ -163,7 +163,7 @@ public class NcSwGUIComponent {
         DefaultListModel listWordNotInSearch = new DefaultListModel();
         
         ArrayList<String> arrKeyOut = 
-                NcEtcKeyWordListManage.getKeyWordOutSearchFromFile();
+                NcEtcKeyWordListManager.getKeyWordOutSearchFromFile();
         if( arrKeyOut.size() == 0 ){
             listWordNotInSearch.addElement("* None *");
         }

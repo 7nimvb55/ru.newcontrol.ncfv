@@ -83,7 +83,7 @@ public class NcPreRunFileViewer {
      *
      * @return
      */
-    public static NcParamFv getUpdatedAppCfg(){
+    private static NcParamFv getUpdatedAppCfg(){
         File fileCfg = NcIdxFileManager.getOrCreateCfgFile();
         ArrayList<String> arrStrCfg = getReadedLinesFromEtcCfg();
         NcParamFv paramReadedCfg = parseEtcCfg(arrStrCfg);
@@ -106,7 +106,7 @@ public class NcPreRunFileViewer {
      *
      * @return
      */
-    public static NcParamFv getDefaultCfgValues(){
+    private static NcParamFv getDefaultCfgValues(){
         TreeMap<Long, NcDiskInfo> sysDisk = NcParamJournalDisk.getFromJournalDiskOrCreateIt();
         TreeMap<Integer, String> diskUserAlias = new TreeMap<Integer, String>();
         for( Map.Entry<Long, NcDiskInfo> itemDisk : sysDisk.entrySet() ){
@@ -158,7 +158,7 @@ public class NcPreRunFileViewer {
      * @param inFuncReadedCfg returned by method {@link #parseEtcCfg parseEtcCfg()};
      * @return Parameters to write into updated Cfg file
      */
-    public static NcParamFv validateAndApplyCfg(NcParamFv inFuncReadedCfg){
+    private static NcParamFv validateAndApplyCfg(NcParamFv inFuncReadedCfg){
         
         boolean aliasChanged = NcParamJournalDisk.updateUserAliasInJournalDisk(inFuncReadedCfg.diskUserAlias);
         
@@ -228,7 +228,7 @@ public class NcPreRunFileViewer {
      *
      * @param forCheck
      */
-    public static void checkInDirFileReadable(File fileForCheck){
+    private static void checkInDirFileReadable(File fileForCheck){
         if( fileForCheck.isFile() ){
             NcAppHelper.outMessage(
                 NcStrLogMsgField.INFO.getStr()
@@ -247,7 +247,7 @@ public class NcPreRunFileViewer {
      *
      * @return
      */
-    public static TreeMap<Long, NcDiskInfo> initDiskInfo(){
+    private static TreeMap<Long, NcDiskInfo> initDiskInfo(){
         TreeMap<Long, NcDiskInfo> sysDisk = NcParamJournalDisk.getFromJournalDiskOrCreateIt();
         for( Map.Entry<Long, NcDiskInfo> itemDisk : sysDisk.entrySet() ){
             NcAppHelper.outMessage(
@@ -311,7 +311,7 @@ public class NcPreRunFileViewer {
      * @param arrStrReadedCfg
      * @return
      */
-    public static NcParamFv parseEtcCfg(ArrayList<String> arrStrReadedCfg){
+    private static NcParamFv parseEtcCfg(ArrayList<String> arrStrReadedCfg){
         NcParamFv paramReadedCfg;
         String indexPathTmp = "/ncfvdi";
         String keywordsOutOfSearchTmp = "keywordout.list";
@@ -382,7 +382,7 @@ public class NcPreRunFileViewer {
      *
      * @return
      */
-    public static ArrayList<String> getReadedLinesFromEtcCfg(){
+    private static ArrayList<String> getReadedLinesFromEtcCfg(){
         File fileCfg = NcIdxFileManager.getOrCreateCfgFile();
         return readCfg(NcIdxFileManager.getStrCanPathFromFile(fileCfg));
     }
@@ -391,7 +391,7 @@ public class NcPreRunFileViewer {
      *
      * @return
      */
-    public static ArrayList<String> getRemTextForCfgFile(){
+    private static ArrayList<String> getRemTextForCfgFile(){
         ArrayList<String> strTextRemark = new ArrayList<String>();
         strTextRemark.add("##################################################");
         strTextRemark.add("#   This Config file generated automaticaly by");
@@ -435,7 +435,7 @@ public class NcPreRunFileViewer {
      *
      * @return
      */
-    public static ArrayList<String> getDefaultParametersForCfg(){
+    private static ArrayList<String> getDefaultParametersForCfg(){
         TreeMap<Long, NcDiskInfo> sysDisk = NcParamJournalDisk.getFromJournalDiskOrCreateIt();
         ArrayList<String> strTextRemark = new ArrayList<String>();
         NcParamFv defaultValues = getDefaultCfgValues();
@@ -498,7 +498,7 @@ public class NcPreRunFileViewer {
      * @param linesParametersForUpdateCfg
      * @return
      */
-    public static int updateEtcCfg(ArrayList<String> linesParametersForUpdateCfg){
+    private static int updateEtcCfg(ArrayList<String> linesParametersForUpdateCfg){
         String strCfgPath = NcIdxFileManager.getStrCanPathFromFile(NcIdxFileManager.getOrCreateCfgFile());
         ArrayList<String> strTextRemark = getRemTextForCfgFile();
         ArrayList<String> strParameters = linesParametersForUpdateCfg;
@@ -537,7 +537,7 @@ public class NcPreRunFileViewer {
      * @param linesValues
      * @return
      */
-    public static ArrayList<String> getLinesParametersForUpdateCfg(NcParamFv linesValues){
+    private static ArrayList<String> getLinesParametersForUpdateCfg(NcParamFv linesValues){
         TreeMap<Long, NcDiskInfo> sysDisk = NcParamJournalDisk.getFromJournalDiskOrCreateIt();
         ArrayList<String> strTextRemark = new ArrayList<String>();
         
@@ -569,7 +569,7 @@ public class NcPreRunFileViewer {
      * @param ncStrCfgPath
      * @return
      */
-    public static ArrayList<String> readCfg(String ncStrCfgPath){
+    private static ArrayList<String> readCfg(String ncStrCfgPath){
         ArrayList<String> strForReturn;
         strForReturn = new ArrayList<String>();
         try(BufferedReader br = new BufferedReader(new FileReader(ncStrCfgPath)))
@@ -588,7 +588,8 @@ public class NcPreRunFileViewer {
             }
         }
          catch(IOException ex){
-            NcAppHelper.outMessage(ex.getMessage());
+            NcAppHelper.logException(
+                NcPreRunFileViewer.class.getCanonicalName(), ex);
         }   
         return strForReturn;
     }

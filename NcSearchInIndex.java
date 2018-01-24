@@ -58,14 +58,14 @@ public class NcSearchInIndex {
         TreeMap<Long, NcDcIdxWordToFile> strDistInResult = new TreeMap<Long, NcDcIdxWordToFile>();
         TreeMap<Long, NcDcIdxWordToFile> strDistOutResult = new TreeMap<Long, NcDcIdxWordToFile>();
         
-        ArrayList<String> arrKeyWordInSearch = NcEtcKeyWordListManage.getKeyWordInSearchFromFile();
+        ArrayList<String> arrKeyWordInSearch = NcEtcKeyWordListManager.getKeyWordInSearchFromFile();
         for( String strItemIn : arrKeyWordInSearch ){
             strHexForInVar.putAll(NcSrchKeyWordInput.getDirListRecordByKeyWord(strItemIn));
         }
         
         strDistInResult = NcSrchFileDataCompare.getDistictIDs(strHexForInVar);
         
-        ArrayList<String> arrKeyWordOutSearch = NcEtcKeyWordListManage.getKeyWordOutSearchFromFile();
+        ArrayList<String> arrKeyWordOutSearch = NcEtcKeyWordListManager.getKeyWordOutSearchFromFile();
         for( String strItemOut : arrKeyWordOutSearch ){
             strHexForOutVar.putAll(NcSrchKeyWordInput.getDirListRecordByKeyWord(strItemOut));
         }

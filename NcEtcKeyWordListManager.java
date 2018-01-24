@@ -25,7 +25,7 @@ import java.util.ArrayList;
  *
  * @author wladimirowichbiaran
  */
-public class NcEtcKeyWordListManage {
+public class NcEtcKeyWordListManager {
     public static ArrayList<String> getKeyWordInSearchFromFile(){
         NcParamFv readedWorkCfg = NcParamFvReader.readDataFromWorkCfg();
         ArrayList<String> strForReturn;
@@ -39,11 +39,7 @@ public class NcEtcKeyWordListManage {
             }
         }
          catch(IOException ex){
-            NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
-                + NcStrLogMsgField.CLASSNAME.getStr()
-                + NcEtcKeyWordListManage.class.getCanonicalName()
-                + NcStrLogMsgField.EXCEPTION_MSG.getStr()
-                + ex.getMessage());
+            NcAppHelper.logException(NcEtcKeyWordListManager.class.getCanonicalName(), ex);
         }   
         return strForReturn;
     }
@@ -60,11 +56,7 @@ public class NcEtcKeyWordListManage {
             }
         }
          catch(IOException ex){
-            NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
-                + NcStrLogMsgField.CLASSNAME.getStr()
-                + NcEtcKeyWordListManage.class.getCanonicalName()
-                + NcStrLogMsgField.EXCEPTION_MSG.getStr()
-                + ex.getMessage());
+            NcAppHelper.logException(NcEtcKeyWordListManager.class.getCanonicalName(), ex);
         }   
         return strForReturn;
     }
