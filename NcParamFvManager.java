@@ -159,6 +159,7 @@ public class NcParamFvManager {
             strLvl = NcStrLogMsgField.ERROR.getStr();
         }
         NcAppHelper.outMessage(strLvl
+        + NcStrLogMsgField.CHECK_RESULT.getStr()
         + NcStrServiceMsg.WORK_CFG_HASH.getStr()
         + NcStrServiceMsg.FOR_WRITE.getStr()
         + isHash);
@@ -171,6 +172,7 @@ public class NcParamFvManager {
             strLvl = NcStrLogMsgField.ERROR.getStr();
         }
         NcAppHelper.outMessage(strLvl
+        + NcStrLogMsgField.CHECK_RESULT.getStr()
         + NcStrServiceMsg.WORK_CFG_HASH.getStr()
         + NcStrServiceMsg.FROM_READ.getStr()
         + isHash);

@@ -111,15 +111,15 @@ public class NcSwModalLogViewer {
                 String strForOut = strItem.getValue();
                 boolean isHTML = false;
                 if( strForOut.contains(NcStrLogMsgField.ERROR.getStr()) ){
-                    strForOut = "<b>" + strForOut + "</b>" ;
+                    strForOut = "<b color=red>" + strForOut + "</b>" ;
                     isHTML = true;
                 }
-                if( strForOut.contains("[LA_") ){
-                    strForOut = "<i>" + strForOut + "</i>";
+                if( strForOut.contains("[LA_GUI") ){
+                    strForOut = "<i color=green>" + strForOut + "</i>";
                     isHTML = true;
                 }
                 if( strForOut.contains("[LA_CFG") ){
-                    strForOut = "<u background-color=#f5f5f5>" + strForOut + "</u>";
+                    strForOut = "<i color=blue>" + strForOut + "</i>";
                     isHTML = true;
                 }
                 if(isHTML){
