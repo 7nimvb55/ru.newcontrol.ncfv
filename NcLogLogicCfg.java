@@ -20,5 +20,20 @@ package ru.newcontrol.ncfv;
  * @author wladimirowichbiaran
  */
 public class NcLogLogicCfg {
-    
+    public static void NcParamFvReaderReadDataRead(){
+        if( NcfvRunVariables.isLALRNcParamFvReaderReadDataFromWorkCfg() ){
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogLogicVar.LA_CFG_WORK_READ_FROM_FILE.getStr();
+            NcAppHelper.outMessage(strLogMsg);
+        }
+    }
+    public static void NcParamFvReaderReadDataGenerate(){
+        if( NcfvRunVariables.isLALRNcParamFvReaderReadDataFromWorkCfg() ){
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogLogicVar.LA_CFG_WORK_GENERATE_ZERO.getStr();
+            NcAppHelper.outMessage(strLogMsg);
+        }
+    }
 }

@@ -36,12 +36,12 @@ public class NcParamFvReader {
         NcParamFv readedDiskInfo;
         String strDataInAppDir = NcIdxFileManager.getWorkCfgPath();
         if( strDataInAppDir.length() < 1 ){
-            toLALRreadDataFromWorkCfgPgenerate();
+            NcLogLogicCfg.NcParamFvReaderReadDataGenerate();
             return new NcParamFv();
         }
         File fileJornalDisk = new File(strDataInAppDir);
         if( !NcIdxFileManager.fileExistRWAccessChecker(fileJornalDisk) ){
-            toLALRreadDataFromWorkCfgPgenerate();
+            NcLogLogicCfg.NcParamFvReaderReadDataGenerate();
             return new NcParamFv();
         }
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(strDataInAppDir)))
@@ -53,27 +53,11 @@ public class NcParamFvReader {
             NcAppHelper.logException(
                     NcPreRunFileViewer.class.getCanonicalName(), ex);
             
-            toLALRreadDataFromWorkCfgPgenerate();
+            NcLogLogicCfg.NcParamFvReaderReadDataGenerate();
             return new NcParamFv();
         }
-        toLALRreadDataFromWorkCfgPread();
+        NcLogLogicCfg.NcParamFvReaderReadDataRead();
         return readedDiskInfo;
     }
 
-    private static void toLALRreadDataFromWorkCfgPread(){
-        if( NcfvRunVariables.isLALRNcParamFvReaderReadDataFromWorkCfg() ){
-            String strLogMsg = NcStrLogMsgField.INFO.getStr()
-                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
-                + NcStrLogLogicVar.LA_CFG_WORK_READ_FROM_FILE.getStr();
-            NcAppHelper.outMessage(strLogMsg);
-        }
-    }
-    private static void toLALRreadDataFromWorkCfgPgenerate(){
-        if( NcfvRunVariables.isLALRNcParamFvReaderReadDataFromWorkCfg() ){
-            String strLogMsg = NcStrLogMsgField.INFO.getStr()
-                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
-                + NcStrLogLogicVar.LA_CFG_WORK_GENERATE_ZERO.getStr();
-            NcAppHelper.outMessage(strLogMsg);
-        }
-    }
 }
