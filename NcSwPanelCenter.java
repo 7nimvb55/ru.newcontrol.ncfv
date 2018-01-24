@@ -67,6 +67,10 @@ public class NcSwPanelCenter {
         toLALRgetPanel();
         return centerPanel;
     }
+    /**
+     * LogAppLogicRecord (LALR) - toLALR(class MethodName)
+     * make record in log file
+     */
     private static void toLALRgetPanel(){
         if( NcfvRunVariables.isLALRNcSwPanelCentergetPanel() ){
             String strLogMsg = NcStrLogMsgField.INFO.getStr()

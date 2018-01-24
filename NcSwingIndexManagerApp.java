@@ -101,6 +101,10 @@ public class NcSwingIndexManagerApp {
         frame.setVisible(true);
         toLALRendOfCreateGUI();
     }
+    /**
+     * LogAppLogicRecord (LALR) - toLALR(class MethodName)
+     * make record in log file
+     */
     private static void toLALRcreateGui(){
         if( NcfvRunVariables.isLALRNcSwIdxMngAppCreateGui() ){
             String strLogMsg = NcStrLogMsgField.INFO.getStr()
@@ -111,7 +115,10 @@ public class NcSwingIndexManagerApp {
             NcAppHelper.outMessage(strLogMsg);
         }
     }
-    
+    /**
+     * LogAppLogicRecord (LALR) - toLALR(class MethodName)
+     * make record in log file
+     */
     private static void toLALRcreateGuiPanel(){
         if( NcfvRunVariables.isLALRNcSwIdxMngAppCreateGui() ){
             String strLogMsg = NcStrLogMsgField.INFO.getStr()
@@ -122,6 +129,10 @@ public class NcSwingIndexManagerApp {
             NcAppHelper.outMessage(strLogMsg);
         }
     }
+    /**
+     * LogAppLogicRecord (LALR) - toLALR(class MethodName)
+     * make record in log file
+     */
     private static void toLALRendOfCreateGUI(){
         if( NcfvRunVariables.isLALRNcSwPanelPageStartgetPanel() ){
             String strLogMsg = NcStrLogMsgField.INFO.getStr()

@@ -55,6 +55,10 @@ public class NcSwMainMenu {
         menuService.add(NcSwMenuItems.getEtcEditor());
         return menuService;
     }
+    /**
+     * LogAppLogicRecord (LALR) - toLALR(class MethodName)
+     * make record in log file
+     */
     private static void toLALRMainMenu(){
         if( NcfvRunVariables.isLALRNcSwMainMenuMainMenu() ){
             String strLogMsg = NcStrLogMsgField.INFO.getStr()

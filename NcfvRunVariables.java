@@ -41,6 +41,8 @@ public class NcfvRunVariables {
     private static boolean boolLALRNcSwPanelLineEndgetPanel = true;
     private static boolean boolLALRNcSwPanelCentergetPanel = true;
     
+    private static boolean boolLALRNcParamFvReaderReadDataFromWorkCfg = true;
+    
     public static boolean getIncludeFile(){
         return outWithFileName;
     }
@@ -94,5 +96,8 @@ public class NcfvRunVariables {
     }
     public static boolean isLALRNcSwPanelCentergetPanel(){
         return boolLALRNcSwPanelCentergetPanel;
+    }
+    public static boolean isLALRNcParamFvReaderReadDataFromWorkCfg(){
+        return boolLALRNcParamFvReaderReadDataFromWorkCfg;
     }
 }

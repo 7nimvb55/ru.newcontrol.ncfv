@@ -64,6 +64,10 @@ public class NcSwPanelPageStart {
         toLALRgetPanel();
         return northPanel;
     }
+    /**
+     * LogAppLogicRecord (LALR) - toLALR(class MethodName)
+     * make record in log file
+     */
     private static void toLALRgetPanel(){
         if( NcfvRunVariables.isLALRNcSwPanelPageStartgetPanel() ){
             String strLogMsg = NcStrLogMsgField.INFO.getStr()

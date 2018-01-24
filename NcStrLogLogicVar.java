@@ -31,6 +31,9 @@ public enum NcStrLogLogicVar {
     LA_JMENU("[LA_GUI_JMENU]"),
     LA_JMENUBAR("[LA_GUI_JMENUBAR]"),
     
+    LA_CFG_WORK_READ_FROM_FILE("[LA_CFG_READ_WORK_FROM_FILE]"),
+    LA_CFG_WORK_GENERATE_ZERO("[LA_CFG_WORK_GENERATE_ZERO]"),
+    
     LA_CHECK("[LA_CFG_WORK_CFG]"),
     LA_CHECK_SUB_DIR("[LA_CFG_CHECK_SUB_DIRS]");
     private String strMsg;

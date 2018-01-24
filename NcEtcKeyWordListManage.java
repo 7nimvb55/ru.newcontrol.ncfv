@@ -30,7 +30,8 @@ public class NcEtcKeyWordListManage {
         NcParamFv readedWorkCfg = NcParamFvReader.readDataFromWorkCfg();
         ArrayList<String> strForReturn;
         strForReturn = new ArrayList<String>();
-        try(BufferedReader br = new BufferedReader(new FileReader(readedWorkCfg.keywordsInSearch)))
+        try(BufferedReader br = new BufferedReader(new FileReader(
+                readedWorkCfg.keywordsInSearch)))
         {
             String s;
             while((s=br.readLine())!=null){
@@ -38,8 +39,10 @@ public class NcEtcKeyWordListManage {
             }
         }
          catch(IOException ex){
-            NcAppHelper.outMessage(
-                NcStrLogMsgField.ERROR.getStr()
+            NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
+                + NcStrLogMsgField.CLASSNAME.getStr()
+                + NcEtcKeyWordListManage.class.getCanonicalName()
+                + NcStrLogMsgField.EXCEPTION_MSG.getStr()
                 + ex.getMessage());
         }   
         return strForReturn;
@@ -48,7 +51,8 @@ public class NcEtcKeyWordListManage {
         NcParamFv readedWorkCfg = NcParamFvReader.readDataFromWorkCfg();
         ArrayList<String> strForReturn;
         strForReturn = new ArrayList<String>();
-        try(BufferedReader br = new BufferedReader(new FileReader(readedWorkCfg.keywordsOutOfSearch)))
+        try(BufferedReader br = new BufferedReader(new FileReader(
+                readedWorkCfg.keywordsOutOfSearch)))
         {
             String s;
             while((s=br.readLine())!=null){
@@ -56,8 +60,10 @@ public class NcEtcKeyWordListManage {
             }
         }
          catch(IOException ex){
-            NcAppHelper.outMessage(
-                NcStrLogMsgField.ERROR.getStr()
+            NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
+                + NcStrLogMsgField.CLASSNAME.getStr()
+                + NcEtcKeyWordListManage.class.getCanonicalName()
+                + NcStrLogMsgField.EXCEPTION_MSG.getStr()
                 + ex.getMessage());
         }   
         return strForReturn;

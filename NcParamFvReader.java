@@ -19,8 +19,6 @@ package ru.newcontrol.ncfv;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -38,10 +36,12 @@ public class NcParamFvReader {
         NcParamFv readedDiskInfo;
         String strDataInAppDir = NcIdxFileManager.getWorkCfgPath();
         if( strDataInAppDir.length() < 1 ){
+            toLALRreadDataFromWorkCfgPgenerate();
             return new NcParamFv();
         }
         File fileJornalDisk = new File(strDataInAppDir);
         if( !NcIdxFileManager.fileExistRWAccessChecker(fileJornalDisk) ){
+            toLALRreadDataFromWorkCfgPgenerate();
             return new NcParamFv();
         }
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(strDataInAppDir)))
@@ -50,9 +50,32 @@ public class NcParamFvReader {
             NcParamFvManager.checkFromRead(readedDiskInfo);
         }
         catch(Exception ex){
-            Logger.getLogger(NcPreRunFileViewer.class.getName()).log(Level.SEVERE, null, ex); 
+            NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
+                + NcStrLogMsgField.CLASSNAME.getStr()
+                + NcPreRunFileViewer.class.getCanonicalName()
+                + NcStrLogMsgField.EXCEPTION_MSG.getStr()
+                + ex.getMessage());
+            
+            toLALRreadDataFromWorkCfgPgenerate();
             return new NcParamFv();
-        } 
+        }
+        toLALRreadDataFromWorkCfgPread();
         return readedDiskInfo;
+    }
+    private static void toLALRreadDataFromWorkCfgPread(){
+        if( NcfvRunVariables.isLALRNcParamFvReaderReadDataFromWorkCfg() ){
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogLogicVar.LA_CFG_WORK_READ_FROM_FILE.getStr();
+            NcAppHelper.outMessage(strLogMsg);
+        }
+    }
+    private static void toLALRreadDataFromWorkCfgPgenerate(){
+        if( NcfvRunVariables.isLALRNcParamFvReaderReadDataFromWorkCfg() ){
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogLogicVar.LA_CFG_WORK_GENERATE_ZERO.getStr();
+            NcAppHelper.outMessage(strLogMsg);
+        }
     }
 }

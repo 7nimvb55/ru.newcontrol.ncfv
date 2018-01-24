@@ -22,6 +22,7 @@ package ru.newcontrol.ncfv;
 public enum NcStrLogMsgField {
     APP_LOGIC_NOW("[APPNOW]"),
     APP_LOGIC_NEXT_WAY_VAR("[APPNEXTWAYVAR]"),
+    EXCEPTION_MSG("[EXCEPTION_MSG]"),
     ERROR("[ERROR]"),
     ERROR_CRITICAL("[ERROR][CRITICAL]"),
     WARNING("[WARNING]"),

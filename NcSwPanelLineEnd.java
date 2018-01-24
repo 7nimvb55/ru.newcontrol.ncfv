@@ -63,11 +63,13 @@ public class NcSwPanelLineEnd {
         eastPanel.setAlignmentX(JComponent.TOP_ALIGNMENT);
         eastPanel.setAlignmentY(JComponent.CENTER_ALIGNMENT);
         
-        JButton ncHowToInSearch = NcSwGUIComponent.createButton(forComponentText[0],null,forTextToolTip[2]);
+        JButton ncHowToInSearch = NcSwGUIComponent.createButton(
+                forComponentText[0],null,forTextToolTip[2]);
         
         eastPanel.add(ncHowToInSearch);
         
-        JPanel textInSearchPanel = NcSwGUIComponent.getTextFieldForSearchPanel(textFiledForSearchDimension, forTextToolTip[0]);
+        JPanel textInSearchPanel = NcSwGUIComponent.getTextFieldForSearchPanel(
+                textFiledForSearchDimension, forTextToolTip[0]);
         eastPanel.add(textInSearchPanel);
         
         eastPanel.add(getAndOrButtonPanel());
@@ -84,9 +86,11 @@ public class NcSwPanelLineEnd {
         JSeparator ncSeparator = new JSeparator(JSeparator.HORIZONTAL);
         eastPanel.add(ncSeparator);
         
-        eastPanel.add(NcSwGUIComponent.createButton(forComponentText[0],null,forTextToolTip[3]));
+        eastPanel.add(NcSwGUIComponent.createButton(
+                forComponentText[0],null,forTextToolTip[3]));
         
-        JPanel textOutSearchPanel = NcSwGUIComponent.getTextFieldForSearchPanel(textFiledForSearchDimension, forTextToolTip[1]);
+        JPanel textOutSearchPanel = NcSwGUIComponent.getTextFieldForSearchPanel(
+                textFiledForSearchDimension, forTextToolTip[1]);
         eastPanel.add(textOutSearchPanel);
         
         eastPanel.add(getAndOrButtonPanel());
@@ -126,6 +130,10 @@ public class NcSwPanelLineEnd {
         buttonPanel.add(NcSwGUIComponent.createButton("-",null,""));
         return buttonPanel;
     }
+    /**
+     * LogAppLogicRecord (LALR) - toLALR(class MethodName)
+     * make record in log file
+     */
     private static void toLALRgetPanel(){
         if( NcfvRunVariables.isLALRNcSwPanelLineEndgetPanel() ){
             String strLogMsg = NcStrLogMsgField.INFO.getStr()
