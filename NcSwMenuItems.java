@@ -96,6 +96,20 @@ public class NcSwMenuItems {
         return new JMenuItem(NcStrGUILabel.CHECK_SUBDIR.getStr());
     }
     /**
+     * For File
+     * @return 
+     */
+    public static JMenuItem getAppExit(){
+        JMenuItem toRetMi = new JMenuItem(NcStrGUILabel.APP_EXIT.getStr());
+        toRetMi.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                System.exit(0);
+            }
+        });
+        return toRetMi;
+    }
+    /**
      * For Settings
      * @return 
      */

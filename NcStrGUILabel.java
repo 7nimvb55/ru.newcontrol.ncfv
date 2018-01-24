@@ -33,6 +33,7 @@ public enum NcStrGUILabel {
     CHECK_SUBDIR("Check SubDir"),
     DIR_IN_INDEX("Dir in index"),
     DIR_OUT_INDEX("Dir out index"),
+    APP_EXIT("Exit"),
     ABOUT("About");
     private String strMsg;
     NcStrGUILabel(String strMsg){

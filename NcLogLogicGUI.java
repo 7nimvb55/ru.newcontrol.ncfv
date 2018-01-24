@@ -20,5 +20,18 @@ package ru.newcontrol.ncfv;
  * @author wladimirowichbiaran
  */
 public class NcLogLogicGUI {
-    
+    /**
+     * LogAppLogicRecord (LALR) - toLALR(class MethodName)
+     * make record in log file
+     */
+    public static void NcSwMainMenuGetMainMenu(){
+        if( NcfvRunVariables.isLALRNcSwMainMenuMainMenu() ){
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogLogicVar.LA_JMENUBAR.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NEXT_WAY_VAR.getStr()
+                + NcStrLogLogicVar.LA_JMENU.getStr();
+            NcAppHelper.outMessage(strLogMsg);
+        }
+    }
 }
