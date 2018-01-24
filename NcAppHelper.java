@@ -39,7 +39,7 @@ public class NcAppHelper {
     /**
      *
      */
-    public static void outPutToConsoleDiskInfo(){
+    protected static void outPutToConsoleDiskInfo(){
         TreeMap<Long, NcDiskInfo> sysDisk = NcParamJournalDisk.getFromJournalDiskOrCreateIt();
         if( !sysDisk.isEmpty() ){
             outMessageToConsole("If your need to write alias parameter into Configuration file");
@@ -105,7 +105,7 @@ public class NcAppHelper {
      *
      * @param pathErr
      */
-    public static void appExitWithMessageFSAccess(String pathErr){
+    protected static void appExitWithMessageFSAccess(String pathErr){
         outMessage(NcStrLogMsgField.ERROR_CRITICAL.getStr()
             + "For run application in the path: " + pathErr
             + "\n application must have permission on read, write on the file system"
@@ -116,7 +116,7 @@ public class NcAppHelper {
             + "\n your system administrator");
         System.exit(0);
     }
-    public static void appExitWithMessage(String strErrMessage){
+    protected static void appExitWithMessage(String strErrMessage){
         NcAppHelper.outMessage(NcStrLogMsgField.ERROR_CRITICAL.getStr() + strErrMessage);
         System.exit(0);
     }
@@ -124,7 +124,7 @@ public class NcAppHelper {
     /**
      *
      */
-    public static void getNcSysProperties(){
+    protected static void getNcSysProperties(){
         Properties sProp = System.getProperties();
         Set<String> strPropName = sProp.stringPropertyNames();
         Map<String, String> sEnv = System.getenv();
@@ -223,7 +223,7 @@ public class NcAppHelper {
      *
      * @param strMessage
      */
-    public static void outMessage(String strMessage){
+    protected static void outMessage(String strMessage){
         if( NcfvRunVariables.getStage() ){
             if( !Ncfv.getRunIsSwing() ){
                 if( NcfvRunVariables.getWithTrace() ){
@@ -253,7 +253,7 @@ public class NcAppHelper {
             outMessageToAppLogFile(strMessage);
         }
     }
-    public static void logException(String strClassName, Exception ex){
+    protected static void logException(String strClassName, Exception ex){
         NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
                 + NcStrLogMsgField.CLASSNAME.getStr()
                 + strClassName
@@ -265,7 +265,7 @@ public class NcAppHelper {
      *
      * @param strMessage
      */
-    public static void outMessageToConsole(String strMessage){
+    protected static void outMessageToConsole(String strMessage){
         System.out.println(strMessage);
     }
 
@@ -273,7 +273,7 @@ public class NcAppHelper {
      *
      * @param strMessage
      */
-    public static void outMessageToAppLogFile(String strMessage){
+    protected static void outMessageToAppLogFile(String strMessage){
         if( NcfvRunVariables.isOutToLogFile() ){
             
             String strNowTime =  NcStrLogMsgField.TIME.getStr()
@@ -367,7 +367,7 @@ public class NcAppHelper {
  * Find disk with maximum avalable space and not ReadOnly for make index work directory
  * @return index of record in class NcDiskInfo
  */    
-    public static NcDiskInfo getNcDiskInfoForMaxFreeSpace(){
+    protected static NcDiskInfo getNcDiskInfoForMaxFreeSpace(){
         NcDiskInfo ncDisk = null;
             long tmpFreeSpace = 0;
             TreeMap<Long, NcDiskInfo> sysDisk = NcParamJournalDisk.getFromJournalDiskOrCreateIt();
@@ -389,7 +389,7 @@ public class NcAppHelper {
      *
      * @return
      */
-    public static boolean isWindows(){
+    protected static boolean isWindows(){
         String os = System.getProperty("os.name").toLowerCase();
         return (os.indexOf( "win" ) >= 0); 
     }
@@ -398,7 +398,7 @@ public class NcAppHelper {
      *
      * @return
      */
-    public static boolean isMac(){
+    protected static boolean isMac(){
         String os = System.getProperty("os.name").toLowerCase();
         return (os.indexOf( "mac" ) >= 0); 
     }
@@ -407,7 +407,7 @@ public class NcAppHelper {
      *
      * @return
      */
-    public static boolean isUnix (){
+    protected static boolean isUnix (){
         String os = System.getProperty("os.name").toLowerCase();
         return (os.indexOf( "nix") >=0 || os.indexOf( "nux") >=0);
     }
@@ -419,10 +419,10 @@ public class NcAppHelper {
      * @param bytes
      * @return
      */
-    public static String toHex(byte[] bytes) {
+    protected static String toHex(byte[] bytes) {
         return DatatypeConverter.printHexBinary(bytes);
     }
-    public static void strArrToConsoleOutPut(String[] strArrForOutPut){
+    protected static void strArrToConsoleOutPut(String[] strArrForOutPut){
         for(int i = 0; i < strArrForOutPut.length ; i++){
                 NcAppHelper.outMessage(
                     NcStrLogMsgField.INFO.getStr()

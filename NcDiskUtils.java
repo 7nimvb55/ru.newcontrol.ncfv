@@ -41,7 +41,7 @@ public class NcDiskUtils {
     /**
      *
      */
-    public NcDiskUtils() {
+    protected NcDiskUtils() {
     }
     
     /**
@@ -49,7 +49,7 @@ public class NcDiskUtils {
      * @param drive
      * @return
      */
-    public static String getIntSerialNumber(String drive) {
+    protected static String getIntSerialNumber(String drive) {
         String result = "";
         int retSerialNumber = 0;
         try {
@@ -81,7 +81,7 @@ public class NcDiskUtils {
      * Get now information about disks in the system
      * @return 
      */
-    public static TreeMap<Long, NcDiskInfo> getDiskInfo(){
+    protected static TreeMap<Long, NcDiskInfo> getDiskInfo(){
         TreeMap<Long, NcDiskInfo> toRetDI = new TreeMap<Long, NcDiskInfo>();
         long diskID = 0;
         try {
@@ -152,7 +152,7 @@ public class NcDiskUtils {
      * @param store
      * @return
      */
-    public static char getDiskLetterFromFileStore(FileStore store){
+    protected static char getDiskLetterFromFileStore(FileStore store){
         String forProcess = store.toString().toUpperCase();
         
         char cLet = '#';
@@ -173,7 +173,7 @@ public class NcDiskUtils {
      * @param strPath
      * @return
      */
-    public static char getDiskLetterFromPath(String strPath){
+    protected static char getDiskLetterFromPath(String strPath){
         String forProcess = strPath.toUpperCase().toString();
         char cLet = '#';
         if(NcAppHelper.isWindows()){
@@ -209,7 +209,7 @@ public class NcDiskUtils {
  * @return
  * diskID provided by class {@link ru.newcontrol.ncfv.NcDiskInfo#diskID NcDiskInfo}
  */
-    public static long getDiskIDbyLetterTotalSpace(File ncFile){
+    protected static long getDiskIDbyLetterTotalSpace(File ncFile){
         String strForDisk = NcIdxFileManager.getStrCanPathFromFile(ncFile).toUpperCase().substring(0);
         char ncDiskLetterFromPath = strForDisk.charAt(0);
         long ncNowStrorageIndex = -1;
@@ -228,7 +228,7 @@ public class NcDiskUtils {
      * @param diskID
      * @return
      */
-    public static String getHumanAlias(long diskID){
+    protected static String getHumanAlias(long diskID){
         return "DiskAliasNumber-" + diskID;
     }
 
@@ -237,10 +237,10 @@ public class NcDiskUtils {
      * @param diskID
      * @return
      */
-    public static String getProgramAlias(long diskID){
+    protected static String getProgramAlias(long diskID){
         return "DiskAliasNumber-" + diskID + "-" + System.nanoTime();
     }
-    public static boolean isNcDiskInfoHashTrue(NcDiskInfo inFuncData){
+    protected static boolean isNcDiskInfoHashTrue(NcDiskInfo inFuncData){
         return inFuncData.reordHash == (""
             + inFuncData.diskID
             + inFuncData.longSerialNumber
@@ -258,7 +258,7 @@ public class NcDiskUtils {
             + inFuncData.isReadonly
             + inFuncData.recordCreationTime).hashCode();
     }
-    public static boolean isDiskInfoRecordsHashTure(TreeMap<Long, NcDiskInfo> inFuncData){
+    protected static boolean isDiskInfoRecordsHashTure(TreeMap<Long, NcDiskInfo> inFuncData){
         boolean isRecordHash = true;
         for(Map.Entry<Long, NcDiskInfo> itemDisk : inFuncData.entrySet() ){
             boolean boolRecHashTrue = isNcDiskInfoHashTrue(itemDisk.getValue());
@@ -269,7 +269,7 @@ public class NcDiskUtils {
         }
         return isRecordHash;
     }
-    public static void printToConsoleNcDiskInfo(NcDiskInfo inFuncData){
+    protected static void printToConsoleNcDiskInfo(NcDiskInfo inFuncData){
         
         int calcHash = (""
             + inFuncData.diskID

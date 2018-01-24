@@ -24,13 +24,27 @@ public class NcLogLogicGUI {
      * LogAppLogicRecord (LALR) - toLALR(class MethodName)
      * make record in log file
      */
-    public static void NcSwMainMenuGetMainMenu(){
+    protected static void NcSwMainMenuGetMainMenu(){
         if( NcfvRunVariables.isLALRNcSwMainMenuMainMenu() ){
             String strLogMsg = NcStrLogMsgField.INFO.getStr()
                 + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
                 + NcStrLogLogicVar.LA_JMENUBAR.getStr()
                 + NcStrLogMsgField.APP_LOGIC_NEXT_WAY_VAR.getStr()
                 + NcStrLogLogicVar.LA_JMENU.getStr();
+            NcAppHelper.outMessage(strLogMsg);
+        }
+    }
+    /**
+     * LogAppLogicRecord (LALR) - toLALR(class MethodName)
+     * make record in log file
+     */
+    protected static void NcSwPanelCenterGetPanel(){
+        if( NcfvRunVariables.isLALRNcSwPanelCentergetPanel() ){
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogLogicVar.LA_JPANEL_CENTER.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NEXT_WAY_VAR.getStr()
+                + NcStrLogLogicVar.LA_SET_VISIBLE_GUI.getStr();
             NcAppHelper.outMessage(strLogMsg);
         }
     }

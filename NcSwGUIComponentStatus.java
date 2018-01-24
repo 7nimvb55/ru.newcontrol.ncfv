@@ -17,11 +17,6 @@ package ru.newcontrol.ncfv;
 
 import java.awt.Component;
 import java.util.TreeMap;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.TableModel;
 
 /**
  *

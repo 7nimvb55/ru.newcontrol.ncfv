@@ -34,7 +34,7 @@ public class NcSwPanelCenter {
      *
      * @return
      */
-    public static JPanel getPanel(NcSwGUIComponentStatus lComp){
+    protected static JPanel getPanel(NcSwGUIComponentStatus lComp){
         JPanel centerPanel = new JPanel();
         String componentPath = NcStrGUIComponent.SMAIN.getStr()
             + NcStrGUIComponent.SJFRAME.getStr()
@@ -64,21 +64,8 @@ public class NcSwPanelCenter {
         ncScrollTable.revalidate();
         
         
-        toLALRgetPanel();
+        NcLogLogicGUI.NcSwPanelCenterGetPanel();
         return centerPanel;
     }
-    /**
-     * LogAppLogicRecord (LALR) - toLALR(class MethodName)
-     * make record in log file
-     */
-    private static void toLALRgetPanel(){
-        if( NcfvRunVariables.isLALRNcSwPanelCentergetPanel() ){
-            String strLogMsg = NcStrLogMsgField.INFO.getStr()
-                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
-                + NcStrLogLogicVar.LA_JPANEL_CENTER.getStr()
-                + NcStrLogMsgField.APP_LOGIC_NEXT_WAY_VAR.getStr()
-                + NcStrLogLogicVar.LA_SET_VISIBLE_GUI.getStr();
-            NcAppHelper.outMessage(strLogMsg);
-        }
-    }
+    
 }
