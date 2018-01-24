@@ -52,7 +52,6 @@ public class NcParamFvReader {
         catch(Exception ex){
             NcAppHelper.logException(
                     NcPreRunFileViewer.class.getCanonicalName(), ex);
-            
             NcLogLogicCfg.NcParamFvReaderReadDataGenerate();
             return new NcParamFv();
         }
