@@ -45,7 +45,7 @@ public class NcIMinFS {
     /**
      *
      */
-    public NcIMinFS() {
+    protected NcIMinFS() {
        this.limitCountRecordInFiles = 100;
 
        ncmcCfg = new NcManageCfg();
@@ -66,7 +66,7 @@ public class NcIMinFS {
      *
      * @return
      */
-    public int getDiskCount(){
+    protected int getDiskCount(){
         
         return ncmcCfg.arrDiskInfo.size();
     }
@@ -75,7 +75,7 @@ public class NcIMinFS {
      *
      * @return
      */
-    public TreeMap<Long, NcDiskInfo> getDiskInfo(){
+    protected TreeMap<Long, NcDiskInfo> getDiskInfo(){
         return ncmcCfg.arrDiskInfo;
     }
     
@@ -83,7 +83,7 @@ public class NcIMinFS {
      *
      * @return
      */
-    public NcIndexManageIDs getNcIndexManageIDs(){
+    protected NcIndexManageIDs getNcIndexManageIDs(){
         return ncmIDs;
     }
     
@@ -91,7 +91,7 @@ public class NcIMinFS {
      *
      * @return
      */
-    public NcManageCfg getNcManageCfg(){
+    protected NcManageCfg getNcManageCfg(){
         return ncmcCfg;
     }
 
@@ -100,7 +100,7 @@ public class NcIMinFS {
  * @param indexedFile
  * @return 
  */    
-    public long getIndexLastModifiedForDirectoryOrFile(File indexedFile){
+    protected long getIndexLastModifiedForDirectoryOrFile(File indexedFile){
         return -1;
     }
     private long writeDirListToFile(){
@@ -117,7 +117,7 @@ public class NcIMinFS {
      * @param fReadyForRecordData
      * @return 
  */
-    public int setReadyForRecordData(ArrayList<NcDcIdxDirListToFileAttr> fReadyForRecordData){
+    protected int setReadyForRecordData(ArrayList<NcDcIdxDirListToFileAttr> fReadyForRecordData){
         fReadyForRecordData.trimToSize();
         readyForRecordData = fReadyForRecordData;
         readyForRecord = fReadyForRecordData.size();

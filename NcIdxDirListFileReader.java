@@ -27,11 +27,12 @@ import java.util.TreeMap;
  */
 public class NcIdxDirListFileReader {
     /**
+     * Used in {@link ru.newcontrol.ncfv.NcIdxDirListManager#putToDirectoryList(ru.newcontrol.ncfv.NcDcIdxDirListToFileAttr) }
      * Directory List
      * @param dirListID
      * @return 
      */ 
-    public static TreeMap<Long, NcDcIdxDirListToFileAttr> ncReadFromDirListFile(long dirListID){
+    protected static TreeMap<Long, NcDcIdxDirListToFileAttr> ncReadFromDirListFile(long dirListID){
         TreeMap<Long, NcDcIdxDirListToFileAttr> ncDataFromDirList;
         String strCfgPath = NcIdxFileManager.getFileNameToRecord(NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirList())+"/dl", dirListID);
 
@@ -52,11 +53,12 @@ public class NcIdxDirListFileReader {
     }
 
     /**
-     *
+     * Used in {@link ru.newcontrol.ncfv.NcIdxDirListExistManager#putToDirListExistStart(ru.newcontrol.ncfv.NcDcIdxDirListToFileExist, long) }
+     * {@link ru.newcontrol.ncfv.NcIdxDirListExistManager#putToDirListExistStop(ru.newcontrol.ncfv.NcDcIdxDirListToFileExist, long) }
      * @param dirListID
      * @return
      */
-    public static TreeMap<Long, NcDcIdxDirListToFileExist> ncReadFromDirListExist(long dirListID){
+    protected static TreeMap<Long, NcDcIdxDirListToFileExist> ncReadFromDirListExist(long dirListID){
         TreeMap<Long, NcDcIdxDirListToFileExist> ncDataFromDirList;
         String strCfgPath = NcIdxFileManager.getFileNameToRecord(NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirListExist()) + "/e", dirListID);
 
@@ -75,7 +77,12 @@ public class NcIdxDirListFileReader {
         } 
         return ncDataFromDirList;
     }
-    public static TreeMap<Long, NcDcIdxDirListToFileAttr> ncReadFromDirListFileByName(String strCfgPath){
+    /**
+     * Used in {@link ru.newcontrol.ncfv.NcIdxDirListManager#getByListIDs(java.util.TreeMap) }
+     * @param strCfgPath
+     * @return 
+     */
+    protected static TreeMap<Long, NcDcIdxDirListToFileAttr> ncReadFromDirListFileByName(String strCfgPath){
         TreeMap<Long, NcDcIdxDirListToFileAttr> ncDataFromDirList;
         
 

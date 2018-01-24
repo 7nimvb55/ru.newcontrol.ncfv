@@ -58,7 +58,7 @@ public enum NcFileHash {
      *
      * @return
      */
-    public String getName() {
+    protected String getName() {
         return name;
     }
 
@@ -67,7 +67,7 @@ public enum NcFileHash {
      * @param input
      * @return
      */
-    public byte[] checksum(File input) {
+    protected byte[] checksum(File input) {
         try (InputStream in = new FileInputStream(input)) {
             MessageDigest digest = MessageDigest.getInstance(getName());
             byte[] block = new byte[4096];

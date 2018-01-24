@@ -16,7 +16,6 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.io.File;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -27,12 +26,12 @@ import java.util.TreeMap;
 public class NcIdxDirListExistManager {
 
     /**
-     *
+     * Used in {@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#makeIndexForFile(java.io.File) }
      * @param toWriteData
      * @param dirListID
      * @return
      */
-    public static long putToDirListExistStart(NcDcIdxDirListToFileExist toWriteData, long dirListID){
+    protected static long putToDirListExistStart(NcDcIdxDirListToFileExist toWriteData, long dirListID){
         TreeMap<Long, NcDcIdxDirListToFileExist> ncReadFromFileData;
         TreeMap<Long, NcDcIdxDirListToFileExist> ncWriteToFileData;
         ncWriteToFileData = new  TreeMap<>();
@@ -50,12 +49,12 @@ public class NcIdxDirListExistManager {
     }
 
     /**
-     *
+     * Used in {@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#makeIndexForFile(java.io.File) }
      * @param toWriteData
      * @param dirListID
      * @return
      */
-    public static long putToDirListExistStop(NcDcIdxDirListToFileExist toWriteData, long dirListID){
+    protected static long putToDirListExistStop(NcDcIdxDirListToFileExist toWriteData, long dirListID){
         TreeMap<Long, NcDcIdxDirListToFileExist> ncReadFromFileData;
         TreeMap<Long, NcDcIdxDirListToFileExist> ncWriteToFileData;
         ncWriteToFileData = new  TreeMap<>();
@@ -82,7 +81,7 @@ public class NcIdxDirListExistManager {
      * @param inFuncData
      * @return
      */
-    public static boolean isDirListExistDataWrong(NcDcIdxDirListToFileExist inFuncData){
+    private static boolean isDirListExistDataWrong(NcDcIdxDirListToFileExist inFuncData){
         if( inFuncData == null ){
             return true;
         }
@@ -97,7 +96,7 @@ public class NcIdxDirListExistManager {
      * @param inFuncData
      * @return
      */
-    public static boolean isDirListExistDataHasEmptyFiled(NcDcIdxDirListToFileExist inFuncData){
+    private static boolean isDirListExistDataHasEmptyFiled(NcDcIdxDirListToFileExist inFuncData){
         if( inFuncData == null ){
             return true;
         }
@@ -120,7 +119,7 @@ public class NcIdxDirListExistManager {
      * @param inFuncData
      * @return
      */
-    public static boolean isDirListExistDataDataEmpty(NcDcIdxDirListToFileExist inFuncData){
+    private static boolean isDirListExistDataDataEmpty(NcDcIdxDirListToFileExist inFuncData){
         if( inFuncData == null ){
             return true;
         }
@@ -145,7 +144,7 @@ public class NcIdxDirListExistManager {
      * @param inFuncData
      * @return
      */
-    public static boolean isDirListExistDataDataHashTrue(NcDcIdxDirListToFileExist inFuncData){
+    private static boolean isDirListExistDataDataHashTrue(NcDcIdxDirListToFileExist inFuncData){
         return inFuncData.recordHash == (
                 ""
                 + inFuncData.dirListID

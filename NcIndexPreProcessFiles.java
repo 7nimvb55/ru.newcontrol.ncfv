@@ -362,10 +362,10 @@ public String[] getFileDataToSwing(File ncFile) throws IOException{
  * td - File.isDirectory()
  * tf - File.isFile()
  * fc - String Files.probeContentType()
-     * @param ncDiskInfo
-     * @param DirListIdx
-     * @param ncFile
-     * @return 
+ * @param ncDiskInfo
+ * @param DirListIdx
+ * @param ncFile
+ * @return 
  */    
     public NcDcIdxDirListToFileAttr getDataToDL(TreeMap<Long, NcDiskInfo> ncDiskInfo, File ncFile, long DirListIdx){
         String strForDisk = NcIdxFileManager.getStrCanPathFromFile(ncFile).toUpperCase().substring(0);
@@ -443,11 +443,11 @@ public String[] getFileDataToSwing(File ncFile) throws IOException{
     }
 
     /**
-     *
+     * Used in {@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
      * @param ncFileRec
      * @return
      */
-    public long makeIndexRecursive(File ncFileRec){
+    protected long makeIndexRecursive(File ncFileRec){
         
         if(ncFileRec.exists()){
             appendToDirListIDs.clear();
@@ -456,6 +456,11 @@ public String[] getFileDataToSwing(File ncFile) throws IOException{
         }
         return 0;
     }
+    /**
+     * 
+     * @param ncFile
+     * @return 
+     */
     
     private long makeIndexForFolder(File ncFile){
         
@@ -486,7 +491,7 @@ public String[] getFileDataToSwing(File ncFile) throws IOException{
      * @return
      * @throws IOException
      */
-    public long makeIndexForFile(File ncFile) throws IOException{
+    private long makeIndexForFile(File ncFile) throws IOException{
         NcDcIdxDirListToFileExist existDirList;
         boolean writedToExistList = false;
         NcIMinFS ncwd = new NcIMinFS();
