@@ -24,8 +24,6 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -131,7 +129,8 @@ public class NcIndexManageIDs {
             oos.writeObject(fIdsToWrite);
         }
         catch(Exception ex){
-            Logger.getLogger(NcIndexManageIDs.class.getName()).log(Level.SEVERE, null, ex); 
+            NcAppHelper.logException(
+                    NcIndexManageIDs.class.getCanonicalName(), ex);
             return -1;
         }
         return 1;
@@ -144,7 +143,8 @@ public class NcIndexManageIDs {
             idsReadData = (NcTmpNowProcessInfo)ois.readObject();
         }
         catch(Exception ex){
-            Logger.getLogger(NcIndexManageIDs.class.getName()).log(Level.SEVERE, null, ex);
+            NcAppHelper.logException(
+                    NcIndexManageIDs.class.getCanonicalName(), ex);
             return new NcTmpNowProcessInfo();
         }
         return idsReadData;
@@ -341,7 +341,8 @@ public class NcIndexManageIDs {
                 lastRecDataDFL = (TreeMap<Long, NcDcIdxDirListToFileAttr>)ois.readObject();
             }
             catch(Exception ex){
-                Logger.getLogger(NcIndexManageIDs.class.getName()).log(Level.SEVERE, null, ex);
+                NcAppHelper.logException(
+                    NcIndexManageIDs.class.getCanonicalName(), ex);
                 return -1;
             }
         }
@@ -358,7 +359,8 @@ public class NcIndexManageIDs {
                 lastRecDataDFHL = (ArrayList<NcDcIdxDirListToFileHash>)ois.readObject();
             }
             catch(Exception ex){
-                Logger.getLogger(NcIndexManageIDs.class.getName()).log(Level.SEVERE, null, ex);
+                NcAppHelper.logException(
+                    NcIndexManageIDs.class.getCanonicalName(), ex);
                 return -1;
             }
         }
@@ -375,7 +377,8 @@ public class NcIndexManageIDs {
                 lastRecDataDLWL = (ArrayList<NcDcIdxLongWordListToFile>)ois.readObject();
             }
             catch(Exception ex){
-                Logger.getLogger(NcIndexManageIDs.class.getName()).log(Level.SEVERE, null, ex);
+                NcAppHelper.logException(
+                    NcIndexManageIDs.class.getCanonicalName(), ex);
                 return -1;
             }
         }
@@ -393,6 +396,8 @@ public class NcIndexManageIDs {
                 return true;
             }
         }catch(NullPointerException ex){
+            NcAppHelper.logException(
+                    NcIndexManageIDs.class.getCanonicalName(), ex);
             return false;
         }
         return false;

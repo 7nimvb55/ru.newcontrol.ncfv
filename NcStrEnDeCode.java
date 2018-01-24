@@ -17,11 +17,11 @@
 package ru.newcontrol.ncfv;
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.*;
 /**
- *
+ * Developed based on the publications found on the Internet at
+ * http://www.torsten-horn.de/techdocs/encoding.htm#Codepage-Konsolenausgabe
+ * Thanks and best regards to author of publishing
  * @author Администратор
  */
 public class NcStrEnDeCode {
@@ -75,8 +75,8 @@ public class NcStrEnDeCode {
             System.out.println( "Mit PrintStream:  " + sonderzeichen );
             
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(NcStrEnDeCode.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
+            NcAppHelper.logException(
+                    NcStrEnDeCode.class.getCanonicalName(), ex);
         }
 
     }
