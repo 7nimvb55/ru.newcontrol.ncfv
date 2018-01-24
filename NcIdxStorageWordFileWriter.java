@@ -20,8 +20,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -43,7 +41,8 @@ public class NcIdxStorageWordFileWriter {
             oos.writeObject(updatedRecords);
         }
         catch(Exception ex){
-            Logger.getLogger(NcIdxStorageWordFileWriter.class.getName()).log(Level.SEVERE, null, ex); 
+            NcAppHelper.logException(
+                    NcIdxStorageWordFileWriter.class.getCanonicalName(), ex);
             return -1;
         } 
         return updatedRecords.size();
