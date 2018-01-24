@@ -28,6 +28,7 @@ public class NcStrEnDeCode {
     
     NcStrEnDeCode(){}
 /**
+ * @deprecated 
  * Use in ru.newcontrol.ncfv.Ncfv.main() @method=main of @File=Ncfv.java provides class name @Class=Ncfv
  */    
     public static void getCodePageInfo(){
