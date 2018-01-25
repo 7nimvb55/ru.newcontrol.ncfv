@@ -120,28 +120,37 @@ public class NcIdxFileManager {
         return false;
     }
     /**
-     * 
+     * Not used
      * @param String inputFileName
      * @return 
      */    
-    public static boolean dirOrFileExistRAccessChecker(String inputFileName){
+    private static boolean dirOrFileExistRAccessChecker(String inputFileName){
         File strFIds = new File(inputFileName);
-            try{
-                if( strFIds.exists() && strFIds.canRead() ){
-                    return true;
-                }
-            }catch(NullPointerException ex){
-                return false;
+        try{
+            if( strFIds.exists() && strFIds.canRead() ){
+                return true;
             }
+        }catch(NullPointerException ex){
             return false;
+        }
+        return false;
     }
     /**
-     * Check for input file, File.exist() && File.canRead() && File.canWrite() && File.isDirectory()  
+     * Check for input file, File.exist() && File.canRead() && File.canWrite() 
+     * && File.isDirectory()
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#createStrPathForCfgFile() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getOrCreateAppDataSubDir() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getAppWorkDirStrPath() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getUserHomeDirStrPath() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getAppWorkDirFile() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getIndexSubDirectories(java.lang.String) }
+     * </ul>
      * @param strFIds
      * @return true if all of checked params true
      * false if one of param false
      */
-    public static boolean dirExistRWAccessChecker(File strFIds){
+    private static boolean dirExistRWAccessChecker(File strFIds){
         try{
             if(strFIds.exists()
                     && strFIds.canRead()
