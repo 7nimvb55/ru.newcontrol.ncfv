@@ -25,8 +25,11 @@ import java.util.TreeMap;
  */
 public class NcIdxDirListManager {
     /**
-     * Used in {@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getResultMakeIndex(java.io.File) }
-     * {@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#makeIndexForFile(java.io.File) }
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getResultMakeIndex(java.io.File) }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#makeIndexForFile(java.io.File) }
+     * </ul>
      * @param forRecordData
      * @param ncToAddInIndexFile
      * @return -1 if false append into Directory List, or ID of appened record
@@ -70,7 +73,7 @@ public class NcIdxDirListManager {
     }
 
     /**
-     *
+     * Not used
      * @param inFuncData
      * @return
      */
@@ -85,7 +88,7 @@ public class NcIdxDirListManager {
     }
 
     /**
-     *  
+     * Not used
      * @param inFuncData
      * @return
      */
@@ -136,9 +139,8 @@ public class NcIdxDirListManager {
                 || deletedRecIsEmpty
                 || changedRecordIDIsEmpty;
     }
-
     /**
-     *
+     * Not used
      * @param inFuncData
      * @return
      */
@@ -168,7 +170,6 @@ public class NcIdxDirListManager {
         boolean deletedRecIsEmpty = inFuncData.deletedRec == false;
         boolean changedRecordIDIsEmpty = inFuncData.changedRecordID == -777;
 
-        
         boolean hashIsTrue =  isDirectoryListDataAttrHashTrue(inFuncData);
         return dirListIdIsEmpty
                 && diskIdIsEmpty
@@ -193,9 +194,12 @@ public class NcIdxDirListManager {
                 && changedRecordIDIsEmpty
                 && hashIsTrue;
     }
-
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListManager#isDirectoryListDataAttrWrong(ru.newcontrol.ncfv.NcDcIdxDirListToFileAttr) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListManager#isDirectoryListDataAttrEmpty(ru.newcontrol.ncfv.NcDcIdxDirListToFileAttr) }
+     * </ul>
      * @param inFuncData
      * @return
      */
@@ -226,8 +230,13 @@ public class NcIdxDirListManager {
             + inFuncData.changedRecordID).hashCode();
     }
     /**
-     * Used in {@link ru.newcontrol.ncfv.NcSrchGetResult#makeSearchByKeyFromInput(java.lang.String) }
-     * {@link ru.newcontrol.ncfv.NcSrchGetResult#makeSearchByKeyFromFile() }
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSearchInIndex#searchWordInIndex() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchGetResult#makeSearchByKeyFromInput(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcSrchGetResult#makeSearchByKeyFromFile() }
+     * </ul>
      * @param inFuncData
      * @return 
      */
@@ -250,7 +259,6 @@ public class NcIdxDirListManager {
         long recIdx = 0;
         for( Map.Entry<Long, String> itemName : filesList.entrySet() ){
             readedData.putAll(NcIdxDirListFileReader.ncReadFromDirListFileByName(itemName.getValue()));
-            
             for( Map.Entry<Long, NcDcIdxWordToFile> itemIDs : inFuncData.entrySet() ){
                 for( Map.Entry<Long, NcDcIdxDirListToFileAttr> itemReaded : readedData.entrySet() ){
                     boolean isToRetId = itemIDs.getValue().dirListID == itemReaded.getValue().dirListID;
@@ -261,10 +269,8 @@ public class NcIdxDirListManager {
                 }
                 
             }
-            
             readedData.clear();
         }
-        
         return toReturn;
     }
 }
