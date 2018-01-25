@@ -28,11 +28,14 @@ import java.util.TreeMap;
 public class NcIdxStorageWordFileReader {
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxStorageWordManager#putInStorageWord(java.lang.String, java.util.TreeMap) }
+     * </ul>
      * @param inFuncFile
      * @return
      */
-    public static TreeMap<Long, NcDcIdxStorageWordToFile> ncReadFileContainedId(File inFuncFile){
+    protected static TreeMap<Long, NcDcIdxStorageWordToFile> ncReadFileContainedId(File inFuncFile){
         TreeMap<Long, NcDcIdxStorageWordToFile> ncReadedData;
         
         if ( !NcIdxFileManager.fileExistRWAccessChecker(inFuncFile)){
