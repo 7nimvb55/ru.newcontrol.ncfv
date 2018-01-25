@@ -83,7 +83,7 @@ public class NcIdxDirListExistManager {
     }
 
     /**
-     *
+     * Not used
      * @param inFuncData
      * @return
      */
@@ -96,9 +96,8 @@ public class NcIdxDirListExistManager {
         }
         return false;
     }
-
     /**
-     *
+     * Not used
      * @param inFuncData
      * @return
      */
@@ -119,9 +118,8 @@ public class NcIdxDirListExistManager {
                 || nanoTimeStartAddToIndexIsEmpty
                 || nanoTimeEndAddToIndexIsEmpty;
     }
-
     /**
-     *
+     * Not used
      * @param inFuncData
      * @return
      */
@@ -144,9 +142,12 @@ public class NcIdxDirListExistManager {
                 && nanoTimeEndAddToIndexIsEmpty
                 && hashIsTrue;
     }
-
     /**
-     *
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListExistManager#isDirListExistDataWrong(ru.newcontrol.ncfv.NcDcIdxDirListToFileExist) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListExistManager#isDirListExistDataDataEmpty(ru.newcontrol.ncfv.NcDcIdxDirListToFileExist) }
+     * </ul>
      * @param inFuncData
      * @return
      */
