@@ -26,20 +26,26 @@ import java.util.TreeMap;
  * @author Администратор
  */
 public class NcIdxLongWordListFileReader {
- /**
- * Directory List Word Long
+    /**
+     * Directory List Word Long
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordListManager#getOrCreateLongWordID(ru.newcontrol.ncfv.NcDcIdxLongWordListToFile) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordManager#getForSearchLongWordID(ru.newcontrol.ncfv.NcDcIdxLongWordListToFile) }
+     * </ul>
      * @param dataForRead
      * @param rID
- * @return 
- */      
-    public static TreeMap<Long, NcDcIdxLongWordListToFile> ncReadFileContainedId(NcDcIdxLongWordListToFile dataForRead, long rID){
+     * @return 
+     */      
+    protected static TreeMap<Long, NcDcIdxLongWordListToFile> ncReadFileContainedId(NcDcIdxLongWordListToFile dataForRead, long rID){
         TreeMap<Long, NcDcIdxLongWordListToFile> ncDataFromDirList;
         String strCfgPath = NcIdxFileManager.getFileNameToRecord(
                 NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirLongWordList()) + "/wl-"
                 + dataForRead.name.substring(0, 4),rID);
         if ( !NcIdxFileManager.fileExistRWAccessChecker(new File(strCfgPath))){
             return new TreeMap<Long, NcDcIdxLongWordListToFile>();
-        };
+        }
         //mcGetWorkCfgDirName() + workFileNames[0];
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(strCfgPath)))
         {

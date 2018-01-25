@@ -25,14 +25,18 @@ import java.util.TreeMap;
  * @author Администратор
  */
 public class NcIdxLongWordListFileWriter {
-/**
- * Directory List Word Long
+    /**
+     * Directory List Word Long
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordListManager#getOrCreateLongWordID(ru.newcontrol.ncfv.NcDcIdxLongWordListToFile) }
+     * </ul>
      * @param ncDataToDirListFile
      * @param dataForWrite
      * @param recID
- * @return 
- */    
-    public static int ncWriteData(TreeMap<Long, NcDcIdxLongWordListToFile> ncDataToDirListFile, NcDcIdxLongWordListToFile dataForWrite, long recID){
+     * @return 
+     */    
+    protected static int ncWriteData(TreeMap<Long, NcDcIdxLongWordListToFile> ncDataToDirListFile, NcDcIdxLongWordListToFile dataForWrite, long recID){
         if( ncDataToDirListFile == null ){
             return -1;
         }
