@@ -69,13 +69,17 @@ public class NcIdxFileManager {
         return prefixFileName + "-" + (fID - (fID % 100) + (100 - 1));
     }
     /**
-     * Not used
+     Used in:
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordManager#putLongWordInFile(java.util.TreeMap, ru.newcontrol.ncfv.NcDcIdxLongWordListToFile) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordManager#getLongWordFromFile(java.util.TreeMap, ru.newcontrol.ncfv.NcDcIdxLongWordListToFile) }
+     * </ul>
      * @param prefixFileName
      * @param fID
      * @param sID
      * @return 
      */    
-    private static String getFileNameToRecordLongWord(String prefixFileName, long fID, long sID){
+    protected static String getFileNameToRecordLongWord(String prefixFileName, long fID, long sID){
         return prefixFileName + "-" + fID + "-" + (sID - (sID % 100) + (100 - 1));
     }
     /**
@@ -115,22 +119,29 @@ public class NcIdxFileManager {
                 return true;
             }
         }catch(NullPointerException ex){
+            NcAppHelper.logException(
+                    NcIdxFileManager.class.getCanonicalName(), ex);
             return false;
         }
         return false;
     }
     /**
-     * Not used
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * </ul>
      * @param String inputFileName
      * @return 
      */    
-    private static boolean dirOrFileExistRAccessChecker(String inputFileName){
+    protected static boolean dirOrFileExistRAccessChecker(String inputFileName){
         File strFIds = new File(inputFileName);
         try{
             if( strFIds.exists() && strFIds.canRead() ){
                 return true;
             }
         }catch(NullPointerException ex){
+            NcAppHelper.logException(
+                    NcIdxFileManager.class.getCanonicalName(), ex);
             return false;
         }
         return false;
@@ -150,7 +161,7 @@ public class NcIdxFileManager {
      * @return true if all of checked params true
      * false if one of param false
      */
-    private static boolean dirExistRWAccessChecker(File strFIds){
+    protected static boolean dirExistRWAccessChecker(File strFIds){
         try{
             if(strFIds.exists()
                     && strFIds.canRead()
@@ -159,16 +170,25 @@ public class NcIdxFileManager {
                 return true;
             }
         }catch(NullPointerException ex){
+            NcAppHelper.logException(
+                    NcIdxFileManager.class.getCanonicalName(), ex);
             return false;
         }
         return false;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getCurrentWorkCfg() }
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getUpdatedAppCfg() }
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getReadedLinesFromEtcCfg() }
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#updateEtcCfg(java.util.ArrayList) }
+     * </ul>
      * Method for check Application path on the read and write permitions and
      * end call end of application methods if path not have need permitions
      * @return {@link java.io.file} object with appPath/etc/ncvf.conf file
      */
-    public static File getOrCreateCfgFile(){
+    protected static File getOrCreateCfgFile(){
         String strCfgFile = createStrPathForCfgFile();
         File fileCfg = new File(strCfgFile);
         if( !NcIdxFileManager.fileExistRWAccessChecker(fileCfg) ){
@@ -177,13 +197,17 @@ public class NcIdxFileManager {
                     NcPreRunFileViewer.createCfg(getStrCanPathFromFile(fileCfg));
                 }
             } catch (IOException ex) {
-                Logger.getLogger(NcPreRunFileViewer.class.getName()).log(Level.SEVERE, null, ex);
-                
+                NcAppHelper.logException(
+                    NcIdxFileManager.class.getCanonicalName(), ex);
                 NcAppHelper.appExitWithMessageFSAccess(getStrCanPathFromFile(fileCfg));
             }
         }
         return fileCfg;
     }
+    /**
+     * Used in {@link ru.newcontrol.ncfv.NcIdxFileManager#getOrCreateCfgFile() }
+     * @return 
+     */
     private static String createStrPathForCfgFile(){
         String appPath = getAppWorkDirStrPath();
         String newSubDirEtc = strPathCombiner(appPath, "/etc");
@@ -196,20 +220,29 @@ public class NcIdxFileManager {
         return strPathCombiner(newSubDirEtc, "/ncfv.conf");
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvReader#readDataFromWorkCfg() }
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvWriter#wirteDataInWorkCfg(ru.newcontrol.ncfv.NcParamFv) }
+     * </ul>
      * Path config in serializable class for operative use
      * {@link ru.newcontrol.ncfv.NcParamFv}
      * @return
      */
-    public static String getWorkCfgPath(){
+    protected static String getWorkCfgPath(){
         String strToReturnDataInAppDir = getOrCreateAppDataSubDir();
         String strToReturnDataInAppDirFile = strPathCombiner(strToReturnDataInAppDir, "workcfg.dat");
         return strToReturnDataInAppDirFile;
     }
     /**
-     * 
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getWorkCfgPath() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getJournalDiskPath() }
+     * </ul>
      * @return 
      */
-    public static String getOrCreateAppDataSubDir(){
+    protected static String getOrCreateAppDataSubDir(){
         String strAppPath = getAppWorkDirStrPath();
         String strToReturnDataInAppDir = strPathCombiner(strAppPath, "/appdata");
         File dirForAppData = new File(strToReturnDataInAppDir);

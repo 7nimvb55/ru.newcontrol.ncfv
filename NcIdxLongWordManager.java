@@ -26,12 +26,12 @@ import java.util.TreeMap;
  */
 public class NcIdxLongWordManager {
 
-/**
- * 
- * @param StructureLongWord
- * @param dataFuncForWrite
- * @return 
- */    
+    /**
+     * 
+     * @param StructureLongWord
+     * @param dataFuncForWrite
+     * @return 
+     */    
     public static long putLongWordInFile(TreeMap<Long, NcDcIdxSubStringToOperationUse> StructureLongWord, NcDcIdxLongWordListToFile dataFuncForWrite){
         long countWritedIDs = 0;
         for(Map.Entry<Long, NcDcIdxSubStringToOperationUse> item : StructureLongWord.entrySet()){
@@ -80,10 +80,10 @@ public class NcIdxLongWordManager {
         return countWritedIDs;
     }
     /**
- * 
- * @param StructureLongWord
- * @return 
- */    
+     * 
+     * @param StructureLongWord
+     * @return 
+     */    
     public static TreeMap<Long, NcDcIdxWordToFile> getLongWord(TreeMap<Long, NcDcIdxSubStringToOperationUse> StructureLongWord){
         TreeMap<Long, NcDcIdxWordToFile> retReadedData = new TreeMap<Long, NcDcIdxWordToFile>();
         long countWritedIDs = 0;
@@ -115,10 +115,10 @@ public class NcIdxLongWordManager {
         return retReadedData;
     }
     /**
- * 
- * @param dataForRead
- * @return 
- */    
+     * 
+     * @param dataForRead
+     * @return 
+     */    
     private static NcDcIdxLongWordListToFile getForSearchLongWordID(NcDcIdxLongWordListToFile dataForRead){
 
         String nameLongWordList = "";
@@ -167,12 +167,12 @@ public class NcIdxLongWordManager {
         dataForRead = new NcDcIdxLongWordListToFile();
         return dataForRead;
     }
-/**
- * 
- * @param StructureLongWord
- * @param dataFuncForWrite
- * @return 
- */
+    /**
+     * 
+     * @param StructureLongWord
+     * @param dataFuncForWrite
+     * @return 
+     */
     private static TreeMap<Long, NcDcIdxWordToFile> getLongWordFromFile(TreeMap<Long, NcDcIdxSubStringToOperationUse> StructureLongWord, NcDcIdxLongWordListToFile dataFuncForWrite){
         TreeMap<Long, NcDcIdxWordToFile> retReadedData = new TreeMap<Long, NcDcIdxWordToFile>();
 
@@ -209,11 +209,14 @@ public class NcIdxLongWordManager {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>
+     * </ul>
      * @param inFuncWord
      * @return
      */
-    public static boolean isLongWord(String inFuncWord){
+    protected static boolean isLongWord(String inFuncWord){
         if (inFuncWord.length() > 25){
             return true;
         }
