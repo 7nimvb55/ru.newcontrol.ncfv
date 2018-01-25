@@ -27,12 +27,16 @@ import java.util.TreeMap;
  */
 public class NcIdxLongWordFileReader {
     /**
- * 
- * @param readedWord
- * @param rID
- * @return 
- */    
-    public static TreeMap<Long, NcDcIdxWordToFile> ncReadFromLongWordFile(String readedWord, long rID){
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordManager#putLongWordInFile(java.util.TreeMap, ru.newcontrol.ncfv.NcDcIdxLongWordListToFile) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordManager#getLongWordFromFile(java.util.TreeMap, ru.newcontrol.ncfv.NcDcIdxLongWordListToFile) }
+     * </ul>
+     * @param readedWord
+     * @param rID
+     * @return 
+     */    
+    protected static TreeMap<Long, NcDcIdxWordToFile> ncReadFromLongWordFile(String readedWord, long rID){
         TreeMap<Long, NcDcIdxWordToFile> ncDataFromWordFile;
         String strCfgPath =  readedWord;
         if ( !NcIdxFileManager.fileExistRWAccessChecker(new File(strCfgPath))){

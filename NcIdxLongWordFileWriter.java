@@ -26,13 +26,16 @@ import java.util.TreeMap;
  */
 public class NcIdxLongWordFileWriter {
     /**
-     * 
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordManager#putLongWordInFile(java.util.TreeMap, ru.newcontrol.ncfv.NcDcIdxLongWordListToFile) }
+     * </ul>
      * @param ncWordToRec
      * @param recHexWord
      * @param recID
      * @return 
      */    
-    public static long ncWriteForLongWord(TreeMap<Long, NcDcIdxWordToFile> ncWordToRec, String recHexWord, long recID){
+    protected static long ncWriteForLongWord(TreeMap<Long, NcDcIdxWordToFile> ncWordToRec, String recHexWord, long recID){
         if( ncWordToRec == null ){
             return -1;
         }
