@@ -431,6 +431,12 @@ public class NcIdxFileManager {
         return getStrCanPathFromFile(getErrorForFileOperation());
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#checkDataForAllDirListFiles() }
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#getNotEqualsRecordDirListAttrVsExist() }
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkTmpIDsData() }
+     * </ul>
      * Methods of this application, generate errors (exeptions) in operation with
      * objects java.io.File, for return not null value and not generated new exeption of null,
      * return value generated from method 
@@ -440,24 +446,39 @@ public class NcIdxFileManager {
      * @param inputFile {@link java.io.File#File(java.lang.String) java.io.File}
      * @return true for found error object
      */
-    public static boolean isErrorForFileOperation(File inputFile){
+    protected static boolean isErrorForFileOperation(File inputFile){
         return ( getStrCanPathFromFile(inputFile).contains(NcStrServiceMsg.ERROR_FILE_NOT_EXIST.getStr()) );
     }
     /**
+     * Not used
      * Analogue for {@link ru.newcontrol.ncfv.NcIdxFileManager#isErrorForFileOperation(java.io.File)}
      * @param inputFilePath
      * @return true if input param has error of operation path
      */
-    public static boolean isErrorForFileOperationByString(String inputFilePath){
+    private static boolean isErrorForFileOperationByString(String inputFilePath){
         return ( inputFilePath.contains(NcStrServiceMsg.ERROR_FILE_NOT_EXIST.getStr()) );
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getAppWorkDirStrPath() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getUserHomeDirStrPath() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getAppWorkDirFile() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#strPathCombiner(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getFileForDirListAttrContainedRecordId(long) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getFileForDirListExistContainedRecordId(long) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getIndexWorkSubDirFileByName(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getTmpIdsFile() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getStrCanPathFromFile(java.io.File) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcManageCfg#mcGetWorkCfgDirName() }
+     * </ul>
      * When File operation has exception, function will return generated this
      * method, object, returned result need check with method
      * {@link #isErrorForFileOperation(java.io.File) isErrorForFileOperation(java.io.File)}
      * @return 
      */
-    public static File getErrorForFileOperation(){
+    protected static File getErrorForFileOperation(){
         NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
             + NcStrLogMsgText.CALLED_ERROR_FOR_FILE_OPERATION.getStr());
         return new File(NcStrServiceMsg.ERROR_FILE_NOT_EXIST.getStr());
