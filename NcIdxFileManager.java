@@ -32,34 +32,34 @@ public class NcIdxFileManager {
     /**
      * Used in:
      * <ul>
-     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListFileReader#ncReadFromDirListFile(long) }</li>
-     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListFileReader#ncReadFromDirListExist(long) }</li>
-     * <li></li>
-     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListFileWriter#ncWriteToDirListFile(java.util.TreeMap, long) }</li>
-     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListFileWriter#ncWriteToDirListExist(java.util.TreeMap, long) }</li>
-     * <li></li>
-     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getExistFilesForDirListAttrByNameGenerated() }</li>
-     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getFileForDirListAttrContainedRecordId(long) }</li>
-     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getExistFilesForDirListExistByNameGenerated() }</li>
-     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getFileForDirListExistContainedRecordId(long) }</li>
-     * <li></li>
-     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordListFileReader#ncReadFileContainedId(ru.newcontrol.ncfv.NcDcIdxLongWordListToFile, long) }</li>
-     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordListFileWriter#ncWriteData(java.util.TreeMap, ru.newcontrol.ncfv.NcDcIdxLongWordListToFile, long) }</li>
-     * <li></li>
-     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordListManager#getOrCreateLongWordID(ru.newcontrol.ncfv.NcDcIdxLongWordListToFile) }</li>
-     * <li></li>
-     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordManager#getForSearchLongWordID(ru.newcontrol.ncfv.NcDcIdxLongWordListToFile) }</li>
-     * <li></li>
-     * <li>{@link ru.newcontrol.ncfv.NcIdxWordFileReader#ncReadFromWord(java.lang.String, long) }</li>
-     * <li></li>
-     * <li>{@link ru.newcontrol.ncfv.NcIdxWordFileWriter#ncWriteForWord(java.util.TreeMap, java.lang.String, long) }</li>
-     * <li></li>
-     * <li>{@link ru.newcontrol.ncfv.NcIdxWordManager#putWord(java.util.TreeMap) }</li>
-     * <li>{@link ru.newcontrol.ncfv.NcIdxWordManager#getWord(java.util.TreeMap) }</li>
-     * <li>{@link ru.newcontrol.ncfv.NcIdxWordManager#getWordExistFile(java.lang.String) }</li>
-     * <li></li>
-     * <li>{@link ru.newcontrol.ncfv.NcTypeOfWord#getStorageWordExistFileName(java.lang.String, java.lang.String) }</li>
-     * <li>{@link ru.newcontrol.ncfv.NcTypeOfWord#getStorageWordByIdFileName(java.lang.String, java.lang.String, long) }</li>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListFileReader#ncReadFromDirListFile(long) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListFileReader#ncReadFromDirListExist(long) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListFileWriter#ncWriteToDirListFile(java.util.TreeMap, long) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListFileWriter#ncWriteToDirListExist(java.util.TreeMap, long) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getExistFilesForDirListAttrByNameGenerated() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getFileForDirListAttrContainedRecordId(long) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getExistFilesForDirListExistByNameGenerated() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getFileForDirListExistContainedRecordId(long) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordListFileReader#ncReadFileContainedId(ru.newcontrol.ncfv.NcDcIdxLongWordListToFile, long) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordListFileWriter#ncWriteData(java.util.TreeMap, ru.newcontrol.ncfv.NcDcIdxLongWordListToFile, long) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordListManager#getOrCreateLongWordID(ru.newcontrol.ncfv.NcDcIdxLongWordListToFile) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordManager#getForSearchLongWordID(ru.newcontrol.ncfv.NcDcIdxLongWordListToFile) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxWordFileReader#ncReadFromWord(java.lang.String, long) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxWordFileWriter#ncWriteForWord(java.util.TreeMap, java.lang.String, long) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxWordManager#putWord(java.util.TreeMap) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxWordManager#getWord(java.util.TreeMap) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxWordManager#getWordExistFile(java.lang.String) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcTypeOfWord#getStorageWordExistFileName(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcTypeOfWord#getStorageWordByIdFileName(java.lang.String, java.lang.String, long) }
      * </ul>
      * @param prefixFileName
      * @param fID
@@ -69,32 +69,44 @@ public class NcIdxFileManager {
         return prefixFileName + "-" + (fID - (fID % 100) + (100 - 1));
     }
     /**
-     * 
+     * Not used
      * @param prefixFileName
      * @param fID
      * @param sID
      * @return 
      */    
-    public static String getFileNameToRecordLongWord(String prefixFileName, long fID, long sID){
+    private static String getFileNameToRecordLongWord(String prefixFileName, long fID, long sID){
         return prefixFileName + "-" + fID + "-" + (sID - (sID % 100) + (100 - 1));
     }
     /**
-     * 
+     * Not used
      * @param prefixFileName
      * @param fID
      * @param sID
      * @return 
      */    
-    public static String getFileNameWithTwoIDs(String prefixFileName, long fID, long sID){
+    private static String getFileNameWithTwoIDs(String prefixFileName, long fID, long sID){
         return prefixFileName + "-" + (fID - (fID % 100) + (100 - 1)) + "-" + (sID - (sID % 100) + (100 - 1));
     }
     /**
-     * Check for input file, File.exist() && File.canRead() && File.canWrite() && File.isFile()  
+     * Check for input file, File.exist() && File.canRead() 
+     * && File.canWrite() && File.isFile()
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getOrCreateCfgFile() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getAppWorkDirFile() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getExistFilesForDirListAttrByNameGenerated() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getFileForDirListAttrContainedRecordId(long) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getExistFilesForDirListExistByNameGenerated() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getFileForDirListExistContainedRecordId(long) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getTmpIdsFile() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxStorageWordFileReader#ncReadFileContainedId(java.io.File) }
+     * </ul>
      * @param strFIds
      * @return true if all of checked params true
      * false if one of param false
      */    
-    public static boolean fileExistRWAccessChecker(File strFIds){
+    protected static boolean fileExistRWAccessChecker(File strFIds){
         try{
             if(strFIds.exists()
                     && strFIds.canRead()
