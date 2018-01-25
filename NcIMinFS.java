@@ -43,7 +43,12 @@ public class NcIMinFS {
     static final long G = 1073741824;
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListManager#putToDirectoryList(ru.newcontrol.ncfv.NcDcIdxDirListToFileAttr) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSearchInIndex#NcSearchInIndex() }
+     * </ul>
      */
     protected NcIMinFS() {
        this.limitCountRecordInFiles = 100;
@@ -63,16 +68,19 @@ public class NcIMinFS {
     }
     
     /**
-     *
+     * Not used
      * @return
      */
-    protected int getDiskCount(){
+    private int getDiskCount(){
         
         return ncmcCfg.arrDiskInfo.size();
     }
     
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSearchInIndex#NcSearchInIndex() }
+     * </ul>
      * @return
      */
     protected TreeMap<Long, NcDiskInfo> getDiskInfo(){
@@ -80,7 +88,12 @@ public class NcIMinFS {
     }
     
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListManager#putToDirectoryList(ru.newcontrol.ncfv.NcDcIdxDirListToFileAttr) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSearchInIndex#NcSearchInIndex() }
+     * </ul>
      * @return
      */
     protected NcIndexManageIDs getNcIndexManageIDs(){
@@ -88,52 +101,61 @@ public class NcIMinFS {
     }
     
     /**
-     *
+     * Not used
      * @return
      */
-    protected NcManageCfg getNcManageCfg(){
+    private NcManageCfg getNcManageCfg(){
         return ncmcCfg;
     }
 
-/**
- * LastModified Date from Directory List File, where contained record for File or Directory
- * @param indexedFile
- * @return 
- */    
-    protected long getIndexLastModifiedForDirectoryOrFile(File indexedFile){
+    /**
+     * Not used
+     * LastModified Date from Directory List File, where contained record for File or Directory
+     * @param indexedFile
+     * @return 
+     */    
+    private long getIndexLastModifiedForDirectoryOrFile(File indexedFile){
         return -1;
     }
+    /**
+     * Not used
+     * @return 
+     */
     private long writeDirListToFile(){
         readyForRecordData.clear();
         readyForRecord = readyForRecordData.size();
         return -1;
     }
+    /**
+     * Not used
+     * @return 
+     */
     private long readDirListFormFile(){
         return -1;
     }
-/**
- * Set ArrayList<NcDirListToFilesForIndex> for Ready to record in File
- * 
+    /**
+     * Not used
+     * Set ArrayList<NcDirListToFilesForIndex> for Ready to record in File
      * @param fReadyForRecordData
      * @return 
- */
-    protected int setReadyForRecordData(ArrayList<NcDcIdxDirListToFileAttr> fReadyForRecordData){
+     */
+    private int setReadyForRecordData(ArrayList<NcDcIdxDirListToFileAttr> fReadyForRecordData){
         fReadyForRecordData.trimToSize();
         readyForRecordData = fReadyForRecordData;
         readyForRecord = fReadyForRecordData.size();
         return -1;
     }
-/**
- * Create TempFile with last ID record in Directory List File
- * and last ID record in Directory List File for Files Hashes
- */
-/**
- * Create TempFile with list Directory List Files and his Hashes
- * provided by class NcDirListToFilesHashes
- * may be released in some perspective
- */
-/**
- * Create TempFile with last ID record in Directory List File for long world
- */
+    /**
+     * Create TempFile with last ID record in Directory List File
+     * and last ID record in Directory List File for Files Hashes
+     */
+    /**
+     * Create TempFile with list Directory List Files and his Hashes
+     * provided by class NcDirListToFilesHashes
+     * may be released in some perspective
+     */
+    /**
+     * Create TempFile with last ID record in Directory List File for long world
+     */
 
 }
