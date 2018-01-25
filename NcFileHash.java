@@ -55,15 +55,21 @@ public enum NcFileHash {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcFileHash#checksum(java.io.File) }
+     * </ul>
      * @return
      */
-    protected String getName() {
+    private String getName() {
         return name;
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvManager#setFileHashes(ru.newcontrol.ncfv.NcParamFv, java.io.File) }
+     * </ul>
      * @param input
      * @return
      */

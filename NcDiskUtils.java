@@ -81,6 +81,9 @@ public class NcDiskUtils {
      * Used in
      * <ul>
      * <li>{@link ru.newcontrol.ncfv.NcDiskUtils#NcDiskUtils() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcParamJournalDisk#getFromJournalDiskOrCreateIt() }
+     * <li>{@link ru.newcontrol.ncfv.NcParamJournalDisk#appendRecordInJournalDisk(java.util.TreeMap) }
      * </ul>
      * Get now information about disks in the system
      * @return 

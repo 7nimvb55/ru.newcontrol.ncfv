@@ -26,6 +26,15 @@ import java.util.ArrayList;
  * @author wladimirowichbiaran
  */
 public class NcEtcKeyWordListManager {
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSearchInIndex#searchWordInIndex() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchGetResult#makeSearchByKeyFromFile() }
+     * </ul>
+     * @return 
+     */
     protected static ArrayList<String> getKeyWordInSearchFromFile(){
         NcParamFv readedWorkCfg = NcParamFvReader.readDataFromWorkCfg();
         ArrayList<String> strForReturn;
@@ -43,6 +52,15 @@ public class NcEtcKeyWordListManager {
         }   
         return strForReturn;
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSearchInIndex#searchWordInIndex() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchGetResult#makeSearchByKeyFromFile() }
+     * </ul>
+     * @return 
+     */
     protected static ArrayList<String> getKeyWordOutSearchFromFile(){
         NcParamFv readedWorkCfg = NcParamFvReader.readDataFromWorkCfg();
         ArrayList<String> strForReturn;
