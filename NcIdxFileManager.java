@@ -484,11 +484,15 @@ public class NcIdxFileManager {
         return new File(NcStrServiceMsg.ERROR_FILE_NOT_EXIST.getStr());
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#getNotEqualsRecordDirListAttrVsExist() }
+     * </ul> 
      * For directory /fl, this method generated name for file contained Id
      * @param recordID
      * @return 
      */
-    public static File getFileForDirListAttrContainedRecordId(long recordID){
+    protected static File getFileForDirListAttrContainedRecordId(long recordID){
         if( recordID < 0 ){
             return getErrorForFileOperation();
         }
@@ -504,11 +508,12 @@ public class NcIdxFileManager {
         return getErrorForFileOperation();
     }
     /**
+     * Not used
      * For directory /fx, this method generated names for files with records,
      * and check for exist file in the directory, return list of exist files
      * @return TreeMap<Integer, File>
      */
-    public static File getExistFilesForDirListExistByNameGenerated(){
+    private static File getExistFilesForDirListExistByNameGenerated(){
         TreeMap<Integer, File> indexWorkSubDirFilesList = getIndexWorkSubDirFilesList();
         long recordID = 0;
         File filePathSubDir = indexWorkSubDirFilesList.get("/fx".hashCode());
@@ -527,11 +532,15 @@ public class NcIdxFileManager {
         return fileWithRecords;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#getNotEqualsRecordDirListAttrVsExist() }
+     * </ul> 
      * For directory /fx, this method generated name for file contained Id
      * @param recordID
      * @return 
      */
-    public static File getFileForDirListExistContainedRecordId(long recordID){
+    protected static File getFileForDirListExistContainedRecordId(long recordID){
         if( recordID < 0 ){
             return getErrorForFileOperation();
         }
@@ -547,6 +556,23 @@ public class NcIdxFileManager {
         return getErrorForFileOperation();
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getExistFilesForDirListAttrByNameGenerated() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getFileForDirListAttrContainedRecordId(long) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getExistFilesForDirListExistByNameGenerated() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getFileForDirListExistContainedRecordId(long) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getIndexWorkSubDirFileByName(java.lang.String) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxWordManager#getWordExistFile(java.lang.String) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#checkDataForAllDirListFiles() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#outToConsoleIdxDirs() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcTypeOfWord#getStorageWordExistFileName(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcTypeOfWord#getStorageWordByIdFileName(java.lang.String, java.lang.String, long) 
+     * </ul> 
      * Get Index Path and subDirictories in the TreeMap<Integer, File> structure,
      * where index of object has value type of "/di".hashCode, "/sw".hashCode
      * about subDirectories list see:
@@ -556,7 +582,7 @@ public class NcIdxFileManager {
      * </ul>
      * @return 
      */
-    public static TreeMap<Integer, File> getIndexWorkSubDirFilesList(){
+    protected static TreeMap<Integer, File> getIndexWorkSubDirFilesList(){
         
         NcParamFv readedWorkCfg = NcParamFvReader.readDataFromWorkCfg();
         if( NcParamFvManager.isNcParamFvDataEmpty(readedWorkCfg) ){
@@ -574,11 +600,16 @@ public class NcIdxFileManager {
         return listSubDirs;
     }
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#validateAndApplyCfg(ru.newcontrol.ncfv.NcParamFv) }
+     * </ul>
+     * function equals for {@link #getIndexWorkSubDirFilesList() }
+     * only not add in list "index"
      * @param inFuncWorkDir
      * @return
      */
-    public static TreeMap<Integer, File> getIndexSubDirectories(String inFuncWorkDir){
+    protected static TreeMap<Integer, File> getIndexSubDirectories(String inFuncWorkDir){
         TreeMap<Integer, File> listSubDirs = new TreeMap<Integer, File>();
         File fileWorkDir = new File(inFuncWorkDir);
         boolean boolResultCreation = false;
@@ -600,6 +631,16 @@ public class NcIdxFileManager {
         return listSubDirs;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcManageCfg#getDirList() }
+     * <li>{@link ru.newcontrol.ncfv.NcManageCfg#getDirListHash() }
+     * <li>{@link ru.newcontrol.ncfv.NcManageCfg#getDirListExist() }
+     * <li>{@link ru.newcontrol.ncfv.NcManageCfg#getDirWords() }
+     * <li>{@link ru.newcontrol.ncfv.NcManageCfg#getDirStorageWords() }
+     * <li>{@link ru.newcontrol.ncfv.NcManageCfg#getDirLongWordList() }
+     * <li>{@link ru.newcontrol.ncfv.NcManageCfg#getDirLongWord() }
+     * </ul>
      * Check for parameters in list of subDir returned by
      * {@link ru.newcontrol.ncfv.NcManageCfg#getWorkSubDirList()} or
      * "index" directory appended in list by method {@link ru.newcontrol.ncfv.NcIdxFileManager#getIndexWorkSubDirFilesList()}
@@ -607,7 +648,7 @@ public class NcIdxFileManager {
      * @return java.io.File object or error data in this object generated by
      * {@link ru.newcontrol.ncfv.NcIdxFileManager#getErrorForFileOperation()}
      */
-    public static File getIndexWorkSubDirFileByName(String inFuncName){
+    protected static File getIndexWorkSubDirFileByName(String inFuncName){
         TreeMap<Integer, File> indexWorkSubDirFilesList = getIndexWorkSubDirFilesList();
         if( indexWorkSubDirFilesList.isEmpty() ){
             return getErrorForFileOperation();
@@ -619,7 +660,15 @@ public class NcIdxFileManager {
         File filePathSubDir = indexWorkSubDirFilesList.get(inFuncName.hashCode());
         return filePathSubDir;
     }
-    public static boolean isDirNameInList(String inFuncName){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getIndexWorkSubDirFileByName(java.lang.String) }
+     * </ul>
+     * @param inFuncName
+     * @return 
+     */
+    private static boolean isDirNameInList(String inFuncName){
         for(String itemSubDir : NcManageCfg.getWorkSubDirList()){
             if( itemSubDir.equalsIgnoreCase(inFuncName) ){
                 return true;
@@ -631,11 +680,18 @@ public class NcIdxFileManager {
         return false;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#checkDataForAllDirListFiles() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#getNotFullFiles(java.io.File) }
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkFilesOnReadable(java.io.File) }
+     * </ul>
      * Returned list of files in directory in structure TreeMap<Integer, File>
      * @param inFuncSubDir
      * @return list of files in TreeMap<Integer, File>
      */
-    public static TreeMap<Integer, File> getFileListFromSubDir(File inFuncSubDir){
+    protected static TreeMap<Integer, File> getFileListFromSubDir(File inFuncSubDir){
         TreeMap<Integer, File> itemsInSubDirs = new TreeMap<Integer, File>();
         int idx = 0;
         for(File itemFile : inFuncSubDir.listFiles()){
@@ -645,63 +701,86 @@ public class NcIdxFileManager {
         return itemsInSubDirs;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#getNotEqualsRecordDirListAttrVsExist() }
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#getNotFinishedAppendToIndex(java.util.TreeMap, java.util.TreeMap) }
+     * </ul>
      * Read from file with structure TreeMap<Long, ?>
      * @param inForRead
      * @return 
      */
-    public static TreeMap<Long, ?> getDataFromFile(File inForRead){
+    protected static TreeMap<Long, ?> getDataFromFile(File inForRead){
         TreeMap<Long, ?> ncDataFromDirList = new TreeMap<>();
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(inForRead)))
         {
             ncDataFromDirList = (TreeMap<Long, ?>)ois.readObject();
         }
         catch(Exception ex){
-            Logger.getLogger(NcPreIdxWork.class.getName()).log(Level.SEVERE, null, ex);
+            NcAppHelper.logException(
+                    NcIdxFileManager.class.getCanonicalName(), ex);
             return new TreeMap<Long, String>();
         } 
         return ncDataFromDirList;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#getNotFullFiles(java.io.File) }
+     * </ul>
      * Read from file with structure TreeMap<Long, ?> and return count of records
      * @param inForRead
      * @return 
      */
-    public static int getCountRecordDataInFile(File inForRead){
+    protected static int getCountRecordDataInFile(File inForRead){
         TreeMap<Long, ?> ncDataFromDirList = new TreeMap<>();
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(inForRead)))
         {
             ncDataFromDirList = (TreeMap<Long, ?>)ois.readObject();
         }
         catch(Exception ex){
-            Logger.getLogger(NcPreIdxWork.class.getName()).log(Level.SEVERE, null, ex);
+            NcAppHelper.logException(
+                    NcIdxFileManager.class.getCanonicalName(), ex);
             return -777;
         } 
         return ncDataFromDirList.size();
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkFilesOnReadable(java.io.File) }
+     * </ul>
      * If some files can read to TreeMap<Long, ?> structure, then return false
      * Data in file wrong or it created not this application classes
      * @param inForRead
      * @return 
      */
-    public static boolean isDataInFileNotWrong(File inForRead){
+    protected static boolean isDataInFileNotWrong(File inForRead){
         TreeMap<Long, ?> ncDataFromDirList = new TreeMap<>();
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(inForRead)))
         {
             ncDataFromDirList = (TreeMap<Long, ?>)ois.readObject();
         }
         catch(Exception ex){
-            Logger.getLogger(NcIdxDirListFileReader.class.getName()).log(Level.SEVERE, null, ex); 
+            NcAppHelper.logException(
+                    NcIdxFileManager.class.getCanonicalName(), ex);
             return false;
         } 
         return true;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#writeTmpIDs(ru.newcontrol.ncfv.NcTmpNowProcessInfo) }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#readTmpIds() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkTmpIDsData() }
+     * </ul>
      * Get File object with data for {@link ru.newcontrol.ncfv.NcIndexManageIDs} class
      * with structured by cless {@link ru.newcontrol.ncfv.NcTmpNowProcessInfo}
      * @return 
      */
-    public static File getTmpIdsFile(){
+    protected static File getTmpIdsFile(){
         NcParamFv readedWorkCfg = NcParamFvReader.readDataFromWorkCfg();
         if( NcParamFvManager.isNcParamFvDataEmpty(readedWorkCfg) ){
             readedWorkCfg = NcPreRunFileViewer.getCurrentWorkCfg();
@@ -717,18 +796,42 @@ public class NcIdxFileManager {
         }
         return getErrorForFileOperation();
     }
-    
-    public static String getStrCanPathFromFile(File inFuncFile){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getOrCreateCfgFile() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#createStrPathForCfgFile() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getOrCreateAppDataSubDir() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getAppWorkDirStrPath() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getUserHomeDirStrPath() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getExistFilesForDirListAttrByNameGenerated() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#strPathCombiner(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#isErrorForFileOperation(java.io.File) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getFileForDirListAttrContainedRecordId(long) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getExistFilesForDirListExistByNameGenerated() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getFileForDirListExistContainedRecordId(long) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getIndexSubDirectories(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getTmpIdsFile() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#outToConsoleIdxDirs() }
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#getNotEqualsRecordDirListAttrVsExist() }
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#getNotFullFiles(java.io.File) }
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkFilesOnReadable(java.io.File) }
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#outFilesFromSubDirToConsole(java.io.File) }
+     * </ul>
+     * @param inFuncFile
+     * @return 
+     */
+    protected static String getStrCanPathFromFile(File inFuncFile){
         String strCanonicalPath = "";
-        
         try {
             strCanonicalPath = inFuncFile.getCanonicalPath();
         } catch (IOException ex) {
             NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
                 + NcStrServiceMsg.ERROR_FILE_NOT_CANONICAL_PATH.getStr()
                 + inFuncFile.getAbsolutePath());
-            NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
-                + ex.getMessage());
+            NcAppHelper.logException(
+                    NcIdxFileManager.class.getCanonicalName(), ex);
             strCanonicalPath = getErrorForFileOperation().getAbsolutePath();
         }
         return strCanonicalPath;
