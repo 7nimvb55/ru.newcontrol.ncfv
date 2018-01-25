@@ -30,12 +30,17 @@ import java.util.logging.Logger;
  */
 public class NcIdxFileManager {
     /**
+     * Used in 
+     * {@link ru.newcontrol.ncfv.NcIdxDirListFileReader#ncReadFromDirListFile(long) }
+     * {@link ru.newcontrol.ncfv.NcIdxDirListFileReader#ncReadFromDirListExist(long) }
+     * 
+     * 
      * 
      * @param prefixFileName
      * @param fID
      * @return 
      */    
-    public static String getFileNameToRecord(String prefixFileName, long fID){
+    protected static String getFileNameToRecord(String prefixFileName, long fID){
         return prefixFileName + "-" + (fID - (fID % 100) + (100 - 1));
     }
     /**

@@ -25,13 +25,14 @@ import java.util.TreeMap;
  * @author Администратор
  */
 public class NcIdxDirListFileWriter {
-/**
- * Directory List
+    /**
+     * Directory List
+     * Used in {@link ru.newcontrol.ncfv.NcIdxDirListManager#putToDirectoryList(ru.newcontrol.ncfv.NcDcIdxDirListToFileAttr) }
      * @param ncDataToDirListFile
      * @param recID
- * @return 
- */    
-    public static int ncWriteToDirListFile(TreeMap<Long, NcDcIdxDirListToFileAttr> ncDataToDirListFile, long recID){
+     * @return 
+     */    
+    protected static int ncWriteToDirListFile(TreeMap<Long, NcDcIdxDirListToFileAttr> ncDataToDirListFile, long recID){
         if( ncDataToDirListFile == null ){
             return -1;
         }
@@ -50,12 +51,13 @@ public class NcIdxDirListFileWriter {
     }
 
     /**
-     *
+     * Used in {@link ru.newcontrol.ncfv.NcIdxDirListExistManager#putToDirListExistStart(ru.newcontrol.ncfv.NcDcIdxDirListToFileExist, long) }
+     * {@link ru.newcontrol.ncfv.NcIdxDirListExistManager#putToDirListExistStop(ru.newcontrol.ncfv.NcDcIdxDirListToFileExist, long) }
      * @param ncDataToDirListFile
      * @param dirListID
      * @return
      */
-    public static int ncWriteToDirListExist(TreeMap<Long, NcDcIdxDirListToFileExist> ncDataToDirListFile, long dirListID){
+    protected static int ncWriteToDirListExist(TreeMap<Long, NcDcIdxDirListToFileExist> ncDataToDirListFile, long dirListID){
         String strCfgPath = NcIdxFileManager.getFileNameToRecord(NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirListExist()) + "/e", dirListID);
         if( ncDataToDirListFile == null ){
             return -1;

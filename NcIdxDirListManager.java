@@ -24,24 +24,20 @@ import java.util.TreeMap;
  * @author Администратор
  */
 public class NcIdxDirListManager {
-/**
- * 
+    /**
+     * Used in {@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getResultMakeIndex(java.io.File) }
+     * {@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#makeIndexForFile(java.io.File) }
      * @param forRecordData
- * @param ncToAddInIndexFile
- * @return -1 if false append into Directory List, or ID of appened record
- */
-    public static long putToDirectoryList(NcDcIdxDirListToFileAttr forRecordData){
+     * @param ncToAddInIndexFile
+     * @return -1 if false append into Directory List, or ID of appened record
+     */
+    protected static long putToDirectoryList(NcDcIdxDirListToFileAttr forRecordData){
         NcIMinFS ncwd = new NcIMinFS();
         NcIndexManageIDs ncThisManagmentIDs = ncwd.getNcIndexManageIDs();
         
         NcTmpNowProcessInfo ncNewManageIDs = ncThisManagmentIDs.getIdsReadedData();
         
         long nextID = forRecordData.dirListID;
-        
-/*        if(ncNewManageIDs.listnameid > -1){
-            nextID = ncNewManageIDs.listnameid;
-        }*/
-        
         int writedSize = -1;
         if(forRecordData != null){
             //Check Records contained in file, after this recording
@@ -78,7 +74,7 @@ public class NcIdxDirListManager {
      * @param inFuncData
      * @return
      */
-    public static boolean isDirectoryListDataAttrWrong(NcDcIdxDirListToFileAttr inFuncData){
+    private static boolean isDirectoryListDataAttrWrong(NcDcIdxDirListToFileAttr inFuncData){
         if( inFuncData == null ){
             return true;
         }
@@ -89,11 +85,11 @@ public class NcIdxDirListManager {
     }
 
     /**
-     *
+     *  
      * @param inFuncData
      * @return
      */
-    public static boolean isDirectoryListDataAttrHasEmptyFiled(NcDcIdxDirListToFileAttr inFuncData){
+    private static boolean isDirectoryListDataAttrHasEmptyFiled(NcDcIdxDirListToFileAttr inFuncData){
         if( inFuncData == null ){
             return true;
         }
@@ -146,7 +142,7 @@ public class NcIdxDirListManager {
      * @param inFuncData
      * @return
      */
-    public static boolean isDirectoryListDataAttrEmpty(NcDcIdxDirListToFileAttr inFuncData){
+    private static boolean isDirectoryListDataAttrEmpty(NcDcIdxDirListToFileAttr inFuncData){
         if( inFuncData == null ){
             return true;
         }
@@ -203,7 +199,7 @@ public class NcIdxDirListManager {
      * @param inFuncData
      * @return
      */
-    public static boolean isDirectoryListDataAttrHashTrue(NcDcIdxDirListToFileAttr inFuncData){
+    private static boolean isDirectoryListDataAttrHashTrue(NcDcIdxDirListToFileAttr inFuncData){
         return inFuncData.recordHash == (
             ""
             + inFuncData.dirListID 
@@ -229,7 +225,13 @@ public class NcIdxDirListManager {
             + inFuncData.deletedRec 
             + inFuncData.changedRecordID).hashCode();
     }
-    public static TreeMap<Long, NcDcIdxDirListToFileAttr> getByListIDs(TreeMap<Long, NcDcIdxWordToFile> inFuncData){
+    /**
+     * Used in {@link ru.newcontrol.ncfv.NcSrchGetResult#makeSearchByKeyFromInput(java.lang.String) }
+     * {@link ru.newcontrol.ncfv.NcSrchGetResult#makeSearchByKeyFromFile() }
+     * @param inFuncData
+     * @return 
+     */
+    protected static TreeMap<Long, NcDcIdxDirListToFileAttr> getByListIDs(TreeMap<Long, NcDcIdxWordToFile> inFuncData){
         TreeMap<Long, String> filesList = new TreeMap<Long, String>();
         TreeMap<Long, NcDcIdxDirListToFileAttr> toReturn = new TreeMap<Long, NcDcIdxDirListToFileAttr>();
         TreeMap<Long, NcDcIdxDirListToFileAttr> readedData = new TreeMap<Long, NcDcIdxDirListToFileAttr>();
