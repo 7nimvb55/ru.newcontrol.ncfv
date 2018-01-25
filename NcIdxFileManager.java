@@ -239,6 +239,8 @@ public class NcIdxFileManager {
      * <ul>
      * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getWorkCfgPath() }
      * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getJournalDiskPath() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcLogFileManager#getLogFile() }
      * </ul>
      * @return 
      */
@@ -254,13 +256,23 @@ public class NcIdxFileManager {
         return getStrCanPathFromFile(dirForAppData);
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#createStrPathForCfgFile() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getOrCreateAppDataSubDir() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAddPrefixWorkAppDir(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputPathFormatFilterForDefault(java.lang.String) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getDefaultCfgValues() }
+     * </ul>
      * From system properties get application path, after that get parent path
      * and check permissions if it not have read and write, than call
      * {@link ru.newcontrol.ncfv.NcAppHelper#appExitWithMessageFSAccess(java.lang.String) }
      * for exit from application
      * @return
      */
-    public static String getAppWorkDirStrPath(){
+    protected static String getAppWorkDirStrPath(){
         String appPath = System.getProperty("java.class.path");
         File pathToApp = new File(appPath);
         File dirToApp = pathToApp.getParentFile();
@@ -271,10 +283,13 @@ public class NcIdxFileManager {
         return getStrCanPathFromFile(getErrorForFileOperation());
     }
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getDefaultCfgValues() }
+     * </ul>
      * @return
      */
-    public static String getUserHomeDirStrPath(){
+    protected static String getUserHomeDirStrPath(){
         String appPath = System.getProperty("user.home");
         File pathToApp = new File(appPath);
         if( !dirExistRWAccessChecker(pathToApp) ){
@@ -283,10 +298,13 @@ public class NcIdxFileManager {
         return getStrCanPathFromFile(pathToApp);
     }
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAddPrefixWorkAppRoot(java.lang.String) }
+     * </ul>
      * @return
      */
-    public static File getAppWorkDirFile(){
+    protected static File getAppWorkDirFile(){
         String appPath = System.getProperty("java.class.path");
         File pathToApp = new File(appPath);
         if( fileExistRWAccessChecker(pathToApp) ){
@@ -300,20 +318,26 @@ public class NcIdxFileManager {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcParamJournalDisk#fileJournalDiskExist() }
+     * <li>{@link ru.newcontrol.ncfv.NcParamJournalDisk#fileJournalDiskWrite(java.util.TreeMap) }
+     * <li>{@link ru.newcontrol.ncfv.NcParamJournalDisk#fileJournalDiskRead() }
+     * </ul>
      * @return
      */
-    public static String getJournalDiskPath(){
+    protected static String getJournalDiskPath(){
         String strToReturnDataInAppDir = getOrCreateAppDataSubDir();
         String strToReturnDataInAppDirFile = strPathCombiner(strToReturnDataInAppDir, "jdisk.dat");
         return strToReturnDataInAppDirFile;
     }
     /**
+     * Not used
      * For directory /fl, this method generated names for files with records,
      * and check for exist file in the directory, return list of exist files
      * @return TreeMap<Integer, File>
      */
-    public static File getExistFilesForDirListAttrByNameGenerated(){
+    private static File getExistFilesForDirListAttrByNameGenerated(){
         TreeMap<Integer, File> indexWorkSubDirFilesList = getIndexWorkSubDirFilesList();
         long recordID = 0;
         File filePathSubDir = indexWorkSubDirFilesList.get("/fl".hashCode());
@@ -332,14 +356,43 @@ public class NcIdxFileManager {
         return fileWithRecords;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#createStrPathForCfgFile() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getWorkCfgPath() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getOrCreateAppDataSubDir() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getJournalDiskPath() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getExistFilesForDirListAttrByNameGenerated() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getFileForDirListAttrContainedRecordId(long) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getExistFilesForDirListExistByNameGenerated() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getFileForDirListExistContainedRecordId(long) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getIndexSubDirectories(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getTmpIdsFile() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxWordManager#getWordExistFile(java.lang.String) }
+     * <li>
+     * <li><li>{@link ru.newcontrol.ncfv.NcLogFileManager#getLogFile() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcManageCfg#mcGetWorkCfgDirName() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcParamCfgToDiskReleaser#createSubDir(java.io.File, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcParamCfgToDiskReleaser#getIdxDirStructure(java.lang.String) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAddPrefixWorkAppDir(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAddPrefixWorkAppRoot(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAddPrefixMaxFreeSpaceRoot(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputPathFormatFilterForDefault(java.lang.String) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getDefaultCfgValues() }
+     * <li>{@link ru.newcontrol.ncfv.NcTypeOfWord#getStorageWordExistFileName(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcTypeOfWord#getStorageWordByIdFileName(java.lang.String, java.lang.String, long) }
+     * </ul>
      * Concat strings to Path with check of end and start of concated strings
      * @param strFirst
-     * @param String strFirst
      * @param strSecond
-     * @param String strSecond
      * @return 
      */
-    public static String strPathCombiner(String strFirst, String strSecond){
+    protected static String strPathCombiner(String strFirst, String strSecond){
         if( (strFirst.length() < 1) && (strSecond.length() < 1) ){
             return getStrCanPathFromFile(getErrorForFileOperation());
         }
