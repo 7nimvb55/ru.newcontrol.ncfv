@@ -27,7 +27,10 @@ import java.util.TreeMap;
 public class NcIdxDirListFileWriter {
     /**
      * Directory List
-     * Used in {@link ru.newcontrol.ncfv.NcIdxDirListManager#putToDirectoryList(ru.newcontrol.ncfv.NcDcIdxDirListToFileAttr) }
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListManager#putToDirectoryList(ru.newcontrol.ncfv.NcDcIdxDirListToFileAttr) }
+     * </ul>
      * @param ncDataToDirListFile
      * @param recID
      * @return 
@@ -51,8 +54,11 @@ public class NcIdxDirListFileWriter {
     }
 
     /**
-     * Used in {@link ru.newcontrol.ncfv.NcIdxDirListExistManager#putToDirListExistStart(ru.newcontrol.ncfv.NcDcIdxDirListToFileExist, long) }
-     * {@link ru.newcontrol.ncfv.NcIdxDirListExistManager#putToDirListExistStop(ru.newcontrol.ncfv.NcDcIdxDirListToFileExist, long) }
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListExistManager#putToDirListExistStart(ru.newcontrol.ncfv.NcDcIdxDirListToFileExist, long) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListExistManager#putToDirListExistStop(ru.newcontrol.ncfv.NcDcIdxDirListToFileExist, long) }
+     * </ul>
      * @param ncDataToDirListFile
      * @param dirListID
      * @return

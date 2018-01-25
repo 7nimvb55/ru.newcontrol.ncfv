@@ -27,7 +27,12 @@ import java.util.TreeMap;
  */
 public class NcIdxDirListFileReader {
     /**
-     * Used in {@link ru.newcontrol.ncfv.NcIdxDirListManager#putToDirectoryList(ru.newcontrol.ncfv.NcDcIdxDirListToFileAttr) }
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListManager#putToDirectoryList(ru.newcontrol.ncfv.NcDcIdxDirListToFileAttr) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSearchInIndex#getWordSearchResult(java.util.ArrayList, java.util.ArrayList) }
+     * </ul>
      * Directory List
      * @param dirListID
      * @return 
@@ -35,11 +40,9 @@ public class NcIdxDirListFileReader {
     protected static TreeMap<Long, NcDcIdxDirListToFileAttr> ncReadFromDirListFile(long dirListID){
         TreeMap<Long, NcDcIdxDirListToFileAttr> ncDataFromDirList;
         String strCfgPath = NcIdxFileManager.getFileNameToRecord(NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirList())+"/dl", dirListID);
-
         if ( !NcIdxFileManager.fileExistRWAccessChecker(new File(strCfgPath))){
             return new TreeMap<>();
         }
-        
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(strCfgPath)))
         {
             ncDataFromDirList = (TreeMap<Long, NcDcIdxDirListToFileAttr>)ois.readObject();
@@ -53,19 +56,20 @@ public class NcIdxDirListFileReader {
     }
 
     /**
-     * Used in {@link ru.newcontrol.ncfv.NcIdxDirListExistManager#putToDirListExistStart(ru.newcontrol.ncfv.NcDcIdxDirListToFileExist, long) }
-     * {@link ru.newcontrol.ncfv.NcIdxDirListExistManager#putToDirListExistStop(ru.newcontrol.ncfv.NcDcIdxDirListToFileExist, long) }
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListExistManager#putToDirListExistStart(ru.newcontrol.ncfv.NcDcIdxDirListToFileExist, long) }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListExistManager#putToDirListExistStop(ru.newcontrol.ncfv.NcDcIdxDirListToFileExist, long) }
+     * </ul>
      * @param dirListID
      * @return
      */
     protected static TreeMap<Long, NcDcIdxDirListToFileExist> ncReadFromDirListExist(long dirListID){
         TreeMap<Long, NcDcIdxDirListToFileExist> ncDataFromDirList;
         String strCfgPath = NcIdxFileManager.getFileNameToRecord(NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirListExist()) + "/e", dirListID);
-
         if ( !NcIdxFileManager.fileExistRWAccessChecker(new File(strCfgPath))){
             return new TreeMap<>();
         }
-        
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(strCfgPath)))
         {
             ncDataFromDirList = (TreeMap<Long, NcDcIdxDirListToFileExist>)ois.readObject();
@@ -78,18 +82,18 @@ public class NcIdxDirListFileReader {
         return ncDataFromDirList;
     }
     /**
-     * Used in {@link ru.newcontrol.ncfv.NcIdxDirListManager#getByListIDs(java.util.TreeMap) }
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListManager#getByListIDs(java.util.TreeMap) }
+     * </ul>
      * @param strCfgPath
      * @return 
      */
     protected static TreeMap<Long, NcDcIdxDirListToFileAttr> ncReadFromDirListFileByName(String strCfgPath){
         TreeMap<Long, NcDcIdxDirListToFileAttr> ncDataFromDirList;
-        
-
         if ( !NcIdxFileManager.fileExistRWAccessChecker(new File(strCfgPath))){
             return new TreeMap<>();
         }
-        
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(strCfgPath)))
         {
             ncDataFromDirList = (TreeMap<Long, NcDcIdxDirListToFileAttr>)ois.readObject();
