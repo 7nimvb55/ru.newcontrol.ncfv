@@ -109,12 +109,15 @@ public class NcIMinFS {
     }
 
     /**
-     * Not used
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getFileDataToSwing(java.io.File) }
+     * </ul>
      * LastModified Date from Directory List File, where contained record for File or Directory
      * @param indexedFile
      * @return 
      */    
-    private long getIndexLastModifiedForDirectoryOrFile(File indexedFile){
+    protected long getIndexLastModifiedForDirectoryOrFile(File indexedFile){
         return -1;
     }
     /**
