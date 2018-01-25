@@ -26,11 +26,16 @@ import java.util.TreeMap;
  */
 public class NcIdxLongWordListManager {
     /**
- * 
- * @param StructureLongWord
- * @return 
- */    
-    public static long putLongWord(TreeMap<Long, NcDcIdxSubStringToOperationUse> StructureLongWord){
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getResultMakeIndex(java.io.File) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#makeIndexForFile(java.io.File) }
+     * </ul>
+     * @param StructureLongWord
+     * @return 
+     */    
+    protected static long putLongWord(TreeMap<Long, NcDcIdxSubStringToOperationUse> StructureLongWord){
         long countWritedIDs = 0;
         String nameLongWordList = "";
         NcDcIdxLongWordListToFile dataForWrite;
@@ -49,11 +54,14 @@ public class NcIdxLongWordListManager {
         }
         return countWritedIDs;
     }
-/**
- * 
- * @param dataForWrite
- * @return 
- */    
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordListManager#putLongWord(java.util.TreeMap) }
+     * </ul>
+     * @param dataForWrite
+     * @return 
+     */    
     private static NcDcIdxLongWordListToFile getOrCreateLongWordID(NcDcIdxLongWordListToFile dataForWrite){
         String nameLongWordList = "";
         String nameNextLongWordList = "";
