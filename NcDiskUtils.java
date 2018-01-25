@@ -45,11 +45,11 @@ public class NcDiskUtils {
     }
     
     /**
-     *
+     * Not used
      * @param drive
      * @return
      */
-    protected static String getIntSerialNumber(String drive) {
+    private static String getIntSerialNumber(String drive) {
         String result = "";
         int retSerialNumber = 0;
         try {
@@ -78,6 +78,10 @@ public class NcDiskUtils {
     }
 
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcDiskUtils#NcDiskUtils() }
+     * </ul>
      * Get now information about disks in the system
      * @return 
      */
@@ -148,11 +152,14 @@ public class NcDiskUtils {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcDiskUtils#getDiskInfo() }
+     * </ul>
      * @param store
      * @return
      */
-    protected static char getDiskLetterFromFileStore(FileStore store){
+    private static char getDiskLetterFromFileStore(FileStore store){
         String forProcess = store.toString().toUpperCase();
         
         char cLet = '#';
@@ -169,11 +176,11 @@ public class NcDiskUtils {
     }
 
     /**
-     *
+     * Not used
      * @param strPath
      * @return
      */
-    protected static char getDiskLetterFromPath(String strPath){
+    private static char getDiskLetterFromPath(String strPath){
         String forProcess = strPath.toUpperCase().toString();
         char cLet = '#';
         if(NcAppHelper.isWindows()){
@@ -185,6 +192,14 @@ public class NcDiskUtils {
         }
         return cLet;
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcDiskUtils#getDiskInfo() }
+     * </ul>
+     * @param indSN
+     * @return 
+     */
     private static long convertSN(String indSN){
         long outsn = 0;
         try{
@@ -196,20 +211,22 @@ public class NcDiskUtils {
                 outsn = DatatypeConverter.parseLong(indSN);
             }
             catch(NumberFormatException extwo){
-                NcAppHelper.logException(NcDiskUtils.class.getCanonicalName(), extwo);
+                NcAppHelper.logException(
+                        NcDiskUtils.class.getCanonicalName(), extwo);
                 return 0;
             }
         }
         return outsn;
     }
-/**
- * For example, when use USB drive, disk letter may be changed sometimes, 
- * for additional option in detect may be used totalSpace
- * @param ncFile
- * @return
- * diskID provided by class {@link ru.newcontrol.ncfv.NcDiskInfo#diskID NcDiskInfo}
- */
-    protected static long getDiskIDbyLetterTotalSpace(File ncFile){
+    /**
+     * Not used
+     * For example, when use USB drive, disk letter may be changed sometimes, 
+     * for additional option in detect may be used totalSpace
+     * @param ncFile
+     * @return
+     * diskID provided by class {@link ru.newcontrol.ncfv.NcDiskInfo#diskID NcDiskInfo}
+     */
+    private static long getDiskIDbyLetterTotalSpace(File ncFile){
         String strForDisk = NcIdxFileManager.getStrCanPathFromFile(ncFile).toUpperCase().substring(0);
         char ncDiskLetterFromPath = strForDisk.charAt(0);
         long ncNowStrorageIndex = -1;
