@@ -27,12 +27,15 @@ import java.util.TreeMap;
 public class NcIdxLongWordManager {
 
     /**
-     * 
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordListManager#putLongWord(java.util.TreeMap) }
+     * </ul>
      * @param StructureLongWord
      * @param dataFuncForWrite
      * @return 
      */    
-    public static long putLongWordInFile(TreeMap<Long, NcDcIdxSubStringToOperationUse> StructureLongWord, NcDcIdxLongWordListToFile dataFuncForWrite){
+    protected static long putLongWordInFile(TreeMap<Long, NcDcIdxSubStringToOperationUse> StructureLongWord, NcDcIdxLongWordListToFile dataFuncForWrite){
         long countWritedIDs = 0;
         for(Map.Entry<Long, NcDcIdxSubStringToOperationUse> item : StructureLongWord.entrySet()){
             String hexWord = item.getValue().hexSubString;
@@ -80,11 +83,14 @@ public class NcIdxLongWordManager {
         return countWritedIDs;
     }
     /**
-     * 
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSearchInIndex#getIDsForKeyWord(java.lang.String) }
+     * </ul>
      * @param StructureLongWord
      * @return 
      */    
-    public static TreeMap<Long, NcDcIdxWordToFile> getLongWord(TreeMap<Long, NcDcIdxSubStringToOperationUse> StructureLongWord){
+    protected static TreeMap<Long, NcDcIdxWordToFile> getLongWord(TreeMap<Long, NcDcIdxSubStringToOperationUse> StructureLongWord){
         TreeMap<Long, NcDcIdxWordToFile> retReadedData = new TreeMap<Long, NcDcIdxWordToFile>();
         long countWritedIDs = 0;
         String nameLongWordList = "";
@@ -115,7 +121,10 @@ public class NcIdxLongWordManager {
         return retReadedData;
     }
     /**
-     * 
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordManager#getLongWord(java.util.TreeMap) }
+     * </ul>
      * @param dataForRead
      * @return 
      */    
@@ -168,7 +177,10 @@ public class NcIdxLongWordManager {
         return dataForRead;
     }
     /**
-     * 
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxLongWordManager#getLongWord(java.util.TreeMap) }
+     * </ul>
      * @param StructureLongWord
      * @param dataFuncForWrite
      * @return 
@@ -211,7 +223,9 @@ public class NcIdxLongWordManager {
     /**
      * Used in
      * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxStorageWordManager#convertFormOperationToFileData(ru.newcontrol.ncfv.NcDcIdxSubStringToOperationUse, long) }
      * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchKeyWordInput#getIdDataForSplittedKeyWord(java.util.ArrayList) }
      * </ul>
      * @param inFuncWord
      * @return
