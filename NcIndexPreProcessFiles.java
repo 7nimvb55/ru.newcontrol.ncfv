@@ -201,12 +201,15 @@ public class NcIndexPreProcessFiles {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexMaker#getMakeIndexForFile(java.io.File) }
+     * </ul>
      * @param ncFile
      * @return
      * @throws IOException
      */
-    public String[] getResultMakeIndex(File ncFile) throws IOException{
+    protected String[] getResultMakeIndex(File ncFile) throws IOException{
         NcIMinFS ncwd = new NcIMinFS();
         
         NcIndexManageIDs ncThisManageIDs = ncwd.getNcIndexManageIDs();
@@ -350,31 +353,35 @@ public class NcIndexPreProcessFiles {
         return fstroA;
     }
 
-/**
- * 
- * i - id record
- * ds - Disk serial number hex string
- * dh - Disk serial number hashCode
- * dl - Disk letter
- * ps - File.getAbsolutePath()
- * ph - File.getAbsolutePath().hashCode() this path hash code (if change disk hash letter changed?)
- * cs - File Path with out Disk Letter;
- * ch - File Path with out Disk Letter hashCode();
- * l - File.length()
- * r - File.canRead()
- * w - File.canWrite()
- * x - File.canExecute()
- * h - File.isHidden()
- * lm - File.lastModified()
- * td - File.isDirectory()
- * tf - File.isFile()
- * fc - String Files.probeContentType()
- * @param ncDiskInfo
- * @param DirListIdx
- * @param ncFile
- * @return 
- */    
-    public NcDcIdxDirListToFileAttr getDataToDL(TreeMap<Long, NcDiskInfo> ncDiskInfo, File ncFile, long DirListIdx){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getResultMakeIndex(java.io.File) }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#makeIndexForFile(java.io.File) }
+     * </ul>
+     * i - id record
+     * ds - Disk serial number hex string
+     * dh - Disk serial number hashCode
+     * dl - Disk letter
+     * ps - File.getAbsolutePath()
+     * ph - File.getAbsolutePath().hashCode() this path hash code (if change disk hash letter changed?)
+     * cs - File Path with out Disk Letter;
+     * ch - File Path with out Disk Letter hashCode();
+     * l - File.length()
+     * r - File.canRead()
+     * w - File.canWrite()
+     * x - File.canExecute()
+     * h - File.isHidden()
+     * lm - File.lastModified()
+     * td - File.isDirectory()
+     * tf - File.isFile()
+     * fc - String Files.probeContentType()
+     * @param ncDiskInfo
+     * @param DirListIdx
+     * @param ncFile
+     * @return 
+     */    
+    protected NcDcIdxDirListToFileAttr getDataToDL(TreeMap<Long, NcDiskInfo> ncDiskInfo, File ncFile, long DirListIdx){
         String strForDisk = NcIdxFileManager.getStrCanPathFromFile(ncFile).toUpperCase().substring(0);
         char ncDiskLetterFromPath = strForDisk.charAt(0);
         int ncDiskIndexes = 0;
@@ -426,6 +433,7 @@ public class NcIndexPreProcessFiles {
     }
 
     /**
+     * Not used
      * File content probe to releases in NcDirListToFilesType
      * @param ncCurPathACP
      * @return 
@@ -442,7 +450,8 @@ public class NcIndexPreProcessFiles {
                 if (type == null)
                     type = "<not recognized>";
             } catch (IOException ex) {
-                Logger.getLogger(NcIndexPreProcessFiles.class.getName()).log(Level.SEVERE, null, ex);
+                NcAppHelper.logException(
+                        NcIndexPreProcessFiles.class.getName(), ex);
                 type = "<not recognized>";
             }
         }
@@ -450,7 +459,10 @@ public class NcIndexPreProcessFiles {
     }
 
     /**
-     * Used in {@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * </ul>
      * @param ncFileRec
      * @return
      */
@@ -464,18 +476,22 @@ public class NcIndexPreProcessFiles {
         return 0;
     }
     /**
-     * 
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#makeIndexRecursive(java.io.File) }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#makeIndexForFolder(java.io.File) }
+     * </ul>
      * @param ncFile
      * @return 
      */
-    
     private long makeIndexForFolder(File ncFile){
         
         if(ncFile.isFile()){
             try {
                 appendToDirListIDs.add(makeIndexForFile(ncFile));
             } catch (IOException ex) {
-                Logger.getLogger(NcIndexPreProcessFiles.class.getName()).log(Level.SEVERE, null, ex);
+                NcAppHelper.logException(
+                        NcIndexPreProcessFiles.class.getName(), ex);
             }
             return 1;
         }
@@ -483,7 +499,8 @@ public class NcIndexPreProcessFiles {
             try {
                 appendToDirListIDs.add(makeIndexForFile(ncFile));
             } catch (IOException ex) {
-                Logger.getLogger(NcIndexPreProcessFiles.class.getName()).log(Level.SEVERE, null, ex);
+                NcAppHelper.logException(
+                        NcIndexPreProcessFiles.class.getName(), ex);
             }
             for(File itemFile : ncFile.listFiles()){
                 makeIndexForFolder(itemFile);
@@ -493,7 +510,10 @@ public class NcIndexPreProcessFiles {
     }
     
     /**
-     *
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#makeIndexForFolder(java.io.File) }
+     * </ul>
      * @param ncFile
      * @return
      * @throws IOException
