@@ -26,19 +26,19 @@ public class NcIndexMaker {
     private File currentFile;
 
     /**
-     *
+     * Not used
      * @param ncFile
      */
-    public NcIndexMaker(File ncFile) {
+    private NcIndexMaker(File ncFile) {
         currentFile = ncFile;
     }
 
     /**
-     *
+     * Not used
      * @param fncFile
      * @return
      */
-    public String[] getFilterStringsArray(File fncFile){
+    private String[] getFilterStringsArray(File fncFile){
         NcIndexPreProcessFiles ncIdxPreReturn = new NcIndexPreProcessFiles(fncFile);
 
         String[] toRet = new String[0];
@@ -53,11 +53,11 @@ public class NcIndexMaker {
     }
     
     /**
-     *
+     * Not used
      * @param fncFile
      * @return
      */
-    public String[] getMakeIndexForFile(File fncFile){
+    private String[] getMakeIndexForFile(File fncFile){
         NcIndexPreProcessFiles ncIdxPreReturn = new NcIndexPreProcessFiles(fncFile);
 
         String[] toRet = new String[0];

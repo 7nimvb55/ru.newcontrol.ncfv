@@ -58,25 +58,35 @@ public class NcIndexManageIDs {
     private ArrayList<NcDcIdxLongWordListToFile> lastRecDataDLWL;
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIMinFS#NcIMinFS() }
+     * </ul>
      * @param ncThisMcCfg
      */
-    public NcIndexManageIDs(NcManageCfg ncThisMcCfg) {
+    protected NcIndexManageIDs(NcManageCfg ncThisMcCfg) {
        this.ncThisMcCfg = ncThisMcCfg;
        createDirListFile();
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getFileDataToSwing(java.io.File) }
+     * </ul>
      * @return
      */
-    public boolean getLoadLastIDsStatus(){
+    protected boolean getLoadLastIDsStatus(){
         return this.existLastIDs;
     }
     /**
- * Create Directory List File
- * Generate and manage File names, check existing files
- */
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#NcIndexManageIDs(ru.newcontrol.ncfv.NcManageCfg) }
+     * </ul>
+     * Create Directory List File
+     * Generate and manage File names, check existing files
+     */
     private void createDirListFile(){
         /** Read last IDs data form Disk, if record not found,
          * attemt to check folders and repair data or write Zero data in file
@@ -102,25 +112,44 @@ public class NcIndexManageIDs {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListManager#putToDirectoryList(ru.newcontrol.ncfv.NcDcIdxDirListToFileAttr) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getFileDataToSwing(java.io.File) }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getResultMakeIndex(java.io.File) }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#makeIndexForFile(java.io.File) }
+     * </ul>
      * @return
      */
-    public NcTmpNowProcessInfo getIdsReadedData(){
+    protected NcTmpNowProcessInfo getIdsReadedData(){
         return readTmpIds();
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxDirListManager#putToDirectoryList(ru.newcontrol.ncfv.NcDcIdxDirListToFileAttr) }
+     * </ul>
      * @param fIdsToWrite
      * @return
      */
-    public int setNewIdsData(NcTmpNowProcessInfo fIdsToWrite){
+    protected int setNewIdsData(NcTmpNowProcessInfo fIdsToWrite){
         int retWriteTmpIDs = writeTmpIDs(fIdsToWrite);
         if ( retWriteTmpIDs < 1 ){
             return retWriteTmpIDs;
         }
         return retWriteTmpIDs;
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#createDirListFile() }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#setNewIdsData(ru.newcontrol.ncfv.NcTmpNowProcessInfo) }
+     * </ul>
+     * @param fIdsToWrite
+     * @return 
+     */
     private int writeTmpIDs(NcTmpNowProcessInfo fIdsToWrite){
         try(ObjectOutputStream oos = 
                 new ObjectOutputStream(
@@ -135,7 +164,15 @@ public class NcIndexManageIDs {
         }
         return 1;
     }
-    
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#createDirListFile() }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#getIdsReadedData() }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#getTmpIDsData(java.io.File) }
+     * </ul>
+     * @return 
+     */
     private static NcTmpNowProcessInfo readTmpIds(){
         NcTmpNowProcessInfo idsReadData;
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(NcIdxFileManager.getTmpIdsFile())))
@@ -151,20 +188,26 @@ public class NcIndexManageIDs {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkTmpIDsData() }
+     * </ul>
      * @param inFuncTmpIds
      * @return
      */
-    public static NcTmpNowProcessInfo getTmpIDsData(File inFuncTmpIds){
+    protected static NcTmpNowProcessInfo getTmpIDsData(File inFuncTmpIds){
         return readTmpIds();
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkTmpIDsData() }
+     * </ul>
      * @param inFuncData
      * @return
      */
-    public static boolean isTmpIDsDataWrong(NcTmpNowProcessInfo inFuncData){
+    protected static boolean isTmpIDsDataWrong(NcTmpNowProcessInfo inFuncData){
         if( inFuncData == null ){
             return true;
         }
