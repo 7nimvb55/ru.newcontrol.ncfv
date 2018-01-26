@@ -218,11 +218,11 @@ public class NcIndexManageIDs {
     }
 
     /**
-     *
+     * Not used
      * @param inFuncData
      * @return
      */
-    public static boolean isTmpIDsDataHasEmptyField(NcTmpNowProcessInfo inFuncData){
+    private static boolean isTmpIDsDataHasEmptyField(NcTmpNowProcessInfo inFuncData){
         if( inFuncData == null ){
             return true;
         }
@@ -245,11 +245,14 @@ public class NcIndexManageIDs {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkTmpIDsData() }
+     * </ul>
      * @param inFuncData
      * @return
      */
-    public static boolean isTmpIDsDataEmpty(NcTmpNowProcessInfo inFuncData){
+    protected static boolean isTmpIDsDataEmpty(NcTmpNowProcessInfo inFuncData){
         if( inFuncData == null ){
             return true;
         }
@@ -275,11 +278,15 @@ public class NcIndexManageIDs {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#isTmpIDsDataWrong(ru.newcontrol.ncfv.NcTmpNowProcessInfo) }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#isTmpIDsDataEmpty(ru.newcontrol.ncfv.NcTmpNowProcessInfo) }
+     * </ul>
      * @param inFuncData
      * @return
      */
-    public static boolean isTmpIDsDataHashTrue(NcTmpNowProcessInfo inFuncData){
+    private static boolean isTmpIDsDataHashTrue(NcTmpNowProcessInfo inFuncData){
         return inFuncData.recordHash == (""
                 + inFuncData.journalname
                 + inFuncData.journalid
@@ -292,14 +299,18 @@ public class NcIndexManageIDs {
                 + inFuncData.recordTime).hashCode();
     }
 
-/**
- * Method check afte record parameters: readyForRecord, count in readyForRecordData,
- * count records in current Directory List File, and if count readyForRecord has
- * record out of bound for current record File, than this method, creat chunk for
- * this recorded data, chunk 1 writed into current File and other data in chunk 2
- * recorded into new file
- * @return 
- */
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#createDirListFile() }
+     * </ul>
+     * Method check afte record parameters: readyForRecord, count in readyForRecordData,
+     * count records in current Directory List File, and if count readyForRecord has
+     * record out of bound for current record File, than this method, creat chunk for
+     * this recorded data, chunk 1 writed into current File and other data in chunk 2
+     * recorded into new file
+     * @return 
+     */
     private NcTmpNowProcessInfo checkDataForAllDirListFiles(){
         TreeMap<Integer, File> indexWorkSubDirFilesList = NcIdxFileManager.getIndexWorkSubDirFilesList();
         File ncmfsDFL = indexWorkSubDirFilesList.get("/fl".hashCode());
@@ -364,6 +375,14 @@ public class NcIndexManageIDs {
             fClongwordlistnameid);
         return inDirIdsData;
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#checkDataForAllDirListFiles() }
+     * </ul>
+     * @param filesList
+     * @return 
+     */
     private String getLastNameFormDirListFiles(TreeMap<Integer, File> filesList){
         String retLastName = "";
         if( filesList.isEmpty() ){
@@ -376,6 +395,14 @@ public class NcIndexManageIDs {
         }
         return retLastName;
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#checkDataForAllDirListFiles() }
+     * </ul>
+     * @param strFIds
+     * @return 
+     */
     private long readFromDFLIds(String strFIds){
         File fileFIds = new File(strFIds);
         if(fileExistRWAccessChecker(fileFIds)){
@@ -394,6 +421,14 @@ public class NcIndexManageIDs {
         }
         return lastRecDataDFL.lastKey();
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#checkDataForAllDirListFiles() }
+     * </ul>
+     * @param strFIds
+     * @return 
+     */
     private int readFromDFHLIds(String strFIds){
         File fileFIds = new File(strFIds);
         if(fileExistRWAccessChecker(fileFIds)){
@@ -412,6 +447,14 @@ public class NcIndexManageIDs {
         }
         return lastRecDataDFHL.size();
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#checkDataForAllDirListFiles() }
+     * </ul>
+     * @param strFIds
+     * @return 
+     */
     private int readFromDLWLIds(String strFIds){
         File fileFIds = new File(strFIds);
         if(fileExistRWAccessChecker(fileFIds)){
@@ -430,6 +473,16 @@ public class NcIndexManageIDs {
         }
         return lastRecDataDLWL.size();
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#readFromDFLIds(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#readFromDFHLIds(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#readFromDLWLIds(java.lang.String) }
+     * </ul>
+     * @param strFIds
+     * @return 
+     */
     private boolean fileExistRWAccessChecker(File strFIds){
         try{
             if(strFIds.exists()
