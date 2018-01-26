@@ -568,11 +568,14 @@ public class NcManageCfg {
         return workSubDir;
     }
 
-    /**
-     * Not used
+    /**     
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getTmpIdsFile() }
+     * </ul>
      * @return
      */
-    private static String[] getWorkFileNames(){
+    protected static String[] getWorkFileNames(){
         return workFileNames;
     }
 }
