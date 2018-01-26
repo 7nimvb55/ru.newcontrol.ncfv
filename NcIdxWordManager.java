@@ -25,12 +25,17 @@ import java.util.TreeMap;
  * @author Администратор
  */
 public class NcIdxWordManager {
-/**
- * 
- * @param StructureWord
- * @return 
- */    
-    public static long putWord(TreeMap<Long, NcDcIdxSubStringToOperationUse> StructureWord){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getResultMakeIndex(java.io.File) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#makeIndexForFile(java.io.File) }
+     * </ul>
+     * @param StructureWord
+     * @return 
+     */    
+    protected static long putWord(TreeMap<Long, NcDcIdxSubStringToOperationUse> StructureWord){
         long countWritedIDs = 0;
         for(Map.Entry<Long, NcDcIdxSubStringToOperationUse> item : StructureWord.entrySet()){
             String hexWord = item.getValue().hexSubString;
@@ -75,12 +80,15 @@ public class NcIdxWordManager {
         
         return countWritedIDs;
     }
-/**
- * 
- * @param StructureWord
- * @return 
- */    
-    public static TreeMap<Long, NcDcIdxWordToFile> getWord(TreeMap<Long, NcDcIdxSubStringToOperationUse> StructureWord){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSearchInIndex#getIDsForKeyWord(java.lang.String) }
+     * </ul>
+     * @param StructureWord
+     * @return 
+     */    
+    protected static TreeMap<Long, NcDcIdxWordToFile> getWord(TreeMap<Long, NcDcIdxSubStringToOperationUse> StructureWord){
         long countWritedIDs = 0;
         TreeMap<Long, NcDcIdxWordToFile> retInDiskWordRecord = new TreeMap<Long, NcDcIdxWordToFile>();
         for(Map.Entry<Long, NcDcIdxSubStringToOperationUse> item : StructureWord.entrySet()){
@@ -114,11 +122,11 @@ public class NcIdxWordManager {
     }
 
     /**
-     *
+     * Not used
      * @param inFuncData
      * @return
      */
-    public static boolean isWordWrong(NcDcIdxWordToFile inFuncData){
+    private static boolean isWordWrong(NcDcIdxWordToFile inFuncData){
         if( inFuncData == null ){
             return true;
         }
@@ -129,11 +137,11 @@ public class NcIdxWordManager {
     }
 
     /**
-     *
+     * Not used
      * @param inFuncData
      * @return
      */
-    public static boolean isWordHasEmptyFiled(NcDcIdxWordToFile inFuncData){
+    private static boolean isWordHasEmptyFiled(NcDcIdxWordToFile inFuncData){
         if( inFuncData == null ){
             return true;
         }
@@ -152,11 +160,11 @@ public class NcIdxWordManager {
     }
 
     /**
-     *
+     * Not used
      * @param inFuncData
      * @return
      */
-    public static boolean isWordDataEmpty(NcDcIdxWordToFile inFuncData){
+    private static boolean isWordDataEmpty(NcDcIdxWordToFile inFuncData){
         if( inFuncData == null ){
             return true;
         }
@@ -177,11 +185,16 @@ public class NcIdxWordManager {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxWordManager#isWordWrong(ru.newcontrol.ncfv.NcDcIdxWordToFile) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxWordManager#isWordDataEmpty(ru.newcontrol.ncfv.NcDcIdxWordToFile) }
+     * </ul>
      * @param inFuncData
      * @return
      */
-    public static boolean isWordDataHashTrue(NcDcIdxWordToFile inFuncData){
+    protected static boolean isWordDataHashTrue(NcDcIdxWordToFile inFuncData){
         return inFuncData.recordHash == (
                 ""
                 + inFuncData.recordID
@@ -192,19 +205,26 @@ public class NcIdxWordManager {
                 + inFuncData.wordLength
                 + inFuncData.recordTime).hashCode();
     }
-    public static TreeMap<Long, NcDcIdxWordToFile> getSearchedWordData(TreeMap<Long, String> inFuncListKeyWords){
+    /**
+     * Not used
+     * @param inFuncListKeyWords
+     * @return 
+     */
+    private static TreeMap<Long, NcDcIdxWordToFile> getSearchedWordData(TreeMap<Long, String> inFuncListKeyWords){
         return new TreeMap<Long, NcDcIdxWordToFile>();
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxWordManager#getAllDataForWord(java.lang.String) }
+     * </ul>
      * Return TreeMap<Long, File> structure for words and heximal view of words, existing in index /w sub dirictory
      * @param wordInHex
      * @param word
      * @return 
      */
-    public static TreeMap<Long, File> getWordExistFile(String wordInHex){
-        
+    private static TreeMap<Long, File> getWordExistFile(String wordInHex){
         TreeMap<Integer, File> listDirs = NcIdxFileManager.getIndexWorkSubDirFilesList();
-        
         File filePathDir = listDirs.get("/w".hashCode());
         boolean boolCheck = NcIdxFileManager.dirExistRWAccessChecker(filePathDir);
         if( !boolCheck ){
@@ -229,8 +249,15 @@ public class NcIdxWordManager {
         while( fileWithRecords.exists() );
         return listFiles;
     }
-    
-    public static TreeMap<Long, NcDcIdxWordToFile> getAllDataForWord(String wordInHex){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchKeyWordInput#getIdDataForSplittedKeyWord(java.util.ArrayList) }
+     * </ul>
+     * @param wordInHex
+     * @return 
+     */
+    protected static TreeMap<Long, NcDcIdxWordToFile> getAllDataForWord(String wordInHex){
         TreeMap<Long, NcDcIdxWordToFile> toReturnData = new TreeMap<Long, NcDcIdxWordToFile>();
         TreeMap<Long, File> existFileList = new TreeMap<Long, File>();
         

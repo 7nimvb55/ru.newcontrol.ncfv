@@ -31,11 +31,14 @@ public class NcIdxSubStringVariant {
     int hexForUpperCaseHash;
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchVariantMaker#getUpperLowerCaseVariant(java.util.ArrayList) }
+     * </ul>
      * @param strInLowerCase
      * @param strInUpperCase
      */
-    public NcIdxSubStringVariant(String strInLowerCase, String strInUpperCase) {
+    protected NcIdxSubStringVariant(String strInLowerCase, String strInUpperCase) {
         this.strInLowerCase = strInLowerCase;
         this.strInLowerCaseHash = this.strInLowerCase.hashCode();
         this.hexForLowerCase = NcPathToArrListStr.toStrUTFinHEX(this.strInLowerCase);

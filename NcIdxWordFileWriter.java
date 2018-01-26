@@ -26,13 +26,17 @@ import java.util.TreeMap;
  */
 public class NcIdxWordFileWriter {
     /**
- * Write Index SubStrings into files
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxWordManager#putWord(java.util.TreeMap) }
+     * </ul>
+     * Write Index SubStrings into files
      * @param ncWordToRec
      * @param recHexWord
      * @param recID
- * @return 
- */    
-    public static long ncWriteForWord(TreeMap<Long, NcDcIdxWordToFile> ncWordToRec, String recHexWord, long recID){
+     * @return 
+     */    
+    protected static long ncWriteForWord(TreeMap<Long, NcDcIdxWordToFile> ncWordToRec, String recHexWord, long recID){
         if( ncWordToRec == null ){
             return -1;
         }

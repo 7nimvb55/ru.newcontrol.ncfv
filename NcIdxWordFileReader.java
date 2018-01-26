@@ -27,12 +27,17 @@ import java.util.TreeMap;
  */
 public class NcIdxWordFileReader {
     /**
- * 
- * @param readedWord
- * @param rID
- * @return 
- */    
-    public static TreeMap<Long, NcDcIdxWordToFile> ncReadFromWord(String readedWord, long rID){
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxWordManager#putWord(java.util.TreeMap) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxWordManager#getWord(java.util.TreeMap) }
+     * </ul>
+     * @param readedWord
+     * @param rID
+     * @return 
+     */    
+    protected static TreeMap<Long, NcDcIdxWordToFile> ncReadFromWord(String readedWord, long rID){
         TreeMap<Long, NcDcIdxWordToFile> ncDataFromWordFile;
         String strCfgPath =  NcIdxFileManager.getFileNameToRecord(
                 NcIdxFileManager.getStrCanPathFromFile(NcManageCfg.getDirWords()) + "/w-" + readedWord, rID);
@@ -51,7 +56,15 @@ public class NcIdxWordFileReader {
         } 
         return ncDataFromWordFile;
     }
-    public static TreeMap<Long, NcDcIdxWordToFile> ncReadFromWordFile(File inFuncFile){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxWordManager#getAllDataForWord(java.lang.String) }
+     * </ul>
+     * @param inFuncFile
+     * @return 
+     */
+    protected static TreeMap<Long, NcDcIdxWordToFile> ncReadFromWordFile(File inFuncFile){
         TreeMap<Long, NcDcIdxWordToFile> ncDataFromWordFile;
         
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(inFuncFile)))
