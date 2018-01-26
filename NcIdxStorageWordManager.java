@@ -27,11 +27,15 @@ import java.util.TreeMap;
 public class NcIdxStorageWordManager {
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getResultMakeIndex(java.io.File) }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#makeIndexForFile(java.io.File) }
+     * </ul>
      * @param typeWords
      * @param WordToStorage
      */
-    public static void putInStorageWord(String typeWords, TreeMap<Long, NcDcIdxSubStringToOperationUse> WordToStorage){
+    protected static void putInStorageWord(String typeWords, TreeMap<Long, NcDcIdxSubStringToOperationUse> WordToStorage){
         
         TreeMap<Long, File> listFilesInStorage = new TreeMap<Long, File>();
         TreeMap<Long, NcDcIdxStorageWordToFile> readedData = new TreeMap<Long, NcDcIdxStorageWordToFile>();
@@ -108,13 +112,16 @@ public class NcIdxStorageWordManager {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxStorageWordManager#putInStorageWord(java.lang.String, java.util.TreeMap) }
+     * </ul>
      * @param inFuncReadedData
      * @param wordInHex
      * @param word
      * @return
      */
-    public static TreeMap<Long, NcDcIdxStorageWordToFile> searchRecordInStorageWord(TreeMap<Long, NcDcIdxStorageWordToFile> inFuncReadedData, String wordInHex, String word){
+    private static TreeMap<Long, NcDcIdxStorageWordToFile> searchRecordInStorageWord(TreeMap<Long, NcDcIdxStorageWordToFile> inFuncReadedData, String wordInHex, String word){
         TreeMap<Long, NcDcIdxStorageWordToFile> toReturnFoundedData = new TreeMap<Long, NcDcIdxStorageWordToFile>();
         for(Map.Entry<Long, NcDcIdxStorageWordToFile> itemReadedData : inFuncReadedData.entrySet() ){
                 boolean compareWordResult = word.hashCode() == itemReadedData.getValue().wordHash;
@@ -128,13 +135,16 @@ public class NcIdxStorageWordManager {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxStorageWordManager#putInStorageWord(java.lang.String, java.util.TreeMap) }
+     * </ul>
      * @param typeWords
      * @param inFuncWordInHex
      * @param inFuncWord
      * @return
      */
-    public static TreeMap<Long, File> getStorageWordExistFiles(String typeWords, String inFuncWordInHex, String inFuncWord){
+    private static TreeMap<Long, File> getStorageWordExistFiles(String typeWords, String inFuncWordInHex, String inFuncWord){
         switch (typeWords){
             case "NCLVLABC":
                 return NcTypeOfWord.NCLVLABC.getStorageWordExistFileName(inFuncWordInHex, inFuncWord);
@@ -151,14 +161,17 @@ public class NcIdxStorageWordManager {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxStorageWordManager#putInStorageWord(java.lang.String, java.util.TreeMap) }
+     * </ul>
      * @param typeWords
      * @param inFuncWordInHex
      * @param inFuncWord
      * @param inFuncId
      * @return
      */
-    public static String getStorageWordByIdFile(String typeWords, String inFuncWordInHex, String inFuncWord, long inFuncId){
+    private static String getStorageWordByIdFile(String typeWords, String inFuncWordInHex, String inFuncWord, long inFuncId){
         switch (typeWords){
             case "NCLVLABC":
                 return NcTypeOfWord.NCLVLABC.getStorageWordByIdFileName(inFuncWordInHex, inFuncWord, inFuncId);
@@ -175,12 +188,15 @@ public class NcIdxStorageWordManager {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxStorageWordManager#putInStorageWord(java.lang.String, java.util.TreeMap) }
+     * </ul>
      * @param inFuncData
      * @param inFuncNextWordId
      * @return
      */
-    public static NcDcIdxStorageWordToFile convertFormOperationToFileData(NcDcIdxSubStringToOperationUse inFuncData, long inFuncNextWordId){
+    private static NcDcIdxStorageWordToFile convertFormOperationToFileData(NcDcIdxSubStringToOperationUse inFuncData, long inFuncNextWordId){
         NcDcIdxStorageWordToFile toReturn = new NcDcIdxStorageWordToFile(
                 inFuncNextWordId,
                 NcIdxLongWordManager.isLongWord(inFuncData.strSubString),

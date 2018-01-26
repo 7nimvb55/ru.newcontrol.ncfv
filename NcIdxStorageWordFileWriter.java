@@ -28,12 +28,15 @@ import java.util.TreeMap;
 public class NcIdxStorageWordFileWriter {
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxStorageWordManager#putInStorageWord(java.lang.String, java.util.TreeMap) }
+     * </ul>
      * @param inFuncWrite
      * @param updatedRecords
      * @return
      */
-    public static int ncUpdateData(File inFuncWrite, TreeMap<Long, NcDcIdxStorageWordToFile> updatedRecords){
+    protected static int ncUpdateData(File inFuncWrite, TreeMap<Long, NcDcIdxStorageWordToFile> updatedRecords){
         try(ObjectOutputStream oos = 
                 new ObjectOutputStream(
                 new FileOutputStream(inFuncWrite)))
