@@ -29,7 +29,17 @@ import java.util.TreeMap;
  * @author wladimirowichbiaran
  */
 public class NcLogFileManager {
-    public static File getLogFile(){
+    /**
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcLogFileManager#readFromLog() }
+     * <li>{@link ru.newcontrol.ncfv.NcLogFileManager#writeLogLines(java.util.TreeMap) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getTreeNodes(javax.swing.tree.DefaultMutableTreeNode) }
+     * </ul>
+     * @return 
+     */
+    protected static File getLogFile(){
         String strAppDataSubDir = NcIdxFileManager.getOrCreateAppDataSubDir();
         String strLogFilePath = 
                 NcIdxFileManager.strPathCombiner(strAppDataSubDir,
@@ -40,6 +50,13 @@ public class NcLogFileManager {
         }
         return fileLog;
     }
+    /**
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcLogFileManager#createLogFile(java.lang.String) }
+     * </ul>
+     * @param ncStrCfgPath 
+     */
     private static void createLogFile(String ncStrCfgPath){
         String strTime = java.time.LocalDateTime.now().toString();
         String text = NcStrLogMsgField.TIME.getStr() + strTime;
@@ -56,7 +73,14 @@ public class NcLogFileManager {
             NcAppHelper.appExitWithMessage(strExitMsg + ex.getMessage());
         }
     }
-    public static void putToLogStr(String strToLog){
+    /**
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcAppHelper#outMessageToAppLogFile(java.lang.String) }
+     * </ul>
+     * @param strToLog 
+     */
+    protected static void putToLogStr(String strToLog){
         if( strToLog.length() > 0 ){
             
             TreeMap<Long, String> strCurrentLog = new TreeMap<Long, String>();
@@ -76,7 +100,14 @@ public class NcLogFileManager {
             writeInLogLimitLines(strCurrentLog);
         }
     }
-    public static void putToLog(TreeMap<Long, String> toLogStr){
+    /**
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcAppHelper#outMessageToAppLogFile(java.lang.String) }
+     * </ul>
+     * @param toLogStr 
+     */
+    protected static void putToLog(TreeMap<Long, String> toLogStr){
         if( toLogStr.size() > 0 ){
             TreeMap<Long, String> strCurrentLog = new TreeMap<Long, String>();
             strCurrentLog.putAll(readFromLog());
@@ -98,7 +129,17 @@ public class NcLogFileManager {
         }
         
     }
-    public static TreeMap<Long, String> readFromLog(){
+    /**
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcLogFileManager#putToLogStr(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcLogFileManager#putToLog(java.util.TreeMap) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getTreeNodes(javax.swing.tree.DefaultMutableTreeNode) }
+     * </ul>
+     * @return 
+     */
+    protected static TreeMap<Long, String> readFromLog(){
         File fileLog = getLogFile();
         TreeMap<Long, String> strForReturn = new TreeMap<Long, String>();
         try(BufferedReader br = new BufferedReader(new FileReader(fileLog)))
@@ -111,10 +152,19 @@ public class NcLogFileManager {
             }
         }
          catch(IOException ex){
-            NcAppHelper.outMessage(ex.getMessage());
+            NcAppHelper.logException(
+                NcLogFileManager.class.getCanonicalName(), ex);
         }
         return strForReturn;
     }
+    /**
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcLogFileManager#putToLogStr(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcLogFileManager#putToLog(java.util.TreeMap) }
+     * </ul>
+     * @param toLogAllStr 
+     */
     private static void writeInLogLimitLines(TreeMap<Long, String> toLogAllStr){
         int logCountLines = NcfvRunVariables.getLogLinesCount();
         if( (toLogAllStr.size()) > logCountLines ){
@@ -134,6 +184,13 @@ public class NcLogFileManager {
         }
         writeLogLines(toLogAllStr);
     }
+    /**
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcLogFileManager#writeInLogLimitLines(java.util.TreeMap) }
+     * </ul>
+     * @param toLogStr 
+     */
     private static void writeLogLines(TreeMap<Long, String> toLogStr){
         File fileLog = getLogFile();
         if( toLogStr.size() > 0 ){
@@ -143,10 +200,8 @@ public class NcLogFileManager {
                     bw.write(itemStr.getValue());
                     bw.newLine();
                 }
-                
             }
             catch(IOException ex){
-                
                 String strMsg = "Can not create log file in:\n"
                         + NcIdxFileManager.getStrCanPathFromFile(fileLog) + "\n";
                 NcAppHelper.appExitWithMessage(strMsg + ex.getMessage());

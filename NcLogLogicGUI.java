@@ -21,6 +21,10 @@ package ru.newcontrol.ncfv;
  */
 public class NcLogLogicGUI {
     /**
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMainMenu#getMainMenu(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * LogAppLogicRecord (LALR) - toLALR(class MethodName)
      * make record in log file
      */
@@ -35,6 +39,10 @@ public class NcLogLogicGUI {
         }
     }
     /**
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelCenter#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * LogAppLogicRecord (LALR) - toLALR(class MethodName)
      * make record in log file
      */

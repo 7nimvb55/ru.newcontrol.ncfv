@@ -20,7 +20,15 @@ package ru.newcontrol.ncfv;
  * @author wladimirowichbiaran
  */
 public class NcLogColorizer {
-    public static String getHtmlStr(String strInput){
+    /**
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getTreeNodes(javax.swing.tree.DefaultMutableTreeNode) }
+     * </ul>
+     * @param strInput
+     * @return 
+     */
+    protected static String getHtmlStr(String strInput){
         boolean isHTML = false;
         if( strInput.contains(NcStrLogMsgField.ERROR.getStr()) ){
             strInput = "<b color=red>" + strInput + "</b>" ;

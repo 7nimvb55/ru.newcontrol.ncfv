@@ -20,7 +20,13 @@ package ru.newcontrol.ncfv;
  * @author wladimirowichbiaran
  */
 public class NcLogLogicCfg {
-    public static void NcParamFvReaderReadDataRead(){
+    /**
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvReader#readDataFromWorkCfg() }
+     * </ul>
+     */
+    protected static void NcParamFvReaderReadDataRead(){
         if( NcfvRunVariables.isLALRNcParamFvReaderReadDataFromWorkCfg() ){
             String strLogMsg = NcStrLogMsgField.INFO.getStr()
                 + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
@@ -28,7 +34,13 @@ public class NcLogLogicCfg {
             NcAppHelper.outMessage(strLogMsg);
         }
     }
-    public static void NcParamFvReaderReadDataGenerate(){
+    /**
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvReader#readDataFromWorkCfg() }
+     * </ul>
+     */
+    protected static void NcParamFvReaderReadDataGenerate(){
         if( NcfvRunVariables.isLALRNcParamFvReaderReadDataFromWorkCfg() ){
             String strLogMsg = NcStrLogMsgField.INFO.getStr()
                 + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
