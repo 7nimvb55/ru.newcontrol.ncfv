@@ -42,72 +42,89 @@ public class NcIndexPreProcessFiles {
     private ArrayList<Long> appendToDirListIDs = new ArrayList<Long>();
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * </ul>
      */
-    public NcIndexPreProcessFiles() {
+    protected NcIndexPreProcessFiles() {
     }
     
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexMaker#getFilterStringsArray(java.io.File) }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexMaker#getMakeIndexForFile(java.io.File) }
+     * </ul>
      * @param ncFile
      */
-    public NcIndexPreProcessFiles(File ncFile) {
+    protected NcIndexPreProcessFiles(File ncFile) {
         currentFile = ncFile;
     }
     
     /**
-     *
+     * Not used
      * @param ncFile
      * @param fNcRecursive
      */
-    public NcIndexPreProcessFiles(File ncFile, boolean fNcRecursive) {
+    private NcIndexPreProcessFiles(File ncFile, boolean fNcRecursive) {
         currentFile = ncFile;
         ncRecursive = fNcRecursive;
     }
     
     /**
-     *
+     * Not used
      * @return
      */
-    public boolean getRecursive(){
+    private boolean getRecursive(){
         return ncRecursive;
     }
     
     /**
-     *
+     * Not used
      * @param fNcRecursive
      * @return
      */
-    public boolean setRecursive(boolean fNcRecursive){
+    private boolean setRecursive(boolean fNcRecursive){
         ncRecursive = fNcRecursive;
         return ncRecursive;
     }
     
     /**
-     *
+     * Not used
      * @return
      */
-    public File getCurrentFile(){
+    private File getCurrentFile(){
         return currentFile;
     }
     
     /**
-     *
+     * Not used
      * @param ncFile
      * @return
      */
-    public File setCurrentFile(File ncFile){
+    private File setCurrentFile(File ncFile){
         currentFile = ncFile;
         return currentFile;
     }
-/**
- * This method to release functional of inteface button "Make Index" in
- * developmend code version
- * @param ncFile
- * @return 
- * @throws java.io.IOException 
- */    
-public String[] getFileDataToSwing(File ncFile) throws IOException{
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexMaker#getFilterStringsArray(java.io.File) }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexMaker#getMakeIndexForFile(java.io.File) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getAttrCurPath(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#makeIndexForFolder(java.io.File) }
+     * </ul>
+     * This method to release functional of inteface button "Make Index" in
+     * developmend code version
+     * @param ncFile
+     * @return 
+     * @throws java.io.IOException 
+     */    
+    protected String[] getFileDataToSwing(File ncFile) throws IOException{
         
         String strAbsolutlePath = NcIdxFileManager.getStrCanPathFromFile(ncFile);
         
