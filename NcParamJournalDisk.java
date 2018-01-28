@@ -35,10 +35,20 @@ import java.util.TreeMap;
 public class NcParamJournalDisk {
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcAppHelper#outPutToConsoleDiskInfo() }
+     * <li>{@link ru.newcontrol.ncfv.NcAppHelper#getNcSysProperties() }
+     * <li>{@link ru.newcontrol.ncfv.NcAppHelper#getNcDiskInfoForMaxFreeSpace() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getDefaultCfgValues() }
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#initDiskInfo() }
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getDefaultParametersForCfg() }
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getLinesParametersForUpdateCfg(ru.newcontrol.ncfv.NcParamFv) }
+     * </ul>
      * @return
      */
-    public static TreeMap<Long, NcDiskInfo> getFromJournalDiskOrCreateIt(){
+    protected static TreeMap<Long, NcDiskInfo> getFromJournalDiskOrCreateIt(){
         TreeMap<Long, NcDiskInfo> readedFromFileDiskInfo;
         if( !fileJournalDiskExist() ){
             TreeMap<Long, NcDiskInfo> sysDisk = NcDiskUtils.getDiskInfo();
@@ -55,11 +65,14 @@ public class NcParamJournalDisk {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcParamJournalDisk#getFromJournalDiskOrCreateIt() }
+     * </ul>
      * @param inFuncDiskInfo
      * @return
      */
-    public static boolean needToUpdateJournalDisk(TreeMap<Long, NcDiskInfo> inFuncDiskInfo){
+    private static boolean needToUpdateJournalDisk(TreeMap<Long, NcDiskInfo> inFuncDiskInfo){
         FileSystem fs = FileSystems.getDefault();
         long tmpTotalSpace = 0;
         boolean totalSpaceDisk = false;
@@ -85,10 +98,13 @@ public class NcParamJournalDisk {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcParamJournalDisk#getFromJournalDiskOrCreateIt() }
+     * </ul>
      * @return
      */
-    public static boolean updateRecordInJournalDisk(){
+    private static boolean updateRecordInJournalDisk(){
         TreeMap<Long, NcDiskInfo> readedFromFileDiskInfo;
         TreeMap<Long, NcDiskInfo> writeToFileDiskInfo;
         readedFromFileDiskInfo = fileJournalDiskRead();
@@ -101,11 +117,11 @@ public class NcParamJournalDisk {
     }
 
     /**
-     *
+     * Not used
      * @param addRecordToFileDiskInfo
      * @return
      */
-    public static boolean addRecordInJournalDisk(NcDiskInfo addRecordToFileDiskInfo){
+    private static boolean addRecordInJournalDisk(NcDiskInfo addRecordToFileDiskInfo){
         TreeMap<Long, NcDiskInfo> readedFromFileDiskInfo;
         TreeMap<Long, NcDiskInfo> writeToFileDiskInfo;
         writeToFileDiskInfo = new TreeMap<Long, NcDiskInfo>();
@@ -120,11 +136,14 @@ public class NcParamJournalDisk {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#validateAndApplyCfg(ru.newcontrol.ncfv.NcParamFv) }
+     * </ul>
      * @param diskUserAlias
      * @return
      */
-    public static boolean updateUserAliasInJournalDisk(TreeMap<Integer, String> diskUserAlias){
+    protected static boolean updateUserAliasInJournalDisk(TreeMap<Integer, String> diskUserAlias){
         TreeMap<Long, NcDiskInfo> readedFromFileDiskInfo;
         TreeMap<Long, NcDiskInfo> writeToFileDiskInfo;
         readedFromFileDiskInfo = fileJournalDiskRead();
@@ -150,11 +169,14 @@ public class NcParamJournalDisk {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcParamJournalDisk#updateRecordInJournalDisk() }
+     * </ul>
      * @param inFuncDiskInfo
      * @return
      */
-    public static TreeMap<Long, NcDiskInfo> appendRecordInJournalDisk(TreeMap<Long, NcDiskInfo> inFuncDiskInfo){
+    private static TreeMap<Long, NcDiskInfo> appendRecordInJournalDisk(TreeMap<Long, NcDiskInfo> inFuncDiskInfo){
         TreeMap<Long, NcDiskInfo> sysDisk = NcDiskUtils.getDiskInfo();
         TreeMap<Long, NcDiskInfo> listToWriteDiskInfo = new TreeMap<Long, NcDiskInfo>();
         TreeMap<Long, NcDiskInfo> forAppend = new TreeMap<Long, NcDiskInfo>();
@@ -200,10 +222,13 @@ public class NcParamJournalDisk {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcParamJournalDisk#getFromJournalDiskOrCreateIt() }
+     * </ul>
      * @return
      */
-    public static boolean fileJournalDiskExist(){
+    private static boolean fileJournalDiskExist(){
         String strDataInAppDir = NcIdxFileManager.getJournalDiskPath();
         File fileJornalDisk = new File(strDataInAppDir);
         if( !NcIdxFileManager.fileExistRWAccessChecker(fileJornalDisk) ){
@@ -213,11 +238,17 @@ public class NcParamJournalDisk {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcParamJournalDisk#getFromJournalDiskOrCreateIt() }
+     * <li>{@link ru.newcontrol.ncfv.NcParamJournalDisk#updateRecordInJournalDisk() }
+     * <li>{@link ru.newcontrol.ncfv.NcParamJournalDisk#addRecordInJournalDisk(ru.newcontrol.ncfv.NcDiskInfo) }
+     * <li>{@link ru.newcontrol.ncfv.NcParamJournalDisk#updateUserAliasInJournalDisk(java.util.TreeMap) }
+     * </ul>
      * @param inFuncSysDisk
      * @return
      */
-    public static int fileJournalDiskWrite(TreeMap<Long, NcDiskInfo> inFuncSysDisk){
+    private static int fileJournalDiskWrite(TreeMap<Long, NcDiskInfo> inFuncSysDisk){
         String strDataInAppDir = NcIdxFileManager.getJournalDiskPath();
         
         if( !NcDiskUtils.isDiskInfoRecordsHashTure(inFuncSysDisk) ){
@@ -239,10 +270,16 @@ public class NcParamJournalDisk {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcParamJournalDisk#getFromJournalDiskOrCreateIt() }
+     * <li>{@link ru.newcontrol.ncfv.NcParamJournalDisk#updateRecordInJournalDisk() }
+     * <li>{@link ru.newcontrol.ncfv.NcParamJournalDisk#addRecordInJournalDisk(ru.newcontrol.ncfv.NcDiskInfo) }
+     * <li>{@link ru.newcontrol.ncfv.NcParamJournalDisk#updateUserAliasInJournalDisk(java.util.TreeMap) }
+     * </ul>
      * @return
      */
-    public static TreeMap<Long, NcDiskInfo> fileJournalDiskRead(){
+    private static TreeMap<Long, NcDiskInfo> fileJournalDiskRead(){
         TreeMap<Long, NcDiskInfo> readedDiskInfo;
         String strDataInAppDir = NcIdxFileManager.getJournalDiskPath();
         File fileJornalDisk = new File(strDataInAppDir);
