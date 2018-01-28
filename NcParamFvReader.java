@@ -26,13 +26,25 @@ import java.io.ObjectInputStream;
  */
 public class NcParamFvReader {
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcEtcKeyWordListManager#getKeyWordInSearchFromFile() }
+     * <li>{@link ru.newcontrol.ncfv.NcEtcKeyWordListManager#getKeyWordOutSearchFromFile() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getIndexWorkSubDirFilesList() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getTmpIdsFile() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkInIndexFolderContent() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getCurrentWorkCfg() }
+     * </ul>
      * Read data from serializable 
      * {@link ru.newcontrol.ncfv.NcParamFv}
      * saved on the disk in *.dat file
      * and return
      * @return empty object if it not read or not set before
      */
-    public static NcParamFv readDataFromWorkCfg(){
+    protected static NcParamFv readDataFromWorkCfg(){
         NcParamFv readedDiskInfo;
         String strDataInAppDir = NcIdxFileManager.getWorkCfgPath();
         if( strDataInAppDir.length() < 1 ){

@@ -26,11 +26,16 @@ import java.io.IOException;
 public class NcParamCfgToDiskReleaser {
     
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcManageCfg#mcSearchOrSetWorkDir() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#validateAndApplyCfg(ru.newcontrol.ncfv.NcParamFv) }
+     * </ul>
      * @param strIndexPath
      * @return
      */
-    public static boolean checkOrCreateIdxDirStructure(String strIndexPath){
+    protected static boolean checkOrCreateIdxDirStructure(String strIndexPath){
         File fileWorkDir = new File(strIndexPath);
         boolean boolResultCreation = false;
         
@@ -46,12 +51,17 @@ public class NcParamCfgToDiskReleaser {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcParamCfgToDiskReleaser#checkOrCreateIdxDirStructure(java.lang.String) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getIndexSubDirectories(java.lang.String) }
+     * </ul>
      * @param existParentDir
      * @param subDirName
      * @return
      */
-    public static boolean createSubDir(File existParentDir, String subDirName){
+    protected static boolean createSubDir(File existParentDir, String subDirName){
         String strPathName = NcIdxFileManager.strPathCombiner(NcIdxFileManager.getStrCanPathFromFile(existParentDir), subDirName);
         File fileForCreateDir = new File(strPathName);
         boolean boolCheck = NcIdxFileManager.dirExistRWAccessChecker(fileForCreateDir);
@@ -62,11 +72,14 @@ public class NcParamCfgToDiskReleaser {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#validateAndApplyCfg(ru.newcontrol.ncfv.NcParamFv) }
+     * </ul>
      * @param strFileName
      * @return
      */
-    public static boolean checkOrCreateFiles(String strFileName){
+    protected static boolean checkOrCreateFiles(String strFileName){
         
         File fileForCreateDir = new File(strFileName);
         if( fileForCreateDir.isDirectory() ){
@@ -91,10 +104,13 @@ public class NcParamCfgToDiskReleaser {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#validateAndApplyCfg(ru.newcontrol.ncfv.NcParamFv) }
+     * </ul>
      * @param strFileName
      */
-    public static void getWorkFileParams(String strFileName){
+    protected static void getWorkFileParams(String strFileName){
         File fileWork = new File(strFileName);
         
         NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
@@ -114,10 +130,13 @@ public class NcParamCfgToDiskReleaser {
     }    
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#validateAndApplyCfg(ru.newcontrol.ncfv.NcParamFv) }
+     * </ul>
      * @param strIndexPath
      */
-    public static void getIdxDirStructure(String strIndexPath){
+    protected static void getIdxDirStructure(String strIndexPath){
         File fileWorkDir = new File(strIndexPath);
         
         NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()

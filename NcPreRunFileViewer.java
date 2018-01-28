@@ -94,7 +94,7 @@ public class NcPreRunFileViewer {
         if( fileCfg.exists() ){
             paramToWriteCfg = NcParamFvManager.setFileHashes(paramFromValideCfg, fileCfg);
         }
-        boolean isWrited = NcParamFvWriter.wirteDataInWorkCfg(paramToWriteCfg);
+        boolean isWrited = NcParamFvWriter.writeDataInWorkCfg(paramToWriteCfg);
         if( !isWrited ){
             NcAppHelper.appExitWithMessage("Can't write work configuration parameters");
             return new NcParamFv();

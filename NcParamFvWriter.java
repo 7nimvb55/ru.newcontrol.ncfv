@@ -25,11 +25,14 @@ import java.io.ObjectOutputStream;
  */
 public class NcParamFvWriter {
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getUpdatedAppCfg() }
+     * </ul>
      * @param paramInFuncToWriteCfg
      * @return
      */
-    public static boolean wirteDataInWorkCfg(NcParamFv paramInFuncToWriteCfg){
+    protected static boolean writeDataInWorkCfg(NcParamFv paramInFuncToWriteCfg){
         String strDataInAppDir = NcIdxFileManager.getWorkCfgPath();
         if( strDataInAppDir.length() < 1 ){
             return false;

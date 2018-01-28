@@ -50,7 +50,7 @@ public class NcPreIdxWork {
     /**
      * Check files in index subFolders
      */
-    public static void checkInIndexFolerContent(){
+    public static void checkInIndexFolderContent(){
         
         NcParamFv readedWorkCfg = NcParamFvReader.readDataFromWorkCfg();
         if( NcParamFvManager.isNcParamFvDataEmpty(readedWorkCfg) ){

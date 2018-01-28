@@ -25,11 +25,25 @@ import java.io.File;
 public class NcParamFvManager {
     
     /**
-     * 
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getIndexWorkSubDirFilesList() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getTmpIdsFile() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcManageCfg#NcManageCfg() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvWriter#writeDataInWorkCfg(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkInIndexFolderContent() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getCurrentWorkCfg() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * </ul>
      * @param inWorkCfg
      * @return 
      */
-    public static boolean isNcParamFvDataEmpty(NcParamFv inWorkCfg){
+    protected static boolean isNcParamFvDataEmpty(NcParamFv inWorkCfg){
         return (inWorkCfg.indexPath.length() == 0
         && inWorkCfg.keywordsOutOfSearch.length() == 0
         && inWorkCfg.keywordsInSearch.length() == 0
@@ -43,11 +57,20 @@ public class NcParamFvManager {
         && inWorkCfg.tmIndexSubDirs.isEmpty());
     }
     /**
-     * 
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvManager#ncParamFvDataOutPut(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvManager#checkToWrite(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvManager#checkFromRead(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvWriter#writeDataInWorkCfg(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * </ul>
      * @param inWorkCfg
      * @return 
      */
-    public static boolean isNcParamFvDataHashTrue(NcParamFv inWorkCfg){
+    protected static boolean isNcParamFvDataHashTrue(NcParamFv inWorkCfg){
         int calcHash = (""
             + inWorkCfg.indexPath
             + inWorkCfg.keywordsOutOfSearch
@@ -77,7 +100,16 @@ public class NcParamFvManager {
         
         return boolCompareResult;
     }
-    public static NcParamFv setFileHashes(NcParamFv inWorkCfg, File fileCfg){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getUpdatedAppCfg() }
+     * </ul>
+     * @param inWorkCfg
+     * @param fileCfg
+     * @return 
+     */
+    protected static NcParamFv setFileHashes(NcParamFv inWorkCfg, File fileCfg){
         String strHexMD5 = NcAppHelper.toHex(NcFileHash.MD5.checksum(fileCfg));
         String strHexSHA1 = NcAppHelper.toHex(NcFileHash.SHA1.checksum(fileCfg));
         String strHexSHA256 = NcAppHelper.toHex(NcFileHash.SHA256.checksum(fileCfg));
@@ -98,7 +130,16 @@ public class NcParamFvManager {
         
         return forOutParam;
     }
-    public static void ncParamFvDataOutPut(NcParamFv inWorkCfg){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvWriter#writeDataInWorkCfg(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * </ul>
+     * @param inWorkCfg 
+     */
+    protected static void ncParamFvDataOutPut(NcParamFv inWorkCfg){
         NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
             + NcStrVarDescription.NCPARAMFV.getStr()
             + NcStrServiceMsg.HASH_RECORD_IS.getStr()
@@ -152,7 +193,11 @@ public class NcParamFvManager {
             + NcStrVarDescription.RECORD_TIME.getStr()
             + inWorkCfg.recordTime);
     }
-    public static void checkToWrite(NcParamFv inWorkCfg){
+    /**
+     * Not used
+     * @param inWorkCfg 
+     */
+    private static void checkToWrite(NcParamFv inWorkCfg){
         boolean isHash = isNcParamFvDataHashTrue(inWorkCfg);
         String strLvl = NcStrLogMsgField.INFO.getStr();
         if( !isHash ){
@@ -165,7 +210,14 @@ public class NcParamFvManager {
         + isHash);
         
     }
-    public static void checkFromRead(NcParamFv inWorkCfg){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvReader#readDataFromWorkCfg() }
+     * </ul>
+     * @param inWorkCfg 
+     */
+    protected static void checkFromRead(NcParamFv inWorkCfg){
         boolean isHash = isNcParamFvDataHashTrue(inWorkCfg);
         String strLvl = NcStrLogMsgField.INFO.getStr();
         if( !isHash ){
