@@ -25,6 +25,12 @@ import java.io.File;
  */
 public class NcPathFromUserChecker {
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#validateAndApplyCfg(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * </ul>
      * Shortly Prefix for maximum free space disk drive letter for Windows based systems
      * Method for check input string to any mask matches and append prefix with
      * letter of disk drive with maximum of free space readable and writable disk
@@ -34,7 +40,7 @@ public class NcPathFromUserChecker {
      * @param strDefault
      * @return string of path for potential work index directory
      */
-    public static String strInputAppWorkDirFromUser(String strInput, String strDefault){
+    protected static String strInputAppWorkDirFromUser(String strInput, String strDefault){
         String strOuput = strInputPathFormatFilter(strInput, strDefault);
         if( strPathWinNetworkStart(strOuput) ){
             if( !NcAppHelper.isWindows() ){
@@ -74,11 +80,14 @@ public class NcPathFromUserChecker {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#validateAndApplyCfg(ru.newcontrol.ncfv.NcParamFv) }
+     * </ul>
      * @param strDefault
      * @return
      */
-    public static String strInputAppWorkDirDefault(String strDefault){
+    protected static String strInputAppWorkDirDefault(String strDefault){
         String strOuput = strInputPathFormatFilterForDefault(strDefault);
         if( strPathWinNetworkStart(strOuput) ){
             if( !NcAppHelper.isWindows() ){
@@ -117,6 +126,12 @@ public class NcPathFromUserChecker {
         return strOuput;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#validateAndApplyCfg(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * </ul>
      * Shortly Prefix for default application work directory with /files in subDir
      * Method for check input string to any mask matches and append prefix with
      * letter of disk drive and path for application work sub directory /files
@@ -126,7 +141,7 @@ public class NcPathFromUserChecker {
      * @param strDefault
      * @return string of path for potential files with search condition data
      */
-    public static String strInputAppWorkFileFromUser(String strInput, String strDefault){
+    protected static String strInputAppWorkFileFromUser(String strInput, String strDefault){
         String strOuput = strInputPathFormatFilter(strInput, strDefault);
         if( strPathWinNetworkStart(strOuput) ){
             if( !NcAppHelper.isWindows() ){
@@ -166,11 +181,14 @@ public class NcPathFromUserChecker {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#validateAndApplyCfg(ru.newcontrol.ncfv.NcParamFv) }
+     * </ul>
      * @param strDefault
      * @return
      */
-    public static String strInputAppWorkFileDefault(String strDefault){
+    protected static String strInputAppWorkFileDefault(String strDefault){
         String strOuput = strInputPathFormatFilterForDefault(strDefault);
         if( strPathWinNetworkStart(strOuput) ){
             if( !NcAppHelper.isWindows() ){
@@ -209,6 +227,11 @@ public class NcPathFromUserChecker {
         return strOuput;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkFileFromUser(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkFileDefault(java.lang.String) }
+     * </ul>
      * Function add for input Path string prefix, for example in value your input:
      * some_file.name, this file have not absolutly path, this function add
      * /work/path/to/this_app/files/some_file.name, for Windows
@@ -216,7 +239,7 @@ public class NcPathFromUserChecker {
      * @param strInput
      * @return 
      */
-    public static String strInputAddPrefixWorkAppDir(String strInput){
+    private static String strInputAddPrefixWorkAppDir(String strInput){
         String strAppPath = NcIdxFileManager.getAppWorkDirStrPath();
         if( strAppPath.length() == 0 ){
             return strInput;
@@ -226,11 +249,11 @@ public class NcPathFromUserChecker {
     }
 
     /**
-     *
+     * Not used
      * @param strInput
      * @return
      */
-    public static String strInputAddPrefixWorkAppRoot(String strInput){
+    private static String strInputAddPrefixWorkAppRoot(String strInput){
         File strAppPath = NcIdxFileManager.getAppWorkDirFile();
         if( strAppPath == null ){
             return strInput;
@@ -240,11 +263,15 @@ public class NcPathFromUserChecker {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkDirFromUser(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkDirDefault(java.lang.String) }
+     * </ul>
      * @param strInput
      * @return
      */
-    public static String strInputAddPrefixMaxFreeSpaceRoot(String strInput){
+    private static String strInputAddPrefixMaxFreeSpaceRoot(String strInput){
         long longFreeSpace = 0;
         String strAppRoot = "";
         for( File itemFile : File.listRoots() ){
@@ -258,6 +285,11 @@ public class NcPathFromUserChecker {
         return NcIdxFileManager.strPathCombiner(strAppRoot, strInput);
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkDirFromUser(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkFileFromUser(java.lang.String, java.lang.String) }
+     * </ul>
      * Function for read input string format, and return default value for
      * filtered strings with not supported masks in the string content
      * @param strInput
@@ -265,7 +297,7 @@ public class NcPathFromUserChecker {
      * @param strDefault
      * @return 
      */
-    public static String strInputPathFormatFilter(String strInput, String strInputDefault){
+    private static String strInputPathFormatFilter(String strInput, String strInputDefault){
         String strDefault = strInputPathFormatFilterForDefault(strInputDefault);
         if( strDefault.equalsIgnoreCase(strInput)){
             NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
@@ -317,11 +349,16 @@ public class NcPathFromUserChecker {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkDirDefault(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkFileDefault(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputPathFormatFilter(java.lang.String, java.lang.String) }
+     * </ul>
      * @param strDefault
      * @return
      */
-    public static String strInputPathFormatFilterForDefault(String strDefault){
+    private static String strInputPathFormatFilterForDefault(String strDefault){
 
         if( !strPathValidContinue(strDefault) ){
             String strGenerateErrorVal = NcIdxFileManager.strPathCombiner(
@@ -379,6 +416,11 @@ public class NcPathFromUserChecker {
         return strDefault;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputPathFormatFilter(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputPathFormatFilterForDefault(java.lang.String) }
+     * </ul>
      * Return true for not Windows system and Path string starts with root for
      * length > 2 or root and dot for length > 3, next symbol after string starn may be
      * digit or alfabettical symbols
@@ -386,7 +428,7 @@ public class NcPathFromUserChecker {
      * @return true in not Windows, for "/[0-9a-zA-Z]" or "/.[0-9a-zA-Z]"
      * in other string start, return false
      */
-    public static boolean strPathRootStartForNotWindows(String inFuncStrPath){
+    private static boolean strPathRootStartForNotWindows(String inFuncStrPath){
         if( NcAppHelper.isWindows() ){
             return false;
         }
@@ -409,11 +451,17 @@ public class NcPathFromUserChecker {
 
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkDirFromUser(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkDirDefault(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkFileFromUser(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkFileDefault(java.lang.String) }
+     * </ul>
      * @param inFuncStrPath
      * @return
      */
-    public static boolean strPathWinNetworkStart(String inFuncStrPath){
+    private static boolean strPathWinNetworkStart(String inFuncStrPath){
         String strSubStart = inFuncStrPath.toUpperCase().substring(0, 3);
         if( strSubStart.substring(0, 2).equalsIgnoreCase("\\\\")
                 && strSubStart.substring(2, 3).matches("[0-9a-zA-Z]") ){
@@ -423,11 +471,17 @@ public class NcPathFromUserChecker {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkDirFromUser(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkDirDefault(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkFileFromUser(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkFileDefault(java.lang.String) }
+     * </ul>
      * @param inFuncStrPath
      * @return
      */
-    public static boolean strPathWinDiskLetterStart(String inFuncStrPath){
+    private static boolean strPathWinDiskLetterStart(String inFuncStrPath){
         String strSubStart = inFuncStrPath.toUpperCase().substring(0, 3);
         if( strSubStart.substring(0, 1).matches("[a-zA-Z]")
                 && strSubStart.substring(1, 3).equalsIgnoreCase(":\\") ){
@@ -441,11 +495,17 @@ public class NcPathFromUserChecker {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkDirFromUser(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkDirDefault(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkFileFromUser(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkFileDefault(java.lang.String) }
+     * </ul>
      * @param inFuncStrPath
      * @return
      */
-    public static boolean strPathRootStart(String inFuncStrPath){
+    private static boolean strPathRootStart(String inFuncStrPath){
         String strSubStart = inFuncStrPath.toUpperCase().substring(0, 3);
         if( strSubStart.substring(0, 1).equalsIgnoreCase("/")
                 && strSubStart.substring(1, 2).matches("[0-9a-zA-Z]") ){
@@ -455,11 +515,17 @@ public class NcPathFromUserChecker {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkDirFromUser(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkDirDefault(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkFileFromUser(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkFileDefault(java.lang.String) }
+     * </ul>
      * @param inFuncStrPath
      * @return
      */
-    public static boolean strPathWinSubDirStart(String inFuncStrPath){
+    private static boolean strPathWinSubDirStart(String inFuncStrPath){
         String strSubStart = inFuncStrPath.toUpperCase().substring(0, 3);
         if( strSubStart.substring(0, 1).equalsIgnoreCase("\\")
                 && strSubStart.substring(1, 2).matches("[0-9a-zA-Z]") ){
@@ -469,11 +535,17 @@ public class NcPathFromUserChecker {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkDirFromUser(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkDirDefault(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkFileFromUser(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputAppWorkFileDefault(java.lang.String) }
+     * </ul>
      * @param inFuncStrPath
      * @return
      */
-    public static boolean strPathSymOrDigitsStart(String inFuncStrPath){
+    private static boolean strPathSymOrDigitsStart(String inFuncStrPath){
         String strSubStart = inFuncStrPath.toUpperCase().substring(0, 3);
         if( strSubStart.substring(0, 1).matches("[0-9a-zA-Z]")
                 && strSubStart.substring(1, 2).matches("[0-9a-zA-Z]")
@@ -503,13 +575,18 @@ public class NcPathFromUserChecker {
         return false;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputPathFormatFilter(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputPathFormatFilterForDefault(java.lang.String) }
+     * </ul>
      * If input string in first three symblos has function mask content, then function
      * return true
      * @param inFuncStrPath
      * @return true if three symbols of start string in mask
      * other string return false
      */
-    public static boolean strPathValidStart(String inFuncStrPath){
+    private static boolean strPathValidStart(String inFuncStrPath){
         String strSubStart = inFuncStrPath.toUpperCase().substring(0, 3);
         if( strSubStart.substring(0, 1).matches("[a-zA-Z]")
                 && strSubStart.substring(1, 3).equalsIgnoreCase(":\\") ){
@@ -560,13 +637,18 @@ public class NcPathFromUserChecker {
         return false;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputPathFormatFilter(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputPathFormatFilterForDefault(java.lang.String) }
+     * </ul>
      * Check for input String Path in first tree symbols have not unmask characters
      * 
      * @param inFuncStrPath
      * @return true if mask symbols not found
      * false if one of feltered mask have matches in the string above 3 positions
      */
-    public static boolean strPathValidContinue(String inFuncStrPath){
+    private static boolean strPathValidContinue(String inFuncStrPath){
         if( inFuncStrPath.length() < 3 ){
             return true;
         }
