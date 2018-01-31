@@ -26,11 +26,14 @@ import javax.swing.border.Border;
  * @author wladimirowichbiaran
  */
 public class NcSwPanelPageEnd {
-        /**
-     *
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#createGui() }
+     * </ul>
      * @return
      */
-    public static JPanel getPanel(NcSwGUIComponentStatus lComp){
+    protected static JPanel getPanel(NcSwGUIComponentStatus lComp){
         JPanel southPanel = new JPanel();
         String componentPath = NcStrGUIComponent.SMAIN.getStr()
             + NcStrGUIComponent.SJFRAME.getStr()
@@ -47,6 +50,10 @@ public class NcSwPanelPageEnd {
         return southPanel;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelPageEnd#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * LogAppLogicRecord (LALR) - toLALR(class MethodName)
      * make record in log file
      */

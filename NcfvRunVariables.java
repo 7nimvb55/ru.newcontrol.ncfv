@@ -43,61 +43,61 @@ public class NcfvRunVariables {
     
     private static boolean boolLALRNcParamFvReaderReadDataFromWorkCfg = true;
     
-    public static boolean getIncludeFile(){
+    protected static boolean getIncludeFile(){
         return outWithFileName;
     }
-    public static boolean getTraceWithPrintFunc(){
+    protected static boolean getTraceWithPrintFunc(){
         return outWithPrintFunc;
     }
-    public static boolean getWithTrace(){
+    protected static boolean getWithTrace(){
         return outWithTrace;
     }
-    public static boolean getStage(){
+    protected static boolean getStage(){
         return devStage;
     }
-    public static int getLogLinesCount(){
+    protected static int getLogLinesCount(){
         return LOGLINES;
     }
-    public static boolean isOutToLogFile(){
+    protected static boolean isOutToLogFile(){
         return outToLogFile;
     }
-    public static boolean isOutToLogFileIncludeFile(){
+    protected static boolean isOutToLogFileIncludeFile(){
         return outToLogFileName;
     }
-    public static boolean isOutToLogFileTraceWithPrintFunc(){
+    protected static boolean isOutToLogFileTraceWithPrintFunc(){
         return outToLogPrintFunc;
     }
-    public static boolean isOutToLogFileWithTrace(){
+    protected static boolean isOutToLogFileWithTrace(){
         return outToLogWithTrace;
     }
-    public static boolean isOutToLogNewRecordAppend(){
+    protected static boolean isOutToLogNewRecordAppend(){
         return outToLogNewRecordAppend;
     }
-    public static boolean isLALRMakeMain(){
+    protected static boolean isLALRMakeMain(){
         return boolLALRMakeMain;
     }
-    public static boolean isLALRNcSwIdxMngAppCreateGui(){
+    protected static boolean isLALRNcSwIdxMngAppCreateGui(){
         return boolLALRNcSwIdxMngAppCreateGui;
     }
-    public static boolean isLALRNcSwMainMenuMainMenu(){
+    protected static boolean isLALRNcSwMainMenuMainMenu(){
         return boolLALRNcSwMainMenuMainMenu;
     }
-    public static boolean isLALRNcSwPanelPageStartgetPanel(){
+    protected static boolean isLALRNcSwPanelPageStartgetPanel(){
         return boolLALRNcSwPanelPageStartgetPanel;
     }
-    public static boolean isLALRNcSwPanelPageEndgetPanel(){
+    protected static boolean isLALRNcSwPanelPageEndgetPanel(){
         return boolLALRNcSwPanelPageEndgetPanel;
     }
-    public static boolean isLALRNcSwPanelLineStartgetPanel(){
+    protected static boolean isLALRNcSwPanelLineStartgetPanel(){
         return boolLALRNcSwPanelLineStartgetPanel;
     }
-    public static boolean isLALRNcSwPanelLineEndgetPanel(){
+    protected static boolean isLALRNcSwPanelLineEndgetPanel(){
         return boolLALRNcSwPanelLineEndgetPanel;
     }
-    public static boolean isLALRNcSwPanelCentergetPanel(){
+    protected static boolean isLALRNcSwPanelCentergetPanel(){
         return boolLALRNcSwPanelCentergetPanel;
     }
-    public static boolean isLALRNcParamFvReaderReadDataFromWorkCfg(){
+    protected static boolean isLALRNcParamFvReaderReadDataFromWorkCfg(){
         return boolLALRNcParamFvReaderReadDataFromWorkCfg;
     }
 }

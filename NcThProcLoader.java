@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 package ru.newcontrol.ncfv;
-import java.io.IOException;
 /**
  * Developed based on the publications found on the Internet at
  * http://www.skipy.ru/technics/gui_sync.html
@@ -26,17 +25,23 @@ public class NcThProcLoader implements Runnable, NcThProcLoaderInterface {
     private boolean executed = false;
     private NcThProcGUICallbackInterface proxyInstGuiCB;
     private boolean canceled = false;
-    
-    public NcThProcLoader(){
+    /**
+     * Not used
+     */
+    protected NcThProcLoader(){
         
     }
-
+    /**
+     * Not used
+     */
     @Override
     public void run() {
         
         
     }
-
+    /**
+     * Not used
+     */
     @Override
     public synchronized void execute() {
         if( executed ){
@@ -47,25 +52,37 @@ public class NcThProcLoader implements Runnable, NcThProcLoaderInterface {
         Thread t = new Thread(this, "NcThProcAt-" + nowTime);
         t.start();
     }
-
+    /**
+     * Not used
+     */
     @Override
     public synchronized void cancel() {
         canceled = true;
     }
+    /**
+     * Not used
+     * @return 
+     */
     public synchronized boolean isCanceled(){
         return canceled;
     }
-
+    /**
+     * Not used
+     */
     @Override
     public synchronized void state() {
         
     }
-
+    /**
+     * Not used
+     */
     @Override
     public synchronized void error() {
         
     }
-
+    /**
+     * Not used
+     */
     @Override
     public synchronized void stats() {
         

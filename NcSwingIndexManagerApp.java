@@ -34,17 +34,20 @@ public class NcSwingIndexManagerApp {
     
 
     /**
-     *
+     * Not used
      */
-    public NcSwingIndexManagerApp() {
+    protected NcSwingIndexManagerApp() {
         
 
     }
     
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * </ul>
      */
-    public static void NcRunSIMA(){
+    protected static void NcRunSIMA(){
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 try {
@@ -62,9 +65,12 @@ public class NcSwingIndexManagerApp {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#NcRunSIMA() }
+     * </ul>
      */
-    public static void createGui(){
+    private static void createGui(){
         NcSwGUIComponentStatus listComponents = new NcSwGUIComponentStatus();
         
         JFrame frame = new JFrame(NcStrGUILabel.TITLE_APP.getStr());
@@ -102,6 +108,10 @@ public class NcSwingIndexManagerApp {
         toLALRendOfCreateGUI();
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#createGui() }
+     * </ul>
      * LogAppLogicRecord (LALR) - toLALR(class MethodName)
      * make record in log file
      */
@@ -116,6 +126,10 @@ public class NcSwingIndexManagerApp {
         }
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#createGui() }
+     * </ul>
      * LogAppLogicRecord (LALR) - toLALR(class MethodName)
      * make record in log file
      */
@@ -130,6 +144,10 @@ public class NcSwingIndexManagerApp {
         }
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#createGui() }
+     * </ul>
      * LogAppLogicRecord (LALR) - toLALR(class MethodName)
      * make record in log file
      */

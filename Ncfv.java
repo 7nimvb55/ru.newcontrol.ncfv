@@ -41,7 +41,7 @@ public class Ncfv {
      *  "-console"
      */
     
-    public static void main(String[] args) {
+    protected static void main(String[] args) {
         
         if (args.length == 0){
             isRunInSwing = true;
@@ -168,9 +168,13 @@ public class Ncfv {
         }
     }
 
-/**
- * Method for putput in console "help to usage" messages
- */    
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * </ul>
+     * Method for putput in console "help to usage" messages
+     */    
     private static void consoleOutHelpUsageMessage(){
         NcAppHelper.outMessageToConsole("Help to usage:");
         NcAppHelper.outMessageToConsole("Run this Application without parameters in command line to");
@@ -183,6 +187,9 @@ public class Ncfv {
         NcAppHelper.outMessageToConsole(" mode see Aplication code, or wait for changes this messages");
         NcAppHelper.outMessageToConsole(" in new releases");
     }
+    /**
+     * Not used
+     */
     private static void consoleOutHelpUsageMessageForDev(){
         NcAppHelper.outMessageToConsole("Help to usage:");
         NcAppHelper.outMessageToConsole("Run this Application without parameters in command line to");
@@ -194,24 +201,35 @@ public class Ncfv {
         NcAppHelper.outMessageToConsole(" in new releases");
     }
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#getMessageRunIn() }
+     * <li>{@link ru.newcontrol.ncfv.NcAppHelper#outMessage(java.lang.String) }
+     * </ul>
      * @return
      */
-    public static boolean getRunIsSwing(){
+    protected static boolean getRunIsSwing(){
         return isRunInSwing;
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * </ul>
      * @return
      */
-    public static String getMessageRunIn(){
+    private static String getMessageRunIn(){
         if(getRunIsSwing()){
             return "Application runned in window mode provided by Swing";
         }
         return "Application runned in console mode";
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * </ul>
      * toLogAppLogicRecord(LALR) - toLALRMethodName make record in log file
      * first
      * second

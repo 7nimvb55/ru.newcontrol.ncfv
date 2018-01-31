@@ -31,6 +31,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NcThProcTypeDetectInterface {
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcThProcInvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[]) }
+     * </ul>
      * Process types defined in the
      * {@link ru.newcontrol.ncfv.NcThProcType}
      * @return type of process 

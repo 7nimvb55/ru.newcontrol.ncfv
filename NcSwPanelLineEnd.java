@@ -34,10 +34,13 @@ import javax.swing.border.Border;
  */
 public class NcSwPanelLineEnd {
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#createGui() }
+     * </ul>
      * @return
      */
-    public static JPanel getPanel(NcSwGUIComponentStatus lComp){
+    protected static JPanel getPanel(NcSwGUIComponentStatus lComp){
         String[] forTextToolTip = {
             "For search with keyword, input it and press \"+\" Button",
             "For search with out keyword, input it and press \"+\" Button",
@@ -108,10 +111,13 @@ public class NcSwPanelLineEnd {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelLineEnd#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * @return
      */
-    public static JPanel getAndOrButtonPanel(){
+    private static JPanel getAndOrButtonPanel(){
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         buttonPanel.add(NcSwGUIComponent.createButton("&&",null,""));
@@ -120,10 +126,13 @@ public class NcSwPanelLineEnd {
     }    
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelLineEnd#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * @return
      */
-    public static JPanel getAddDelButtonPanel(){
+    private static JPanel getAddDelButtonPanel(){
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         buttonPanel.add(NcSwGUIComponent.createButton("+",null,""));
@@ -131,8 +140,13 @@ public class NcSwPanelLineEnd {
         return buttonPanel;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelLineEnd#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * LogAppLogicRecord (LALR) - toLALR(class MethodName)
      * make record in log file
+     * @return
      */
     private static void toLALRgetPanel(){
         if( NcfvRunVariables.isLALRNcSwPanelLineEndgetPanel() ){

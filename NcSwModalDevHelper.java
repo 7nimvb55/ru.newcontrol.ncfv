@@ -29,19 +29,40 @@ import javax.swing.JTable;
  * @author wladimirowichbiaran
  */
 public class NcSwModalDevHelper {
-    public static void showModalEnvironment(JFrame mainGUI){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMenuItems#getEnvironmentViewer(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @param mainGUI 
+     */
+    protected static void showModalEnvironment(JFrame mainGUI){
         String strTitle = "Environment variables";
         JComponent[] forShow = new JComponent[1];
         forShow[0] = getEnvVarTable();
         
         JOptionPane.showMessageDialog(mainGUI, forShow, strTitle, JOptionPane.INFORMATION_MESSAGE);
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalDevHelper#showModalEnvironment(javax.swing.JFrame) }
+     * </ul>
+     * @return 
+     */
     private static JComponent getEnvVarTable(){
         JTable toViewTable = getEnvArrStr();
         JScrollPane toRetPane = new JScrollPane(toViewTable);
         toViewTable.setFillsViewportHeight(true);
         return toRetPane;
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalDevHelper#getEnvVarTable() }
+     * </ul>
+     * @return 
+     */
     private static JTable getEnvArrStr(){
         String[] columnName = {"Property", "Value"};
         
@@ -59,18 +80,39 @@ public class NcSwModalDevHelper {
         JTable toRetTable = new JTable(toRetStr, columnName);
         return toRetTable;
     }
-    public static void showModalProperties(JFrame mainGUI){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMenuItems#getPropertiesViewer(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @param mainGUI 
+     */
+    protected static void showModalProperties(JFrame mainGUI){
         String strTitle = "System properties";
         JComponent[] forShow = new JComponent[1];
         forShow[0] = getPropVarTable();
         JOptionPane.showMessageDialog(mainGUI, forShow, strTitle, JOptionPane.INFORMATION_MESSAGE);
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalDevHelper#showModalProperties(javax.swing.JFrame) }
+     * </ul>
+     * @return 
+     */
     private static JComponent getPropVarTable(){
         JTable toViewTable = getPropArrStr();
         JScrollPane toRetPane = new JScrollPane(toViewTable);
         toViewTable.setFillsViewportHeight(true);
         return toRetPane;
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalDevHelper#getPropVarTable() }
+     * </ul>
+     * @return 
+     */
     private static JTable getPropArrStr(){
         String[] columnName = {"Property", "Value"};
         

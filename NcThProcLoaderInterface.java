@@ -24,22 +24,27 @@ package ru.newcontrol.ncfv;
  */
 public interface NcThProcLoaderInterface {
     /**
+     * Not used
      * Loading operation in new Thread for run
      */
     void execute();
     /**
+     * Not used
      * Cancel run thread
      */
     void cancel();
     /**
+     * Not used
      * Get status of current operation if avalable
      */
     void state();
     /**
+     * Not used
      * Get errors in runned process if generated
      */
     void error();
     /**
+     * Not used
      * Get statistics of executed operations if avalable
      */
     void stats();

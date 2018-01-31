@@ -38,8 +38,15 @@ import javax.swing.tree.DefaultMutableTreeNode;
  */
 public class NcSwModalLogViewer {
     private static String modalTitle = "View log file";
-    
-    public static JDialog getDialogLogViewer(NcSwGUIComponentStatus lComp){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMenuItems#getLogFileReader(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @param lComp
+     * @return 
+     */
+    protected static JDialog getDialogLogViewer(NcSwGUIComponentStatus lComp){
         String componentPath = NcStrGUIComponent.SMAIN.getStr()
             + NcStrGUIComponent.SJFRAME.getStr();
         JFrame mainFrame = (JFrame) lComp.getComponentByPath(componentPath);
@@ -62,6 +69,14 @@ public class NcSwModalLogViewer {
         modalWindow.repaint();
         return modalWindow;
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getDialogLogViewer(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @param compLocalIndex
+     * @return 
+     */
     private static JPanel getPanelCenter(NcSwGUIComponentStatus compLocalIndex){
         JPanel modalPanelInFunc = new JPanel();
         compLocalIndex.putComponents("JPanel-PanelCenter", modalPanelInFunc);
@@ -69,6 +84,15 @@ public class NcSwModalLogViewer {
         modalPanelInFunc.add(treeScroll);
         return modalPanelInFunc;
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getPanelCenter(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getButtonUpdate(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @param compLocalIndex
+     * @return 
+     */
     private static JScrollPane getScrolledTree(NcSwGUIComponentStatus compLocalIndex){
         DefaultMutableTreeNode treeTop = 
                 new DefaultMutableTreeNode("Log file contained:");
@@ -78,6 +102,14 @@ public class NcSwModalLogViewer {
         compLocalIndex.putComponents("JScrollPane-treeView", treeView);
         return treeView;
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getScrolledTree(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @param forTreeTop
+     * @return 
+     */
     private static JTree getTreeNodes(DefaultMutableTreeNode forTreeTop){
         TreeMap<Long, String> strLogReaded = new TreeMap<Long, String>();
         File logFile = NcLogFileManager.getLogFile();
@@ -153,9 +185,25 @@ public class NcSwModalLogViewer {
         forTreeTop.add(strReadedParent);
         return new JTree(forTreeTop);
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getTreeNodes(javax.swing.tree.DefaultMutableTreeNode) }
+     * </ul>
+     * @param strNodeName
+     * @return 
+     */
     private static DefaultMutableTreeNode getNN(String strNodeName){
         return new DefaultMutableTreeNode(strNodeName);
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getDialogLogViewer(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @param compLocalIndex
+     * @return 
+     */
     private static JPanel getPanelPageStart(NcSwGUIComponentStatus compLocalIndex){
         JPanel modalPanelInFunc = new JPanel();
         JTextField textSearch = new JTextField();
@@ -167,12 +215,28 @@ public class NcSwModalLogViewer {
         modalPanelInFunc.add(buttonUpdate);
         return modalPanelInFunc;
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getDialogLogViewer(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @param modalWindowInFunc
+     * @return 
+     */
     private static JPanel getPanelPageEnd(JDialog modalWindowInFunc){
         JPanel modalPanelInFunc = new JPanel();
         JButton buttonClose = getButtonClose(modalWindowInFunc);
         modalPanelInFunc.add(buttonClose);
         return modalPanelInFunc;
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getPanelPageEnd(javax.swing.JDialog) }
+     * </ul>
+     * @param modalWindowForButton
+     * @return 
+     */
     private static JButton getButtonClose(JDialog modalWindowForButton){
         JButton buttonClose = new JButton("Close");
         buttonClose.addActionListener(new ActionListener(){
@@ -182,6 +246,13 @@ public class NcSwModalLogViewer {
         });
         return buttonClose;
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getPanelPageStart(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @return 
+     */
     private static JButton getButtonSearch(){
         JButton buttonSearch = new JButton("Search");
         buttonSearch.addActionListener(new ActionListener(){
@@ -191,6 +262,14 @@ public class NcSwModalLogViewer {
         });
         return buttonSearch;
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getPanelPageStart(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @param compLocalIndex
+     * @return 
+     */
     private static JButton getButtonUpdate(NcSwGUIComponentStatus compLocalIndex){
         JButton buttonSearch = new JButton("Update");
         buttonSearch.addActionListener(new ActionListener(){

@@ -29,11 +29,24 @@ import javax.swing.SwingUtilities;
 public class NcThProcInvocationHandler implements InvocationHandler {
     private Object invocationResult = null;
     private NcThProcGUICallbackInterface ui;
-    
-    public NcThProcInvocationHandler(NcThProcGUICallbackInterface ui){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwThreadManager#getProxyInstanceGUICallback() }
+     * </ul>
+     * @param ui 
+     */
+    protected NcThProcInvocationHandler(NcThProcGUICallbackInterface ui){
         this.ui = ui;
     }
-    
+    /**
+     * Not used
+     * @param proxy
+     * @param method
+     * @param args
+     * @return
+     * @throws Throwable 
+     */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         NcThProcTypeDetectInterface typeProc = method.getAnnotation(NcThProcTypeDetectInterface.class);

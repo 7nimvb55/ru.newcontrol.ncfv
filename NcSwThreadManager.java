@@ -16,7 +16,6 @@
 package ru.newcontrol.ncfv;
 
 import java.lang.reflect.Proxy;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
@@ -26,8 +25,15 @@ import javax.swing.table.TableModel;
  * @author wladimirowichbiaran
  */
 public class NcSwThreadManager {
-     
-    public static void setToViewSearchedResult(NcSwGUIComponentStatus lComp, String strSrch){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelPageStart#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @param lComp
+     * @param strSrch 
+     */
+    protected static void setToViewSearchedResult(NcSwGUIComponentStatus lComp, String strSrch){
         String componentPath = NcStrGUIComponent.SMAIN.getStr()
             + NcStrGUIComponent.SJFRAME.getStr()
             + NcStrGUIComponent.SJPANEL.getStr()
@@ -49,7 +55,11 @@ public class NcSwThreadManager {
         guiTable.setModel(locNewTableModel);
         centerPanel.repaint();
     }
-    public static NcThProcGUICallbackInterface getProxyInstanceGUICallback(){
+    /**
+     * Not used
+     * @return 
+     */
+    private static NcThProcGUICallbackInterface getProxyInstanceGUICallback(){
         
         NcThProcGUICallback cbLoc = new NcThProcGUICallback();
         NcThProcInvocationHandler ncInvHandler = 

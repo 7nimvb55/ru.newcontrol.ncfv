@@ -24,11 +24,19 @@ package ru.newcontrol.ncfv;
  */
 public enum NcThProcType {
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcThProcInvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[]) }
+     * </ul>
      * Async exec provided by
      * {@link javax.swing.SwingUtilities#invokeLater(java.lang.Runnable)}
      */
     ASYNC,
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcThProcTypeDetectInterface#this}
+     * </ul>
      * Sync exec provided by
      * {@link javax.swing.SwingUtilities#invokeAndWait(java.lang.Runnable)}
      */

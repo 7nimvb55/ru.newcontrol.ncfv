@@ -21,7 +21,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
@@ -32,11 +31,14 @@ import javax.swing.border.Border;
  * @author wladimirowichbiaran
  */
 public class NcSwPanelPageStart {
-        /**
-     *
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#createGui() }
+     * </ul>
      * @return
      */
-    public static JPanel getPanel(NcSwGUIComponentStatus lComp){
+    protected static JPanel getPanel(NcSwGUIComponentStatus lComp){
         JPanel northPanel = new JPanel();
         String componentPath = NcStrGUIComponent.SMAIN.getStr()
             + NcStrGUIComponent.SJFRAME.getStr()
@@ -65,6 +67,10 @@ public class NcSwPanelPageStart {
         return northPanel;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelPageStart#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * LogAppLogicRecord (LALR) - toLALR(class MethodName)
      * make record in log file
      */

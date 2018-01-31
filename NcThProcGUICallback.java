@@ -15,9 +15,6 @@
  */
 package ru.newcontrol.ncfv;
 
-import javax.swing.JPanel;
-import javax.swing.JTable;
-
 /**
  * Developed based on the publications found on the Internet at
  * http://www.skipy.ru/technics/gui_sync.html
@@ -27,36 +24,54 @@ import javax.swing.JTable;
  */
 public class NcThProcGUICallback implements NcThProcGUICallbackInterface {
     
-    
-    public NcThProcGUICallback(){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwThreadManager#getProxyInstanceGUICallback() }
+     * </ul>
+     */
+    protected NcThProcGUICallback(){
         
     }
-
+    /**
+     * Not used
+     */
     @Override
     public void appendSrchResult() {
         
     }
-
+    /**
+     * Not used
+     */
     @Override
     public void setSrcResult() {
         
     }
-
+    /**
+     * Not used
+     */
     @Override
     public void showProgressSwitch() {
         
     }
-
+    /**
+     * Not used
+     */
     @Override
     public void startSrch() {
         
     }
-
+    /**
+     * Not used
+     */
     @Override
     public void stopSrch() {
         
     }
-
+    /**
+     * Not used
+     * @param strMessage 
+     */
     @Override
     public void showError(String strMessage) {
         

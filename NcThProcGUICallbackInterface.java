@@ -23,21 +23,35 @@ package ru.newcontrol.ncfv;
  * @author wladimirowichbiaran
  */
 public interface NcThProcGUICallbackInterface {
+    /**
+     * Not used
+     */
     @NcThProcTypeDetectInterface
     void appendSrchResult();
-    
+    /**
+     * Not used
+     */
     @NcThProcTypeDetectInterface
     void setSrcResult();
-    
+    /**
+     * Not used
+     */
     @NcThProcTypeDetectInterface
     void showProgressSwitch();
-    
+    /**
+     * Not used
+     */
     @NcThProcTypeDetectInterface
     void startSrch();
-    
+    /**
+     * Not used
+     */
     @NcThProcTypeDetectInterface
     void stopSrch();
-    
+    /**
+     * Not used
+     * @param strMessage 
+     */
     @NcThProcTypeDetectInterface(NcThProcType.SYNC)
     void showError(String strMessage);
 }

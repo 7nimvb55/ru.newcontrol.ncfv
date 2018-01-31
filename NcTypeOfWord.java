@@ -59,19 +59,27 @@ public enum NcTypeOfWord {
     }
     
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcTypeOfWord#getStorageWordExistFileName(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcTypeOfWord#getStorageWordByIdFileName(java.lang.String, java.lang.String, long) }
+     * </ul>
      * @return
      */
-    public String getName(){
+    protected String getName(){
         return filtername;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxStorageWordManager#getStorageWordExistFiles(java.lang.String, java.lang.String, java.lang.String) }
+     * </ul>
      * Return TreeMap<Long, File> structure for words and heximal view of words, existing in index sub dirictories
      * @param wordInHex
      * @param word
      * @return 
      */
-    public TreeMap<Long, File> getStorageWordExistFileName(String wordInHex, String word){
+    protected TreeMap<Long, File> getStorageWordExistFileName(String wordInHex, String word){
         
         TreeMap<Integer, File> listDirs = NcIdxFileManager.getIndexWorkSubDirFilesList();
         String strPathSubDir = NcIdxFileManager.strPathCombiner(NcIdxFileManager.getStrCanPathFromFile(listDirs.get("/sw".hashCode())), getName());
@@ -98,13 +106,17 @@ public enum NcTypeOfWord {
         return listFiles;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxStorageWordManager#getStorageWordByIdFile(java.lang.String, java.lang.String, java.lang.String, long) }
+     * </ul>
      * Return file name contained record id in Storage word for word, heximal view for word, and id of record
      * @param wordInHex
      * @param word
      * @param recordId
      * @return 
      */
-    public String getStorageWordByIdFileName(String wordInHex, String word, long recordId){
+    protected String getStorageWordByIdFileName(String wordInHex, String word, long recordId){
         TreeMap<Integer, File> listDirs = NcIdxFileManager.getIndexWorkSubDirFilesList();
         String strPathSubDir = NcIdxFileManager.strPathCombiner(NcIdxFileManager.getStrCanPathFromFile(listDirs.get("/sw".hashCode())), getName());
         File filePathSubDir = new File(strPathSubDir);

@@ -28,11 +28,14 @@ import javax.swing.border.Border;
  * @author wladimirowichbiaran
  */
 public class NcSwPanelLineStart {
-        /**
-     *
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#createGui() }
+     * </ul>
      * @return
      */
-    public static JPanel getPanel(NcSwGUIComponentStatus lComp){
+    protected static JPanel getPanel(NcSwGUIComponentStatus lComp){
         JPanel westPanel = new JPanel();
         String componentPath = NcStrGUIComponent.SMAIN.getStr()
             + NcStrGUIComponent.SJFRAME.getStr()
@@ -52,6 +55,10 @@ public class NcSwPanelLineStart {
         return westPanel;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelLineStart#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * LogAppLogicRecord (LALR) - toLALR(class MethodName)
      * make record in log file
      */

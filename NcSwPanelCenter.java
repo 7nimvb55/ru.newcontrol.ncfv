@@ -31,7 +31,10 @@ import javax.swing.table.TableModel;
 public class NcSwPanelCenter {
     
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#createGui() }
+     * </ul>
      * @return
      */
     protected static JPanel getPanel(NcSwGUIComponentStatus lComp){
