@@ -39,7 +39,24 @@ public enum NcStrGUILabel {
     NcStrGUILabel(String strMsg){
         this.strMsg = strMsg;
     }
-    public String getStr(){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMenuItems#getLogFileReader(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>{@link ru.newcontrol.ncfv.NcSwMenuItems#getEnvironmentViewer(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>{@link ru.newcontrol.ncfv.NcSwMenuItems#getPropertiesViewer(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>{@link ru.newcontrol.ncfv.NcSwMenuItems#getEtcEditor() }
+     * <li>{@link ru.newcontrol.ncfv.NcSwMenuItems#getSubDirChecker() }
+     * <li>{@link ru.newcontrol.ncfv.NcSwMenuItems#getAppExit() }
+     * <li>{@link ru.newcontrol.ncfv.NcSwMenuItems#getDirInEditor() }
+     * <li>{@link ru.newcontrol.ncfv.NcSwMenuItems#getDirOutEditor() }
+     * <li>{@link ru.newcontrol.ncfv.NcSwMenuItems#getAbout() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#createGui() }
+     * </ul>
+     * @return 
+     */
+    protected String getStr(){
         return strMsg;
     }
 }

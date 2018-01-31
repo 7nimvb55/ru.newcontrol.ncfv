@@ -24,11 +24,18 @@ import java.util.TreeMap;
  */
 public class NcSrchFileDataCompare {
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSearchInIndex#searchWordInIndex() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchGetResult#makeSearchByKeyFromInput(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcSrchGetResult#makeSearchByKeyFromFile() }
+     * </ul>
      * Find duplicate of records by dirListID
      * @param strHexForInVar
      * @return 
      */
-    public static TreeMap<Long, NcDcIdxWordToFile> getDistictIDs(TreeMap<Long, NcDcIdxWordToFile> strHexForInVar){
+    protected static TreeMap<Long, NcDcIdxWordToFile> getDistictIDs(TreeMap<Long, NcDcIdxWordToFile> strHexForInVar){
         TreeMap<Long, NcDcIdxWordToFile> inList = new TreeMap<Long, NcDcIdxWordToFile>();
         long newRecId = 0;
         for( Map.Entry<Long, NcDcIdxWordToFile> itemID : strHexForInVar.entrySet() ){
@@ -45,12 +52,19 @@ public class NcSrchFileDataCompare {
         
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSearchInIndex#searchWordInIndex() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchGetResult#makeSearchByKeyFromFile() }
+     * <li>{@link ru.newcontrol.ncfv.NcSrchGetResult#outSearchResult(java.util.TreeMap, java.util.TreeMap) }
+     * </ul>
      * Delete records with dirListId out of search from in search list 
      * @param strHexForInVar
      * @param strHexForOutVar
      * @return 
      */
-    public static TreeMap<Long, NcDcIdxWordToFile> getIdInWithoutOfOutSearchResult(TreeMap<Long, NcDcIdxWordToFile> strHexForInVar, TreeMap<Long, NcDcIdxWordToFile> strHexForOutVar){
+    protected static TreeMap<Long, NcDcIdxWordToFile> getIdInWithoutOfOutSearchResult(TreeMap<Long, NcDcIdxWordToFile> strHexForInVar, TreeMap<Long, NcDcIdxWordToFile> strHexForOutVar){
         TreeMap<Long, NcDcIdxWordToFile> inList = new TreeMap<Long, NcDcIdxWordToFile>();
         long newRecId = 0;
         for( Map.Entry<Long, NcDcIdxWordToFile> itemID : strHexForInVar.entrySet() ){

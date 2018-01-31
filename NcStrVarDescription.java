@@ -60,7 +60,21 @@ public enum NcStrVarDescription {
     NcStrVarDescription(String strMsg){
         this.strMsg = strMsg;
     }
-    public String getStr(){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvManager#ncParamFvDataOutPut(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputPathFormatFilter(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputPathFormatFilterForDefault(java.lang.String) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkTmpIDsData() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchGetResult#outSearchResult(java.util.TreeMap, java.util.TreeMap) }
+     * </ul>
+     * @return 
+     */
+    protected String getStr(){
         return strMsg;
     }
 }

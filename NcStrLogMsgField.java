@@ -66,7 +66,69 @@ public enum NcStrLogMsgField {
     NcStrLogMsgField(String strMsg){
         this.strMsg = strMsg;
     }
-    public String getStr(){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcAppHelper#appExitWithMessageFSAccess(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcAppHelper#appExitWithMessage(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcAppHelper#logException(java.lang.String, java.lang.Exception) }
+     * <li>{@link ru.newcontrol.ncfv.NcAppHelper#outMessageToAppLogFile(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcAppHelper#strArrToConsoleOutPut(java.lang.String[]) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcDiskUtils#printToConsoleNcDiskInfo(ru.newcontrol.ncfv.NcDiskInfo) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexManageIDs#checkDataForAllDirListFiles() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcLogColorizer#getHtmlStr(java.lang.String) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcLogFileManager#createLogFile(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcLogFileManager#putToLogStr(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcLogFileManager#putToLog(java.util.TreeMap) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcLogLogicCfg#NcParamFvReaderReadDataRead() }
+     * <li>{@link ru.newcontrol.ncfv.NcLogLogicCfg#NcParamFvReaderReadDataGenerate() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcLogLogicGUI#NcSwMainMenuGetMainMenu() }
+     * <li>{@link ru.newcontrol.ncfv.NcLogLogicGUI#NcSwPanelCenterGetPanel() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcManageCfg#mcCreateWorkDir(ru.newcontrol.ncfv.NcDiskInfo) }
+     * <li>{@link ru.newcontrol.ncfv.NcManageCfg#mcCheckAndCreateFolderStructure() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcParamCfgToDiskReleaser#getWorkFileParams(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcParamCfgToDiskReleaser#getIdxDirStructure(java.lang.String) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvManager#isNcParamFvDataHashTrue(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvManager#ncParamFvDataOutPut(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvManager#checkToWrite(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvManager#checkFromRead(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputPathFormatFilter(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputPathFormatFilterForDefault(java.lang.String) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkTmpIDsData() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchGetResult#outSearchResult(java.util.TreeMap, java.util.TreeMap) }
+     * <li>{@link ru.newcontrol.ncfv.NcSrchKeyWordInput#getIdDataForSplittedKeyWord(java.util.ArrayList) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getTreeNodes(javax.swing.tree.DefaultMutableTreeNode) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelLineEnd#toLALRgetPanel() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelLineStart#toLALRgetPanel() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelPageEnd#toLALRgetPanel() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelPageStart#toLALRgetPanel() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#toLALRcreateGui() }
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#toLALRcreateGuiPanel() }
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#toLALRendOfCreateGUI() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#toLALRMain() }
+     * </ul>
+     * @return 
+     */
+    protected String getStr(){
         return strMsg;
     }
 }

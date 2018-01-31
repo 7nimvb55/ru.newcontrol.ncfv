@@ -27,10 +27,14 @@ import javax.swing.JMenuItem;
  */
 public class NcSwMenuItems {
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMainMenu#getMenuDevelop(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * For Development
      * @return 
      */
-    public static JMenuItem getLogFileReader(NcSwGUIComponentStatus lComp){
+    protected static JMenuItem getLogFileReader(NcSwGUIComponentStatus lComp){
         
         JMenuItem toRetMi = new JMenuItem(NcStrGUILabel.LOG_VIEW.getStr());
         toRetMi.addActionListener(new ActionListener(){
@@ -45,10 +49,14 @@ public class NcSwMenuItems {
         return toRetMi;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMainMenu#getMenuDevelop(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * For Development
      * @return 
      */
-    public static JMenuItem getEnvironmentViewer(NcSwGUIComponentStatus lComp){
+    protected static JMenuItem getEnvironmentViewer(NcSwGUIComponentStatus lComp){
         JMenuItem toRetMi = new JMenuItem(NcStrGUILabel.ENV_VIEW.getStr());
         toRetMi.addActionListener(new ActionListener(){
             @Override
@@ -64,10 +72,14 @@ public class NcSwMenuItems {
     }
     
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMainMenu#getMenuDevelop(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * For Development
      * @return 
      */
-    public static JMenuItem getPropertiesViewer(NcSwGUIComponentStatus lComp){
+    protected static JMenuItem getPropertiesViewer(NcSwGUIComponentStatus lComp){
         JMenuItem toRetMi = new JMenuItem(NcStrGUILabel.PROPERTIES_VIEW.getStr());
         toRetMi.addActionListener(new ActionListener(){
             @Override
@@ -82,24 +94,36 @@ public class NcSwMenuItems {
         return toRetMi;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMainMenu#getMenuService() }
+     * </ul>
      * For Settings
      * @return 
      */
-    public static JMenuItem getEtcEditor(){
+    protected static JMenuItem getEtcEditor(){
         return new JMenuItem(NcStrGUILabel.SETTINGS.getStr());
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMainMenu#getMenuFile() }
+     * </ul>
      * For File
      * @return 
      */
-    public static JMenuItem getSubDirChecker(){
+    protected static JMenuItem getSubDirChecker(){
         return new JMenuItem(NcStrGUILabel.CHECK_SUBDIR.getStr());
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMainMenu#getMenuFile() }
+     * </ul>
      * For File
      * @return 
      */
-    public static JMenuItem getAppExit(){
+    protected static JMenuItem getAppExit(){
         JMenuItem toRetMi = new JMenuItem(NcStrGUILabel.APP_EXIT.getStr());
         toRetMi.addActionListener(new ActionListener(){
             @Override
@@ -110,24 +134,30 @@ public class NcSwMenuItems {
         return toRetMi;
     }
     /**
+     * Not used
      * For Settings
      * @return 
      */
-    public static JMenuItem getDirInEditor(){
+    private static JMenuItem getDirInEditor(){
         return new JMenuItem(NcStrGUILabel.DIR_IN_INDEX.getStr());
     }
     /**
+     * Not used
      * For Settings
      * @return 
      */
-    public static JMenuItem getDirOutEditor(){
+    private static JMenuItem getDirOutEditor(){
         return new JMenuItem(NcStrGUILabel.DIR_OUT_INDEX.getStr());
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMainMenu#getMenuHelp() }
+     * </ul>
      * For Help
      * @return 
      */
-    public static JMenuItem getAbout(){
+    protected static JMenuItem getAbout(){
         return new JMenuItem(NcStrGUILabel.ABOUT.getStr());
     }
 }

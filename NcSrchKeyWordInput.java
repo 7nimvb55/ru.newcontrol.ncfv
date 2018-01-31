@@ -25,12 +25,19 @@ import java.util.TreeMap;
  */
 public class NcSrchKeyWordInput {
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSearchInIndex#searchWordInIndex() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchGetResult#makeSearchByKeyFromInput(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcSrchGetResult#makeSearchByKeyFromFile() }
+     * </ul>
      * Filter and split KeyWords into words format used in index folder
      * file names with id data
      * @param inFuncKeyWord
      * @return 
      */
-    public static TreeMap<Long, NcDcIdxWordToFile> getDirListRecordByKeyWord(String inFuncKeyWord){
+    protected static TreeMap<Long, NcDcIdxWordToFile> getDirListRecordByKeyWord(String inFuncKeyWord){
         TreeMap<Long, NcDcIdxWordToFile> idsDataForKeyWord = new TreeMap<Long, NcDcIdxWordToFile>();
         
         ArrayList<String> strABC = NcPathToArrListStr.NCLVLABC.retArrListStr(inFuncKeyWord);
@@ -49,6 +56,10 @@ public class NcSrchKeyWordInput {
         return idsDataForKeyWord;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchKeyWordInput#getDirListRecordByKeyWord(java.lang.String) }
+     * </ul>
      * Input in function splitted strings of keywords for create
      * file names with id data in word subDirs
      * Output from function data from keywords files 

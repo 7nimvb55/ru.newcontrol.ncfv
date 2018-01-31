@@ -35,21 +35,27 @@ import javax.swing.filechooser.FileSystemView;
 public class NcSwGUIComponent {
     private static final long ncForGB = 1024*1024*1024;
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelPageEnd#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * @return
      */
-    public static JLabel createEmptyLabel() {
+    protected static JLabel createEmptyLabel() {
         JLabel label = new JLabel();
         label.setPreferredSize(new Dimension(100, 30));
         return label;
     }
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelLineEnd#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * @param textSize
      * @param strToolTip
      * @return
      */
-    public static JPanel getTextFieldForSearchPanel(Dimension textSize, String strToolTip){
+    protected static JPanel getTextFieldForSearchPanel(Dimension textSize, String strToolTip){
         JPanel textFieldForSearchPanel = new JPanel();
         textFieldForSearchPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         
@@ -60,11 +66,14 @@ public class NcSwGUIComponent {
         textFieldForSearchPanel.add(textWordForSearch);
         return textFieldForSearchPanel;
     }
-        /**
-     *
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelLineStart#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * @return
      */
-    public static ArrayList<JButton> getRootButtons(){
+    protected static ArrayList<JButton> getRootButtons(){
         ArrayList<JButton> toReturn = new ArrayList<JButton>();
         
         FileSystemView fileSystemView;
@@ -117,13 +126,22 @@ public class NcSwGUIComponent {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwGUIComponent#getRootButtons() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelLineEnd#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelLineEnd#getAndOrButtonPanel() }
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelLineEnd#getAddDelButtonPanel() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelPageStart#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * @param ncName
      * @param ncIcon
      * @param ncToolTipText
      * @return
      */
-    public static JButton createButton(String ncName, Icon ncIcon, String ncToolTipText) {
+    protected static JButton createButton(String ncName, Icon ncIcon, String ncToolTipText) {
         JButton ncButton = new JButton(ncName);
         if(ncIcon != null){
             ncButton.setIcon(ncIcon);
@@ -133,10 +151,13 @@ public class NcSwGUIComponent {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelLineEnd#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * @return
      */
-    public static JList createJListWordInSearch(){
+    protected static JList createJListWordInSearch(){
         DefaultListModel listWordInSearch = new DefaultListModel();
         ArrayList<String> arrKeyIn = 
                 NcEtcKeyWordListManager.getKeyWordInSearchFromFile();
@@ -156,10 +177,13 @@ public class NcSwGUIComponent {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelLineEnd#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * @return
      */
-    public static JList createJListWordNotInSearch(){
+    protected static JList createJListWordNotInSearch(){
         DefaultListModel listWordNotInSearch = new DefaultListModel();
         
         ArrayList<String> arrKeyOut = 
@@ -179,11 +203,11 @@ public class NcSwGUIComponent {
     }
 
     /**
-     *
+     * Not used
      * @param ncJList
      * @return
      */
-    public static JList addJListElement(JList ncJList){
+    private static JList addJListElement(JList ncJList){
         return ncJList;
     }
 }

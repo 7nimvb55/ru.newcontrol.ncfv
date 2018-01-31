@@ -33,7 +33,21 @@ public enum NcStrLogMsgText {
     NcStrLogMsgText(String strMsg){
         this.strMsg = strMsg;
     }
-    public String getStr(){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcLogFileManager#createLogFile(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcLogFileManager#putToLogStr(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcLogFileManager#putToLog(java.util.TreeMap) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#toLALRcreateGui() }
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#toLALRcreateGuiPanel() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#toLALRMain() }
+     * </ul>
+     * @return 
+     */
+    protected String getStr(){
         return strMsg;
     }
 }

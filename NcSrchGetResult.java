@@ -24,16 +24,31 @@ import java.util.TreeMap;
  * @author wladimirowichbiaran
  */
 public class NcSrchGetResult {
-    public static void outToConsoleSearchByKeyFromInput(String strInputedKeyWord){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * </ul>
+     * @param strInputedKeyWord 
+     */
+    protected static void outToConsoleSearchByKeyFromInput(String strInputedKeyWord){
         TreeMap<Long, NcDcIdxDirListToFileAttr> searchedData;
         searchedData = makeSearchByKeyFromInput(strInputedKeyWord);
         for( Map.Entry<Long, NcDcIdxDirListToFileAttr> itemReaded : searchedData.entrySet() ){
             NcAppHelper.outMessageToConsole(itemReaded.getValue().path);
         }
     }
-    
-    
-    public static TreeMap<Long, NcDcIdxDirListToFileAttr> makeSearchByKeyFromInput(String strForSearch){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSIMASearchResultTableModel#NcSIMASearchResultTableModel(java.lang.String) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchGetResult#outToConsoleSearchByKeyFromInput(java.lang.String) }
+     * </ul>
+     * @param strForSearch
+     * @return 
+     */
+    protected static TreeMap<Long, NcDcIdxDirListToFileAttr> makeSearchByKeyFromInput(String strForSearch){
         TreeMap<Long, NcDcIdxWordToFile> strHexForInVar = new TreeMap<Long, NcDcIdxWordToFile>();
         TreeMap<Long, NcDcIdxWordToFile> strDistInResult = new TreeMap<Long, NcDcIdxWordToFile>();
         
@@ -46,7 +61,13 @@ public class NcSrchGetResult {
         
         return readedData;
     }
-    public static void outToConsoleSearchByKeyFromFile(){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * </ul>
+     */
+    protected static void outToConsoleSearchByKeyFromFile(){
         TreeMap<Long, NcDcIdxDirListToFileAttr> searchedData;
         searchedData = makeSearchByKeyFromFile();
         for( Map.Entry<Long, NcDcIdxDirListToFileAttr> itemReaded : searchedData.entrySet() ){
@@ -54,10 +75,17 @@ public class NcSrchGetResult {
         }
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSIMASearchResultTableModel#NcSIMASearchResultTableModel()  }
+     * <li>{@link ru.newcontrol.ncfv.NcSIMASearchResultTableModel#NcSIMASearchResultTableModel(java.util.ArrayList, java.util.ArrayList) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchGetResult#outToConsoleSearchByKeyFromFile() }
+     * </ul>
      * Get KeyWordIn(Out)Search from file and output serch results
      * @return 
      */
-    public static TreeMap<Long, NcDcIdxDirListToFileAttr> makeSearchByKeyFromFile(){
+    protected static TreeMap<Long, NcDcIdxDirListToFileAttr> makeSearchByKeyFromFile(){
         TreeMap<Long, NcDcIdxWordToFile> strHexForInVar = new TreeMap<Long, NcDcIdxWordToFile>();
         TreeMap<Long, NcDcIdxWordToFile> strHexForOutVar = new TreeMap<Long, NcDcIdxWordToFile>();
         TreeMap<Long, NcDcIdxWordToFile> strDistInResult = new TreeMap<Long, NcDcIdxWordToFile>();
@@ -89,21 +117,21 @@ public class NcSrchGetResult {
         return readedData;
     }
     /**
-     * 
+     * Not used
      * @param strHexForInVar 
      */
-    public static void outToConsoleSearchedIDs(TreeMap<Long, NcDcIdxWordToFile> strHexForInVar){
+    private static void outToConsoleSearchedIDs(TreeMap<Long, NcDcIdxWordToFile> strHexForInVar){
         for( Map.Entry<Long, NcDcIdxWordToFile> itemID : strHexForInVar.entrySet() ){
             NcAppHelper.outMessageToConsole("id: " + itemID.getValue().dirListID);
         }
         
     }
     /**
-     * 
+     * Not used
      * @param strHexForInVar
      * @param strHexForOutVar 
      */
-    public static void outSearchResult(TreeMap<Long, NcDcIdxWordToFile> strHexForInVar, TreeMap<Long, NcDcIdxWordToFile> strHexForOutVar){
+    private static void outSearchResult(TreeMap<Long, NcDcIdxWordToFile> strHexForInVar, TreeMap<Long, NcDcIdxWordToFile> strHexForOutVar){
         TreeMap<Long, NcDcIdxWordToFile> CleanResult = NcSrchFileDataCompare.getIdInWithoutOfOutSearchResult(strHexForInVar, strHexForOutVar);
         NcAppHelper.outMessage(
             NcStrLogMsgField.INFO.getStr()

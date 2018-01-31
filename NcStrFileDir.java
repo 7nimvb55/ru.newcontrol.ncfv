@@ -49,11 +49,21 @@ public enum NcStrFileDir {
     FILE_SRCH_DIR_IN("dirin.list");
 
     private String fileSubDirName;
-
+    /**
+     * Constructor
+     * @param fileSubDirName 
+     */
     NcStrFileDir(String fileSubDirName){
         this.fileSubDirName = fileSubDirName;
     }
-    public String getStr(){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcLogFileManager#getLogFile() }
+     * </ul>
+     * @return 
+     */
+    protected String getStr(){
         return fileSubDirName;
     }
 }

@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 /**
@@ -35,40 +34,56 @@ public class NcSIMASearchResultTableModel implements TableModel {
     private TreeMap<Long, NcDcIdxDirListToFileAttr> ncDirectoryListReader;
 
     /**
-     *
+     * Not used
      */
-    public NcSIMASearchResultTableModel() {
+    private NcSIMASearchResultTableModel() {
         ncDirectoryListReader = NcSrchGetResult.makeSearchByKeyFromFile();
     }
     
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwThreadManager#setToViewSearchedResult(ru.newcontrol.ncfv.NcSwGUIComponentStatus, java.lang.String) }
+     * </ul>
      */
-    public NcSIMASearchResultTableModel(String strSearchInput) {
+    protected NcSIMASearchResultTableModel(String strSearchInput) {
         ncDirectoryListReader = NcSrchGetResult.makeSearchByKeyFromInput(strSearchInput);
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelCenter#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
      * @param strKeyWordInSearch
      * @param strKeyWordOutSearch
      */
-    public NcSIMASearchResultTableModel(ArrayList<String> strKeyWordInSearch,ArrayList<String>  strKeyWordOutSearch) {
+    protected NcSIMASearchResultTableModel(ArrayList<String> strKeyWordInSearch,ArrayList<String>  strKeyWordOutSearch) {
         NcSearchInIndex ncSearchInIndex = new NcSearchInIndex();
         ncDirectoryListReader = NcSrchGetResult.makeSearchByKeyFromFile();
     }
     
-    
+    /**
+     * Not used
+     * @return 
+     */
     @Override
     public int getRowCount() {
         return ncDirectoryListReader.size();
     }
-
-   @Override
+    /**
+     * Not used
+     * @return 
+     */
+    @Override
     public int getColumnCount() {
         return 16;
     }
-
+    /**
+     * Not used
+     * @param columnIndex
+     * @return 
+     */
     @Override
     public String getColumnName(int columnIndex) {
             switch (columnIndex) {
@@ -108,17 +123,31 @@ public class NcSIMASearchResultTableModel implements TableModel {
             }
             return "";
     }
-
+    /**
+     * Not used
+     * @param columnIndex
+     * @return 
+     */
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return String.class;
     }
-
+    /**
+     * Not used
+     * @param rowIndex
+     * @param columnIndex
+     * @return 
+     */
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return false;
     }
-
+    /**
+     * Not used
+     * @param rowIndex
+     * @param columnIndex
+     * @return 
+     */
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         boolean returnNulls = true;
@@ -186,17 +215,28 @@ public class NcSIMASearchResultTableModel implements TableModel {
         
         return new Object();
     }
-
+    /**
+     * Not used
+     * @param aValue
+     * @param rowIndex
+     * @param columnIndex 
+     */
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         
     }
-
+    /**
+     * Not used
+     * @param l 
+     */
     @Override
     public void addTableModelListener(TableModelListener l) {
         listeners.add(l);
     }
-
+    /**
+     * Not used
+     * @param l 
+     */
     @Override
     public void removeTableModelListener(TableModelListener l) {
         listeners.remove(l);

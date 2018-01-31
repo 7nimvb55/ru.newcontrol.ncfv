@@ -60,7 +60,32 @@ public enum NcStrServiceMsg {
     NcStrServiceMsg(String strMsg){
         this.strMsg = strMsg;
     }
-    public String getStr(){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcManageCfg#mcCreateWorkDir(ru.newcontrol.ncfv.NcDiskInfo) }
+     * <li>{@link ru.newcontrol.ncfv.NcManageCfg#mcCheckAndCreateFolderStructure() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcParamCfgToDiskReleaser#getWorkFileParams(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcParamCfgToDiskReleaser#getIdxDirStructure(java.lang.String) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvManager#isNcParamFvDataHashTrue(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvManager#ncParamFvDataOutPut(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvManager#checkToWrite(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>{@link ru.newcontrol.ncfv.NcParamFvManager#checkFromRead(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputPathFormatFilter(java.lang.String, java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathFromUserChecker#strInputPathFormatFilterForDefault(java.lang.String) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkTmpIDsData() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchGetResult#outSearchResult(java.util.TreeMap, java.util.TreeMap) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchKeyWordInput#getIdDataForSplittedKeyWord(java.util.ArrayList) }
+     * </ul>
+     * @return 
+     */
+    protected String getStr(){
         return strMsg;
     }
 }

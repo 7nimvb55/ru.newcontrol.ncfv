@@ -25,18 +25,64 @@ import java.util.TreeMap;
 public class NcSwGUIComponentStatus {
     
     private TreeMap<Integer, Component> modalLogView;
-    
-    public NcSwGUIComponentStatus(){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getDialogLogViewer(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#createGui() }
+     * </ul>
+     */
+    protected NcSwGUIComponentStatus(){
         modalLogView = new TreeMap<Integer, Component>();
     }
-
-    public TreeMap<Integer, Component> getComponentsList(){
+    /**
+     * Not used
+     * @return 
+     */
+    protected TreeMap<Integer, Component> getComponentsList(){
         return modalLogView;
     }
-    public Component getComponentByPath(String typeToGet){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMenuItems#getEnvironmentViewer(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>{@link ru.newcontrol.ncfv.NcSwMenuItems#getPropertiesViewer(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getDialogLogViewer(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getButtonUpdate(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwThreadManager#setToViewSearchedResult(ru.newcontrol.ncfv.NcSwGUIComponentStatus, java.lang.String) }
+     * </ul>
+     * @param typeToGet
+     * @return 
+     */
+    protected Component getComponentByPath(String typeToGet){
         return modalLogView.get(typeToGet.hashCode());
     }
-    public void putComponents(String typeToAdd, Component compToAdd){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getDialogLogViewer(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getPanelCenter(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>{@link ru.newcontrol.ncfv.NcSwModalLogViewer#getScrolledTree(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelCenter#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelLineEnd#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelLineStart#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelPageEnd#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelPageStart#getPanel(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#createGui() }
+     * </ul>
+     * @param typeToAdd
+     * @param compToAdd 
+     */
+    protected void putComponents(String typeToAdd, Component compToAdd){
         if( modalLogView == null ){
             modalLogView = new TreeMap<Integer, Component>();
         }

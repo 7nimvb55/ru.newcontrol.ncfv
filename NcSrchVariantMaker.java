@@ -26,11 +26,14 @@ import java.util.TreeMap;
  */
 public class NcSrchVariantMaker {
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchKeyWordInput#getIdDataForSplittedKeyWord(java.util.ArrayList) }
+     * </ul>
      * @param strInFunc
      * @return
      */
-    public static TreeMap<Long, NcIdxSubStringVariant> getUpperLowerCaseVariant(ArrayList<String> strInFunc){
+    protected static TreeMap<Long, NcIdxSubStringVariant> getUpperLowerCaseVariant(ArrayList<String> strInFunc){
         TreeMap<Long, NcIdxSubStringVariant> strToRet = new TreeMap<Long, NcIdxSubStringVariant>();
         if( strInFunc.isEmpty() ){
             return strToRet;
@@ -46,10 +49,13 @@ public class NcSrchVariantMaker {
         return strToRet;
     }
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchKeyWordInput#getIdDataForSplittedKeyWord(java.util.ArrayList) }
+     * </ul>
      * @param toSearchABC
      */
-    public static ArrayList<String> getUpLowerCaseCombineKeyWord(TreeMap<Long, NcIdxSubStringVariant> toSearchABC){
+    protected static ArrayList<String> getUpLowerCaseCombineKeyWord(TreeMap<Long, NcIdxSubStringVariant> toSearchABC){
         ArrayList<String> strWordsVar = new ArrayList<String>();
         
         for(Map.Entry<Long, NcIdxSubStringVariant> itemKeyWord : toSearchABC.entrySet()){
@@ -75,13 +81,16 @@ public class NcSrchVariantMaker {
         return strWordsVar;
     }
     /**
-     * 
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchVariantMaker#getUpLowerCaseCombineKeyWord(java.util.TreeMap) }
+     * </ul>
      * @param strArrChange
      * @param strArrDown
      * @param strArrUp
      * @return 
      */
-    public static String[] strArrChangeState(String[] strArrChange, String[] strArrDown, String[] strArrUp){
+    private static String[] strArrChangeState(String[] strArrChange, String[] strArrDown, String[] strArrUp){
         if( (strArrDown.length == strArrUp.length)
                 && (strArrChange.length == strArrDown.length) ){
             boolean changeFlow = false;
@@ -120,37 +129,46 @@ public class NcSrchVariantMaker {
         return strArrChange;
     }
     /**
-     * 
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchVariantMaker#getUpLowerCaseCombineKeyWord(java.util.TreeMap) }
+     * </ul>
      * @param strChange
      * @param strDown
      * @param strUp
      * @return 
      */
-    public static String strArrChangeElement(String strChange, String strDown, String strUp){
+    private static String strArrChangeElement(String strChange, String strDown, String strUp){
         if(strDown.equalsIgnoreCase(strChange)){
             return strUp;
         }
         return strDown;
     }
     /**
-     * 
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchVariantMaker#strArrChangeState(java.lang.String[], java.lang.String[], java.lang.String[]) }
+     * </ul>
      * @param strForCompare
      * @param strDown
      * @param strUp
      * @return 
      */
-    public static boolean strIfUpToDownTrue(String strForCompare, String strDown, String strUp){
+    private static boolean strIfUpToDownTrue(String strForCompare, String strDown, String strUp){
         if( strUp.equalsIgnoreCase(strForCompare) ){
             return true;
         }
         return false;
     }
     /**
-     * 
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchVariantMaker#getUpLowerCaseCombineKeyWord(java.util.TreeMap) }
+     * </ul>
      * @param inputArrStr
      * @return 
      */
-    public static String arrToStr(String[] inputArrStr){
+    private static String arrToStr(String[] inputArrStr){
         String toReturn = "";
         for(int i = 0; i < inputArrStr.length ; i++){
             toReturn = toReturn + inputArrStr[i];
@@ -158,11 +176,14 @@ public class NcSrchVariantMaker {
         return toReturn;
     }
     /**
-     * 
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchVariantMaker#getUpLowerCaseCombineKeyWord(java.util.TreeMap) }
+     * </ul>
      * @param inputHexStr
      * @return 
      */
-    public static String[] strToArray(String inputHexStr){
+    private static String[] strToArray(String inputHexStr){
         int idxStart = 0;
         int idxEnd = idxStart + 4;
         int idx = 0;

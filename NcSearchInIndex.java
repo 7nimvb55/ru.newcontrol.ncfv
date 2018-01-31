@@ -30,29 +30,24 @@ public class NcSearchInIndex {
     private TreeMap<Long, NcDiskInfo> ncDiskInfo;
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSIMASearchResultTableModel#NcSIMASearchResultTableModel(java.lang.String) }
+     * </ul>
      */
-    public NcSearchInIndex() {
+    protected NcSearchInIndex() {
         NcIMinFS ncwd = new NcIMinFS();
         
         ncThisManageIDs = ncwd.getNcIndexManageIDs();
         ncDiskInfo = ncwd.getDiskInfo();
     }
     /** 
-     * IDs for OR for example T-SQL:
-     * dataForInKeyWord = 
-     * select id from some.table
-     * where field.word like '%keywordinsearch_1%'
-     * or like ...
-     * or like '%keywordinsearch_N%'
-     * or not like  '%keywordoutsearch_1%'
-     * or like ...
-     * or like '%keywordoutsearch_N%'
+     * Not used
      * @param strKeyWordInSearch
      * @param strKeyWordOutSearch
      * @return 
      */ 
-    public static void searchWordInIndex(){
+    private static void searchWordInIndex(){
         TreeMap<Long, NcDcIdxWordToFile> strHexForInVar = new TreeMap<Long, NcDcIdxWordToFile>();
         TreeMap<Long, NcDcIdxWordToFile> strHexForOutVar = new TreeMap<Long, NcDcIdxWordToFile>();
         TreeMap<Long, NcDcIdxWordToFile> strDistInResult = new TreeMap<Long, NcDcIdxWordToFile>();
@@ -85,10 +80,13 @@ public class NcSearchInIndex {
             NcAppHelper.outMessage(itemReaded.getValue().path);
         }
     }
-    
-
-    
-    public TreeMap<Long, NcDcIdxDirListToFileAttr> getWordSearchResult(ArrayList<String> strKeyWordInSearch, ArrayList<String> strKeyWordOutSearch){
+    /**
+     * Not used
+     * @param strKeyWordInSearch
+     * @param strKeyWordOutSearch
+     * @return 
+     */
+    private TreeMap<Long, NcDcIdxDirListToFileAttr> getWordSearchResult(ArrayList<String> strKeyWordInSearch, ArrayList<String> strKeyWordOutSearch){
         TreeMap<Long, NcDcIdxWordToFile> dataForInKeyWord = new TreeMap<Long, NcDcIdxWordToFile>();
         TreeMap<Long, NcDcIdxWordToFile> dataForOutKeyWord = new TreeMap<Long, NcDcIdxWordToFile>();
         TreeMap<Long, NcDcIdxDirListToFileAttr> retFormDiskDataResult = new TreeMap<Long, NcDcIdxDirListToFileAttr>();
@@ -148,10 +146,14 @@ public class NcSearchInIndex {
         
         return retFilteredDataResult;
     }
-    
-    
-    
-    
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSearchInIndex#getWordSearchResult(java.util.ArrayList, java.util.ArrayList) }
+     * </ul>
+     * @param strKeyWordInSearch
+     * @return 
+     */
     private TreeMap<Long, NcDcIdxWordToFile> getIDsForKeyWord(String strKeyWordInSearch){
                 long searchID = 0;
         
@@ -245,6 +247,10 @@ public class NcSearchInIndex {
         
         return searchedWords;
     }
+    /**
+     * Not used
+     * @return 
+     */
     private TreeMap<Long, NcDcIdxDirListToFileAttr> getKeyWordForSearch(){
         TreeMap<Long, NcDcIdxDirListToFileAttr> Word;
         Word = new TreeMap<Long, NcDcIdxDirListToFileAttr>();

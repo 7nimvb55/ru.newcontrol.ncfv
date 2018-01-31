@@ -23,7 +23,15 @@ import javax.swing.JMenuBar;
  * @author wladimirowichbiaran
  */
 public class NcSwMainMenu {
-    public static JMenuBar getMainMenu(NcSwGUIComponentStatus lComp){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#createGui() }
+     * </ul>
+     * @param lComp
+     * @return 
+     */
+    protected static JMenuBar getMainMenu(NcSwGUIComponentStatus lComp){
         JMenuBar menuMain = new JMenuBar();
         NcLogLogicGUI.NcSwMainMenuGetMainMenu();
         menuMain.add(getMenuFile());
@@ -32,25 +40,54 @@ public class NcSwMainMenu {
         menuMain.add(getMenuHelp());
         return menuMain;
     }
-    public static JMenu getMenuFile(){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMainMenu#getMainMenu(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @return 
+     */
+    private static JMenu getMenuFile(){
         JMenu menuFile = new JMenu("File");
         menuFile.add(NcSwMenuItems.getSubDirChecker());
         menuFile.add(NcSwMenuItems.getAppExit());
         return menuFile;
     }
-    public static JMenu getMenuDevelop(NcSwGUIComponentStatus lComp){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMainMenu#getMainMenu(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @param lComp
+     * @return 
+     */
+    private static JMenu getMenuDevelop(NcSwGUIComponentStatus lComp){
         JMenu menuDevelop = new JMenu("Development");
         menuDevelop.add(NcSwMenuItems.getLogFileReader(lComp));
         menuDevelop.add(NcSwMenuItems.getEnvironmentViewer(lComp));
         menuDevelop.add(NcSwMenuItems.getPropertiesViewer(lComp));
         return menuDevelop;
     }
-    public static JMenu getMenuHelp(){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMainMenu#getMainMenu(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @return 
+     */
+    private static JMenu getMenuHelp(){
         JMenu menuHelp = new JMenu("Help");
         menuHelp.add(NcSwMenuItems.getAbout());
         return menuHelp;
     }
-    public static JMenu getMenuService(){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMainMenu#getMainMenu(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @return 
+     */
+    private static JMenu getMenuService(){
         JMenu menuService = new JMenu("Service");
         menuService.add(NcSwMenuItems.getEtcEditor());
         return menuService;

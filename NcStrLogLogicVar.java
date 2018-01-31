@@ -40,7 +40,29 @@ public enum NcStrLogLogicVar {
     NcStrLogLogicVar(String strMsg){
         this.strMsg = strMsg;
     }
-    public String getStr(){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcLogLogicCfg#NcParamFvReaderReadDataRead() }
+     * <li>{@link ru.newcontrol.ncfv.NcLogLogicCfg#NcParamFvReaderReadDataGenerate() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcLogLogicGUI#NcSwMainMenuGetMainMenu() }
+     * <li>{@link ru.newcontrol.ncfv.NcLogLogicGUI#NcSwPanelCenterGetPanel() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelLineEnd#toLALRgetPanel() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelLineStart#toLALRgetPanel() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelPageEnd#toLALRgetPanel() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwPanelPageStart#toLALRgetPanel() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#toLALRcreateGuiPanel() }
+     * <li>{@link ru.newcontrol.ncfv.NcSwingIndexManagerApp#toLALRendOfCreateGUI() }
+     * </ul>
+     * @return 
+     */
+    protected String getStr(){
         return strMsg;
     }
 }
