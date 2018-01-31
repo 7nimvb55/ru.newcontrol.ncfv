@@ -36,25 +36,35 @@ public class NcPreRunFileViewer {
     
     
     /**
-     *
+     * Not used
      */
-    public NcPreRunFileViewer() {
+    protected NcPreRunFileViewer() {
         
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * </ul>
      */
-    public static void createNewCfg(){
+    protected static void createNewCfg(){
         ArrayList<String> arrStrCfg = getReadedLinesFromEtcCfg();
     }
     /**
-     * 
-     * Version of {@link ru.newcontrol.ncfv.NcPreRunFileViewer#initStateCheck()}
-     * with return structure of Data
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getIndexWorkSubDirFilesList() }
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getTmpIdsFile() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcManageCfg#NcManageCfg() }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#outToConsoleIdxDirs() }
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkInIndexFolderContent() }
+     * </ul>
      * @return {@link ru.newcontrol.ncfv.NcParamFv}
      */
-    public static NcParamFv getCurrentWorkCfg(){
+    protected static NcParamFv getCurrentWorkCfg(){
         File fileCfg = NcIdxFileManager.getOrCreateCfgFile();
         NcParamFv readedWorkCfg = NcParamFvReader.readDataFromWorkCfg();
         boolean boolMD5 = false;
@@ -80,8 +90,11 @@ public class NcPreRunFileViewer {
         return readedWorkCfg;
     }
     /**
-     *
-     * @return
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getCurrentWorkCfg() }
+     * </ul>
+     * @return {@link ru.newcontrol.ncfv.NcParamFv}
      */
     private static NcParamFv getUpdatedAppCfg(){
         File fileCfg = NcIdxFileManager.getOrCreateCfgFile();
@@ -103,8 +116,12 @@ public class NcPreRunFileViewer {
     }
     
     /**
-     *
-     * @return
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#validateAndApplyCfg(ru.newcontrol.ncfv.NcParamFv) }
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getDefaultParametersForCfg() }
+     * </ul>
+     * @return {@link ru.newcontrol.ncfv.NcParamFv}
      */
     private static NcParamFv getDefaultCfgValues(){
         TreeMap<Long, NcDiskInfo> sysDisk = NcParamJournalDisk.getFromJournalDiskOrCreateIt();
@@ -152,11 +169,16 @@ public class NcPreRunFileViewer {
     
     
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getUpdatedAppCfg() }
+     * </ul>
      * Method for validate parameters from readed configuration file, if setted
      * parameters has wrong format, than used default value and configuration
      * file will be rewrited with work config
      * @param inFuncReadedCfg returned by method {@link #parseEtcCfg parseEtcCfg()};
      * @return Parameters to write into updated Cfg file
+     * {@link ru.newcontrol.ncfv.NcParamFv}
      */
     private static NcParamFv validateAndApplyCfg(NcParamFv inFuncReadedCfg){
         
@@ -225,7 +247,10 @@ public class NcPreRunFileViewer {
 
     
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#checkInDirFileReadable(java.io.File) }
+     * </ul>
      * @param forCheck
      */
     private static void checkInDirFileReadable(File fileForCheck){
@@ -244,7 +269,7 @@ public class NcPreRunFileViewer {
     }
 
     /**
-     *
+     * Not used
      * @return
      */
     private static TreeMap<Long, NcDiskInfo> initDiskInfo(){
@@ -307,9 +332,12 @@ public class NcPreRunFileViewer {
     }
     
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getUpdatedAppCfg() }
+     * </ul>
      * @param arrStrReadedCfg
-     * @return
+     * @return {@link ru.newcontrol.ncfv.NcParamFv }
      */
     private static NcParamFv parseEtcCfg(ArrayList<String> arrStrReadedCfg){
         NcParamFv paramReadedCfg;
@@ -379,8 +407,12 @@ public class NcPreRunFileViewer {
 
 
     /**
-     *
-     * @return
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#createNewCfg() }
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getUpdatedAppCfg() }
+     * </ul>
+     * @return {@link java.util.ArrayList }
      */
     private static ArrayList<String> getReadedLinesFromEtcCfg(){
         File fileCfg = NcIdxFileManager.getOrCreateCfgFile();
@@ -388,8 +420,12 @@ public class NcPreRunFileViewer {
     }
 
     /**
-     *
-     * @return
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#createCfg(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#updateEtcCfg(java.util.ArrayList) }
+     * </ul>
+     * @return {@link java.util.ArrayList }
      */
     private static ArrayList<String> getRemTextForCfgFile(){
         ArrayList<String> strTextRemark = new ArrayList<String>();
@@ -432,8 +468,11 @@ public class NcPreRunFileViewer {
     }
 
     /**
-     *
-     * @return
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#createCfg(java.lang.String) }
+     * </ul>
+     * @return {@link java.util.ArrayList }
      */
     private static ArrayList<String> getDefaultParametersForCfg(){
         TreeMap<Long, NcDiskInfo> sysDisk = NcParamJournalDisk.getFromJournalDiskOrCreateIt();
@@ -462,10 +501,13 @@ public class NcPreRunFileViewer {
         return strTextRemark;
     }
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxFileManager#getOrCreateCfgFile() }
+     * </ul>
      * @param ncStrCfgPath
      */
-    public static void createCfg(String strCfgPath){
+    protected static void createCfg(String strCfgPath){
         ArrayList<String> strTextRemark = getRemTextForCfgFile();
         ArrayList<String> strParameters = getDefaultParametersForCfg();
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(strCfgPath)))
@@ -494,9 +536,12 @@ public class NcPreRunFileViewer {
         }
     }
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getUpdatedAppCfg() }
+     * </ul>
      * @param linesParametersForUpdateCfg
-     * @return
+     * @return {@link java.util.ArrayList }
      */
     private static int updateEtcCfg(ArrayList<String> linesParametersForUpdateCfg){
         String strCfgPath = NcIdxFileManager.getStrCanPathFromFile(NcIdxFileManager.getOrCreateCfgFile());
@@ -533,9 +578,12 @@ public class NcPreRunFileViewer {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getUpdatedAppCfg() }
+     * </ul>
      * @param linesValues
-     * @return
+     * @return {@link java.util.ArrayList }
      */
     private static ArrayList<String> getLinesParametersForUpdateCfg(NcParamFv linesValues){
         TreeMap<Long, NcDiskInfo> sysDisk = NcParamJournalDisk.getFromJournalDiskOrCreateIt();
@@ -565,9 +613,12 @@ public class NcPreRunFileViewer {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getReadedLinesFromEtcCfg() }
+     * </ul>
      * @param ncStrCfgPath
-     * @return
+     * @return {@link java.util.ArrayList }
      */
     private static ArrayList<String> readCfg(String ncStrCfgPath){
         ArrayList<String> strForReturn;

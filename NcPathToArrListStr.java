@@ -67,33 +67,51 @@ public enum NcPathToArrListStr {
     }
     
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPathToArrListStr#retStr(java.lang.String) }
+     * <li>{@link ru.newcontrol.ncfv.NcPathToArrListStr#retArrListStr(java.lang.String) }
+     * </ul>
      * @return
      */
-    public String getName(){
+    private String getName(){
         return filtername;
     }
-/**
- * Method for split String (for example File Path) to subStrings, filtered by 
- * regular expression and concated before return
- * @param fstrti - splitted String
- * @return
- */    
-    public String retStr(String fstrti){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getFileDataToSwing(java.io.File) }
+     * </ul>
+     * Method for split String (for example File Path) to subStrings, filtered by 
+     * regular expression and concated before return
+     * @param fstrti - splitted String
+     * @return
+     */    
+    protected String retStr(String fstrti){
         String fstro = "";
         for (String istr : fstrti.split(getName())){
            fstro += istr;
         } 
         return fstro;
     }
-/**
- * Method for split String (for example File Path) to subStrings, filtered by 
- * regular expression and return in ArrayList format, with out for Nulled
- * subStrings
- * @param fstrti
- * @return 
- */    
-    public ArrayList<String> retArrListStr(String fstrti){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getFileDataToSwing(java.io.File) }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getResultMakeIndex(java.io.File) }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#makeIndexForFile(java.io.File) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSearchInIndex#getIDsForKeyWord(java.lang.String) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchKeyWordInput#getDirListRecordByKeyWord(java.lang.String) }
+     * </ul>
+     * Method for split String (for example File Path) to subStrings, filtered by 
+     * regular expression and return in ArrayList format, with out for Nulled
+     * subStrings
+     * @param fstrti
+     * @return 
+     */    
+    protected ArrayList<String> retArrListStr(String fstrti){
         String[] tmpStr = fstrti.split(getName());
         ArrayList<String> fstro = new ArrayList<String>();
         for (String i : tmpStr){
@@ -104,6 +122,13 @@ public enum NcPathToArrListStr {
         return fstro;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getResultMakeIndex(java.io.File) }
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#makeIndexForFile(java.io.File) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSearchInIndex#getIDsForKeyWord(java.lang.String) }
+     * </ul>
      * Method for search subString in Source String (for example File Path) and
      * detect positions of subStrings in the Source String and his lengs, append
      * detected information into result concated string, released for development
@@ -112,7 +137,7 @@ public enum NcPathToArrListStr {
      * @param fileID
      * @return 
      */    
-    public static TreeMap<Long, NcDcIdxSubStringToOperationUse> getStructureToRecord(
+    protected static TreeMap<Long, NcDcIdxSubStringToOperationUse> getStructureToRecord(
             ArrayList<String> strArr,
             String strPath,
             long fileID){
@@ -209,53 +234,67 @@ public enum NcPathToArrListStr {
         }
         return codeStr;
     }
-/**
- * Part of technological process of conversion string to his Heximal vision
- * @param toEncodeStr
- * @return 
- */    
-    public static String toStrUTFinHEX(String toEncodeStr){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIdxSubStringVariant#NcIdxSubStringVariant(java.lang.String, java.lang.String) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getFileDataToSwing(java.io.File) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcPathToArrListStr#getStructureToRecord(java.util.ArrayList, java.lang.String, long) }
+     * <li>
+     * <li>{@link ru.newcontrol.ncfv.NcSrchKeyWordInput#getIdDataForSplittedKeyWord(java.util.ArrayList) }
+     * </ul>
+     * Part of technological process of conversion string to his Heximal vision
+     * @param toEncodeStr
+     * @return 
+     */    
+    protected static String toStrUTFinHEX(String toEncodeStr){
         byte[] utfBytes = strEncodeUTF8(toEncodeStr);
         String afterRetStr = toHex(utfBytes);
         afterRetStr = cleanResults(afterRetStr, toEncodeStr);
         return afterRetStr;
     }
-/**
- * Method for correct results of conversion Strings to UTF8 and return his Hex
- * Some string after Java autoappend Buffer size contained some Nulls in end of
- * strings
- * 
- * Symbols in standart ASCII converted in simple one byte length
- * format for example this class convert "ZZZ" in UTF-8 with strEncodeUTF8() and
- * return it by toHex method, his result is: "5A5A5A" in UTF-8 notation usely
- * "\u005A\u005A\u005A", for this project need simple 005A005A005A
- * 
- * Also, for example, symbols in: :\.-«». returned: 3A5C2E2DC2ABC2BB2E
- * Length source string 7 bytes x 4 (UTF-8) = 28 theoretical, in prctics with
- * out cleanResults() method, result length is 9 bytes
- *
- * cleanResults() works in something of algoritm parts
- *
- * Part, of mixed bytes, where algoritm compare integer value of symbols in
- * string and if his values < 256, append before bytes '00' to return in
- * result string see example 003A005C002E002DC2ABC2BB002E
- * 
- * Part, compare Source String length x 4 with result string length and take
- * form start string index to index srcLength x 4
- * 
- * @param inBytes
- * @param srcStr
- * @return 
- */    
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPathToArrListStr#toStrUTFinHEX(java.lang.String) }
+     * </ul>
+     * Method for correct results of conversion Strings to UTF8 and return his Hex
+     * Some string after Java autoappend Buffer size contained some Nulls in end of
+     * strings
+     * 
+     * Symbols in standart ASCII converted in simple one byte length
+     * format for example this class convert "ZZZ" in UTF-8 with strEncodeUTF8() and
+     * return it by toHex method, his result is: "5A5A5A" in UTF-8 notation usely
+     * "\u005A\u005A\u005A", for this project need simple 005A005A005A
+     * 
+     * Also, for example, symbols in: :\.-«». returned: 3A5C2E2DC2ABC2BB2E
+     * Length source string 7 bytes x 4 (UTF-8) = 28 theoretical, in prctics with
+     * out cleanResults() method, result length is 9 bytes
+     *
+     * cleanResults() works in something of algoritm parts
+     *
+     * Part, of mixed bytes, where algoritm compare integer value of symbols in
+     * string and if his values < 256, append before bytes '00' to return in
+     * result string see example 003A005C002E002DC2ABC2BB002E
+     * 
+     * Part, compare Source String length x 4 with result string length and take
+     * form start string index to index srcLength x 4
+     * 
+     * @param inBytes
+     * @param srcStr
+     * @return 
+     */    
     private static String cleanResults(String inBytes, String srcStr){
         int srcStrLength = srcStr.length();
         String tmpStrToNullAdd = new String(inBytes);
         String backToOper = "";
-/**
- * Part, of mixed bytes, where algoritm compare integer value of symbols in
- * string and if his values < 256, append before bytes '00' to return in
- * result string see example 003A005C002E002DC2ABC2BB002E
- */
+        /**
+         * Part, of mixed bytes, where algoritm compare integer value of symbols in
+         * string and if his values < 256, append before bytes '00' to return in
+         * result string see example 003A005C002E002DC2ABC2BB002E
+         */
         if (srcStrLength*4 != inBytes.length()){
             int di = 0;
             for(int i = 0 ; i < srcStrLength ; i++ ){
@@ -274,23 +313,27 @@ public enum NcPathToArrListStr {
             }
             inBytes = backToOper;
         }
-/**
- * Part, compare Source String length x 4 with result string length and take
- * form start string index to index srcLength x 4
- */        
+        /**
+         * Part, compare Source String length x 4 with result string length and take
+         * form start string index to index srcLength x 4
+         */        
         if(inBytes.length() > srcStrLength * 4){
             inBytes = inBytes.substring(0, srcStrLength*4);
         }
         return inBytes;
     }
-/**
- * Method for Encode source string, return byte Array, this returned Array
- * contained some Nulls after needed bytes in
- * this source (https://metanit.com/java/tutorial/7.3.php) writed about 
- * Java autoappend Buffer size
- * @param strToEncode
- * @return 
- */    
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPathToArrListStr#toStrUTFinHEX(java.lang.String) }
+     * </ul>
+     * Method for Encode source string, return byte Array, this returned Array
+     * contained some Nulls after needed bytes in
+     * this source (https://metanit.com/java/tutorial/7.3.php) writed about 
+     * Java autoappend Buffer size
+     * @param strToEncode
+     * @return 
+     */    
     private static byte[] strEncodeUTF8(String strToEncode){
         // Create the encoder and decoder for ISO-8859-1
         ByteBuffer utfbytes;
@@ -304,36 +347,48 @@ public enum NcPathToArrListStr {
         }
         return utfbytes.array();
     }
-/**
- * Convert String in byte Array format to Heximal format
- * code founded in one of internet sources
- * @param bytes
- * @return 
- */    
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPathToArrListStr#toStrUTFinHEX(java.lang.String) }
+     * </ul>
+     * Convert String in byte Array format to Heximal format
+     * code founded in one of internet sources
+     * @param bytes
+     * @return 
+     */    
     private static String toHex(byte[] bytes) {
         return DatatypeConverter.printHexBinary(bytes);
     }
-/**
- * Method compare (length of source string) x 4 and length of string in his
- * HEXimal view
- * @param inBytes
- * @param tmpInBytes
- * @return 
- */    
-    public static boolean checkStrUtfHex(String inBytes, String tmpInBytes){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getFileDataToSwing(java.io.File) }
+     * </ul>
+     * Method compare (length of source string) x 4 and length of string in his
+     * HEXimal view
+     * @param inBytes
+     * @param tmpInBytes
+     * @return 
+     */    
+    protected static boolean checkStrUtfHex(String inBytes, String tmpInBytes){
         if(inBytes.length() < tmpInBytes.length() * 4){
             return false;
         }
         return true;
     }    
     
-/**
- * Method for return extention, extention is all symbols after last dot in the Path
- * 
- * @param ncFile
- * @return String of file.Extention or "" Nulled string if it is a Directory or File has not Extention
- */
-    public static String getExtention(File ncFile){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getFileDataToSwing(java.io.File) }
+     * </ul>
+     * Method for return extention, extention is all symbols after last dot in the Path
+     * 
+     * @param ncFile
+     * @return String of file.Extention or "" Nulled string if it is a Directory or File has not Extention
+     */
+    protected static String getExtention(File ncFile){
         String outExt = "";
         if(ncFile.isFile()){
             String inStrPath = NcIdxFileManager.getStrCanPathFromFile(ncFile);
@@ -354,15 +409,19 @@ public enum NcPathToArrListStr {
     }
     
     
-/**
- * Method for search subString in Source String (for example File Path) and
- * detect positions of subStrings in the Source String and his lengs, append
- * detected information into result concated string, released for development
- * @param strArr
- * @param strPath
- * @return 
- */    
-    public static String getResultStr(ArrayList<String> strArr, String strPath){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcIndexPreProcessFiles#getFileDataToSwing(java.io.File) }
+     * </ul>
+     * Method for search subString in Source String (for example File Path) and
+     * detect positions of subStrings in the Source String and his lengs, append
+     * detected information into result concated string, released for development
+     * @param strArr
+     * @param strPath
+     * @return 
+     */    
+    protected static String getResultStr(ArrayList<String> strArr, String strPath){
         String codeStr = "";
         int i = 0;
         int[] inResultIndexOf = new int[i + 1];
@@ -376,18 +435,18 @@ public enum NcPathToArrListStr {
         int StartSearchPos = 0;
         int CurrentSearchedIndex = 0;
         int ComparedIdx = 0;
-/**
- * Search in ArrayList subString and his position in Source String
- */        
+        /**
+         * Search in ArrayList subString and his position in Source String
+         */        
         for(String subStrfArr : strArr){
             
             inPrevResultIndexOf = Arrays.copyOf(inResultIndexOf,inResultIndexOf.length);
             inOldResultStr = Arrays.copyOf(inResultStr,inResultStr.length);
-/**
- * subString compare with early processed strings (oldStr), if that founded than, get
- * index in two list and save him to (ComparedIdx), also flag (eqI) incremented
- * eqI - count of early used subStrings
- */            
+            /**
+             * subString compare with early processed strings (oldStr), if that founded than, get
+             * index in two list and save him to (ComparedIdx), also flag (eqI) incremented
+             * eqI - count of early used subStrings
+             */            
             for(String oldStr : inOldResultStr){
                 
                 if(subStrfArr.equals(oldStr)){
@@ -396,10 +455,10 @@ public enum NcPathToArrListStr {
                 }
                 IdxPrev++;
             }
-/**
- * If count of old used subString not zero, than get Index of last used subStrings
- * and increment him for found next positions of subString in source string
- */
+            /**
+             * If count of old used subString not zero, than get Index of last used subStrings
+             * and increment him for found next positions of subString in source string
+             */
             if(eqI > 0){
                 StartSearchPos = inPrevResultIndexOf[ComparedIdx];
                 if (strPath.length() > StartSearchPos){
@@ -408,14 +467,14 @@ public enum NcPathToArrListStr {
             }
             
             CurrentSearchedIndex = strPath.indexOf(subStrfArr,StartSearchPos);
-/**
- * Append to returned string information about as founded subStrings in format
- * subString{position in sourceString : subString.length()}
- */            
+            /**
+             * Append to returned string information about as founded subStrings in format
+             * subString{position in sourceString : subString.length()}
+             */            
             codeStr = codeStr + subStrfArr + "{" + CurrentSearchedIndex + ":" + subStrfArr.length() + "}";
-/**
- * Add to Array index of found subString, method (Array.copyof) changed him size
- */            
+            /**
+             * Add to Array index of found subString, method (Array.copyof) changed him size
+             */            
             
             inResultIndexOf = new int[i + 1];
             for (int tmpcpi = 0; tmpcpi < inPrevResultIndexOf.length; tmpcpi++){
@@ -423,9 +482,9 @@ public enum NcPathToArrListStr {
             }
            
             inResultIndexOf[i] = CurrentSearchedIndex;
-/**
- * Add this subStrings to Array of used subStrings
- */            
+            /**
+             * Add this subStrings to Array of used subStrings
+             */            
             
             inResultStr = new String[i + 1];
             
@@ -433,9 +492,9 @@ public enum NcPathToArrListStr {
                 inResultStr[tmpcpi] = inOldResultStr[tmpcpi];
             }
             inResultStr[i] = subStrfArr;
-/**
- * Changed flags and counters for next iteration
- */            
+            /**
+             * Changed flags and counters for next iteration
+             */            
             i++;
             StartSearchPos = 0;
             IdxPrev = 0;
@@ -446,12 +505,13 @@ public enum NcPathToArrListStr {
         return codeStr;
     }
     
-/**
- * Method copied from some (https://stackoverflow.com/a/229022) Internet resurse
- * and save for example
- * @param strToDecode
- * @return 
- */    
+    /**
+     * Not used
+     * Method copied from some (https://stackoverflow.com/a/229022) Internet resurse
+     * and save for example
+     * @param strToDecode
+     * @return 
+     */    
     private static String strEnDecodeUTF8(String strToDecode){
                  // Create the encoder and decoder for ISO-8859-1
         byte[] utfbytes = {};
@@ -468,14 +528,15 @@ public enum NcPathToArrListStr {
         }
         return decodeStr;
     }
-/**
- * Method from early stady of development, deleted Nulls from HEXimal
- * This method deleted all nulls in end of Hex String, result string is damaged
- * after use this method, not used, algoritm need for Super Developer and history
- * @param afterRetStr
- * @param SrcLength
- * @return 
- */    
+    /**
+     * Not used
+     * Method from early stady of development, deleted Nulls from HEXimal
+     * This method deleted all nulls in end of Hex String, result string is damaged
+     * after use this method, not used, algoritm need for Super Developer and history
+     * @param afterRetStr
+     * @param SrcLength
+     * @return 
+     */    
     private static String ShrinkNulls(String afterRetStr, int SrcLength){
         if(afterRetStr.length() > 2){
             int chi = afterRetStr.length() - 1;

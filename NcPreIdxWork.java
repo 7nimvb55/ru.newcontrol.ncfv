@@ -26,7 +26,13 @@ import java.util.TreeMap;
  * @author Администратор
  */
 public class NcPreIdxWork {
-    public static void outToConsoleIdxDirs(){
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * </ul>
+     */
+    protected static void outToConsoleIdxDirs(){
         NcParamFv currentWorkCfg = NcPreRunFileViewer.getCurrentWorkCfg();
         TreeMap<Integer, File> listSubDirs = new TreeMap<Integer, File>();
         listSubDirs.putAll(currentWorkCfg.tmIndexSubDirs);
@@ -48,9 +54,10 @@ public class NcPreIdxWork {
         }
     }
     /**
+     * Not used
      * Check files in index subFolders
      */
-    public static void checkInIndexFolderContent(){
+    private static void checkInIndexFolderContent(){
         
         NcParamFv readedWorkCfg = NcParamFvReader.readDataFromWorkCfg();
         if( NcParamFvManager.isNcParamFvDataEmpty(readedWorkCfg) ){
@@ -79,6 +86,10 @@ public class NcPreIdxWork {
         getNotFinishedAppendToIndex(fileFromDirList, fileFromDirListExist);
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.Ncfv#main(java.lang.String[]) }
+     * </ul>
      * Compare for content of DirListAttr and DirListExist, by fileds:
      * <ul>
      * <li>{@link ru.newcontrol.ncfv.NcDcIdxDirListToFileAttr#dirListID NcDcIdxDirListToFileAttr.dirListID} == {@link ru.newcontrol.ncfv.NcDcIdxDirListToFileExist#dirListID NcDcIdxDirListToFileExist.dirListID}
@@ -86,9 +97,8 @@ public class NcPreIdxWork {
      * <li>{@link ru.newcontrol.ncfv.NcDcIdxDirListToFileAttr#pathHash NcDcIdxDirListToFileAttr.pathHash} == {@link ru.newcontrol.ncfv.NcDcIdxDirListToFileExist#pathHash NcDcIdxDirListToFileExist.pathHash}
      * </ul>
      * Output to console result of compare lists
-     * 
      */
-    public static void getNotEqualsRecordDirListAttrVsExist(){
+    protected static void getNotEqualsRecordDirListAttrVsExist(){
         long recordId = 0;
         
         File recordsAttr = NcIdxFileManager.getFileForDirListAttrContainedRecordId(recordId);
@@ -234,11 +244,15 @@ public class NcPreIdxWork {
         
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkInIndexFolderContent() }
+     * </ul>
      * This method return not finished (breaked) record of data
      * @param inFuncFileFromDirList
      * @param inFuncFileFromDirListExist 
      */
-    public static void getNotFinishedAppendToIndex(TreeMap<Long, File> inFuncFileFromDirList, TreeMap<Long, File> inFuncFileFromDirListExist){
+    private static void getNotFinishedAppendToIndex(TreeMap<Long, File> inFuncFileFromDirList, TreeMap<Long, File> inFuncFileFromDirListExist){
         TreeMap<Long, NcDcIdxDirListToFileAttr> dataFromDirList = new TreeMap<>();
         TreeMap<Long, NcDcIdxDirListToFileExist> dataFromDirListExist = new TreeMap<>();
         for(Map.Entry<Long, File> itemFromDirList : inFuncFileFromDirList.entrySet() ){
@@ -264,10 +278,14 @@ public class NcPreIdxWork {
         }
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#getNotFinishedAppendToIndex(java.util.TreeMap, java.util.TreeMap) }
+     * </ul>
      * Print to console data from {@link ru.newcontrol.ncfv.NcDcIdxDirListToFileAttr}
      * @param inFuncData {@link ru.newcontrol.ncfv.NcDcIdxDirListToFileAttr}
      */
-    public static void outToConsoleDirListAttr(NcDcIdxDirListToFileAttr inFuncData){
+    protected static void outToConsoleDirListAttr(NcDcIdxDirListToFileAttr inFuncData){
         NcAppHelper.outMessageToConsole("dirListID: " + inFuncData.dirListID);
         NcAppHelper.outMessageToConsole("diskID: " + inFuncData.diskID);
         NcAppHelper.outMessageToConsole("diskSnLong: " + inFuncData.diskSnLong);
@@ -292,10 +310,14 @@ public class NcPreIdxWork {
         NcAppHelper.outMessageToConsole("changedRecordID: " + inFuncData.changedRecordID);
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#getNotFinishedAppendToIndex(java.util.TreeMap, java.util.TreeMap) }
+     * </ul>
      * Print to console data from {@link ru.newcontrol.ncfv.NcDcIdxDirListToFileExist}
      * @param inFuncData {@link ru.newcontrol.ncfv.NcDcIdxDirListToFileExist}
      */
-    public static void outToConsoleDirListExist(NcDcIdxDirListToFileExist inFuncData){
+    private static void outToConsoleDirListExist(NcDcIdxDirListToFileExist inFuncData){
         if( inFuncData.nanoTimeEndAddToIndex < 0 ){
             NcAppHelper.outMessageToConsole("dirListID: " + inFuncData.dirListID);
             NcAppHelper.outMessageToConsole("diskID: " + inFuncData.diskID);
@@ -308,11 +330,15 @@ public class NcPreIdxWork {
         
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkInIndexFolderContent() }
+     * </ul>
      * List of data has 100 records, this method return file names for records < 100
      * @param inFuncSubDir
      * @return 
      */
-    public static TreeMap<Long, File> getNotFullFiles(File inFuncSubDir){
+    private static TreeMap<Long, File> getNotFullFiles(File inFuncSubDir){
         TreeMap<Integer, File> itemsInSubDir = NcIdxFileManager.getFileListFromSubDir(inFuncSubDir);
         TreeMap<Long, File> notFullItemsInSubDir = new TreeMap<Long, File>();
         for(Map.Entry<Integer, File> itemFile : itemsInSubDir.entrySet()){
@@ -335,11 +361,17 @@ public class NcPreIdxWork {
         return notFullItemsInSubDir;
     }
     /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkInIndexFolderContent() }
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#getNotFullFiles(java.io.File) }
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkFilesOnReadable(java.io.File) }
+     * </ul>
      * If on the file write operation breaked, data in file damage, this method test file
      * on readable and delete damaged files
      * @param inFuncSubDir 
      */
-    public static void checkFilesOnReadable(File inFuncSubDir){
+    private static void checkFilesOnReadable(File inFuncSubDir){
         TreeMap<Integer, File> itemsInSubDir = NcIdxFileManager.getFileListFromSubDir(inFuncSubDir);
         for(Map.Entry<Integer, File> itemFile : itemsInSubDir.entrySet()){
             if( itemFile.getValue().isDirectory() ){
@@ -357,11 +389,11 @@ public class NcPreIdxWork {
     }
     
     /**
-     *
+     * Not used
      * @param inFuncNameSubDir
      * @return
      */
-    public static Object getNcClassNameForSubDir(String inFuncNameSubDir){
+    private static Object getNcClassNameForSubDir(String inFuncNameSubDir){
         switch (inFuncNameSubDir){
             case "/t":
                     return Object.class;
@@ -394,10 +426,10 @@ public class NcPreIdxWork {
     // after danage data, part of not readable files may be repair form parsed logs, smoke and sleep
 
     /**
-     *
+     * Not used
      * @param inFuncSubDir
      */
-    public static void outFilesFromSubDirToConsole(File inFuncSubDir){
+    private static void outFilesFromSubDirToConsole(File inFuncSubDir){
         File[] inDirFiles = inFuncSubDir.listFiles();
         NcAppHelper.outMessageToConsole("");
         NcAppHelper.outMessageToConsole("Directory path: " + NcIdxFileManager.getStrCanPathFromFile(inFuncSubDir));
@@ -408,9 +440,12 @@ public class NcPreIdxWork {
     }
     
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkInIndexFolderContent() }
+     * </ul>
      */
-    public static void checkTmpIDsData(){
+    private static void checkTmpIDsData(){
         File fileTmpIDs = NcIdxFileManager.getTmpIdsFile();
         boolean fileGet = NcIdxFileManager.isErrorForFileOperation(fileTmpIDs);
         if( fileGet ){
@@ -436,10 +471,13 @@ public class NcPreIdxWork {
     }
 
     /**
-     *
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreIdxWork#checkTmpIDsData() }
+     * </ul>
      * @param readedTmpIDsData
      */
-    public static void getTmpIdsDataToConsole(NcTmpNowProcessInfo readedTmpIDsData){
+    private static void getTmpIdsDataToConsole(NcTmpNowProcessInfo readedTmpIDsData){
         NcAppHelper.outMessageToConsole("TmpIdsData: ");
         NcAppHelper.outMessageToConsole("journalid: " + readedTmpIDsData.journalid + " \tjournalname: " + readedTmpIDsData.journalname);
         NcAppHelper.outMessageToConsole("listnameid: " + readedTmpIDsData.listnameid + " \tlistnameid: " + readedTmpIDsData.listname);
