@@ -22,10 +22,13 @@ package ru.newcontrol.ncfv;
  */
 public class NcfvRunVariables {
     private static boolean devStage = true;
+    
     private static boolean outWithTrace = false;
     private static boolean outWithPrintFunc = false;
     private static boolean outWithFileName = false;
+    
     private static final int LOGLINES = 10000;
+    
     private static boolean outToLogFile = true;
     private static boolean outToLogWithTrace = true;
     private static boolean outToLogPrintFunc = true;
@@ -42,6 +45,7 @@ public class NcfvRunVariables {
     private static boolean boolLALRNcSwPanelCentergetPanel = true;
     
     private static boolean boolLALRNcParamFvReaderReadDataFromWorkCfg = true;
+    private static boolean boolLALRNcPreRunFileViewerGetCurrentWorkCfg = true;
     
     protected static boolean getIncludeFile(){
         return outWithFileName;
@@ -99,5 +103,8 @@ public class NcfvRunVariables {
     }
     protected static boolean isLALRNcParamFvReaderReadDataFromWorkCfg(){
         return boolLALRNcParamFvReaderReadDataFromWorkCfg;
+    }
+    protected static boolean isLALRNcPreRunFileViewerGetCurrentWorkCfg(){
+        return boolLALRNcPreRunFileViewerGetCurrentWorkCfg;
     }
 }

@@ -48,4 +48,18 @@ public class NcLogLogicCfg {
             NcAppHelper.outMessage(strLogMsg);
         }
     }
+    /**
+     * Used in 
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcPreRunFileViewer#getCurrentWorkCfg() }
+     * </ul>
+     */
+    protected static void NcPreRunFileViewerGetCurrentWorkCfg(){
+        if( NcfvRunVariables.isLALRNcPreRunFileViewerGetCurrentWorkCfg() ){
+            String strLogMsg = NcStrLogMsgField.INFO.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogLogicVar.LA_CFG_WORK_GET_CURRENT.getStr();
+            NcAppHelper.outMessage(strLogMsg);
+        }
+    }    
 }

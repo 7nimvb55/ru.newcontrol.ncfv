@@ -22,6 +22,7 @@ package ru.newcontrol.ncfv;
 public enum NcStrLogMsgText {
     RUN_WITH_OUT_ARGS("Run with out args"),
     GUI_CREATE_JPANEL_FOR_MAIN_FRAME("Gui create JPanel for main frame"),
+    APP_LOADER_START("[APP_LOADER_START]"),
     APP_GUI_START("Application start in GUI mode"),
     APP_ERROR_EXIT("Application stop with critical error"),
     LOG_CREATE("Log file created"),

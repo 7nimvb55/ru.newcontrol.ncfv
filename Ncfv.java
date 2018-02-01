@@ -41,8 +41,8 @@ public class Ncfv {
      *  "-console"
      */
     
-    protected static void main(String[] args) {
-        
+    public static void main(String[] args) {
+        NcAppLoader.loadApp();
         if (args.length == 0){
             isRunInSwing = true;
             oneofAppRun = true;

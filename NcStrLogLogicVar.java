@@ -20,6 +20,9 @@ package ru.newcontrol.ncfv;
  * @author wladimirowichbiaran
  */
 public enum NcStrLogLogicVar {
+    
+    
+    
     LA_SET_VISIBLE_GUI("[LA_GUI_SET_VISIBLE_GUI]"),
     LA_GUI_WAIT_FOR_USER_INPUT("[LA_GUI_WAIT_FOR_USER_INPUT]"),
     LA_JPANEL_CENTER("[LA_GUI_JPANEL_CENTER]"),
@@ -31,7 +34,8 @@ public enum NcStrLogLogicVar {
     LA_JMENU("[LA_GUI_JMENU]"),
     LA_JMENUBAR("[LA_GUI_JMENUBAR]"),
     
-    LA_CFG_WORK_READ_FROM_FILE("[LA_CFG_READ_WORK_FROM_FILE]"),
+    LA_CFG_WORK_GET_CURRENT("[LA_CFG_WORK_GET_CURRENT]"),
+    LA_CFG_WORK_READ_FROM_FILE("[LA_CFG_WORK_READ_FROM_FILE]"),
     LA_CFG_WORK_GENERATE_ZERO("[LA_CFG_WORK_GENERATE_ZERO]"),
     
     LA_CHECK("[LA_CFG_WORK_CFG]"),
@@ -43,6 +47,7 @@ public enum NcStrLogLogicVar {
     /**
      * Used in
      * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcLogLogicCfg#NcPreRunFileViewerGetCurrentWorkCfg() }
      * <li>{@link ru.newcontrol.ncfv.NcLogLogicCfg#NcParamFvReaderReadDataRead() }
      * <li>{@link ru.newcontrol.ncfv.NcLogLogicCfg#NcParamFvReaderReadDataGenerate() }
      * <li>

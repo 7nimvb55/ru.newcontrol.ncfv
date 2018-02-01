@@ -87,6 +87,7 @@ public class NcPreRunFileViewer {
                 NcAppHelper.appExitWithMessage("Can't get for current work config, error");
             }
         }
+        NcLogLogicCfg.NcPreRunFileViewerGetCurrentWorkCfg();
         return readedWorkCfg;
     }
     /**
