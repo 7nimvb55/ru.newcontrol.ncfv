@@ -72,6 +72,7 @@ public class NcLogFileManager {
                     + ncStrCfgPath + "\n";
             NcAppHelper.appExitWithMessage(strExitMsg + ex.getMessage());
         }
+        NcfvRunVariables.setCanRecord();
     }
     /**
      * Used in 

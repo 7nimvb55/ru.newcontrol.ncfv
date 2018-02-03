@@ -30,6 +30,7 @@ public class NcfvRunVariables {
     private static boolean outWithFileName = false;
     
     private static final int LOGLINES = 10000;
+    private static boolean boolCanRecord = false;
     
     private static boolean outToLogFile = true;
     private static boolean outToLogWithTrace = true;
@@ -52,6 +53,13 @@ public class NcfvRunVariables {
     
     private static boolean boolLALRNcIdxFileManagerFileExistRWAccessChecker = true;
     
+    protected static void setCanRecord(){
+        boolCanRecord = true;
+    }
+    
+    protected static boolean getCanRecord(){
+        return boolCanRecord;
+    }
     protected static boolean getIncludeFile(){
         return outWithFileName;
     }

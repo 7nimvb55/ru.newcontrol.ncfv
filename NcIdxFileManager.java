@@ -123,7 +123,6 @@ public class NcIdxFileManager {
                     NcIdxFileManager.class.getCanonicalName(), ex);
             return false;
         }
-        NcLogLogicApp.NcIdxFileManagerFileExistRWAccessChecker(strFIds.getAbsolutePath());
         return false;
     }
     /**
@@ -794,6 +793,12 @@ public class NcIdxFileManager {
         boolean boolCheck = NcIdxFileManager.fileExistRWAccessChecker(fileForTmpIds);
         if( boolCheck ){
             return fileForTmpIds;
+        }
+        try {
+            NcLogLogicApp.NcIdxFileManagerFileExistRWAccessChecker(fileForTmpIds.getCanonicalPath());
+        } catch (IOException ex) {
+            NcAppHelper.logException(
+                NcIdxFileManager.class.getCanonicalName(), ex);
         }
         return getErrorForFileOperation();
     }
