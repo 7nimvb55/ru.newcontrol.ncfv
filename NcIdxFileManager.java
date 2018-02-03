@@ -790,17 +790,7 @@ public class NcIdxFileManager {
         File fileT = listSubDirs.get("/t".hashCode());
         String strFilePath = strPathCombiner(getStrCanPathFromFile(fileT), NcStrFileDir.FILE_ID_DATA.getStr());
         File fileForTmpIds = new File(strFilePath);
-        boolean boolCheck = NcIdxFileManager.fileExistRWAccessChecker(fileForTmpIds);
-        if( boolCheck ){
-            return fileForTmpIds;
-        }
-        try {
-            NcLogLogicApp.NcIdxFileManagerFileExistRWAccessChecker(fileForTmpIds.getCanonicalPath());
-        } catch (IOException ex) {
-            NcAppHelper.logException(
-                NcIdxFileManager.class.getCanonicalName(), ex);
-        }
-        return getErrorForFileOperation();
+        return fileForTmpIds;
     }
     /**
      * Used in

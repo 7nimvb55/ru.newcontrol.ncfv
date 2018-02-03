@@ -25,6 +25,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileSystemView;
 
@@ -85,17 +86,19 @@ public class NcSwGUIComponent {
         for(File itemDisk : ncDisks){
             
             Icon itemIcon = fileSystemView.getSystemIcon(itemDisk);
+            String strSysTypeDescription = fileSystemView.getSystemTypeDescription(itemDisk);
+            if( "".equals(strSysTypeDescription) || (strSysTypeDescription == null) ){
+                if( !NcAppHelper.isWindows() ){
+                    strSysTypeDescription = "Root";
+                }
+            }
             String itemDisplayName = NcIdxFileManager.getStrCanPathFromFile(itemDisk) + " - " +
-                    fileSystemView.getSystemTypeDescription(itemDisk);
+                    strSysTypeDescription;
             
             if( NcIdxFileManager.getStrCanPathFromFile(itemDisk).length() > 2 ){
                 itemDisplayName = NcIdxFileManager.getStrCanPathFromFile(itemDisk).substring(0, 2) + " - " +
-                    fileSystemView.getSystemTypeDescription(itemDisk);
+                    strSysTypeDescription;
             }
-            
-                    
-
-            
             long ncDriveFreeGb = itemDisk.getFreeSpace()/ncForGB;
             long ncDriveTotalGb = itemDisk.getTotalSpace()/ncForGB;
             
@@ -209,5 +212,11 @@ public class NcSwGUIComponent {
      */
     private static JList addJListElement(JList ncJList){
         return ncJList;
+    }
+    protected static JProgressBar getProgressBar(){
+        JProgressBar progressBar = new JProgressBar();
+        progressBar.setIndeterminate(true);
+        progressBar.setVisible(false);
+        return progressBar;
     }
 }

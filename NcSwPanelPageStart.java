@@ -57,8 +57,10 @@ public class NcSwPanelPageStart {
         
         btnSearch.addActionListener(new ActionListener(){
             public void  actionPerformed(ActionEvent e){
+                NcSwStatusPanel.visibleProgressBar(lComp);
                 String strSearch = addNorthWordSearch.getText();
                 NcSwThreadManager.setToViewSearchedResult(lComp, strSearch);
+                NcSwStatusPanel.hideProgressBar(lComp);
             }
         });
         

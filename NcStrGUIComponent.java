@@ -48,6 +48,7 @@ public enum NcStrGUIComponent {
     STEXTFIELD("TEXTFIELD"),
     SJLABEL("JLABEL"),
     SJBUTTON("JBUTTON"),
+    SJPROGRESSBAR("JPROGRESSBAR"),
     
     SSEARCH("SEARCH"),
     SMANAGE("MANAGE"),
