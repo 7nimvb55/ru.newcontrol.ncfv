@@ -227,6 +227,7 @@ public class NcPreRunFileViewer {
         if( !resultCheckFileDirInIndex ){
             NcParamCfgToDiskReleaser.getWorkFileParams(strPotFileDirInIndex);
             strPotFileDirInIndex = NcPathFromUserChecker.strInputAppWorkFileDefault(defaultWorkCfg.dirInIndex);
+            
             resultCheckFileDirInIndexDefault = NcParamCfgToDiskReleaser.checkOrCreateFiles(strPotFileDirInIndex);
         }
         outFuncWorkCfg = new NcParamFv(
@@ -242,7 +243,7 @@ public class NcPreRunFileViewer {
                 "",
                 NcIdxFileManager.getIndexSubDirectories(strPotWorkDir)
         );
-        
+        NcLogLogicCfg.NcPreRunFileViewerValidateAndApplyCfg();
         return outFuncWorkCfg;
     }
 

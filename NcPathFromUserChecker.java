@@ -240,6 +240,7 @@ public class NcPathFromUserChecker {
      * @return 
      */
     private static String strInputAddPrefixWorkAppDir(String strInput){
+        String strWorkCfgPath = NcIdxFileManager.getWorkCfgPath();
         String strAppPath = NcIdxFileManager.getAppWorkDirStrPath();
         if( strAppPath.length() == 0 ){
             return strInput;

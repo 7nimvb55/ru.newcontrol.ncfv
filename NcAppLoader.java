@@ -27,8 +27,9 @@ public class NcAppLoader {
     private static void checkLoad(){
         Thread t = Thread.currentThread();
         t.checkAccess();
+        
         ClassLoader contextClassLoader = t.getContextClassLoader();
         ClassLoader parent = contextClassLoader.getParent();
-        
+        ClassLoader classLoader = parent.getClass().getClassLoader();
     }
 }

@@ -225,7 +225,7 @@ public class NcAppHelper {
      */
     protected static void outMessage(String strMessage){
         if( NcfvRunVariables.getStage() ){
-            if( !Ncfv.getRunIsSwing() ){
+            if( !NcfvRunVariables.isNoOutToConsole() ){
                 if( NcfvRunVariables.getWithTrace() ){
                     String strNowTime = java.time.LocalDateTime.now().toString();
                     outMessageToConsole("at " + strNowTime + "\n");

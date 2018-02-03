@@ -23,6 +23,8 @@ package ru.newcontrol.ncfv;
 public class NcfvRunVariables {
     private static boolean devStage = true;
     
+    private static boolean noOutToConsole = true;
+    
     private static boolean outWithTrace = false;
     private static boolean outWithPrintFunc = false;
     private static boolean outWithFileName = false;
@@ -46,6 +48,7 @@ public class NcfvRunVariables {
     
     private static boolean boolLALRNcParamFvReaderReadDataFromWorkCfg = true;
     private static boolean boolLALRNcPreRunFileViewerGetCurrentWorkCfg = true;
+    private static boolean boolLALRNcPreRunFileViewerValidateAndApplyCfg = true;
     
     protected static boolean getIncludeFile(){
         return outWithFileName;
@@ -58,6 +61,9 @@ public class NcfvRunVariables {
     }
     protected static boolean getStage(){
         return devStage;
+    }
+    protected static boolean isNoOutToConsole(){
+        return noOutToConsole;
     }
     protected static int getLogLinesCount(){
         return LOGLINES;
@@ -106,5 +112,8 @@ public class NcfvRunVariables {
     }
     protected static boolean isLALRNcPreRunFileViewerGetCurrentWorkCfg(){
         return boolLALRNcPreRunFileViewerGetCurrentWorkCfg;
+    }
+    protected static boolean isLALRNcPreRunFileViewerValidateAndApplyCfg(){
+        return boolLALRNcPreRunFileViewerValidateAndApplyCfg;
     }
 }
