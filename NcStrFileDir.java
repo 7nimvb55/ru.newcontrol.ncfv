@@ -43,10 +43,10 @@ public enum NcStrFileDir {
     DIR_APP_CFG("/etc"),
     FILE_APP_CFG("/ncfv.conf"),
     
-    FILE_SRCH_KEY_OUT("keywordout.list"),
-    FILE_SRCH_KEY_IN("keywordin.list"),
-    FILE_SRCH_DIR_OUT("dirout.list"),
-    FILE_SRCH_DIR_IN("dirin.list");
+    FILE_SRCH_KEY_OUT("/keywordout.list"),
+    FILE_SRCH_KEY_IN("/keywordin.list"),
+    FILE_SRCH_DIR_OUT("/dirout.list"),
+    FILE_SRCH_DIR_IN("/dirin.list");
 
     private String fileSubDirName;
     /**

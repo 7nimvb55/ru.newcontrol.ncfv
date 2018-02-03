@@ -67,6 +67,7 @@ public class NcPreRunFileViewer {
     protected static NcParamFv getCurrentWorkCfg(){
         File fileCfg = NcIdxFileManager.getOrCreateCfgFile();
         NcParamFv readedWorkCfg = NcParamFvReader.readDataFromWorkCfg();
+        
         boolean boolMD5 = false;
         boolean boolSHA1 = false;
         boolean boolSHA256 = false;
@@ -88,6 +89,7 @@ public class NcPreRunFileViewer {
             }
         }
         NcLogLogicCfg.NcPreRunFileViewerGetCurrentWorkCfg();
+        
         return readedWorkCfg;
     }
     /**
@@ -101,7 +103,13 @@ public class NcPreRunFileViewer {
         File fileCfg = NcIdxFileManager.getOrCreateCfgFile();
         ArrayList<String> arrStrCfg = getReadedLinesFromEtcCfg();
         NcParamFv paramReadedCfg = parseEtcCfg(arrStrCfg);
+        
+        
+        
         NcParamFv paramFromValideCfg = validateAndApplyCfg(paramReadedCfg);
+        
+        
+        
         ArrayList<String> arrStrToUpdateCfg = getLinesParametersForUpdateCfg(paramFromValideCfg);
         int countLines = updateEtcCfg(arrStrToUpdateCfg);
         NcParamFv paramToWriteCfg = null;
@@ -113,6 +121,9 @@ public class NcPreRunFileViewer {
             NcAppHelper.appExitWithMessage("Can't write work configuration parameters");
             return new NcParamFv();
         }
+        
+        
+        
         return paramToWriteCfg;
     }
     
@@ -130,41 +141,33 @@ public class NcPreRunFileViewer {
         for( Map.Entry<Long, NcDiskInfo> itemDisk : sysDisk.entrySet() ){
             diskUserAlias.put((int) itemDisk.getValue().diskID, itemDisk.getValue().humanAlias);
         }
-        String strIndex = "/ncfvdi";
-        if( !NcAppHelper.isWindows() ){
-            String homePath = NcIdxFileManager.getUserHomeDirStrPath();
-            String appDir = NcIdxFileManager.getAppWorkDirStrPath();
-            strIndex = NcIdxFileManager.strPathCombiner(homePath, strIndex);
-            String kwdOut = NcIdxFileManager.strPathCombiner(appDir, "keywordout.list");
-            String kwdIn = NcIdxFileManager.strPathCombiner(appDir, "keywordin.list");
-            String dirOut = NcIdxFileManager.strPathCombiner(appDir, "dirout.list");
-            String dirIn = NcIdxFileManager.strPathCombiner(appDir, "dirin.list");
-            NcParamFv defaultCfgForReturn = new NcParamFv(
-            strIndex,
-            kwdOut,
-            kwdIn,
-            dirOut,
-            dirIn,
-            diskUserAlias,
-            "",
-            "",
-            "",
-            "",
-            new TreeMap<Integer, File>());
-        return defaultCfgForReturn;
-        }
+        String strIndex = NcStrFileDir.DIR_IDX.getStr();
+
+        String homePath = NcIdxFileManager.getUserHomeDirStrPath();
+        String appDir = NcIdxFileManager.getAppWorkDirStrPath();
+        strIndex = NcIdxFileManager.strPathCombiner(homePath, strIndex);
+        String kwdOut = NcIdxFileManager.strPathCombiner(appDir,
+            NcStrFileDir.FILE_SRCH_KEY_OUT.getStr());
+        String kwdIn = NcIdxFileManager.strPathCombiner(appDir,
+            NcStrFileDir.FILE_SRCH_KEY_IN.getStr());
+        String dirOut = NcIdxFileManager.strPathCombiner(appDir,
+            NcStrFileDir.FILE_SRCH_DIR_OUT.getStr());
+        String dirIn = NcIdxFileManager.strPathCombiner(appDir,
+            NcStrFileDir.FILE_SRCH_DIR_IN.getStr());
+        
         NcParamFv defaultCfgForReturn = new NcParamFv(
-            strIndex,
-            "keywordout.list",
-            "keywordin.list",
-            "dirout.list",
-            "dirin.list",
-            diskUserAlias,
-            "",
-            "",
-            "",
-            "",
-            new TreeMap<Integer, File>());
+        strIndex,
+        kwdOut,
+        kwdIn,
+        dirOut,
+        dirIn,
+        diskUserAlias,
+        "",
+        "",
+        "",
+        "",
+        new TreeMap<Integer, File>());
+
         return defaultCfgForReturn;
     }
     
@@ -188,11 +191,13 @@ public class NcPreRunFileViewer {
         NcParamFv defaultWorkCfg = getDefaultCfgValues();
         NcParamFv outFuncWorkCfg;
         
+        
         String strPotWorkDir = NcPathFromUserChecker.strInputAppWorkDirFromUser(inFuncReadedCfg.indexPath, defaultWorkCfg.indexPath);
         String strPotFileKeyOutSearch = NcPathFromUserChecker.strInputAppWorkFileFromUser(inFuncReadedCfg.keywordsOutOfSearch, defaultWorkCfg.keywordsOutOfSearch);
         String strPotFileKeyInSearch = NcPathFromUserChecker.strInputAppWorkFileFromUser(inFuncReadedCfg.keywordsInSearch, defaultWorkCfg.keywordsInSearch);
         String strPotFileDirOutIndex = NcPathFromUserChecker.strInputAppWorkFileFromUser(inFuncReadedCfg.dirOutOfIndex, defaultWorkCfg.dirOutOfIndex);
         String strPotFileDirInIndex = NcPathFromUserChecker.strInputAppWorkFileFromUser(inFuncReadedCfg.dirInIndex, defaultWorkCfg.dirInIndex);
+        
         
         boolean resultCheckWorkDir = NcParamCfgToDiskReleaser.checkOrCreateIdxDirStructure(strPotWorkDir);
         boolean resultCheckWorkDirDefault = false;
@@ -342,12 +347,13 @@ public class NcPreRunFileViewer {
      * @return {@link ru.newcontrol.ncfv.NcParamFv }
      */
     private static NcParamFv parseEtcCfg(ArrayList<String> arrStrReadedCfg){
+        NcParamFv defaultWorkCfg = getDefaultCfgValues();
         NcParamFv paramReadedCfg;
-        String indexPathTmp = "/ncfvdi";
-        String keywordsOutOfSearchTmp = "keywordout.list";
-        String keywordsInSearchTmp = "keywordin.list";
-        String dirOutOfIndexTmp = "dirout.list";
-        String dirInIndexTmp = "dirin.list";
+        String indexPathTmp = defaultWorkCfg.indexPath;
+        String keywordsOutOfSearchTmp = defaultWorkCfg.keywordsOutOfSearch;
+        String keywordsInSearchTmp = defaultWorkCfg.keywordsInSearch;
+        String dirOutOfIndexTmp = defaultWorkCfg.dirOutOfIndex;
+        String dirInIndexTmp = defaultWorkCfg.dirInIndex;
         TreeMap<Integer, String> diskUserAliasTmp;
         diskUserAliasTmp = new TreeMap<Integer, String>();
         for( String itemStrCfg : arrStrReadedCfg ){

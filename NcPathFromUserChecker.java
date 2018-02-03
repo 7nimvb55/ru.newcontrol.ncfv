@@ -41,6 +41,9 @@ public class NcPathFromUserChecker {
      * @return string of path for potential work index directory
      */
     protected static String strInputAppWorkDirFromUser(String strInput, String strDefault){
+        if( strInput.equals(strDefault) ){
+            return strDefault;
+        }
         String strOuput = strInputPathFormatFilter(strInput, strDefault);
         if( strPathWinNetworkStart(strOuput) ){
             if( !NcAppHelper.isWindows() ){
@@ -142,6 +145,9 @@ public class NcPathFromUserChecker {
      * @return string of path for potential files with search condition data
      */
     protected static String strInputAppWorkFileFromUser(String strInput, String strDefault){
+        if( strInput.equals(strDefault) ){
+            return strDefault;
+        }
         String strOuput = strInputPathFormatFilter(strInput, strDefault);
         if( strPathWinNetworkStart(strOuput) ){
             if( !NcAppHelper.isWindows() ){
@@ -399,7 +405,7 @@ public class NcPathFromUserChecker {
             if( strPathRootStartForNotWindows(strDefault) ){
                 String strGenerateErrorVal = NcIdxFileManager.strPathCombiner(
                     NcIdxFileManager.getAppWorkDirStrPath(),
-                    strDefault);
+                    "/wrongDefaults/f_" + System.nanoTime() + ".error");
                 NcAppHelper.outMessage(NcStrLogMsgField.ERROR.getStr()
                     + NcStrLogMsgField.CHECK_RESULT.getStr()
                     + NcStrServiceMsg.PATH_FOR_NOT_WINDOWS_SYSTEM.getStr()

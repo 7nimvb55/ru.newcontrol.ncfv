@@ -34,4 +34,13 @@ public class NcLogLogicApp {
             NcAppHelper.outMessage(strLogMsg);
         }
     }
+    protected static void NcIdxFileManagerFileExistRWAccessChecker(String strFile){
+        if( NcfvRunVariables.isLALRNcIdxFileManagerFileExistRWAccessChecker() ){
+            String strLogMsg = NcStrLogMsgField.ERROR.getStr()
+                + NcStrLogMsgField.APP_LOGIC_NOW.getStr()
+                + NcStrLogMsgText.NOT_EXIST_OR_READ_WRITE_PERMISSIONS_FOR_FILE.getStr()
+                + strFile;
+            NcAppHelper.outMessage(strLogMsg);
+        }
+    }
 }

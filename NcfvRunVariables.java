@@ -50,6 +50,8 @@ public class NcfvRunVariables {
     private static boolean boolLALRNcPreRunFileViewerGetCurrentWorkCfg = true;
     private static boolean boolLALRNcPreRunFileViewerValidateAndApplyCfg = true;
     
+    private static boolean boolLALRNcIdxFileManagerFileExistRWAccessChecker = true;
+    
     protected static boolean getIncludeFile(){
         return outWithFileName;
     }
@@ -115,5 +117,8 @@ public class NcfvRunVariables {
     }
     protected static boolean isLALRNcPreRunFileViewerValidateAndApplyCfg(){
         return boolLALRNcPreRunFileViewerValidateAndApplyCfg;
+    }
+    protected static boolean isLALRNcIdxFileManagerFileExistRWAccessChecker(){
+        return boolLALRNcIdxFileManagerFileExistRWAccessChecker;
     }
 }

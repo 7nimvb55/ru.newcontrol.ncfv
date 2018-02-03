@@ -29,7 +29,8 @@ public enum NcStrLogMsgText {
     LOG_RECORD_APPEND("Append new record"),
     CALLED_ERROR_FOR_FILE_OPERATION("Error in file operation, NcIdxFileManager.getErrorForFileOperation() called"),
     LA_CHECK("[LA_WORK_CFG]"),
-    LA_CHECK_SUB_DIR("[LA_CHECK_SUB_DIRS]");
+    LA_CHECK_SUB_DIR("[LA_CHECK_SUB_DIRS]"),
+    NOT_EXIST_OR_READ_WRITE_PERMISSIONS_FOR_FILE("[NOT_EXIST_OR_READ_WRITE_PERMISSIONS_FOR_FILE]");
     private String strMsg;
     NcStrLogMsgText(String strMsg){
         this.strMsg = strMsg;

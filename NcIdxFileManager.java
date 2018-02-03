@@ -123,6 +123,7 @@ public class NcIdxFileManager {
                     NcIdxFileManager.class.getCanonicalName(), ex);
             return false;
         }
+        NcLogLogicApp.NcIdxFileManagerFileExistRWAccessChecker(strFIds.getAbsolutePath());
         return false;
     }
     /**
@@ -788,7 +789,7 @@ public class NcIdxFileManager {
         TreeMap<Integer, File> listSubDirs = new TreeMap<Integer, File>();
         listSubDirs.putAll(readedWorkCfg.tmIndexSubDirs);
         File fileT = listSubDirs.get("/t".hashCode());
-        String strFilePath = strPathCombiner(getStrCanPathFromFile(fileT), NcManageCfg.getWorkFileNames()[1]);
+        String strFilePath = strPathCombiner(getStrCanPathFromFile(fileT), NcStrFileDir.FILE_ID_DATA.getStr());
         File fileForTmpIds = new File(strFilePath);
         boolean boolCheck = NcIdxFileManager.fileExistRWAccessChecker(fileForTmpIds);
         if( boolCheck ){
