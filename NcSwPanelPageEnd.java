@@ -47,8 +47,6 @@ public class NcSwPanelPageEnd {
         JLabel txtFromIndex = NcSwGUIComponent.createEmptyLabel();
         
         southPanel.add(txtFromIndex);
-        southPanel.add(NcSwStatusPanel.getProgressBar(lComp));
-        //NcSwStatusPanel.hideProgressBar(lComp);
         toLALRgetPanel();
         return southPanel;
     }

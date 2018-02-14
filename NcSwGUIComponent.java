@@ -213,10 +213,17 @@ public class NcSwGUIComponent {
     private static JList addJListElement(JList ncJList){
         return ncJList;
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwStatusPanel#addProgressBar(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @return 
+     */
     protected static JProgressBar getProgressBar(){
         JProgressBar progressBar = new JProgressBar();
         progressBar.setIndeterminate(true);
-        progressBar.setVisible(false);
+        progressBar.setVisible(true);
         return progressBar;
     }
 }

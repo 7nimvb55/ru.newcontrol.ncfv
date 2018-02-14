@@ -93,9 +93,10 @@ public class NcSwingIndexManagerApp {
         frame.setJMenuBar(NcSwMainMenu.getMainMenu(listComponents));
         toLALRcreateGuiPanel();
         
+        mainPanel.add(NcSwPanelPageEnd.getPanel(listComponents), BorderLayout.SOUTH);
         mainPanel.add(NcSwPanelCenter.getPanel(listComponents), BorderLayout.CENTER);
         mainPanel.add(NcSwPanelPageStart.getPanel(listComponents), BorderLayout.NORTH);
-        mainPanel.add(NcSwPanelPageEnd.getPanel(listComponents), BorderLayout.SOUTH);
+        
         mainPanel.add(NcSwPanelLineStart.getPanel(listComponents), BorderLayout.WEST);
         mainPanel.add(NcSwPanelLineEnd.getPanel(listComponents), BorderLayout.EAST);
 

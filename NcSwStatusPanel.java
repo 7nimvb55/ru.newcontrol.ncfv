@@ -27,7 +27,7 @@ public class NcSwStatusPanel {
      * @param lComp
      * @return 
      */
-    protected static JProgressBar getProgressBar(NcSwGUIComponentStatus lComp){
+    protected static JProgressBar addProgressBar(NcSwGUIComponentStatus lComp){
         String componentPath = getProgressBarPath();
         JProgressBar progressBar = NcSwGUIComponent.getProgressBar();
         lComp.putComponents(componentPath,

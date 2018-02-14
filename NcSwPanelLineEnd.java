@@ -41,6 +41,10 @@ public class NcSwPanelLineEnd {
      * @return
      */
     protected static JPanel getPanel(NcSwGUIComponentStatus lComp){
+        JPanel lineEndPanel = getSearchKeyWordManagePanel(lComp);
+        return lineEndPanel;
+    }
+    private static JPanel getSearchKeyWordManagePanel(NcSwGUIComponentStatus lComp){
         String[] forTextToolTip = {
             "For search with keyword, input it and press \"+\" Button",
             "For search with out keyword, input it and press \"+\" Button",
@@ -109,7 +113,6 @@ public class NcSwPanelLineEnd {
         toLALRgetPanel();
         return eastPanel;
     }
-
     /**
      * Used in
      * <ul>

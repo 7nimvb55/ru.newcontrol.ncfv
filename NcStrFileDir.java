@@ -20,7 +20,7 @@ package ru.newcontrol.ncfv;
  * @author wladimirowichbiaran
  */
 public enum NcStrFileDir {
-    DIR_IDX("/ncfvdi"),
+    DIR_IDX("/ncidxfv"),
     DIR_TMP("/t"),
     DIR_DIR_LIST("/di"),
     DIR_JOURNAL("/j"),
