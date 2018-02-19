@@ -222,7 +222,7 @@ public class NcSwGUIComponent {
      */
     protected static JProgressBar getProgressBar(){
         JProgressBar progressBar = new JProgressBar();
-        progressBar.setIndeterminate(true);
+        progressBar.setIndeterminate(false);
         progressBar.setVisible(true);
         return progressBar;
     }

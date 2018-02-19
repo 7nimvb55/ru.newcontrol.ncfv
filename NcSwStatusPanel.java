@@ -28,7 +28,8 @@ public class NcSwStatusPanel {
      * @return 
      */
     protected static JProgressBar addProgressBar(NcSwGUIComponentStatus lComp){
-        String componentPath = getProgressBarPath();
+        String componentPath = 
+                NcSwGUIComponentRouter.pathMainFramePanelPageEndProgressBar();
         JProgressBar progressBar = NcSwGUIComponent.getProgressBar();
         lComp.putComponents(componentPath,
             progressBar);
@@ -38,31 +39,22 @@ public class NcSwStatusPanel {
      * 
      * @param lComp 
      */
-    protected static void visibleProgressBar(NcSwGUIComponentStatus lComp){
-        String componentPath = getProgressBarPath();
+    protected static void indicationStartProgressBar(NcSwGUIComponentStatus lComp){
+        String componentPath = 
+                NcSwGUIComponentRouter.pathMainFramePanelPageEndProgressBar();
         JProgressBar progressBar = (JProgressBar) lComp.getComponentByPath(componentPath);
         progressBar.setIndeterminate(true);
-        progressBar.setVisible(true);
     }
     /**
      * 
      * @param lComp 
      */
-    protected static void hideProgressBar(NcSwGUIComponentStatus lComp){
-        String componentPath = getProgressBarPath();
-        JProgressBar progressBar = (JProgressBar) lComp.getComponentByPath(componentPath);
-        progressBar.setVisible(false);
+    protected static void indicationStopProgressBar(NcSwGUIComponentStatus lComp){
+        String componentPath = 
+                NcSwGUIComponentRouter.pathMainFramePanelPageEndProgressBar();
+        JProgressBar progressBar = 
+                (JProgressBar) lComp.getComponentByPath(componentPath);
+        progressBar.setIndeterminate(false);
     }
-    /**
-     * 
-     * @return 
-     */
-    protected static String getProgressBarPath(){
-        String componentPath = NcStrGUIComponent.SMAIN.getStr()
-            + NcStrGUIComponent.SJFRAME.getStr()
-            + NcStrGUIComponent.SJPANEL.getStr()
-            + NcStrGUIComponent.SPAGEEND.getStr()
-            + NcStrGUIComponent.SJPROGRESSBAR.getStr();
-        return componentPath;
-    }
+    
 }

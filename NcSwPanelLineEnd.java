@@ -24,6 +24,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JTree;
 import javax.swing.border.Border;
 
 
@@ -41,9 +42,35 @@ public class NcSwPanelLineEnd {
      * @return
      */
     protected static JPanel getPanel(NcSwGUIComponentStatus lComp){
-        JPanel lineEndPanel = getSearchKeyWordManagePanel(lComp);
+        JPanel lineEndPanel = getPanelTreeShowStack(lComp);
+        
         return lineEndPanel;
     }
+    
+    private static JPanel getPanelTreeShowStack(NcSwGUIComponentStatus lComp){
+        JTree treeStack = NcSwGUITreeShowStack.getTreeShowStack(lComp);
+        JScrollPane scrollPane = new JScrollPane(treeStack);
+        scrollPane.setAutoscrolls(true);
+        
+        Dimension dimMin = new Dimension(50, 70);
+        scrollPane.setMinimumSize(dimMin);
+        Dimension dimMax = new Dimension(250, 700);
+        scrollPane.setMaximumSize(dimMax);
+        Dimension dimPreff = new Dimension(250, 407);
+        scrollPane.setPreferredSize(dimPreff);
+        
+        String componentPath = NcSwGUIComponentRouter.pathMainFramePanelLineEndScrollPane();
+        lComp.putComponents(componentPath, scrollPane);
+        JPanel panel = new JPanel();
+        Border eastBorder = BorderFactory.createTitledBorder("EAST panel");
+        
+        panel.setBorder(eastBorder);
+        panel.add(scrollPane);
+        componentPath = NcSwGUIComponentRouter.pathMainFramePanelLineEnd();
+        lComp.putComponents(componentPath, panel);
+        return panel;
+    }
+    
     private static JPanel getSearchKeyWordManagePanel(NcSwGUIComponentStatus lComp){
         String[] forTextToolTip = {
             "For search with keyword, input it and press \"+\" Button",

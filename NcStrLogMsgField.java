@@ -34,6 +34,7 @@ public enum NcStrLogMsgField {
     MSG_INFO("[MSG][INFO]"),
     
     VARVAL("[VARVAL]"),
+    VALUE("[VALUE]"),
     VARNAME("[VARNAME]"),
     CHECK_RESULT("[CHECK_RESULT]"),
     
@@ -43,8 +44,11 @@ public enum NcStrLogMsgField {
     
     DELIMITER("[]"),
     TIME("[TIME]"),
+    ACTIVE("[ACTIVE]"),
+    GROUP("[GROUP]"),
     THREAD("[THREAD]"),
     THREAD_GROUP("[THREADGROUP]"),
+    
     THREAD_GROUP_NAME("[THREADGROUPNAME]"),
     COUNT("[COUNT]"),
     CLASSLOADER("[CLASSLOADER]"),
@@ -52,16 +56,27 @@ public enum NcStrLogMsgField {
     NAME("[NAME]"),
     CANONICALNAME("[CANONICALNAME]"),
     ID("[ID]"),
+    IS("[IS]"),
+    DAEMON("[DAEMON]"),
+    DESTROYED("[DESTROYED]"),
     STATE("[STATE]"),
     STACK("[STACK]"),
     TRACE("[TRACE]"),
     FILENAME("[FILENAME]"),
     CLASSNAME("[CLASSNAME]"),
     METHODNAME("[METHODNAME]"),
+    METHOD("[METHOD]"),
+    PARAMETER("[PARAMETER]"),
+    FIELD("[FIELD]"),
+    TYPE("[TYPE]"),
     LINENUM("[LINENUM]"),
     NATIVE("[NATIVE]"),
     ELEMENTNUM("[ELEMENTNUM]"),
-    MSG("[MSG]");
+    ELEMENT("[ELEMENT]"),
+    NUM("[NUM]"),
+    MSG("[MSG]"),
+    MAX("[MAX]"),
+    PRIORITY("[PRIORITY]");
     private String strMsg;
     NcStrLogMsgField(String strMsg){
         this.strMsg = strMsg;

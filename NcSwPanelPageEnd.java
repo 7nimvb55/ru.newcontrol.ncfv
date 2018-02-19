@@ -16,7 +16,10 @@
 package ru.newcontrol.ncfv;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -44,9 +47,19 @@ public class NcSwPanelPageEnd {
         Border southBorder = BorderFactory.createTitledBorder("SOUTH panel");
         southPanel.setBorder(southBorder);
         
-        JLabel txtFromIndex = NcSwGUIComponent.createEmptyLabel();
+        southPanel.add(
+            NcSwStatusPanel.addProgressBar(lComp)
+        );
+        JButton buttonGetStack = NcSwGUIComponent.createButton("Show", null, "Show now StackTrace");
         
-        southPanel.add(txtFromIndex);
+        buttonGetStack.addActionListener(new ActionListener(){
+            public void  actionPerformed(ActionEvent e){
+                NcSwStatusPanel.indicationStartProgressBar(lComp);
+                NcThWorkerUpGUITreeState.stateTreeAddChildren(lComp);
+                NcSwStatusPanel.indicationStopProgressBar(lComp);
+            }
+        });
+        southPanel.add(buttonGetStack);
         toLALRgetPanel();
         return southPanel;
     }
