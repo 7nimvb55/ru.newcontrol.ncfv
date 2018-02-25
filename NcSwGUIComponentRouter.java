@@ -32,6 +32,25 @@ public class NcSwGUIComponentRouter {
      * 
      * @return 
      */
+    protected static String pathMainFramePanel(){
+        return NcStrGUIComponent.SMAIN.getStr()
+                + NcStrGUIComponent.SJFRAME.getStr()
+                + NcStrGUIComponent.SJPANEL.getStr();
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected static String pathMainFramePanelLineStart(){
+        return NcStrGUIComponent.SMAIN.getStr()
+                + NcStrGUIComponent.SJFRAME.getStr()
+                + NcStrGUIComponent.SJPANEL.getStr()
+                + NcStrGUIComponent.SLINESTART.getStr();
+    }
+    /**
+     * 
+     * @return 
+     */
     protected static String pathMainFramePanelLineEnd(){
         return NcStrGUIComponent.SMAIN.getStr()
                 + NcStrGUIComponent.SJFRAME.getStr()
@@ -65,6 +84,26 @@ public class NcSwGUIComponentRouter {
      * 
      * @return 
      */
+    protected static String pathMainFramePanelPageStart(){
+        return NcStrGUIComponent.SMAIN.getStr()
+                + NcStrGUIComponent.SJFRAME.getStr()
+                + NcStrGUIComponent.SJPANEL.getStr()
+                + NcStrGUIComponent.SPAGESTART.getStr();
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected static String pathMainFramePanelPageEnd(){
+        return NcStrGUIComponent.SMAIN.getStr()
+                + NcStrGUIComponent.SJFRAME.getStr()
+                + NcStrGUIComponent.SJPANEL.getStr()
+                + NcStrGUIComponent.SPAGEEND.getStr();
+    }
+    /**
+     * 
+     * @return 
+     */
     protected static String pathMainFramePanelPageEndProgressBar(){
         String componentPath = NcStrGUIComponent.SMAIN.getStr()
             + NcStrGUIComponent.SJFRAME.getStr()
@@ -72,5 +111,26 @@ public class NcSwGUIComponentRouter {
             + NcStrGUIComponent.SPAGEEND.getStr()
             + NcStrGUIComponent.SJPROGRESSBAR.getStr();
         return componentPath;
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected static String pathMainFramePanelCenter(){
+        return NcStrGUIComponent.SMAIN.getStr()
+                + NcStrGUIComponent.SJFRAME.getStr()
+                + NcStrGUIComponent.SJPANEL.getStr()
+                + NcStrGUIComponent.SCENTER.getStr();
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected static String pathMainFramePanelCenterTable(){
+        return NcStrGUIComponent.SMAIN.getStr()
+            + NcStrGUIComponent.SJFRAME.getStr()
+            + NcStrGUIComponent.SJPANEL.getStr()
+            + NcStrGUIComponent.SCENTER.getStr()
+            + NcStrGUIComponent.SJTABLE.getStr();
     }
 }

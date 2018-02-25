@@ -40,10 +40,7 @@ public class NcSwPanelPageStart {
      */
     protected static JPanel getPanel(NcSwGUIComponentStatus lComp){
         JPanel northPanel = new JPanel();
-        String componentPath = NcStrGUIComponent.SMAIN.getStr()
-            + NcStrGUIComponent.SJFRAME.getStr()
-            + NcStrGUIComponent.SJPANEL.getStr()
-            + NcStrGUIComponent.SPAGESTART.getStr();
+        String componentPath = NcSwGUIComponentRouter.pathMainFramePanelPageStart();
         lComp.putComponents(componentPath, northPanel);
         Border northBorder = BorderFactory.createTitledBorder("NORTH panel");
         northPanel.setBorder(northBorder);

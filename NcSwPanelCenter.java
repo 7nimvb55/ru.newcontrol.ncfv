@@ -39,10 +39,7 @@ public class NcSwPanelCenter {
      */
     protected static JPanel getPanel(NcSwGUIComponentStatus lComp){
         JPanel centerPanel = new JPanel();
-        String componentPath = NcStrGUIComponent.SMAIN.getStr()
-            + NcStrGUIComponent.SJFRAME.getStr()
-            + NcStrGUIComponent.SJPANEL.getStr()
-            + NcStrGUIComponent.SCENTER.getStr();
+        String componentPath = NcSwGUIComponentRouter.pathMainFramePanelCenter();
         lComp.putComponents(componentPath, centerPanel);
         Border centerBorder = BorderFactory.createTitledBorder("CENTER panel");
         centerPanel.setBorder(centerBorder);
@@ -51,11 +48,7 @@ public class NcSwPanelCenter {
         TableModel ncTableModel = new NcSIMASearchResultTableModel(new ArrayList<String>(), new ArrayList<String>());
         
         JTable ncTable = new JTable(ncTableModel);
-        componentPath = NcStrGUIComponent.SMAIN.getStr()
-            + NcStrGUIComponent.SJFRAME.getStr()
-            + NcStrGUIComponent.SJPANEL.getStr()
-            + NcStrGUIComponent.SCENTER.getStr()
-            + NcStrGUIComponent.SJTABLE.getStr();
+        componentPath = NcSwGUIComponentRouter.pathMainFramePanelCenterTable();
         lComp.putComponents(componentPath, ncTable);
         
         

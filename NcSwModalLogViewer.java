@@ -47,8 +47,7 @@ public class NcSwModalLogViewer {
      * @return 
      */
     protected static JDialog getDialogLogViewer(NcSwGUIComponentStatus lComp){
-        String componentPath = NcStrGUIComponent.SMAIN.getStr()
-            + NcStrGUIComponent.SJFRAME.getStr();
+        String componentPath = NcSwGUIComponentRouter.pathMainFrame();
         JFrame mainFrame = (JFrame) lComp.getComponentByPath(componentPath);
         
         NcSwGUIComponentStatus compIndex = new NcSwGUIComponentStatus();

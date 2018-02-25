@@ -61,8 +61,7 @@ public class NcSwMenuItems {
         toRetMi.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                String componentPath = NcStrGUIComponent.SMAIN.getStr()
-                    + NcStrGUIComponent.SJFRAME.getStr();
+                String componentPath = NcSwGUIComponentRouter.pathMainFrame();
                 JFrame mainFrame =
                     (JFrame) lComp.getComponentByPath(componentPath);
                 NcSwModalDevHelper.showModalEnvironment(mainFrame);
@@ -84,8 +83,7 @@ public class NcSwMenuItems {
         toRetMi.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                String componentPath = NcStrGUIComponent.SMAIN.getStr()
-                    + NcStrGUIComponent.SJFRAME.getStr();
+                String componentPath = NcSwGUIComponentRouter.pathMainFrame();
                 JFrame mainFrame =
                     (JFrame) lComp.getComponentByPath(componentPath);
                 NcSwModalDevHelper.showModalProperties(mainFrame);

@@ -85,10 +85,7 @@ public class NcSwPanelLineEnd {
         Dimension textFiledForSearchDimension = new Dimension(100, 20);        
         
         JPanel eastPanel = new JPanel();
-        String componentPath = NcStrGUIComponent.SMAIN.getStr()
-            + NcStrGUIComponent.SJFRAME.getStr()
-            + NcStrGUIComponent.SJPANEL.getStr()
-            + NcStrGUIComponent.SLINEEND.getStr();
+        String componentPath = NcSwGUIComponentRouter.pathMainFramePanelLineEnd();
         lComp.putComponents(componentPath, eastPanel);
         Border eastBorder = BorderFactory.createTitledBorder("EAST panel");
         eastPanel.setBorder(eastBorder);

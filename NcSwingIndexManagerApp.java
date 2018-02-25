@@ -74,8 +74,7 @@ public class NcSwingIndexManagerApp {
         NcSwGUIComponentStatus listComponents = new NcSwGUIComponentStatus();
         
         JFrame frame = new JFrame(NcStrGUILabel.TITLE_APP.getStr());
-        String componentPath = NcStrGUIComponent.SMAIN.getStr()
-            + NcStrGUIComponent.SJFRAME.getStr();
+        String componentPath = NcSwGUIComponentRouter.pathMainFrame();
         listComponents.putComponents(componentPath, frame);  
             
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,9 +82,7 @@ public class NcSwingIndexManagerApp {
         toLALRcreateGui();
         
         JPanel mainPanel = new JPanel();
-        componentPath = NcStrGUIComponent.SMAIN.getStr()
-                + NcStrGUIComponent.SJFRAME.getStr()
-                + NcStrGUIComponent.SJPANEL.getStr();
+        componentPath = NcSwGUIComponentRouter.pathMainFramePanel();
         listComponents.putComponents(componentPath, mainPanel);
         
         mainPanel.setLayout(new BorderLayout());
@@ -101,6 +98,7 @@ public class NcSwingIndexManagerApp {
         mainPanel.add(NcSwPanelLineEnd.getPanel(listComponents), BorderLayout.EAST);
 
         frame.getContentPane().add(mainPanel);
+        frame.setMinimumSize(new Dimension(320, 240));
         frame.setPreferredSize(new Dimension(800, 600));
         frame.pack();
         frame.setLocationRelativeTo(null);
