@@ -51,6 +51,7 @@ public enum NcStrGUIComponent {
     SJPROGRESSBAR("JPROGRESSBAR"),
     
     SSEARCH("SEARCH"),
+    SGETSTACK("GETSTACK"),
     SMANAGE("MANAGE"),
     SDIRECTORY("DIRECTORY");
     

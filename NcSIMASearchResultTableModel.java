@@ -49,7 +49,9 @@ public class NcSIMASearchResultTableModel implements TableModel {
     protected NcSIMASearchResultTableModel(String strSearchInput) {
         ncDirectoryListReader = NcSrchGetResult.makeSearchByKeyFromInput(strSearchInput);
     }
-
+    protected NcSIMASearchResultTableModel(TreeMap<Long, NcDcIdxDirListToFileAttr> ncInFuncData) {
+        ncDirectoryListReader = ncInFuncData;
+    }
     /**
      * Used in
      * <ul>

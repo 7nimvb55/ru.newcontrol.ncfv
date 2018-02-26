@@ -94,11 +94,47 @@ public class NcSwGUIComponentRouter {
      * 
      * @return 
      */
+    protected static String pathMainFramePanelPageStartTextFieldSearch(){
+        return NcStrGUIComponent.SMAIN.getStr()
+                + NcStrGUIComponent.SJFRAME.getStr()
+                + NcStrGUIComponent.SJPANEL.getStr()
+                + NcStrGUIComponent.SPAGESTART.getStr()
+                + NcStrGUIComponent.STEXTFIELD.getStr()
+                + NcStrGUIComponent.SSEARCH.getStr();
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected static String pathMainFramePanelPageStartButtonSearch(){
+        return NcStrGUIComponent.SMAIN.getStr()
+                + NcStrGUIComponent.SJFRAME.getStr()
+                + NcStrGUIComponent.SJPANEL.getStr()
+                + NcStrGUIComponent.SPAGESTART.getStr()
+                + NcStrGUIComponent.SJBUTTON.getStr()
+                + NcStrGUIComponent.SSEARCH.getStr();
+    }
+    /**
+     * 
+     * @return 
+     */
     protected static String pathMainFramePanelPageEnd(){
         return NcStrGUIComponent.SMAIN.getStr()
                 + NcStrGUIComponent.SJFRAME.getStr()
                 + NcStrGUIComponent.SJPANEL.getStr()
                 + NcStrGUIComponent.SPAGEEND.getStr();
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected static String pathMainFramePanelPageEndButtonGetStack(){
+        return NcStrGUIComponent.SMAIN.getStr()
+                + NcStrGUIComponent.SJFRAME.getStr()
+                + NcStrGUIComponent.SJPANEL.getStr()
+                + NcStrGUIComponent.SPAGEEND.getStr()
+                + NcStrGUIComponent.SJBUTTON.getStr()
+                + NcStrGUIComponent.SGETSTACK.getStr();
     }
     /**
      * 

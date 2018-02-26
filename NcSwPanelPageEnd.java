@@ -48,6 +48,8 @@ public class NcSwPanelPageEnd {
             NcSwStatusPanel.addProgressBar(lComp)
         );
         JButton buttonGetStack = NcSwGUIComponent.createButton("Show", null, "Show now StackTrace");
+        componentPath = NcSwGUIComponentRouter.pathMainFramePanelPageEndButtonGetStack();
+        lComp.putComponents(componentPath, buttonGetStack);
         
         buttonGetStack.addActionListener(new ActionListener(){
             public void  actionPerformed(ActionEvent e){

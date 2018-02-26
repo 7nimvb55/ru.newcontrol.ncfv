@@ -34,10 +34,7 @@ public class NcSwThreadManager {
      * @param strSrch 
      */
     protected static void setToViewSearchedResult(NcSwGUIComponentStatus lComp, String strSrch){
-        String componentPath = NcStrGUIComponent.SMAIN.getStr()
-            + NcStrGUIComponent.SJFRAME.getStr()
-            + NcStrGUIComponent.SJPANEL.getStr()
-            + NcStrGUIComponent.SCENTER.getStr();
+        String componentPath = NcSwGUIComponentRouter.pathMainFramePanelCenter();
         JPanel centerPanel =
             (JPanel) lComp.getComponentByPath(componentPath);
         
@@ -45,11 +42,7 @@ public class NcSwThreadManager {
         //NcThProcGUICallbackInterface proxyInstGuiCb = getProxyInstanceGUICallback();
         TableModel locNewTableModel = new NcSIMASearchResultTableModel(strSrch);
         
-        componentPath = NcStrGUIComponent.SMAIN.getStr()
-            + NcStrGUIComponent.SJFRAME.getStr()
-            + NcStrGUIComponent.SJPANEL.getStr()
-            + NcStrGUIComponent.SCENTER.getStr()
-            + NcStrGUIComponent.SJTABLE.getStr();
+        componentPath = NcSwGUIComponentRouter.pathMainFramePanelCenterTable();
         JTable guiTable = (JTable) lComp.getComponentByPath(componentPath);
         
         guiTable.setModel(locNewTableModel);

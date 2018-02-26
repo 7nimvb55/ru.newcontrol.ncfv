@@ -29,6 +29,7 @@ public enum NcStrGUILabel {
     LOG_VIEW("Log View"),
     ENV_VIEW("Env View"),
     PROPERTIES_VIEW("Properties View"),
+    PARAMETERS_FOR_SEARCH("Parameters for search"),
     SETTINGS("Settings"),
     CHECK_SUBDIR("Check SubDir"),
     DIR_IN_INDEX("Dir in index"),

@@ -42,22 +42,30 @@ public class NcSwPanelPageStart {
         JPanel northPanel = new JPanel();
         String componentPath = NcSwGUIComponentRouter.pathMainFramePanelPageStart();
         lComp.putComponents(componentPath, northPanel);
-        Border northBorder = BorderFactory.createTitledBorder("NORTH panel");
+        Border northBorder = BorderFactory.createTitledBorder(
+                NcStrGUILabel.PARAMETERS_FOR_SEARCH.getStr());
         northPanel.setBorder(northBorder);
         northPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         
         JTextField addNorthWordSearch = new JTextField();
+        componentPath = NcSwGUIComponentRouter.pathMainFramePanelPageStartTextFieldSearch();
+        lComp.putComponents(componentPath, addNorthWordSearch);
+        
         addNorthWordSearch.setPreferredSize(new Dimension(300, 20));
         
         northPanel.add(addNorthWordSearch);
         JButton btnSearch = NcSwGUIComponent.createButton("Search",null,"");
+        componentPath = NcSwGUIComponentRouter.pathMainFramePanelPageStartButtonSearch();
+        lComp.putComponents(componentPath, btnSearch);
         
         btnSearch.addActionListener(new ActionListener(){
             public void  actionPerformed(ActionEvent e){
-                NcSwStatusPanel.indicationStartProgressBar(lComp);
+                //NcSwStatusPanel.indicationStartProgressBar(lComp);
                 String strSearch = addNorthWordSearch.getText();
-                NcSwThreadManager.setToViewSearchedResult(lComp, strSearch);
-                NcSwStatusPanel.indicationStopProgressBar(lComp);
+                //NcSwThreadManager.setToViewSearchedResult(lComp, strSearch);
+                NcThWorkerUpGUIKeyWordSearch.searchKeyWordGetResult(lComp);
+                
+                //NcSwStatusPanel.indicationStopProgressBar(lComp);
             }
         });
         
