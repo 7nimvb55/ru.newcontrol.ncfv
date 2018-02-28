@@ -50,6 +50,7 @@ public class NcSwMainMenu {
     private static JMenu getMenuFile(){
         JMenu menuFile = new JMenu("File");
         menuFile.add(NcSwMenuItems.getSubDirChecker());
+        
         menuFile.add(NcSwMenuItems.getAppExit());
         return menuFile;
     }
@@ -63,6 +64,7 @@ public class NcSwMainMenu {
      */
     private static JMenu getMenuDevelop(NcSwGUIComponentStatus lComp){
         JMenu menuDevelop = new JMenu("Development");
+        menuDevelop.add(NcSwMenuItems.getStorageWordViewer(lComp));
         menuDevelop.add(NcSwMenuItems.getLogFileReader(lComp));
         menuDevelop.add(NcSwMenuItems.getEnvironmentViewer(lComp));
         menuDevelop.add(NcSwMenuItems.getPropertiesViewer(lComp));

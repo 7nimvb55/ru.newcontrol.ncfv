@@ -105,6 +105,29 @@ public enum NcTypeOfWord {
         while( fileWithRecords.exists() );
         return listFiles;
     }
+    protected TreeMap<Long, File> getStorageWordAllExistFileName(){
+        
+        TreeMap<Integer, File> listDirs = NcIdxFileManager.getIndexWorkSubDirFilesList();
+        String strPathSubDir = NcIdxFileManager.strPathCombiner(NcIdxFileManager.getStrCanPathFromFile(listDirs.get("/sw".hashCode())), getName());
+        File filePathSubDir = new File(strPathSubDir);
+        boolean boolCheck = NcIdxFileManager.dirExistRWAccessChecker(filePathSubDir);
+        if( !boolCheck ){
+            if( !filePathSubDir.mkdirs() ){
+                return new TreeMap<Long, File>();
+            }
+        }
+        long recordID = 0;
+        File fileWithRecords;
+        TreeMap<Long, File> listFiles = new TreeMap<Long, File>();
+        File[] listFiles1 = filePathSubDir.listFiles();
+        long idx = 0;
+        for (File file : listFiles1) {
+            listFiles.put(idx, file);
+            idx++;
+        }
+        
+        return listFiles;
+    }
     /**
      * Used in
      * <ul>

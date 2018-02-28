@@ -158,4 +158,17 @@ public class NcSwMenuItems {
     protected static JMenuItem getAbout(){
         return new JMenuItem(NcStrGUILabel.ABOUT.getStr());
     }
+    protected static JMenuItem getStorageWordViewer(NcSwGUIComponentStatus lComp){
+        JMenuItem toRetMi = new JMenuItem(NcStrGUILabel.STORAGEWORD.getStr());
+        toRetMi.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                String componentPath = NcSwGUIComponentRouter.pathMainFrame();
+                JFrame mainFrame =
+                    (JFrame) lComp.getComponentByPath(componentPath);
+                NcSwModalStorageWord.showModalStorageWord(mainFrame);
+            }
+        });
+        return toRetMi;
+    }
 }

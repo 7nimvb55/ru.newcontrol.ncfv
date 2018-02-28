@@ -110,7 +110,20 @@ public class NcIdxStorageWordManager {
             listFilesInStorage.clear();
         }        
     }
-
+    protected static TreeMap<Long, NcDcIdxStorageWordToFile> getFromStorageWordAllRecords(String typeWords){
+        TreeMap<Long, File> listFilesInStorage = new TreeMap<Long, File>();
+        TreeMap<Long, NcDcIdxStorageWordToFile> readedData = new TreeMap<Long, NcDcIdxStorageWordToFile>();
+        
+        listFilesInStorage = getStorageWordAllExistFiles(typeWords);
+        if( !listFilesInStorage.isEmpty() ){
+            for(Map.Entry<Long, File> itemFile : listFilesInStorage.entrySet() ){
+                readedData.putAll(NcIdxStorageWordFileReader.ncReadFileContainedId(itemFile.getValue()));
+            }
+        }
+        listFilesInStorage.clear();
+        
+        return readedData;
+    }
     /**
      * Used in
      * <ul>
@@ -156,6 +169,21 @@ public class NcIdxStorageWordManager {
                 return NcTypeOfWord.NCLVLSYM.getStorageWordExistFileName(inFuncWordInHex, inFuncWord);
             case "NCLVLSPACE":
                 return NcTypeOfWord.NCLVLSPACE.getStorageWordExistFileName(inFuncWordInHex, inFuncWord);
+        }
+        return new TreeMap<Long, File>();
+    }
+    private static TreeMap<Long, File> getStorageWordAllExistFiles(String typeWords){
+        switch (typeWords){
+            case "NCLVLABC":
+                return NcTypeOfWord.NCLVLABC.getStorageWordAllExistFileName();
+            case "NCLVLRABC":
+                return NcTypeOfWord.NCLVLRABC.getStorageWordAllExistFileName();
+            case "NCLVLNUM":
+                return NcTypeOfWord.NCLVLNUM.getStorageWordAllExistFileName();
+            case "NCLVLSYM":
+                return NcTypeOfWord.NCLVLSYM.getStorageWordAllExistFileName();
+            case "NCLVLSPACE":
+                return NcTypeOfWord.NCLVLSPACE.getStorageWordAllExistFileName();
         }
         return new TreeMap<Long, File>();
     }
