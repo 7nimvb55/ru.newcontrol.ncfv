@@ -17,6 +17,8 @@ package ru.newcontrol.ncfv;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
@@ -119,7 +121,13 @@ public class NcSwGUIComponent {
             }
             
             JButton ncButton = createButton(itemDisplayName, itemIcon, itemToolTipText);
-         
+            ncButton.addActionListener(new ActionListener(){
+                public void  actionPerformed(ActionEvent e){
+                        NcFsIdxStorage.getDataFromIndex();
+                    }
+                }
+            );
+            
            
             toReturn.add(ncButton);
         }

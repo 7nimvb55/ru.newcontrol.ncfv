@@ -15,11 +15,16 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.io.File;
+import java.nio.file.Paths;
+
+
 /**
  *
  * @author wladimirowichbiaran
  */
 public enum NcStrFileDir {
+    
     DIR_IDX("/ncidxfv"),
     DIR_TMP("/t"),
     DIR_DIR_LIST("/di"),
@@ -34,6 +39,9 @@ public enum NcStrFileDir {
     DIR_LONG_WORD_DATA("/ln"),
     
     DIR_APP_DATA("/appdata"),
+    
+    FILE_INDEX_CONTAINS("/ncidxfv.zip"),
+    
     FILE_JOURNAL_DISK("/jdisk.dat"),
     FILE_DISK_DATA("/disks.dat"),
     FILE_ID_DATA("/ids.dat"),
