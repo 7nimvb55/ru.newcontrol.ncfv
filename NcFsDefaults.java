@@ -15,34 +15,28 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author wladimirowichbiaran
  */
-public class NcFsIdxStorage {
-    protected static void putDataToIndex(){
-        
+public class NcFsDefaults {
+    protected static Path getUserHomePath() throws IOException{
+        String usrHomePath = System.getProperty("user.home");
+        Path parentForFS = Paths.get(usrHomePath);
+        parentForFS = parentForFS.normalize();
+        parentForFS = parentForFS.toRealPath(LinkOption.NOFOLLOW_LINKS);
+        return parentForFS;
     }
-    protected static void getDataFromIndex(){
-        ThreadLocal<NcParamFs> openFsIdx = NcFsIdxStorageInit.getStorage();
-        
+    protected static Path getAppPath() throws IOException{
+        String appPath = System.getProperty("java.class.path");
+        Path parentForFS = Paths.get(appPath);
+        parentForFS = parentForFS.normalize();
+        parentForFS = parentForFS.toRealPath(LinkOption.NOFOLLOW_LINKS);
+        return parentForFS;
     }
-    protected static void getIndexStorage(){
-    }
-    
-    
 }
