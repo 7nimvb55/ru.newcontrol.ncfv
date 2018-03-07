@@ -44,6 +44,8 @@ public enum NcStrGUIComponent {
     SJPANEL("JPANEL"),
     SJTREE("JTREE"),
     SJTABLE("JTABLE"),
+    SJTABBEDPANE("JTABBEDPANE"),
+    
     
     STEXTFIELD("TEXTFIELD"),
     SJLABEL("JLABEL"),
@@ -51,7 +53,9 @@ public enum NcStrGUIComponent {
     SJPROGRESSBAR("JPROGRESSBAR"),
     
     SSEARCH("SEARCH"),
-    SGETSTACK("GETSTACK"),
+    SSTACK("STACK"),
+    SWORK("WORK"),
+    SOUTPUT("OUTPUT"),
     SMANAGE("MANAGE"),
     SDIRECTORY("DIRECTORY");
     

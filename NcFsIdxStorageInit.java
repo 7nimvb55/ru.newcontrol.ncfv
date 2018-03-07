@@ -22,7 +22,9 @@ import java.nio.file.FileSystems;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,25 +35,55 @@ import java.util.logging.Logger;
  */
 public class NcFsIdxStorageInit {
     
-    protected static ThreadLocal<NcParamFs> getStorage(){
-        ThreadLocal<NcParamFs> toReturn = new ThreadLocal<>();
-        FileSystem fileStorage = openStorage();
-        NcParamFs dataStorage = initStorageStructure(fileStorage);
-        toReturn.set(dataStorage);
+    protected static void getStorage(NcSwGUIComponentStatus lComp){
+        URI toReturn = openStorage();
+        //NcParamFs fileStorageParam = toReturn.get();
         
-        return toReturn;
+        ArrayList<String> arrStr = new ArrayList<String>();
+        //arrStr.add("NcParamFs:");
+        //arrStr.add(fileStorageParam.toString());
+        
+        arrStr.add("Storage:");
+        arrStr.add(toReturn.toString());
+        //arrStr.add("isOpen: " + fileStorageParam.getIdxFs().isOpen());
+        //arrStr.add("getDirDirList: " + fileStorageParam.getDirDirList().toString());
+        
+        //NcParamFs dataStorage = initStorageStructure(fileStorage);
+        //toReturn.set(dataStorage);
+        
+        //return toReturn;
+        arrStr.add("attempt to open storage:");
+        try(FileSystem fsZipIndexStorage = 
+            FileSystems.newFileSystem(toReturn, getFsPropExist())){
+            arrStr.add("isOpen: " + fsZipIndexStorage.isOpen());
+            Iterable<Path> rootDirectories = fsZipIndexStorage.getRootDirectories();
+            
+            Iterator<Path> iterator = rootDirectories.iterator();
+            while (iterator.hasNext()) {
+                Path next = iterator.next();
+                arrStr.add(next.toString());
+
+            }
+        } catch (IOException ex) {
+            NcAppHelper.logException(NcFsIdxStorageInit.class.getCanonicalName(), ex);
+        }
+        
+        NcThWorkerUpGUITreeWork.workTreeAddChildren(lComp, arrStr);
     }
     
-    private static FileSystem openStorage(){
+    private static URI openStorage(){
         Path pathIndexFile = buildPathToFileOfIdxStorage();
         Map<String, String> fsProperties = getFsPropExist();
+        ThreadLocal<NcParamFs> toReturn = new ThreadLocal<>();
         if( !NcFsIdxOperationFiles.existAndHasAccessRWNotLink(pathIndexFile) ){
             fsProperties = getFsPropCreate();
         }
         URI uriZipIndexStorage = URI.create("jar:" + pathIndexFile.toUri());
         try(FileSystem fsZipIndexStorage = 
             FileSystems.newFileSystem(uriZipIndexStorage, fsProperties)){
-            return fsZipIndexStorage;
+            NcParamFs dataStorage = initStorageStructure(fsZipIndexStorage);
+            toReturn.set(dataStorage);
+            return uriZipIndexStorage;
         } catch (IOException ex) {
             NcAppHelper.logException(NcFsIdxStorageInit.class.getCanonicalName(), ex);
         }
@@ -66,7 +98,9 @@ public class NcFsIdxStorageInit {
     
 
     private static NcParamFs initStorageStructure(FileSystem inFS){
+        
         Path dirDirList = inFS.getPath(NcStrFileDir.DIR_DIR_LIST.getStr());
+        
         NcFsIdxOperationDirs.create(dirDirList);
         
         Path dirFileExist = inFS.getPath(NcStrFileDir.DIR_FILE_EXIST.getStr());

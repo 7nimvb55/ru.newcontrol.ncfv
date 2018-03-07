@@ -76,7 +76,7 @@ public class NcSwGUIComponent {
      * </ul>
      * @return
      */
-    protected static ArrayList<JButton> getRootButtons(){
+    protected static ArrayList<JButton> getRootButtons(NcSwGUIComponentStatus lComp){
         ArrayList<JButton> toReturn = new ArrayList<JButton>();
         
         FileSystemView fileSystemView;
@@ -123,7 +123,7 @@ public class NcSwGUIComponent {
             JButton ncButton = createButton(itemDisplayName, itemIcon, itemToolTipText);
             ncButton.addActionListener(new ActionListener(){
                 public void  actionPerformed(ActionEvent e){
-                        NcFsIdxStorage.getDataFromIndex();
+                        NcFsIdxStorage.getDataFromIndex(lComp);
                     }
                 }
             );

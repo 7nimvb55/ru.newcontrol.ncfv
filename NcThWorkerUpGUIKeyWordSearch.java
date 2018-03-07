@@ -91,8 +91,8 @@ public class NcThWorkerUpGUIKeyWordSearch {
                 tableShowSearchResult.setEnabled(true);
                 buttonSearch.setEnabled(true);
                 String componentPath = NcSwGUIComponentRouter.pathMainFramePanelCenter();
-                JPanel panelLineEnd = (JPanel) lComp.getComponentByPath(componentPath);
-                panelLineEnd.repaint();
+                JPanel panelCenter = (JPanel) lComp.getComponentByPath(componentPath);
+                panelCenter.repaint();
                 
             }
                     

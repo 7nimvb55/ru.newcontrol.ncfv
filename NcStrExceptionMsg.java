@@ -15,22 +15,21 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.awt.Dimension;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-
 /**
  *
  * @author wladimirowichbiaran
  */
-public class NcSwGUITreeShowStack {
-    protected static JTree getTreeShowStack(NcSwGUIComponentStatus lComp){
-        DefaultMutableTreeNode treeTop = 
-                new DefaultMutableTreeNode("Stack contained:");
-        JTree treeNodes = new JTree(treeTop);
-        String pathComponent = 
-                NcSwGUIComponentRouter.pathMainFramePanelLineEndTabbedPaneStackScrollPaneTreeShowStack();
-        lComp.putComponents(pathComponent, treeNodes);
-        return treeNodes;
+public enum NcStrExceptionMsg {
+    DATA_FOR_RECORD_IS_NULL("Input data for record to storage is null"),
+    DATA_FOR_RECORD_IS_EMPTY("Input data for record to storage is empty"),
+    DATA_FOR_RECORD_NOT_HOMOGENEOUS(
+        "Input data for record to storage are not homogeneous");
+    
+    private String strMsg;
+    NcStrExceptionMsg(String strMsg){
+        this.strMsg = strMsg;
+    }
+    protected String getStr(){
+        return strMsg;
     }
 }

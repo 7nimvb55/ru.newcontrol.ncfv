@@ -20,6 +20,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -90,16 +91,24 @@ public class NcSwingIndexManagerApp {
         frame.setJMenuBar(NcSwMainMenu.getMainMenu(listComponents));
         toLALRcreateGuiPanel();
         
-        mainPanel.add(NcSwPanelPageEnd.getPanel(listComponents), BorderLayout.SOUTH);
+        mainPanel.add(NcSwPanelPageEnd.getPanel(listComponents), BorderLayout.PAGE_END);
         mainPanel.add(NcSwPanelCenter.getPanel(listComponents), BorderLayout.CENTER);
-        mainPanel.add(NcSwPanelPageStart.getPanel(listComponents), BorderLayout.NORTH);
+        mainPanel.add(NcSwPanelPageStart.getPanel(listComponents), BorderLayout.PAGE_START);
         
-        mainPanel.add(NcSwPanelLineStart.getPanel(listComponents), BorderLayout.WEST);
-        mainPanel.add(NcSwPanelLineEnd.getPanel(listComponents), BorderLayout.EAST);
+        mainPanel.add(NcSwPanelLineStart.getPanel(listComponents), BorderLayout.LINE_START);
+        
+        
+        
+        JPanel panelLineEnd = NcSwPanelLineEnd.getPanel(listComponents);
+        
+        mainPanel.add(panelLineEnd, BorderLayout.LINE_END);
+
 
         frame.getContentPane().add(mainPanel);
         frame.setMinimumSize(new Dimension(320, 240));
         frame.setPreferredSize(new Dimension(800, 600));
+        frame.repaint();
+        frame.revalidate();
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);

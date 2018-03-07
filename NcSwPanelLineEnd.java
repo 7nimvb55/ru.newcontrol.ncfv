@@ -24,6 +24,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.border.Border;
 
@@ -43,31 +44,54 @@ public class NcSwPanelLineEnd {
      */
     protected static JPanel getPanel(NcSwGUIComponentStatus lComp){
         JPanel lineEndPanel = getPanelTreeShowStack(lComp);
-        
         return lineEndPanel;
     }
     
     private static JPanel getPanelTreeShowStack(NcSwGUIComponentStatus lComp){
         JTree treeStack = NcSwGUITreeShowStack.getTreeShowStack(lComp);
-        JScrollPane scrollPane = new JScrollPane(treeStack);
-        scrollPane.setAutoscrolls(true);
         
-        Dimension dimMin = new Dimension(50, 70);
-        scrollPane.setMinimumSize(dimMin);
-        Dimension dimMax = new Dimension(250, 700);
-        scrollPane.setMaximumSize(dimMax);
-        Dimension dimPreff = new Dimension(250, 407);
-        scrollPane.setPreferredSize(dimPreff);
+        JScrollPane scrollTreeStackPane = new JScrollPane(treeStack);
         
-        String componentPath = NcSwGUIComponentRouter.pathMainFramePanelLineEndScrollPane();
-        lComp.putComponents(componentPath, scrollPane);
+        String componentPath = NcSwGUIComponentRouter.pathMainFramePanelLineEndTabbedPaneStackScrollPane();
+        lComp.putComponents(componentPath, scrollTreeStackPane);
         JPanel panel = new JPanel();
-        Border eastBorder = BorderFactory.createTitledBorder("EAST panel");
         
+        Border eastBorder = BorderFactory.createTitledBorder("EAST panel");
+        Dimension dimMin = new Dimension(50, 70);
+        panel.setMinimumSize(dimMin);
+        Dimension dimMax = new Dimension(250, 700);
+        panel.setMaximumSize(dimMax);
+        Dimension dimPreff = new Dimension(250, 407);
+        panel.setPreferredSize(dimPreff);
         panel.setBorder(eastBorder);
-        panel.add(scrollPane);
+        
+
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.addTab("Stack", scrollTreeStackPane);
+        
+        JTree treeWork = NcSwGUITreeShowWork.showWork(lComp);
+        JScrollPane scrollTreeWorkPane = new JScrollPane(treeWork);
+        tabbedPane.addTab("Work", scrollTreeWorkPane);
+        componentPath = NcSwGUIComponentRouter.pathMainFramePanelLineEndTabbedPaneWorkScrollPane();
+        lComp.putComponents(componentPath, scrollTreeWorkPane);
+        
+        JTree treeOutput = NcSwGUITreeShowOutput.showOutput(lComp);
+        JScrollPane scrollTreeOutputPane = new JScrollPane(treeOutput);
+        tabbedPane.addTab("Output", scrollTreeOutputPane);
+        componentPath = NcSwGUIComponentRouter.pathMainFramePanelLineEndTabbedPaneOutputScrollPane();
+        lComp.putComponents(componentPath, scrollTreeOutputPane);
+        
+        panel.add(tabbedPane);
+        
+        Dimension preferredSize = scrollTreeStackPane.getPreferredSize();
+        Dimension widePreffSize = new Dimension(240,
+                ((int) preferredSize.getHeight()) - 25);
+        scrollTreeStackPane.setPreferredSize(widePreffSize);
         componentPath = NcSwGUIComponentRouter.pathMainFramePanelLineEnd();
         lComp.putComponents(componentPath, panel);
+        
+        
+        
         return panel;
     }
     

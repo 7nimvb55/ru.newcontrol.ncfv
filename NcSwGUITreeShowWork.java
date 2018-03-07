@@ -15,7 +15,6 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.awt.Dimension;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -23,14 +22,16 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  * @author wladimirowichbiaran
  */
-public class NcSwGUITreeShowStack {
-    protected static JTree getTreeShowStack(NcSwGUIComponentStatus lComp){
+public class NcSwGUITreeShowWork {
+
+    protected static JTree showWork(NcSwGUIComponentStatus lComp) {
         DefaultMutableTreeNode treeTop = 
-                new DefaultMutableTreeNode("Stack contained:");
+                new DefaultMutableTreeNode("Work contained:");
         JTree treeNodes = new JTree(treeTop);
         String pathComponent = 
-                NcSwGUIComponentRouter.pathMainFramePanelLineEndTabbedPaneStackScrollPaneTreeShowStack();
+                NcSwGUIComponentRouter.pathMainFramePanelLineEndTabbedPaneWorkScrollPaneTreeShowWork();
         lComp.putComponents(pathComponent, treeNodes);
         return treeNodes;
     }
+    
 }

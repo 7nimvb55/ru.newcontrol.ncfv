@@ -15,6 +15,7 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 
@@ -43,7 +44,8 @@ public class NcParamFs {
     private long dataTime;
     private int dataHash;
 
-    public NcParamFs(FileSystem idxFs, 
+    public NcParamFs(
+            FileSystem idxFs, 
             Path dirDirList, 
             Path dirFileExist, 
             Path dirFileHash, 
@@ -105,6 +107,7 @@ public class NcParamFs {
         return this.idxFs;
     } 
     protected Path getDirDirList(){
+        
         if( NcFsIdxOperationDirs.existAndHasAccessRW(this.dirDirList) ){
             return this.dirDirList;
         }

@@ -37,8 +37,9 @@ public class NcFsIdxStorage {
     protected static void putDataToIndex(){
         
     }
-    protected static void getDataFromIndex(){
-        ThreadLocal<NcParamFs> openFsIdx = NcFsIdxStorageInit.getStorage();
+    protected static void getDataFromIndex(NcSwGUIComponentStatus lComp){
+        //ThreadLocal<NcParamFs> openFsIdx = 
+                NcFsIdxStorageInit.getStorage(lComp);
         
     }
     protected static void getIndexStorage(){

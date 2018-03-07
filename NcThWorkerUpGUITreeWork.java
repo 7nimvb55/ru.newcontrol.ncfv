@@ -18,7 +18,6 @@ package ru.newcontrol.ncfv;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -31,10 +30,11 @@ import javax.swing.tree.TreeModel;
  *
  * @author wladimirowichbiaran
  */
-public class NcThWorkerUpGUITreeState {
-    protected static void stateTreeAddChildren(NcSwGUIComponentStatus lComp){
+public class NcThWorkerUpGUITreeWork {
+    protected static void workTreeAddChildren(NcSwGUIComponentStatus lComp,
+            ArrayList<String> arrStr){
         String strPathTree = 
-                NcSwGUIComponentRouter.pathMainFramePanelLineEndTabbedPaneStackScrollPaneTreeShowStack();
+                NcSwGUIComponentRouter.pathMainFramePanelLineEndTabbedPaneWorkScrollPaneTreeShowWork();
         JTree treeShowStack = (JTree) lComp.getComponentByPath(strPathTree);
         
         
@@ -55,14 +55,11 @@ public class NcThWorkerUpGUITreeState {
             @Override
             protected Void doInBackground() {
                 
-                ArrayList<String> arrStr = NcAppStackTrace.getAllStack();
+                //ArrayList<String> arrStr = NcAppStackTrace.getAllStack();
                 
                 for (String string : arrStr) {
                     publish(string);
                 }
-                
-                
-                
                 return null;
             }
             
@@ -81,7 +78,7 @@ public class NcThWorkerUpGUITreeState {
                 treeShowStack.setModel(treeForAdd);
                 treeShowStack.setEnabled(true);
                 
-                String componentPath = NcSwGUIComponentRouter.pathMainFramePanelLineEndTabbedPaneStackScrollPane();
+                String componentPath = NcSwGUIComponentRouter.pathMainFramePanelLineEndTabbedPaneWorkScrollPane();
                 JScrollPane scrollTreeStackPane = (JScrollPane) lComp.getComponentByPath(componentPath);
                 Dimension preferredSize = scrollTreeStackPane.getPreferredSize();
                 Dimension widePreffSize = new Dimension(250,

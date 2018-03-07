@@ -43,7 +43,7 @@ public class NcSwPanelLineStart {
         westPanel.setBorder(westBorder);
         westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.PAGE_AXIS));
         
-        ArrayList<JButton> ncAllDisk = NcSwGUIComponent.getRootButtons();
+        ArrayList<JButton> ncAllDisk = NcSwGUIComponent.getRootButtons(lComp);
 
         for(JButton itemDisk : ncAllDisk){
             westPanel.add(itemDisk);

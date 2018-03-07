@@ -61,23 +61,80 @@ public class NcSwGUIComponentRouter {
      * 
      * @return 
      */
-    protected static String pathMainFramePanelLineEndScrollPane(){
-        return NcStrGUIComponent.SMAIN.getStr()
-                + NcStrGUIComponent.SJFRAME.getStr()
-                + NcStrGUIComponent.SJPANEL.getStr()
-                + NcStrGUIComponent.SLINEEND.getStr()
+    protected static String pathMainFramePanelLineEndTabbedPane(){
+        return pathMainFramePanelLineEnd()
+            + NcStrGUIComponent.SJTABBEDPANE.getStr();
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected static String pathMainFramePanelLineEndTabbedPaneStack(){
+        return pathMainFramePanelLineEndTabbedPane()
+            + NcStrGUIComponent.SSTACK.getStr();
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected static String pathMainFramePanelLineEndTabbedPaneWork(){
+        return pathMainFramePanelLineEndTabbedPane()
+            + NcStrGUIComponent.SWORK.getStr();
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected static String pathMainFramePanelLineEndTabbedPaneOutput(){
+        return pathMainFramePanelLineEndTabbedPane()
+            + NcStrGUIComponent.SOUTPUT.getStr();
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected static String pathMainFramePanelLineEndTabbedPaneStackScrollPane(){
+        return pathMainFramePanelLineEndTabbedPaneStack()
                 + NcStrGUIComponent.SJSCROLLPANE.getStr();
     }
     /**
      * 
      * @return 
      */
-    protected static String pathMainFramePanelLineEndScrollPaneTreeShowStack(){
-        return NcStrGUIComponent.SMAIN.getStr()
-                + NcStrGUIComponent.SJFRAME.getStr()
-                + NcStrGUIComponent.SJPANEL.getStr()
-                + NcStrGUIComponent.SLINEEND.getStr()
-                + NcStrGUIComponent.SJSCROLLPANE.getStr()
+    protected static String pathMainFramePanelLineEndTabbedPaneWorkScrollPane(){
+        return pathMainFramePanelLineEndTabbedPaneWork()
+                + NcStrGUIComponent.SJSCROLLPANE.getStr();
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected static String pathMainFramePanelLineEndTabbedPaneOutputScrollPane(){
+        return pathMainFramePanelLineEndTabbedPaneOutput()
+                + NcStrGUIComponent.SJSCROLLPANE.getStr();
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected static String pathMainFramePanelLineEndTabbedPaneStackScrollPaneTreeShowStack(){
+        return pathMainFramePanelLineEndTabbedPaneStackScrollPane()
+                + NcStrGUIComponent.SJTREE.getStr();
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected static String pathMainFramePanelLineEndTabbedPaneWorkScrollPaneTreeShowWork(){
+        return pathMainFramePanelLineEndTabbedPaneWorkScrollPane()
+                + NcStrGUIComponent.SJTREE.getStr();
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected static String pathMainFramePanelLineEndTabbedPaneOutputScrollPaneTreeShowOutput(){
+        return pathMainFramePanelLineEndTabbedPaneOutputScrollPane()
                 + NcStrGUIComponent.SJTREE.getStr();
     }
     /**
@@ -134,7 +191,7 @@ public class NcSwGUIComponentRouter {
                 + NcStrGUIComponent.SJPANEL.getStr()
                 + NcStrGUIComponent.SPAGEEND.getStr()
                 + NcStrGUIComponent.SJBUTTON.getStr()
-                + NcStrGUIComponent.SGETSTACK.getStr();
+                + NcStrGUIComponent.SSTACK.getStr();
     }
     /**
      * 
