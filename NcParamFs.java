@@ -15,7 +15,6 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 
@@ -62,6 +61,7 @@ public class NcParamFs {
             Path dirStorageWordSym, 
             Path dirTmp, 
             Path dirWord) {
+        
         this.idxFs = idxFs;
         this.dirDirList = dirDirList;
         this.dirFileExist = dirFileExist;
@@ -102,7 +102,7 @@ public class NcParamFs {
             + dirWord.toString()
             + Long.toString(nowTime)).hashCode();
     }
-    
+
     protected FileSystem getIdxFs(){
         return this.idxFs;
     } 

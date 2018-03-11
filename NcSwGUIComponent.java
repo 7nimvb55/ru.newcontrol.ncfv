@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -83,7 +85,7 @@ public class NcSwGUIComponent {
         fileSystemView = FileSystemView.getFileSystemView();
         //File[] ncDisks = fileSystemView.getRoots();
         File[] ncDisks = File.listRoots();
-       
+        
         
         for(File itemDisk : ncDisks){
             
@@ -123,7 +125,11 @@ public class NcSwGUIComponent {
             JButton ncButton = createButton(itemDisplayName, itemIcon, itemToolTipText);
             ncButton.addActionListener(new ActionListener(){
                 public void  actionPerformed(ActionEvent e){
-                        NcFsIdxStorage.getDataFromIndex(lComp);
+                        try {
+                            NcThWorkerGUIDirListScan.scanDirToIdxDirList(lComp, itemDisk.toPath());
+                        } catch (Exception ex) {
+                            NcAppHelper.logException(NcSwGUIComponent.class.getCanonicalName(), ex);
+                        }
                     }
                 }
             );

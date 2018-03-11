@@ -15,9 +15,16 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.io.IOException;
 import java.nio.file.Files;
+
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  *
@@ -42,5 +49,52 @@ public class NcFsIdxOperationFiles {
             NcAppHelper.logException(NcFsIdxOperationFiles.class.getCanonicalName(), ex);
         }
         return false;
+    }
+    protected static void outToGUIFileAttributes(Path file, NcSwGUIComponentStatus lComp){
+        try{
+            
+            //Files.readAttributes(file, attributes, options);
+            //Set<String> supportedFileAttributeViews = file.getFileSystem().supportedFileAttributeViews();
+            Set<String> supportedFileAttributeViews = new HashSet<String>();
+            supportedFileAttributeViews.add("creationTime");
+            supportedFileAttributeViews.add("lastModifiedTime");
+            supportedFileAttributeViews.add("size");
+            supportedFileAttributeViews.add("isDirectory");
+            supportedFileAttributeViews.add("isFile");
+            supportedFileAttributeViews.add("isReadable");
+            supportedFileAttributeViews.add("isWritable");
+            supportedFileAttributeViews.add("isExecutable");
+            supportedFileAttributeViews.add("isHidden");
+            
+            ArrayList<String> arrStr = new ArrayList<String>();
+            arrStr.add(file.toRealPath(LinkOption.NOFOLLOW_LINKS).toString());
+            arrStr.add("FileSystems.getDefault().supportedFileAttributeViews()");
+            for (String supportedFileAttributeView : supportedFileAttributeViews) {
+                arrStr.add("[KEY]" + supportedFileAttributeView);
+            }
+            TreeMap<String, Object> forReturn = new TreeMap<String, Object>();
+            for (String supportedFileAttributeView : supportedFileAttributeViews) {
+                Object attribute = new String("Not avalable");
+                try{
+                    //attribute = Files.getAttribute(file, supportedFileAttributeView, LinkOption.NOFOLLOW_LINKS);
+                    attribute = Files.readAttributes(file, supportedFileAttributeView, LinkOption.NOFOLLOW_LINKS);
+                }catch(Exception ex){
+                    NcAppHelper.logException(NcFsIdxFileVisitor.class.getCanonicalName(), ex);
+                }
+                forReturn.putIfAbsent(supportedFileAttributeView, attribute);
+            }
+            
+            for (Map.Entry<String, Object> entry : forReturn.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                Class<?> aClass = value.getClass();
+                String strOut = "[KEY]" + key + "[VALCLASS]" + aClass.getCanonicalName()
+                        + "[VAl]" + value.toString();
+                arrStr.add(strOut);
+            }
+            NcThWorkerUpGUITreeOutput.outputTreeAddChildren(lComp, arrStr);
+        } catch (IOException ex) {
+            NcAppHelper.logException(NcFsIdxFileVisitor.class.getCanonicalName(), ex);
+        }
     }
 }
