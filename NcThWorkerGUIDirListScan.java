@@ -64,10 +64,7 @@ public class NcThWorkerGUIDirListScan {
         
         prePathToStart = prePathToStart.normalize();
         try {
-
             prePathToStart = prePathToStart.toRealPath(LinkOption.NOFOLLOW_LINKS);
-
-            
         } catch (IOException ex) {
             NcAppHelper.logException(NcFsIdxStorage.class.getCanonicalName(), ex);
         }
@@ -78,51 +75,39 @@ public class NcThWorkerGUIDirListScan {
         + "[count File]"
         + fileVisitor.getCountVisitFile());
         
-        
-        
-        
-        
         TreeMap<Long, NcDcIdxDirListToFileAttr> makeSearchResult = 
                 new TreeMap<Long, NcDcIdxDirListToFileAttr>();
         NcThWorkerUpGUITreeWork.workTreeAddChildren(lComp, arrStr);
-        
+        arrStr.clear();
         SwingWorker<Void, TreeMap<Long, NcDataListAttr>> underGroundWorker = 
                 new SwingWorker<Void, TreeMap<Long, NcDataListAttr>> () {
                     
             @Override
             protected Void doInBackground() {
-                
                 try {
-                    arrStr.add("Start: Files.walkFileTree");
-
                     Files.walkFileTree(pathToStart, fileVisitor);
-
-                    arrStr.add("After start: Files.walkFileTree");
-
                 } catch (IOException ex) {
                     NcAppHelper.logException(NcThWorkerGUIDirListScan.class.getCanonicalName(), ex);
                 }
                 int emptyCount = 0;
                 try {
                     //NcFsIdxStorage.putDataToIndex(lComp, pathDevDirToScan);
-                    TreeMap<Long, NcDataListAttr> makeListResult = 
-                                new TreeMap<Long, NcDataListAttr>();
                     do {
                         do {                        
-                            makeListResult = null;
-                            makeListResult = 
+                            TreeMap<Long, NcDataListAttr> makeListResult = 
                                 new TreeMap<Long, NcDataListAttr>();
-                            emptyCount = 0;
                             makeListResult.putAll(fileVisitor.buffDirList.take());
+                            if( makeListResult.size() > 0 ){
+                                emptyCount = 0;
+                            }
                             publish(makeListResult);
                         } while ( !fileVisitor.buffDirList.isEmpty());
                         emptyCount++;
                         Thread.sleep(1000);
-                    } while ( emptyCount == 5 );
+                    } while ( emptyCount != 5 );
                 } catch (InterruptedException ex) {
                     NcAppHelper.logException(NcThWorkerGUIDirListScan.class.getCanonicalName(), ex);
                 }
-                
                 return null;
             }
             
@@ -135,15 +120,12 @@ public class NcThWorkerGUIDirListScan {
                         Long key = entry.getKey();
                         NcDataListAttr value = entry.getValue();
                         arrOutStr.add(value.getShortDataToString());
-                        
                     }
                     //for publish and save to index code here
-                    
                     NcThWorkerUpGUITreeOutput.outputTreeAddChildren(lComp, arrOutStr);
                 }
                 arrStr.add("New chunk count: " + chunks.size());
                 NcThWorkerUpGUITreeWork.workTreeAddChildren(lComp, arrStr);
-                
             }
             
             @Override
@@ -154,7 +136,6 @@ public class NcThWorkerGUIDirListScan {
                 String componentPath = NcSwGUIComponentRouter.pathMainFramePanelCenter();
                 JPanel panelCenter = (JPanel) lComp.getComponentByPath(componentPath);
                 panelCenter.repaint();
-                
             }
                     
         };
