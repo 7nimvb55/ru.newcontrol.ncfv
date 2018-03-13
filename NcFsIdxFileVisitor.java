@@ -49,10 +49,10 @@ public class NcFsIdxFileVisitor implements FileVisitor {
     private long countPreVisitDir;
     private long countPostVisitDir;
     private long count;
-    protected BlockingQueue<TreeMap<Long, NcDataListAttr>> buffDirList;
+    protected BlockingQueue<TreeMap<UUID, NcDataListAttr>> buffDirList;
     
     public NcFsIdxFileVisitor(NcSwGUIComponentStatus lComp,
-            BlockingQueue<TreeMap<Long, NcDataListAttr>> inputDirList){
+            BlockingQueue<TreeMap<UUID, NcDataListAttr>> inputDirList){
         this.lComp = lComp;
         this.countVisitFile = 0;
         this.countVisitFileFailed = 0;
@@ -78,7 +78,7 @@ public class NcFsIdxFileVisitor implements FileVisitor {
         return this.countPostVisitDir;
     }
     private void makeListAttrForStorage(Object objectFile, BasicFileAttributes attrs){
-        TreeMap<Long, NcDataListAttr> toPipe = new TreeMap<Long, NcDataListAttr>();
+        TreeMap<UUID, NcDataListAttr> toPipe = new TreeMap<UUID, NcDataListAttr>();
         
         
         
@@ -172,7 +172,7 @@ public class NcFsIdxFileVisitor implements FileVisitor {
             exSize,
             notEqualSize
         );
-        toPipe.put(this.count, attrEntity);
+        toPipe.put(UUID.randomUUID(), attrEntity);
         buffDirList.add(toPipe);
         this.count++;
     }

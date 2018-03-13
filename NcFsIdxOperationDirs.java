@@ -100,6 +100,19 @@ public class NcFsIdxOperationDirs {
         }
         return false;
     }
+    protected static Path checkScanPath(Path toScan) throws Exception{
+        if( !existAndHasAccessR(toScan) ){
+            throw new Exception("Directory not have access for read" + toScan.toString());
+        }
+        Path prePathToStart = toScan.normalize();
+        prePathToStart = prePathToStart.toAbsolutePath();
+        try {
+            prePathToStart = prePathToStart.toRealPath(LinkOption.NOFOLLOW_LINKS);
+        } catch (IOException ex) {
+            NcAppHelper.logException(NcFsIdxStorage.class.getCanonicalName(), ex);
+        }
+        return prePathToStart;
+    }
     protected static boolean existAndHasAccessOnlyR(Path inFPath){
         try {
             Path normPath = inFPath.normalize();

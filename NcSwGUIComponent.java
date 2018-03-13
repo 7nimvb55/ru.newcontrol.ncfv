@@ -126,7 +126,8 @@ public class NcSwGUIComponent {
             ncButton.addActionListener(new ActionListener(){
                 public void  actionPerformed(ActionEvent e){
                         try {
-                            NcThWorkerGUIDirListScan.scanDirToIdxDirList(lComp, itemDisk.toPath());
+                            NcThScanListAttr.fsScanListAttr(ncButton, lComp, itemDisk.toPath());
+                            //NcThWorkerGUIDirListScan.scanDirToIdxDirList(lComp, itemDisk.toPath());
                         } catch (Exception ex) {
                             NcAppHelper.logException(NcSwGUIComponent.class.getCanonicalName(), ex);
                         }
