@@ -46,7 +46,8 @@ public class NcThScanListAttr {
         Path pathDevDirToScan = Paths.get("/usr/home/wladimirowichbiaran/work");
         Path pathToStart = NcFsIdxOperationDirs.checkScanPath(pathDevDirToScan);
         
-        
+        CopyOnWriteArrayList<TreeMap<UUID, NcDataListAttr>> listOfListForRecord = 
+                new CopyOnWriteArrayList<TreeMap<UUID, NcDataListAttr>>();
         ArrayList<String> arrStr = new ArrayList<String>();
         BlockingQueue<TreeMap<UUID, NcDataListAttr>> pipeDirList = new ArrayBlockingQueue(1000, true);
         
@@ -59,7 +60,7 @@ public class NcThScanListAttr {
         + "[count File]"
         + fileVisitor.getCountVisitFile());
         
-        underGroundScan(pathToStart, fileVisitor, 1, lComp);
+        underGroundScan(pathToStart, fileVisitor, listOfListForRecord, 1, lComp);
         
         /*UUID randomUUID = UUID.randomUUID();
         
@@ -77,14 +78,15 @@ public class NcThScanListAttr {
         compChangeForDone(ncButton, lComp);
     }
     private static void underGroundScan(Path pathToStart,
-            NcFsIdxFileVisitor fileVisitor, int countTh, NcSwGUIComponentStatus lComp){
+            NcFsIdxFileVisitor fileVisitor, CopyOnWriteArrayList<TreeMap<UUID, NcDataListAttr>> listOfListForRecord, int countTh, NcSwGUIComponentStatus lComp){
         Runnable scanDir = new Runnable() {
             final Semaphore avalableThToScan = new Semaphore(countTh);
             public void run(){
                 try {
                     avalableThToScan.acquire();
                     doBackgroundReadList(pathToStart,
-                            fileVisitor, lComp);
+                            fileVisitor, lComp, listOfListForRecord);
+                    avalableThToScan.release();
                 } catch (InterruptedException ex) {
                     NcAppHelper.logException(NcThScanListAttr.class.getCanonicalName(), ex);
                 }
@@ -94,15 +96,14 @@ public class NcThScanListAttr {
         backGroundScan.checkAccess();
         backGroundScan.start();
     }
-    private static void publishScanList(NcSwGUIComponentStatus lComp, List<TreeMap<UUID, NcDataListAttr>> pipeDirList, int countTh){
+    private static void publishScanList(NcSwGUIComponentStatus lComp, List<TreeMap<UUID, NcDataListAttr>> pipeDirList, CopyOnWriteArrayList<TreeMap<UUID, NcDataListAttr>> listOfListForRecord, int countTh){
         Runnable scanResult = new Runnable() {
             private final TreeMap<UUID, NcDataListAttr> makeForRecord = 
                 new TreeMap<UUID, NcDataListAttr>();
             private final TreeMap<UUID, NcDataListAttr> listForRecord = 
                 new TreeMap<UUID, NcDataListAttr>();
         
-            private final ArrayList<TreeMap<UUID, NcDataListAttr>> listOfListForRecord =
-                new ArrayList<TreeMap<UUID, NcDataListAttr>>();
+            
             final Semaphore avalableThToScan = new Semaphore(countTh);
             public void run(){
                 try {
@@ -114,41 +115,31 @@ public class NcThScanListAttr {
                     arrStr = new ArrayList<String>();
                     int numPart = 0;
                     for(TreeMap<UUID, NcDataListAttr> item : pipeDirList){
-                        arrOutStr.add("Part" + numPart + " of " + pipeDirList.size());
-                        for (Map.Entry<UUID, NcDataListAttr> entry : item.entrySet()) {
-                            UUID key = entry.getKey();
-                            NcDataListAttr value = entry.getValue();
-                            arrOutStr.add("[key]" + key
-                                + "[value]" + value.getShortDataToString());
-                        }
-                        makeForRecord.putAll(item);
                         //for publish and save to index code here
-                        NcThWorkerUpGUITreeOutput.outputTreeAddChildren(lComp, arrOutStr);
-                        arrOutStr.clear();
+                        if( item.size() > 0 ){
+                            listOfListForRecord.addIfAbsent(item);
+                            for (Map.Entry<UUID, NcDataListAttr> entry : item.entrySet()) {
+                                UUID key = entry.getKey();
+                                NcDataListAttr value = entry.getValue();
+                                arrOutStr.add("[key]" + key
+                                    + "[value]" + value.getShortDataToString());
+                            }
+                            if( arrOutStr.size() > 0 ){
+                                NcThWorkerUpGUITreeOutput.outputTreeAddChildren(lComp, arrOutStr);
+                                arrOutStr.clear();
+                            }
+                        }
                         numPart++;
                     }
-                    if( makeForRecord.size() > 100 ){
-                        int countKey = 0;
-                        for (Map.Entry<UUID, NcDataListAttr> itemForRecord : makeForRecord.entrySet()) {
-                            if( countKey < 100){
-                                UUID key = itemForRecord.getKey();
-                                listForRecord.put(key, makeForRecord.get(key));
-                            }
-                            countKey++;
-                        }
-                        listOfListForRecord.add(listForRecord);
-                        arrStr.add("[process]makeForRecord: " + makeForRecord.size());
-                    }
-                    arrStr.add("[process]listForRecord count: " + listForRecord.size());
-                    arrStr.add("[process]listOfListForRecord count: " + listOfListForRecord.size());
-                    arrStr.add("[process]makeForRecord: " + makeForRecord.size());
-                    NcThWorkerUpGUITreeWork.workTreeAddChildren(lComp, arrStr);
-                    arrOutStr.clear();
-                    arrStr.clear();
-                    
+                    avalableThToScan.release();
                 } catch (InterruptedException ex) {
                     NcAppHelper.logException(NcThScanListAttr.class.getCanonicalName(), ex);
                 }
+                ArrayList<String> listStrArr = new ArrayList<String>();
+                listStrArr.add("[publishScanList][run][done]"
+                + "[listOfListForRecord.size]" + listOfListForRecord.size());
+                NcThWorkerUpGUITreeWork.workTreeAddChildren(lComp, listStrArr);
+                listStrArr = null;
             }
         };
         Thread backGroundResult = new Thread(scanResult);
@@ -156,7 +147,8 @@ public class NcThScanListAttr {
         backGroundResult.start();
     }
     private static void doBackgroundReadList(Path pathToStart,
-            NcFsIdxFileVisitor fileVisitor, NcSwGUIComponentStatus lComp){
+            NcFsIdxFileVisitor fileVisitor, NcSwGUIComponentStatus lComp, CopyOnWriteArrayList<TreeMap<UUID, NcDataListAttr>> listOfListForRecord){
+        
         try {
             Files.walkFileTree(pathToStart, fileVisitor);
         } catch (IOException ex) {
@@ -178,7 +170,7 @@ public class NcThScanListAttr {
                         TreeMap<UUID, NcDataListAttr> take = fileVisitor.buffDirList.take();
                         //publish(fileVisitor.buffDirList.take());
                         copyOnWriteArrayList.addIfAbsent(take);
-                        publishScanList(lComp, copyOnWriteArrayList, 1);
+                        publishScanList(lComp, copyOnWriteArrayList, listOfListForRecord, 1);
                     }
                     if( hasData ){
                        if( size == 0 ){
@@ -189,6 +181,7 @@ public class NcThScanListAttr {
                 } while ( notExitFromReadData );
                 emptyCount++;
             } while ( emptyCount < 5 );
+            
         } catch (InterruptedException ex) {
             NcAppHelper.logException(NcThScanListAttr.class.getCanonicalName(), ex);
         }
