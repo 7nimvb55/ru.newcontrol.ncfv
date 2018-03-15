@@ -189,9 +189,11 @@ public class NcThScanListAttr {
 
                             ConcurrentHashMap.KeySetView<UUID, TreeMap<UUID, NcDataListAttr>> keySetListPack = listPack.keySet();
                             for (Iterator<UUID> iterator = keySetListPack.iterator(); iterator.hasNext();) {
+                                
                                 final ReentrantLock lock = this.lock;
                                 lock.lock();
                                 try {
+
                                     UUID nextKey = iterator.next();
                                     TreeMap<UUID, NcDataListAttr> getPacket = listPack.get(nextKey);
                                     if( getPacket == null ){
@@ -203,7 +205,9 @@ public class NcThScanListAttr {
                                                 + packSize);
                                         if( packSize != 100 ){
                                             dataPack = listPack.remove(nextKey);
-
+                                            if( dataPack == null ){
+                                                continue;
+                                            }
                                         }
                                     }
                                 } finally {
