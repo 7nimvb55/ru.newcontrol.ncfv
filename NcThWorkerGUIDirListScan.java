@@ -23,10 +23,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentSkipListMap;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -55,10 +55,10 @@ public class NcThWorkerGUIDirListScan {
         panelLineEnd.repaint();
         
         ArrayList<String> arrStr = new ArrayList<String>();
-        BlockingQueue<TreeMap<UUID, NcDataListAttr>> pipeDirList = new ArrayBlockingQueue(1000, true);
+        BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeDirList = new ArrayBlockingQueue(1000, true);
         
-        final NcFsIdxFileVisitor fileVisitor = new NcFsIdxFileVisitor(lComp, pipeDirList);
-        //Path prePathToStart = pathDirToScan.toAbsolutePath();
+        NcFsIdxFileVisitor fileVisitor = new NcFsIdxFileVisitor(pipeDirList);
+        
         Path prePathToStart = pathDevDirToScan;
         
         prePathToStart = prePathToStart.normalize();
@@ -75,19 +75,19 @@ public class NcThWorkerGUIDirListScan {
         + fileVisitor.getCountVisitFile());
         UUID randomUUID = UUID.randomUUID();
         
-        TreeMap<UUID, NcDataListAttr> makeForRecord = 
-                new TreeMap<UUID, NcDataListAttr>();
+        ConcurrentSkipListMap<UUID, NcDataListAttr> makeForRecord = 
+                new ConcurrentSkipListMap<UUID, NcDataListAttr>();
                 
-        TreeMap<UUID, NcDataListAttr> listForRecord = 
-                new TreeMap<UUID, NcDataListAttr>();
+        ConcurrentSkipListMap<UUID, NcDataListAttr> listForRecord = 
+                new ConcurrentSkipListMap<UUID, NcDataListAttr>();
         
-        ArrayList<TreeMap<UUID, NcDataListAttr>> listOfListForRecord =
-                new ArrayList<TreeMap<UUID, NcDataListAttr>>();
+        ArrayList<ConcurrentSkipListMap<UUID, NcDataListAttr>> listOfListForRecord =
+                new ArrayList<ConcurrentSkipListMap<UUID, NcDataListAttr>>();
         ArrayList<Integer> listOfSizeIterarion = new ArrayList<Integer>();
         NcThWorkerUpGUITreeWork.workTreeAddChildren(lComp, arrStr);
         arrStr.clear();
-        SwingWorker<Void, TreeMap<UUID, NcDataListAttr>> underGroundWorker = 
-                new SwingWorker<Void, TreeMap<UUID, NcDataListAttr>> () {
+        SwingWorker<Void, ConcurrentSkipListMap<UUID, NcDataListAttr>> underGroundWorker = 
+                new SwingWorker<Void, ConcurrentSkipListMap<UUID, NcDataListAttr>> () {
                     
             @Override
             protected Void doInBackground() {
@@ -125,11 +125,11 @@ public class NcThWorkerGUIDirListScan {
             }
             
             @Override
-            protected void process(List<TreeMap<UUID, NcDataListAttr>> chunks){
+            protected void process(List<ConcurrentSkipListMap<UUID, NcDataListAttr>> chunks){
                 ArrayList<String> arrOutStr = null;
                 arrOutStr = new ArrayList<String>();
                 int numPart = 0;
-                for(TreeMap<UUID, NcDataListAttr> item : chunks){
+                for(ConcurrentSkipListMap<UUID, NcDataListAttr> item : chunks){
                     arrOutStr.add("Part" + numPart + " of " + chunks.size());
                     for (Map.Entry<UUID, NcDataListAttr> entry : item.entrySet()) {
                         UUID key = entry.getKey();

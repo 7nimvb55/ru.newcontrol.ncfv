@@ -54,12 +54,10 @@ public class NcThWorkerUpGUITreeOutput {
                     
             @Override
             protected Void doInBackground() {
-                
-                //ArrayList<String> arrStr = NcAppStackTrace.getAllStack();
-                
                 for (String string : arrStr) {
                     publish(string);
                 }
+                
                 return null;
             }
             

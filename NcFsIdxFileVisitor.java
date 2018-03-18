@@ -31,29 +31,26 @@ import java.nio.file.attribute.UserPrincipal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.filechooser.FileSystemView;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  *
  * @author wladimirowichbiaran
  */
 public class NcFsIdxFileVisitor implements FileVisitor {
-    private final NcSwGUIComponentStatus lComp;
+    private FileVisitResult visitResult;
     private long countVisitFile;
     private long countVisitFileFailed;
     private long countPreVisitDir;
     private long countPostVisitDir;
     private long count;
-    protected BlockingQueue<TreeMap<UUID, NcDataListAttr>> buffDirList;
+    protected BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> buffDirList;
     
-    public NcFsIdxFileVisitor(NcSwGUIComponentStatus lComp,
-            BlockingQueue<TreeMap<UUID, NcDataListAttr>> inputDirList){
-        this.lComp = lComp;
+    public NcFsIdxFileVisitor(
+            BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> inputDirList){
+        this.visitResult = FileVisitResult.CONTINUE;
         this.countVisitFile = 0;
         this.countVisitFileFailed = 0;
         this.countPreVisitDir = 0;
@@ -78,9 +75,7 @@ public class NcFsIdxFileVisitor implements FileVisitor {
         return this.countPostVisitDir;
     }
     private void makeListAttrForStorage(Object objectFile, BasicFileAttributes attrs){
-        TreeMap<UUID, NcDataListAttr> toPipe = new TreeMap<UUID, NcDataListAttr>();
-        
-        
+        ConcurrentSkipListMap<UUID, NcDataListAttr> toPipe = new ConcurrentSkipListMap<UUID, NcDataListAttr>();
         
         Path file = getPathFromObject(objectFile);
         Path fileName = file.getFileName();
@@ -199,156 +194,12 @@ public class NcFsIdxFileVisitor implements FileVisitor {
         return file = (Path) objectFile;
          
     }
-    private void makeListAttributes(Object objectFile, BasicFileAttributes attrs){
-        
-        TreeMap<Long, NcDcIdxDirListToFileAttr> toPipe = new TreeMap<Long, NcDcIdxDirListToFileAttr>();
-        Path file = (Path) objectFile;
-        Class<?> aClass = objectFile.getClass();
-        String objectFileCanonicalName = aClass.getCanonicalName();
-        
-        String strRealPath = "Not avalable";
-        
-        FileStore fsFile = null;
-        long totalSpace = 0;
-        
-        boolean isHidden = false;
-        boolean isRegularFile = true;
-        long fileTime = 0;
-        try {
-            
-            FileStore fileStore = Files.getFileStore(file);
-            FileSystem fileSystem = file.getFileSystem();
-            fsFile = Files.getFileStore(file);
-            totalSpace = fsFile.getTotalSpace();
-            
-        } catch (IOException ex) {
-            NcAppHelper.logException(NcFsIdxFileVisitor.class.getCanonicalName(), ex);
-        }
-        
-        long recId = System.nanoTime();
-        try{
-            UUID randomUUID = UUID.randomUUID();//
-            
-            Set<PosixFilePermission> posixFilePermissions = Files.getPosixFilePermissions(file, LinkOption.NOFOLLOW_LINKS);//
-            for (PosixFilePermission posixFilePermission : posixFilePermissions) {
-                posixFilePermission.GROUP_EXECUTE.equals(posixFilePermission);
-                posixFilePermission.GROUP_READ.equals(posixFilePermission);
-                posixFilePermission.GROUP_WRITE.equals(posixFilePermission);
-                posixFilePermission.OTHERS_EXECUTE.equals(posixFilePermission);
-                posixFilePermission.OTHERS_READ.equals(posixFilePermission);
-                posixFilePermission.OTHERS_WRITE.equals(posixFilePermission);
-                posixFilePermission.OWNER_EXECUTE.equals(posixFilePermission);
-                posixFilePermission.OWNER_READ.equals(posixFilePermission);
-                posixFilePermission.OWNER_WRITE.equals(posixFilePermission);
-            }
-            String probeContentType = Files.probeContentType(file);
-            String fileToString = file.toString();
-            
-            strRealPath = file.toRealPath(LinkOption.NOFOLLOW_LINKS).toString();//
-            UserPrincipal owner = Files.getOwner(file, LinkOption.NOFOLLOW_LINKS);//
-
-            Path fileName = file.getFileName();//
-            int nameCount = file.getNameCount();
-            Path parent = file.getParent();
-            Path root = file.getRoot();
-            int hashCode = file.hashCode();//   
-
-
-
-            Object fileKey = attrs.fileKey();
-            String canonicalName = fileKey.getClass().getCanonicalName();
-            
-            boolean directory = attrs.isDirectory();//
-            boolean readable = Files.isReadable(file);//
-            boolean writable = Files.isWritable(file);//
-            boolean executable = Files.isExecutable(file);//
-            boolean other = attrs.isOther();//
-            
-            boolean regularFile = attrs.isRegularFile();//
-            boolean regularFile1 = Files.isRegularFile(file, LinkOption.NOFOLLOW_LINKS);
-            
-            boolean notExists = Files.notExists(file, LinkOption.NOFOLLOW_LINKS);//
-            boolean exists = Files.exists(file, LinkOption.NOFOLLOW_LINKS);//
-            boolean hidden = Files.isHidden(file);//
-            
-            boolean absolute = file.isAbsolute();//
-
-            boolean filesSymbolicLink = Files.isSymbolicLink(file);
-            boolean symbolicLink = attrs.isSymbolicLink();//
-
-            FileTime creationTime = attrs.creationTime();//
-            FileTime lastAccessTime = attrs.lastAccessTime();//
-            FileTime filesLastModifiedTime = Files.getLastModifiedTime(file, LinkOption.NOFOLLOW_LINKS);
-            FileTime lastModifiedTime = attrs.lastModifiedTime();//
-            
-            fileTime = Files.getLastModifiedTime(file, LinkOption.NOFOLLOW_LINKS).toMillis();
-            long filesSize = Files.size(root);
-            long size = attrs.size();//
-            String toString = attrs.toString();
-            
-            isRegularFile = Files.isRegularFile(file, LinkOption.NOFOLLOW_LINKS);
-            isHidden = Files.isHidden(file);
-        } catch (IOException ex) {
-            NcAppHelper.logException(NcFsIdxFileVisitor.class.getCanonicalName(), ex);
-        }
-        
-        NcDcIdxDirListToFileAttr entityOfList = new NcDcIdxDirListToFileAttr(
-            recId,//long dirListID,
-            0,//long diskID,
-            0,//long diskSnLong,
-            totalSpace,//long diskTotalSpace,
-            "not released in this version",//String diskProgramAlias,
-            "not released in this version",//String diskSnHex,
-            '#',//char diskLetter,
-            file.toString(),//String path,
-            attrs.size(),//long fileLength,
-            Files.isReadable(file),//boolean fileCanRead,
-            Files.isWritable(file),//boolean fileCanWrite,
-            Files.isExecutable(file),//boolean fileCanExecute,
-            isHidden,//boolean fileIsHidden,
-            fileTime,//long fileLastModified,
-            attrs.isDirectory(),//boolean fileIsDirectory,
-            isRegularFile,//boolean fileIsFile,
-            false,//boolean deletedRec,
-            0//long changedRecordID
-        );
-        //toPipe.put(this.count, entityOfList);
-        //buffDirList.add(toPipe);
-        this.count++;
-    }
-    private void outAttributesToGUI(Object objectFile, BasicFileAttributes attrs){
-        Path file = (Path) objectFile;
-        String strRealPath = "Not avalable";
-        try{
-            strRealPath = file.toRealPath(LinkOption.NOFOLLOW_LINKS).toString();
-        } catch (IOException ex) {
-            NcAppHelper.logException(NcFsIdxFileVisitor.class.getCanonicalName(), ex);
-        }    
-            
-        ArrayList<String> arrStr = new ArrayList<String>();
-        arrStr.add("[Path.toString()]" + file.toString());
-        arrStr.add("[Path.toRealPath(LinkOption.NOFOLLOW_LINKS).toString()]" + strRealPath);
-        
-        arrStr.add("[BasicFileAttributes.creationTime()]" + attrs.creationTime());
-        arrStr.add("[BasicFileAttributes.fileKey()]" + attrs.fileKey());
-        arrStr.add("[BasicFileAttributes.hashCode()]" + attrs.hashCode());
-        arrStr.add("[BasicFileAttributes.isDirectory()]" + attrs.isDirectory());
-        arrStr.add("[BasicFileAttributes.isOther()]" + attrs.isOther());
-        arrStr.add("[BasicFileAttributes.isRegularFile()]" + attrs.isRegularFile());
-        arrStr.add("[BasicFileAttributes.isSymbolicLink()]" + attrs.isSymbolicLink());
-        arrStr.add("[BasicFileAttributes.lastAccessTime()]" + attrs.lastAccessTime());
-        arrStr.add("[BasicFileAttributes.lastModifiedTime()]" + attrs.lastModifiedTime());
-        arrStr.add("[BasicFileAttributes.size()]" + attrs.size());
-        arrStr.add("[BasicFileAttributes.toString()]" + attrs.toString());
-
-        NcThWorkerUpGUITreeOutput.outputTreeAddChildren(lComp, arrStr);
-    }
 
     @Override
     public FileVisitResult preVisitDirectory(Object dir, BasicFileAttributes attrs) throws IOException {
         BasicFileAttributes rAttr = Files.readAttributes((Path) dir, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
         this.countPreVisitDir++;
-        return FileVisitResult.CONTINUE;
+        return this.visitResult;
     }
 
     @Override
@@ -356,13 +207,13 @@ public class NcFsIdxFileVisitor implements FileVisitor {
         BasicFileAttributes rAttr = Files.readAttributes((Path) file, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
         makeListAttrForStorage(file, rAttr);
         this.countVisitFile++;
-        return FileVisitResult.CONTINUE;
+        return this.visitResult;
     }
 
     @Override
     public FileVisitResult visitFileFailed(Object file, IOException exc) throws IOException {
         this.countVisitFileFailed++;
-        return FileVisitResult.CONTINUE;
+        return this.visitResult;
     }
 
     @Override
@@ -370,7 +221,20 @@ public class NcFsIdxFileVisitor implements FileVisitor {
         BasicFileAttributes rAttr = Files.readAttributes((Path) dir, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
         makeListAttrForStorage(dir, rAttr);
         this.countPostVisitDir++;
-        return FileVisitResult.CONTINUE;
+        return this.visitResult;
+    }
+    
+    protected void setVisitToContinue(){
+        this.visitResult = FileVisitResult.CONTINUE;
+    }
+    protected void setVisitToSkipSiblings(){
+        this.visitResult = FileVisitResult.SKIP_SIBLINGS;
+    }
+    protected void setVisitToSkipSubtree(){
+        this.visitResult = FileVisitResult.SKIP_SUBTREE;
+    }
+    protected void setVisitToTerminate(){
+        this.visitResult = FileVisitResult.TERMINATE;
     }
     
 }

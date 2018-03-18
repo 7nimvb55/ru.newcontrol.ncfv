@@ -100,9 +100,9 @@ public class NcFsIdxOperationDirs {
         }
         return false;
     }
-    protected static Path checkScanPath(Path toScan) throws Exception{
+    protected static Path checkScanPath(Path toScan) throws IOException{
         if( !existAndHasAccessR(toScan) ){
-            throw new Exception("Directory not have access for read" + toScan.toString());
+            throw new IOException("Directory not have access for read " + toScan.toString());
         }
         Path prePathToStart = toScan.normalize();
         prePathToStart = prePathToStart.toAbsolutePath();
