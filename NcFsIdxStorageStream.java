@@ -96,7 +96,7 @@ public class NcFsIdxStorageStream {
         }
         catch(IOException ex){
             NcAppHelper.logException(
-                    NcIdxDirListFileWriter.class.getCanonicalName(), ex);
+                    NcFsIdxStorageStream.class.getCanonicalName(), ex);
             throw ex;
         } 
         return dataToRecord.size();
@@ -115,7 +115,7 @@ public class NcFsIdxStorageStream {
         }
         catch(Exception ex){
             NcAppHelper.logException(
-                    NcIdxDirListFileReader.class.getCanonicalName(), ex);
+                    NcFsIdxStorageStream.class.getCanonicalName(), ex);
             return new TreeMap<>();
         } 
         return ncDataFromDirList;

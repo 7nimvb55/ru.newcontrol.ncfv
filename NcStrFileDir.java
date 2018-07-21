@@ -38,6 +38,8 @@ public enum NcStrFileDir {
     DIR_LONG_WORD_LIST("/lw"),
     DIR_LONG_WORD_DATA("/ln"),
     
+    PRE_DIR_LIST("dl-"),
+    
     DIR_APP_DATA("/appdata"),
     
     FILE_INDEX_CONTAINS("/ncidxfv.zip"),

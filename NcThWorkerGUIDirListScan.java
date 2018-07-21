@@ -103,11 +103,11 @@ public class NcThWorkerGUIDirListScan {
                     do {
                         boolean notExitFromReadData = Boolean.TRUE;
                         do { 
-                            size = fileVisitor.buffDirList.size();
+                            size = fileVisitor.getBuffDirList().size();
                             if( (size > 0) ){
                                 hasData = Boolean.TRUE;
                                 emptyCount = 0;
-                                publish(fileVisitor.buffDirList.take());
+                                publish(fileVisitor.getBuffDirList().take());
                             }
                             if( hasData ){
                                if( size == 0 ){

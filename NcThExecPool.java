@@ -15,22 +15,22 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -38,14 +38,94 @@ import java.util.concurrent.locks.ReentrantLock;
  * @param <E>
  */
 public class NcThExecPool implements ExecutorService {
+    private static String typeThread;
     private static final int CORE_POOL_SIZE = 4;
     private static final int MAXIMUM_POOL_SIZE = 4;
     private static final int QUEUE_LENGTH = 100;
+    private Path dirForScanToList;
     private final BlockingQueue<Runnable> workQueue;
     private final ExecutorService execSuper;
+    private final ConcurrentSkipListMap<UUID, Callable> callableQueue;
+    private final ConcurrentSkipListMap<UUID, Future> futureQueue;
     
+    public NcThExecPool(NcThExStatus jobParam) {
+        Thread.currentThread().checkAccess();
+        this.typeThread = "[EXECPOOL]";
+        NcAppHelper.outCreateObjectMessage(this.typeThread, this.getClass());
+        this.callableQueue = new ConcurrentSkipListMap<UUID, Callable>();
+        this.futureQueue = new ConcurrentSkipListMap<UUID, Future>();
+        this.workQueue = new ArrayBlockingQueue<>(this.QUEUE_LENGTH);
+        this.execSuper =
+                new ThreadPoolExecutor(this.CORE_POOL_SIZE,
+                        this.MAXIMUM_POOL_SIZE,
+                        0L,
+                        TimeUnit.MILLISECONDS,
+                        this.workQueue);
+        
+    }
+    
+    /**
+     * @deprecated
+     */
     public NcThExecPool() {
         Thread.currentThread().checkAccess();
+        this.typeThread = "[EXECPOOL]";
+        NcAppHelper.outCreateObjectMessage(this.typeThread, this.getClass());
+        this.callableQueue = new ConcurrentSkipListMap<UUID, Callable>();
+        this.futureQueue = new ConcurrentSkipListMap<UUID, Future>();
+        this.workQueue = new ArrayBlockingQueue<>(this.QUEUE_LENGTH);
+        this.execSuper =
+                new ThreadPoolExecutor(this.CORE_POOL_SIZE,
+                        this.MAXIMUM_POOL_SIZE,
+                        0L,
+                        TimeUnit.MILLISECONDS,
+                        this.workQueue);
+        
+    }
+    /**
+     * @deprecated
+     * @param forReadList
+     * @throws IOException 
+     */
+    public NcThExecPool(Path forReadList) throws IOException {
+        Thread.currentThread().checkAccess();
+        this.typeThread = "[EXECPOOL]";
+        NcAppHelper.outCreateObjectMessage(this.typeThread, this.getClass());
+        
+        this.dirForScanToList = null;
+        Path pathToStart = Paths.get(forReadList.toString());
+        try{
+            pathToStart = NcFsIdxOperationDirs.checkScanPath(pathToStart);
+        } catch (IOException ex) {
+            String strAddMsg = NcStrLogMsgField.MSG_ERROR.getStr()
+                    + " wrong path for scan "
+                    + forReadList.toString();
+            NcAppHelper.outMessage(strAddMsg);
+            NcAppHelper.logException(NcThExecPool.class.getCanonicalName(), ex);
+            throw new IOException(strAddMsg, ex);
+        }
+        this.dirForScanToList = pathToStart;
+        this.callableQueue = new ConcurrentSkipListMap<UUID, Callable>();
+        this.futureQueue = new ConcurrentSkipListMap<UUID, Future>();
+        this.workQueue = new ArrayBlockingQueue<>(this.QUEUE_LENGTH);
+        this.execSuper =
+                new ThreadPoolExecutor(this.CORE_POOL_SIZE,
+                        this.MAXIMUM_POOL_SIZE,
+                        0L,
+                        TimeUnit.MILLISECONDS,
+                        this.workQueue);
+        
+    }
+    /**
+     * @deprecated 
+     * @param countThreadPool 
+     */
+    public NcThExecPool(int countThreadPool) {
+        Thread.currentThread().checkAccess();
+        this.typeThread = "[EXECPOOL]";
+        NcAppHelper.outCreateObjectMessage(this.typeThread, this.getClass());
+        this.callableQueue = new ConcurrentSkipListMap<UUID, Callable>();
+        this.futureQueue = new ConcurrentSkipListMap<UUID, Future>();
         this.workQueue = new ArrayBlockingQueue<>(this.QUEUE_LENGTH);
         this.execSuper =
                 new ThreadPoolExecutor(this.CORE_POOL_SIZE,
@@ -54,21 +134,91 @@ public class NcThExecPool implements ExecutorService {
                         TimeUnit.MILLISECONDS,
                         this.workQueue);
     }
-    
-    public NcThExecPool(int countThreadPool) {
-        Thread.currentThread().checkAccess();
-        this.workQueue = new ArrayBlockingQueue<>(this.QUEUE_LENGTH);
-        this.execSuper =
-                new ThreadPoolExecutor(this.CORE_POOL_SIZE,
-                        this.MAXIMUM_POOL_SIZE,
-                        0L,
-                        TimeUnit.MILLISECONDS,
-                        this.workQueue);
+    protected void execScanDirToIndex() throws Exception{
+        
+    }
+    /**
+     * @deprecated
+     * @throws Exception 
+     */
+    protected void autoExecRouter() throws Exception{
+        
+        
+        NcThExRouter thRouter = new NcThExRouter();
+        System.out.println("NcThExecPool.autoExecRouter NcThExRouter");
+        
+        
+        thRouter.setExecPool(this);
+        thRouter.setThreadParams(new NcThExInfo());
+        thRouter.setDirForScan(this.dirForScanToList);
+        System.out.println("NcThExecPool in NcThExRouter.setScanDir");
+        
+        System.out.println("NcThExecPool.submit");
+        Future submitRouter = this.submit(thRouter);
+        
+        
+        int countWait = 0;
+
+        while( !submitRouter.isDone() ){
+            System.out.println("NcThExecPool.while");
+            if( submitRouter.isCancelled() ){
+                 NcAppHelper.outMessage("[BUTTONTHREAD] is canceled in main thread " + countWait);
+            }
+            NcAppHelper.outMessage("[BUTTONTHREAD] not for done " + countWait);
+            countWait++;
+            if( countWait == 30 ){
+                NcAppHelper.outMessage("[BUTTONTHREAD] call for thread.setNeedSleep(30) " + countWait);
+                thRouter.setNeedSleep(30L);
+            }
+            if( countWait == 70 ){
+                NcAppHelper.outMessage("[BUTTONTHREAD] call for thread.setNeedSleep(0) " + countWait);
+                thRouter.setNeedSleep(0L);
+            }
+            if( countWait > 100 ){
+                NcAppHelper.outMessage("[BUTTONTHREAD] call for thread.finishHim " + countWait);
+                thRouter.finishHim();
+            }
+            if( countWait > 130 ){
+                NcAppHelper.outMessage("[BUTTONTHREAD] call for thread.finishHimByInterrupted " + countWait);
+
+                try {
+                    thRouter.finishHimByInterrupted();
+                } catch (InterruptedException ex) {
+                    NcAppHelper.logException(NcThExecPool.class.getCanonicalName(), ex);
+                    String classInfoToString = NcAppHelper.getClassInfoToString(NcThExecPool.class);
+                    throw new Exception( NcStrLogMsgField.ERROR.getStr()
+                            + classInfoToString
+                            + NcStrLogMsgField.MSG_INFO.getStr()
+                            + " part of start make index is Interrupted ", ex);
+                            }
+            }
+        }
+    }
+    /**
+     * @deprecated
+     * @return 
+     */
+    protected int ncGetQueueSize(){
+        return this.workQueue.size();
+    }
+    /**
+     * @deprecated
+     * @return 
+     */
+    protected ConcurrentSkipListMap<UUID, Callable> ncGetCallableQueue(){
+        return this.callableQueue;
+    }
+    /**
+     * @deprecated
+     * @return 
+     */
+    protected ConcurrentSkipListMap<UUID, Future> ncGetFutureQueue(){
+        return this.futureQueue;
     }
 
     @Override
     public void shutdown() {
-        execSuper.shutdown();
+        shutdown();
     }
 
     @Override
@@ -94,25 +244,35 @@ public class NcThExecPool implements ExecutorService {
 
     @Override
     public <T> Future<T> submit(Callable<T> task) {
-        //SecurityManager securityManager = System.getSecurityManager();
-        //ThreadGroup threadGroup = securityManager.getThreadGroup();
-        //threadGroup.checkAccess();
-        Class<? extends Callable> aClass = task.getClass();
-        
-        NcAppHelper.outMessage(NcStrLogMsgField.INFO.getStr()
-        + NcStrLogMsgField.START.getStr()
-        + NcStrLogMsgField.THREAD.getStr()
-        + NcStrLogMsgField.ID.getStr()
-        + String.valueOf(Thread.currentThread().getId())
-        + NcStrLogMsgField.PRIORITY.getStr()        
-        + String.valueOf(Thread.currentThread().getPriority())
-        + NcStrLogMsgField.NAME.getStr()
-        + Thread.currentThread().getName()
-        + NcStrLogMsgField.CANONICALNAME.getStr()
-        + aClass.getCanonicalName()
-        + NcStrLogMsgField.GENERICSTRING.getStr()
-        + aClass.toGenericString());
-        
+        //String threadInfoToString = NcAppHelper.getThreadInfoToString(Thread.currentThread());
+        //String classInfoToString = NcAppHelper.getClassInfoToString(NcThExecPool.class);
+        //Future<T> ncSubmit = null;
+        //try{
+            //Thread currentThread = Thread.currentThread();
+            //currentThread.checkAccess();
+            Class<? extends Callable> aClass = task.getClass();
+            String strClassInfo = NcAppHelper.getClassInfoToString(aClass);
+            //String strThreadInfo = NcAppHelper.getThreadInfoToString(currentThread);
+            NcAppHelper.outMessage(
+                //strThreadInfo
+                //+ 
+                        strClassInfo
+                + NcStrLogMsgField.MSG_INFO.getStr()
+                + NcStrLogMsgField.START.getStr());
+
+                //ncSubmit = execSuper.submit(task);
+                //if( ncSubmit == null ){
+                    //throw new NullPointerException(classInfoToString);
+                //}
+            //this.callableQueue.put(UUID.randomUUID(), task);
+            //this.futureQueue.put(UUID.randomUUID(), ncSubmit);
+        /*} catch(Exception ex){
+            String strMsg = NcStrLogMsgField.ERROR.getStr()
+                + threadInfoToString + classInfoToString
+                + NcStrLogMsgField.MSG_INFO.getStr()
+                + " in submit exception ";
+            NcAppHelper.logException(strMsg, ex);
+        }*/
         return execSuper.submit(task);
     }
 

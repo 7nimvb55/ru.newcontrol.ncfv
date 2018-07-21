@@ -31,6 +31,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class NcThExDirTreeWalk<V> 
         implements Callable<BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>>> {
+    private static String typeThread;
     private boolean FAIR_QUEUE;
     private boolean boolDone;
     private int LENGTH_QUEUE;
@@ -39,6 +40,9 @@ public class NcThExDirTreeWalk<V>
     private BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeDirList;
     
     public NcThExDirTreeWalk(Path forReadList) throws IOException {
+        Thread.currentThread().checkAccess();
+        this.typeThread = "[TREEWALKER]";
+        NcAppHelper.outCreateObjectMessage(this.typeThread, this.getClass());
         this.boolDone = Boolean.FALSE;
         this.FAIR_QUEUE = Boolean.TRUE;
         this.LENGTH_QUEUE = 1000;
@@ -46,8 +50,12 @@ public class NcThExDirTreeWalk<V>
         try{
             pathToStart = NcFsIdxOperationDirs.checkScanPath(pathToStart);
         } catch (IOException ex) {
+            String strAddMsg = NcStrLogMsgField.MSG_ERROR.getStr()
+                    + " wrong path for scan "
+                    + forReadList.toString();
+            NcAppHelper.outMessage(strAddMsg);
             NcAppHelper.logException(NcThExDirTreeWalk.class.getCanonicalName(), ex);
-            throw new IOException(ex);
+            throw new IOException(strAddMsg, ex);
         }
         this.pipeDirList = new ArrayBlockingQueue(this.LENGTH_QUEUE, this.FAIR_QUEUE);
         this.fileVisitor = new NcFsIdxFileVisitor(this.pipeDirList);
@@ -55,47 +63,85 @@ public class NcThExDirTreeWalk<V>
     }
     
     public NcThExDirTreeWalk(Path forReadList, int lengthQueue) throws IOException {
+        Thread.currentThread().checkAccess();
+        this.typeThread = "[TREEWALKER]";
+        NcAppHelper.outCreateObjectMessage(this.typeThread, this.getClass());
         this.LENGTH_QUEUE = lengthQueue;
         Path pathToStart = Paths.get(forReadList.toString());
         try{
             pathToStart = NcFsIdxOperationDirs.checkScanPath(pathToStart);
         } catch (IOException ex) {
+            String strAddMsg = NcStrLogMsgField.MSG_ERROR.getStr()
+                    + " wrong path for scan "
+                    + forReadList.toString();
+            NcAppHelper.outMessage(strAddMsg);
             NcAppHelper.logException(NcThExDirTreeWalk.class.getCanonicalName(), ex);
-            throw new IOException(ex);
+            throw new IOException(strAddMsg, ex);
         }
         this.pipeDirList = new ArrayBlockingQueue(this.LENGTH_QUEUE, this.FAIR_QUEUE);
-        this.fileVisitor = new NcFsIdxFileVisitor(pipeDirList);
+        this.fileVisitor = new NcFsIdxFileVisitor(this.pipeDirList);
+        this.pathToStart = pathToStart;
+    }
+    
+    public NcThExDirTreeWalk(Path forReadList,
+            BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeFromOut) throws IOException {
+        Thread.currentThread().checkAccess();
+        this.typeThread = "[TREEWALKER]";
+        NcAppHelper.outCreateObjectMessage(this.typeThread, this.getClass());
+        this.LENGTH_QUEUE = 1000;
+        Path pathToStart = Paths.get(forReadList.toString());
+        try{
+            pathToStart = NcFsIdxOperationDirs.checkScanPath(pathToStart);
+        } catch (IOException ex) {
+            String strAddMsg = NcStrLogMsgField.MSG_ERROR.getStr()
+                    + " wrong path for scan "
+                    + forReadList.toString();
+            NcAppHelper.outMessage(strAddMsg);
+            NcAppHelper.logException(NcThExDirTreeWalk.class.getCanonicalName(), ex);
+            throw new IOException(strAddMsg, ex);
+        }
+        this.pipeDirList = pipeFromOut;
+        this.fileVisitor = new NcFsIdxFileVisitor(this.pipeDirList);
         this.pathToStart = pathToStart;
     }
     
     @Override
     public BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> call() throws Exception {
         try {
-            Files.walkFileTree(pathToStart, fileVisitor);
+            Files.walkFileTree(this.pathToStart, this.fileVisitor);
         } catch (IOException ex) {
             NcAppHelper.logException(NcThExDirTreeWalk.class.getCanonicalName(), ex);
+            this.boolDone = Boolean.TRUE;
+            String strThreadInfo = NcAppHelper.getThreadInfoToString(Thread.currentThread());
+            throw new Exception(
+                    strThreadInfo
+                    + NcStrLogMsgField.MSG_INFO.getStr()
+                    + this.typeThread + " aborted, reason "
+                    + NcStrLogMsgField.EXCEPTION_MSG.getStr()
+                    + ex.getMessage(), ex);
+            
         }
         this.boolDone = Boolean.TRUE;
-        return fileVisitor.buffDirList;
+        return this.fileVisitor.getBuffDirList();
     }
     protected BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> getQueue(){
-        return fileVisitor.buffDirList;
+        return this.fileVisitor.getBuffDirList();
     }
     
     protected boolean isDone(){
         return this.boolDone;
     }
     protected long getCountPostVisitDir(){
-        return fileVisitor.getCountPostVisitDir();
+        return this.fileVisitor.getCountPostVisitDir();
     }
     protected long getCountPreVisitDir(){
-        return fileVisitor.getCountPreVisitDir();
+        return this.fileVisitor.getCountPreVisitDir();
     }
     protected long getCountVisitFile(){
-        return fileVisitor.getCountVisitFile();
+        return this.fileVisitor.getCountVisitFile();
     }
     protected long getCountVisitFileFailed(){
-        return fileVisitor.getCountVisitFileFailed();
+        return this.fileVisitor.getCountVisitFileFailed();
     }
     
 }

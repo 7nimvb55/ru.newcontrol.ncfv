@@ -100,7 +100,7 @@ public class NcFsIdxStorageInit {
     
     
 
-    private static NcParamFs initStorageStructure(FileSystem inFS){
+    protected static NcParamFs initStorageStructure(FileSystem inFS){
         
         Path dirDirList = inFS.getPath(NcStrFileDir.DIR_DIR_LIST.getStr());
         
@@ -176,20 +176,20 @@ public class NcFsIdxStorageInit {
         return forReturn;
     }
     
-    private static Map<String, String> getFsPropCreate(){
+    protected static Map<String, String> getFsPropCreate(){
         Map<String, String> zipfsPropeties = new HashMap<>();
         zipfsPropeties.put("create","true");
         zipfsPropeties.put("encoding","UTF-8");
         return zipfsPropeties;
     }
-    private static Map<String, String> getFsPropExist(){
+    protected static Map<String, String> getFsPropExist(){
         Map<String, String> zipfsPropeties = new HashMap<>();
         zipfsPropeties.put("create","false");
         zipfsPropeties.put("encoding","UTF-8");
         return zipfsPropeties;
     }
 
-    private static Path buildPathToFileOfIdxStorage(){
+    protected static Path buildPathToFileOfIdxStorage(){
         String fileStorageName = NcStrFileDir.FILE_INDEX_CONTAINS.getStr();
         Path workPath = getWorkDirByRWAccess();
         Path workFilePath = Paths.get(workPath.toString(), fileStorageName);

@@ -31,15 +31,20 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class NcThExListPack<V>
         implements Callable<ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>>> {
-    private final Semaphore avalableThToScan = new Semaphore(1);
-    private final transient ReentrantLock lock = new ReentrantLock();
-    private final NcSwGUIComponentStatus lComp;
-    private final ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>> listPack;
-    private final ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeDirList;
+    
+    private static String typeThread;
+    private Semaphore avalableThToScan = new Semaphore(1);
+    private transient ReentrantLock lock = new ReentrantLock();
+    private NcSwGUIComponentStatus lComp;
+    private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>> listPack;
+    private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeDirList;
     
     public NcThExListPack(
             ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeDirList,
             NcSwGUIComponentStatus lComp) {
+        Thread.currentThread().checkAccess();
+        this.typeThread = "[LISTATTRSCAN]";
+        NcAppHelper.outCreateObjectMessage(this.typeThread, this.getClass());
         this.lComp = lComp;
         this.listPack = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>>();
         this.pipeDirList = pipeDirList;
@@ -49,7 +54,7 @@ public class NcThExListPack<V>
     public ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>> call() throws Exception {
         try {
                     
-            avalableThToScan.acquire();
+            this.avalableThToScan.acquire();
             ArrayList<String> listStrArr = new ArrayList<String>();
                     //final ReentrantLock lock = this.lock;
             do{
@@ -58,7 +63,7 @@ public class NcThExListPack<V>
                             new ConcurrentSkipListMap<UUID, NcDataListAttr>();
 
 
-                NavigableSet<UUID> keySet = listPack.keySet();
+                NavigableSet<UUID> keySet = this.listPack.keySet();
                 for (Iterator<UUID> iterator = keySet.iterator(); iterator.hasNext();) {
 
                     final ReentrantLock lock = this.lock;
@@ -66,7 +71,7 @@ public class NcThExListPack<V>
                     try {
 
                         UUID nextKey = iterator.next();
-                        ConcurrentSkipListMap<UUID, NcDataListAttr> getPacket = listPack.get(nextKey);
+                        ConcurrentSkipListMap<UUID, NcDataListAttr> getPacket = this.listPack.get(nextKey);
                         if( getPacket == null ){
                             continue;
                         } else {
@@ -75,7 +80,7 @@ public class NcThExListPack<V>
                                     + nextKey + ").size]"
                                     + packSize);
                             if( packSize != 100 ){
-                                dataPack = (ConcurrentSkipListMap<UUID, NcDataListAttr>) listPack.remove(nextKey);
+                                dataPack = (ConcurrentSkipListMap<UUID, NcDataListAttr>) this.listPack.remove(nextKey);
 
                                 if( dataPack == null ){
                                     continue;
@@ -94,11 +99,11 @@ public class NcThExListPack<V>
                 + dataPack.size());
 
             listStrArr.add("[packetCreator][run][pipeDirList.size]"
-                + pipeDirList.size()
+                + this.pipeDirList.size()
                 + "[packetCreator][run][startIteration]"
                 + "[dataPack.size]" + dataPack.size()
-                + "[listPack.size]" + listPack.size());
-            NavigableSet<UUID> pipekeySet = pipeDirList.keySet();
+                + "[listPack.size]" + this.listPack.size());
+            NavigableSet<UUID> pipekeySet = this.pipeDirList.keySet();
 
             for (Iterator<UUID> iterator = pipekeySet.iterator(); iterator.hasNext();) {
                 UUID next = iterator.next();
@@ -106,16 +111,16 @@ public class NcThExListPack<V>
                 //for publish and save to index code here
                 /*lock.lock();
                 try {*/
-                ConcurrentSkipListMap<UUID, NcDataListAttr> nowPack = pipeDirList.remove(next);
+                ConcurrentSkipListMap<UUID, NcDataListAttr> nowPack = this.pipeDirList.remove(next);
                 int nowSize = nowPack.size();
 
                 int currentPack = dataPack.size();
                 listStrArr.add("[packetCreator][run][pipeDirList.remove][nowPack][size]"
                 + nowSize
                 + "[dataPack.size]" + currentPack
-                + "[listPack.size]" + listPack.size());
+                + "[listPack.size]" + this.listPack.size());
                 if( currentPack == 100 ){
-                    listPack.put(UUID.randomUUID(), dataPack);
+                    this.listPack.put(UUID.randomUUID(), dataPack);
                     dataPack = new ConcurrentSkipListMap<UUID, NcDataListAttr>();
                     listStrArr.add("[packetCreator][run][initPacket][dataPack.size]"
                         + dataPack.size());
@@ -130,7 +135,7 @@ public class NcThExListPack<V>
                     listStrArr.add("[packetCreator][run][dataPack.putAll][nowPack][size]"
                         + nowSize
                         + "[dataPack.size]" + currentPack
-                        + "[listPack.size]" + listPack.size());
+                        + "[listPack.size]" + this.listPack.size());
                     continue;
                 }
                 if( (nowSize + currentPack) > 100){
@@ -139,7 +144,7 @@ public class NcThExListPack<V>
                         NcDataListAttr value = entry.getValue();
                         currentPack = dataPack.size();
                         if( currentPack == 100 ){
-                            listPack.put(UUID.randomUUID(), dataPack);
+                            this.listPack.put(UUID.randomUUID(), dataPack);
                             dataPack = new ConcurrentSkipListMap<UUID, NcDataListAttr>();
                             listStrArr.add("[packetCreator][run][initPacket][dataPack.size]"
                                 + dataPack.size());
@@ -149,29 +154,29 @@ public class NcThExListPack<V>
                 }
 
             }
-            listPack.put(UUID.randomUUID(), dataPack);
+            this.listPack.put(UUID.randomUUID(), dataPack);
             dataPack = new ConcurrentSkipListMap<UUID, NcDataListAttr>();
             listStrArr.add("[packetCreator][run][pipeDirList.size]"
-                + pipeDirList.size()
+                + this.pipeDirList.size()
                 + "[packetCreator][run][endIteration]"
                 + "[dataPack.size]" + dataPack.size()
-                + "[listPack.size]" + listPack.size());
+                + "[listPack.size]" + this.listPack.size());
 
-            }while( pipeDirList.size() != 0 );
+            }while( this.pipeDirList.size() != 0 );
             listStrArr.add("[packetCreator][run][finishStady][listPack.size]"
-                + listPack.size());
-            for (Map.Entry<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>> entryItem : listPack.entrySet()) {
+                + this.listPack.size());
+            for (Map.Entry<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>> entryItem : this.listPack.entrySet()) {
                 UUID key = entryItem.getKey();
                 ConcurrentSkipListMap<UUID, NcDataListAttr> value = entryItem.getValue();
                 listStrArr.add("[packetCreator][run][report][listPack(" + key + ").size]"
                 + value.size());
             }
-            NcThWorkerUpGUITreeWork.workTreeAddChildren(lComp, listStrArr);
-            avalableThToScan.release();
+            NcThWorkerUpGUITreeWork.workTreeAddChildren(this.lComp, listStrArr);
+            this.avalableThToScan.release();
         } catch (InterruptedException ex) {
             NcAppHelper.logException(NcThScanListAttr.class.getCanonicalName(), ex);
         }
-        return listPack;
+        return this.listPack;
     }
     
 }

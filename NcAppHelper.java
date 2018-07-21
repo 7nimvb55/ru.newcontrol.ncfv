@@ -294,8 +294,13 @@ public class NcAppHelper {
                 + Thread.activeCount()
                 + NcStrLogMsgField.THREAD_GROUP_NAME.getStr()
                 + t.getThreadGroup().getName()
+                + NcStrLogMsgField.ACTIVE.getStr()        
                 + NcStrLogMsgField.COUNT.getStr()
-                + t.getThreadGroup().activeCount();
+                + t.getThreadGroup().activeCount()
+                + NcStrLogMsgField.ACTIVE.getStr()
+                + NcStrLogMsgField.GROUP.getStr()
+                + NcStrLogMsgField.COUNT.getStr()
+                + t.getThreadGroup().activeGroupCount();
                 strForLog.put(idx, strThread);
                 idx++;
                 String strLoader = NcStrLogMsgField.CLASSLOADER.getStr()
@@ -428,5 +433,51 @@ public class NcAppHelper {
                     NcStrLogMsgField.INFO.getStr()
                     + i + "\t" + strArrForOutPut[i]);
         }
+    }
+    protected static String getThreadInfoToString(Thread forStrBuild){
+        ThreadGroup threadGroup = forStrBuild.getThreadGroup();
+        String nameThreadGroup = threadGroup.getName();
+        int activeCountThreadGroup = threadGroup.activeCount();
+        int activeGroupCount = threadGroup.activeGroupCount();
+        Class<?> aClass = forStrBuild.getClass();
+        return NcStrLogMsgField.INFO.getStr()
+                    + NcStrLogMsgField.THREAD_GROUP_NAME.getStr()
+                    + nameThreadGroup
+                    + NcStrLogMsgField.ACTIVE.getStr()        
+                    + NcStrLogMsgField.COUNT.getStr()
+                    + String.valueOf(activeCountThreadGroup)
+                    + NcStrLogMsgField.ACTIVE.getStr()
+                    + NcStrLogMsgField.GROUP.getStr()
+                    + NcStrLogMsgField.COUNT.getStr()
+                    + String.valueOf(activeGroupCount)
+                    + NcStrLogMsgField.THREAD.getStr()
+                    + NcStrLogMsgField.ID.getStr()
+                    + String.valueOf(forStrBuild.getId())
+                    + NcStrLogMsgField.PRIORITY.getStr()        
+                    + String.valueOf(forStrBuild.getPriority())
+                    + NcStrLogMsgField.NAME.getStr()
+                    + forStrBuild.getName()
+                    + NcStrLogMsgField.CANONICALNAME.getStr()
+                    + aClass.getCanonicalName()
+                    + NcStrLogMsgField.GENERICSTRING.getStr()
+                    + aClass.toGenericString();
+    }
+    protected static String getClassInfoToString(Class<?> forStrBuild){
+        return NcStrLogMsgField.INFO.getStr()
+            + NcStrLogMsgField.CLASSNAME.getStr()
+            + forStrBuild.getName()
+            + NcStrLogMsgField.TYPENAME.getStr()
+            + forStrBuild.getTypeName()
+            + NcStrLogMsgField.CANONICALNAME.getStr()
+            + forStrBuild.getCanonicalName()
+            + NcStrLogMsgField.GENERICSTRING.getStr()
+            + forStrBuild.toGenericString();
+    }
+    protected static void outCreateObjectMessage(String strMsg, Class<?> forStrBuild){
+        String classInfoToString = NcAppHelper.getClassInfoToString(forStrBuild);
+            NcAppHelper.outMessage( NcStrLogMsgField.INFO.getStr()
+                    + NcStrLogMsgField.CREATE.getStr()
+                    + strMsg
+                    + classInfoToString);
     }
 }

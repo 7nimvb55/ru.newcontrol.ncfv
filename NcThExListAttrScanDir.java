@@ -32,6 +32,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 public class NcThExListAttrScanDir<V>
         implements Callable<ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>>> {
     
+    private static String typeThread;
     private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>> listForOut;
     private NcThExDirTreeWalk dirWalker;
     private Path pathToStart;
@@ -39,7 +40,10 @@ public class NcThExListAttrScanDir<V>
     
     private BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeDirList;
     
-    public NcThExListAttrScanDir(Path forReadList) throws IOException {
+    /*public NcThExListAttrScanDir(Path forReadList) throws IOException {
+        Thread.currentThread().checkAccess();
+        this.typeThread = "[LISTATTRSCAN]";
+        NcAppHelper.outCreateObjectMessage(this.typeThread, this.getClass());
         Path pathToStart = Paths.get(forReadList.toString());
         try{
             pathToStart = NcFsIdxOperationDirs.checkScanPath(pathToStart);
@@ -51,9 +55,12 @@ public class NcThExListAttrScanDir<V>
         this.fileVisitor = new NcFsIdxFileVisitor(pipeDirList);
         this.pathToStart = pathToStart;
         this.listForOut = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>>();
-    }
+    }*/
     
-    public NcThExListAttrScanDir(NcThExDirTreeWalk thDirWalker) throws IOException {
+    public NcThExListAttrScanDir(NcThExDirTreeWalk thDirWalker) {
+        Thread.currentThread().checkAccess();
+        this.typeThread = "[LISTATTRSCAN]";
+        NcAppHelper.outCreateObjectMessage(this.typeThread, this.getClass());
         this.dirWalker = thDirWalker;
         this.pipeDirList = this.dirWalker.getQueue();
         this.listForOut = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>>();
@@ -82,7 +89,7 @@ public class NcThExListAttrScanDir<V>
                         emptyCount = 0;
                         ConcurrentSkipListMap<UUID, NcDataListAttr> take = this.pipeDirList.take();
                         UUID key = UUID.randomUUID();
-                        listForOut.put(key, take);
+                        this.listForOut.put(key, take);
                     }
                     if( hasData ){
                        if( size == 0 ){
@@ -95,10 +102,10 @@ public class NcThExListAttrScanDir<V>
         } catch (InterruptedException ex) {
             NcAppHelper.logException(NcThExListAttrScanDir.class.getCanonicalName(), ex);
         }
-        return listForOut;
+        return this.listForOut;
     }
     protected ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>> getList(){
-        return listForOut;
+        return this.listForOut;
     }
     
 }

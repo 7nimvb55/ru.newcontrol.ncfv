@@ -51,6 +51,7 @@ public enum NcStrLogMsgField {
     
     THREAD_GROUP_NAME("[THREADGROUPNAME]"),
     COUNT("[COUNT]"),
+    CREATE("[CREATE]"),
     CLASSLOADER("[CLASSLOADER]"),
     TOSTRING("[TOSTRING]"),
     NAME("[NAME]"),
@@ -72,6 +73,7 @@ public enum NcStrLogMsgField {
     PARAMETER("[PARAMETER]"),
     FIELD("[FIELD]"),
     TYPE("[TYPE]"),
+    TYPENAME("[TYPENAME]"),
     LINENUM("[LINENUM]"),
     NATIVE("[NATIVE]"),
     ELEMENTNUM("[ELEMENTNUM]"),

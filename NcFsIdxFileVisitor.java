@@ -16,8 +16,6 @@
 package ru.newcontrol.ncfv;
 
 import java.io.IOException;
-import java.nio.file.FileStore;
-import java.nio.file.FileSystem;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
@@ -27,13 +25,12 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.nio.file.attribute.PosixFilePermission;
-import java.nio.file.attribute.UserPrincipal;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -41,24 +38,48 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class NcFsIdxFileVisitor implements FileVisitor {
     private FileVisitResult visitResult;
-    private long countVisitFile;
-    private long countVisitFileFailed;
-    private long countPreVisitDir;
-    private long countPostVisitDir;
-    private long count;
-    protected BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> buffDirList;
+    private Long countVisitFile;
+    private Long countVisitFileFailed;
+    private Long countPreVisitDir;
+    private Long countPostVisitDir;
+    private Long count;
+    private Long sleepInVisitFile;
+    private Long sleepInVisitFileFailed;
+    private Long sleepInPreVisitDir;
+    private Long sleepInPostVisitDir;
+    private Long sleepTimeDownScanSpeed;
+    
+    private BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> buffDirList;
+    
     
     public NcFsIdxFileVisitor(
             BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> inputDirList){
+        
+        
+        
+        System.out.println("NcFsIdxFileVisitor.constructor new ThreadLocal");
         this.visitResult = FileVisitResult.CONTINUE;
-        this.countVisitFile = 0;
-        this.countVisitFileFailed = 0;
-        this.countPreVisitDir = 0;
-        this.countPostVisitDir = 0;
+        this.countVisitFile = 0L;
+        this.countVisitFileFailed = 0L;
+        this.countPreVisitDir = 0L;
+        this.countPostVisitDir = 0L;
+        
+        
+        
         this.buffDirList = inputDirList;
-        this.count = 0;
+        
+        this.count = 0L;
+        this.sleepInVisitFile = 0L;
+        this.sleepInVisitFileFailed = 0L;
+        this.sleepInPreVisitDir = 0L;
+        this.sleepInPostVisitDir = 0L;
+        
+        this.sleepTimeDownScanSpeed = 100L;
+        
     }
-    
+    protected BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> getBuffDirList(){
+        return buffDirList;
+    }
     protected long getCountVisitFile(){
         return this.countVisitFile;
     }
@@ -168,11 +189,32 @@ public class NcFsIdxFileVisitor implements FileVisitor {
             notEqualSize
         );
         toPipe.put(UUID.randomUUID(), attrEntity);
-        buffDirList.add(toPipe);
+/*
+ * @todo get queue max length for compare with queue.size()      
+ */
+        if( this.buffDirList.size() > 950 ){
+            try {
+                String strThreadInfo = NcAppHelper.getThreadInfoToString(Thread.currentThread());
+                NcAppHelper.outMessage(
+                    strThreadInfo
+                    + NcStrLogMsgField.MSG_WARNING.getStr()
+                    + "Queue size limit, go to sleep time, "
+                    + this.sleepTimeDownScanSpeed + " ms");
+                Thread.sleep(this.sleepTimeDownScanSpeed);
+            } catch (InterruptedException ex) {
+                NcAppHelper.logException(NcFsIdxFileVisitor.class.getCanonicalName(), ex);
+            }
+        }
+        try {
+            this.buffDirList.put(toPipe);
+        } catch (InterruptedException ex) {
+                NcAppHelper.logException(NcFsIdxFileVisitor.class.getCanonicalName(), ex);
+        }
+        
         this.count++;
+        
     }
     private static Path getPathFromObject(Object objectFile){
-        Path file;
         if( !Path.class.isInstance(objectFile) ){
             String strMethod = "makeListAttrForStorage()";
             try {
@@ -191,36 +233,48 @@ public class NcFsIdxFileVisitor implements FileVisitor {
                 + objectFile.getClass().getCanonicalName();
             throw new IllegalArgumentException(strException);
         }
-        return file = (Path) objectFile;
-         
+        return (Path) objectFile;
     }
 
     @Override
     public FileVisitResult preVisitDirectory(Object dir, BasicFileAttributes attrs) throws IOException {
+        //needSleep(this.sleepInPreVisitDir.get());
+        
         BasicFileAttributes rAttr = Files.readAttributes((Path) dir, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
-        this.countPreVisitDir++;
+        long localCount = this.countPreVisitDir;
+        localCount++;
+        this.countPreVisitDir = localCount;
         return this.visitResult;
     }
 
     @Override
     public FileVisitResult visitFile(Object file, BasicFileAttributes attrs) throws IOException {
+        //needSleep(this.sleepInVisitFile.get());
         BasicFileAttributes rAttr = Files.readAttributes((Path) file, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
         makeListAttrForStorage(file, rAttr);
-        this.countVisitFile++;
+        long localCount = this.countVisitFile;
+        localCount++;
+        this.countVisitFile = localCount;
         return this.visitResult;
     }
 
     @Override
     public FileVisitResult visitFileFailed(Object file, IOException exc) throws IOException {
-        this.countVisitFileFailed++;
+        //needSleep(this.sleepInVisitFileFailed.get());
+        long localCount = this.countVisitFileFailed;
+        localCount++;
+        this.countVisitFileFailed = localCount;
         return this.visitResult;
     }
 
     @Override
     public FileVisitResult postVisitDirectory(Object dir, IOException exc) throws IOException {
+        //needSleep(this.sleepInPostVisitDir.get());
         BasicFileAttributes rAttr = Files.readAttributes((Path) dir, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
         makeListAttrForStorage(dir, rAttr);
-        this.countPostVisitDir++;
+        long localCount = this.countPostVisitDir;
+        localCount++;
+        this.countPostVisitDir = localCount;
         return this.visitResult;
     }
     
@@ -236,5 +290,27 @@ public class NcFsIdxFileVisitor implements FileVisitor {
     protected void setVisitToTerminate(){
         this.visitResult = FileVisitResult.TERMINATE;
     }
-    
+    private static void needSleep(long sleepTime) throws IOException{
+        if( sleepTime > 0 ){
+            try {
+                String strThreadInfo = NcAppHelper.getThreadInfoToString(Thread.currentThread());
+                NcAppHelper.outMessage(
+                    strThreadInfo
+                    + NcStrLogMsgField.MSG_WARNING.getStr()
+                    + "Go to sleep time, "
+                    + sleepTime + " ms");
+                Thread.sleep(sleepTime);
+            } catch (InterruptedException ex) {
+                NcAppHelper.logException(NcFsIdxFileVisitor.class.getCanonicalName(), ex);
+                
+                String strThreadInfo = NcAppHelper.getThreadInfoToString(Thread.currentThread());
+                throw new IOException(
+                    strThreadInfo
+                    + NcStrLogMsgField.MSG_INFO.getStr()
+                    + "Thread interrupted, reason "
+                    + NcStrLogMsgField.EXCEPTION_MSG.getStr()
+                    + ex.getMessage());
+            }
+        }
+    }
 }
