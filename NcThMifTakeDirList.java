@@ -60,7 +60,7 @@ public class NcThMifTakeDirList extends Thread {
                         take = null;
                         int emptyCountWaiter = 0;
                         do{
-                            take = this.fromPipeDirWalker.poll(3, TimeUnit.SECONDS);
+                            take = this.fromPipeDirWalker.poll(15, TimeUnit.NANOSECONDS);
                             if ( take == null ){
                                 emptyCountWaiter++;
                             }
@@ -71,10 +71,10 @@ public class NcThMifTakeDirList extends Thread {
                             }
                         }while( take == null );
                         this.toPackDirList.put(take);
-                        System.out.println("[Take]fromPipeDirWalker-"
+                        /*System.out.println("[Take]fromPipeDirWalker-"
                                 + take.size()
                                 + "-toPackDirList-"
-                                + this.toPackDirList.size());
+                                + this.toPackDirList.size());*/
                     } catch (IllegalArgumentException ex) {
                         NcAppHelper.logException(NcThMifTakeDirList.class.getCanonicalName(), ex);
                     }  

@@ -20,6 +20,7 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -47,35 +48,53 @@ public class NcThMifPackDirList extends Thread {
     public void run() {
         try {
             int dataWaitCount = 0;
+            ConcurrentSkipListMap<UUID, NcDataListAttr> dataPack =
+                                    new ConcurrentSkipListMap<UUID, NcDataListAttr>();
             do{
-                ConcurrentSkipListMap<UUID, NcDataListAttr> dataPack =
-                                new ConcurrentSkipListMap<UUID, NcDataListAttr>();
-                do{
-                    ConcurrentSkipListMap<UUID, NcDataListAttr> take = this.pipeDirListInner.poll();
-                    ConcurrentSkipListMap<UUID, NcDataListAttr> takedChunk = 
-                                new ConcurrentSkipListMap<UUID, NcDataListAttr>();
-                    takedChunk.putAll(take);
-                    take = null;
-                    for (Map.Entry<UUID, NcDataListAttr> entry : takedChunk.entrySet()) {
-                        UUID key = entry.getKey();
-                        NcDataListAttr value = entry.getValue();
-                        int nowSize = 1;
-                        int currentPackSize = dataPack.size();
-                        if( currentPackSize == 100 ){
-                            this.readyPack.put(dataPack);
-                            dataPack = new ConcurrentSkipListMap<UUID, NcDataListAttr>();
-                            currentPackSize = dataPack.size();
-                            continue;
+                try{
+                    
+                    do{
+
+                        ConcurrentSkipListMap<UUID, NcDataListAttr> take;
+                        take = null;
+                        int emptyCountWaiter = 0;
+                        do{
+                            take = this.pipeDirListInner.poll(3, TimeUnit.NANOSECONDS);
+                            if ( take == null ){
+                                emptyCountWaiter++;
+                            }
+                            if ( emptyCountWaiter > 21 ){
+                                String strMsgError = 
+                                    "[Packer] Time out for wait data from [Taker] is over";
+                                throw new IllegalArgumentException(strMsgError);
+                            }
+                        }while( take == null );
+
+
+                        dataWaitCount = 0;
+                        for (Map.Entry<UUID, NcDataListAttr> entry : take.entrySet()) {
+                            UUID key = entry.getKey();
+                            NcDataListAttr value = entry.getValue();
+                            int nowSize = 1;
+                            int currentPackSize = dataPack.size();
+                            if( currentPackSize == 100 ){
+                                this.readyPack.put(dataPack);
+                                dataPack = new ConcurrentSkipListMap<UUID, NcDataListAttr>();
+                                currentPackSize = dataPack.size();
+                                continue;
+                            }
+                            if( (nowSize + currentPackSize)  < 101 ){
+                                dataPack.put(key, value);
+                                currentPackSize = dataPack.size();
+                                continue;
+                            }
                         }
-                        if( (nowSize + currentPackSize)  < 101 ){
-                            dataPack.put(key, value);
-                            currentPackSize = dataPack.size();
-                            continue;
-                        }
-                    }
-                    System.out.println("[Pack]readyPack-" + this.readyPack.size()
-                    + "-pipeDirList-" + this.pipeDirListInner.size());
-                }while( this.pipeDirListInner.size() != 0 );
+                        /*System.out.println("[Pack]readyPack-" + this.readyPack.size()
+                        + "-pipeDirList-" + this.pipeDirListInner.size());*/
+                    }while( this.pipeDirListInner.size() != 0 );
+                } catch (IllegalArgumentException ex) {
+                        NcAppHelper.logException(NcThMifPackDirList.class.getCanonicalName(), ex);
+                }
                 dataWaitCount++;
             }while( dataWaitCount < 50);
         } catch (Exception ex) {
