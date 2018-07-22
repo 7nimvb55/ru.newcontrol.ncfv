@@ -100,6 +100,7 @@ public class NcThMifPackDirList extends Thread {
         } catch (Exception ex) {
             NcAppHelper.logException(NcThMifPackDirList.class.getCanonicalName(), ex);
         }
+        System.out.println("[PACKER][FINISH][EXIT]");
     }
     
 }

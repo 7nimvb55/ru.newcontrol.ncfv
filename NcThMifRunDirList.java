@@ -56,6 +56,7 @@ public class NcThMifRunDirList extends Thread {
         } catch (IllegalStateException ex) {
             NcAppHelper.logException(NcThMifRunDirList.class.getCanonicalName(), ex);
         }
+        System.out.println("[RUNNER][FINISH][EXIT]");
     }
     
 }

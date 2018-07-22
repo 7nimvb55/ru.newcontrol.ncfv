@@ -84,6 +84,7 @@ public class NcThMifTakeDirList extends Thread {
         } catch (InterruptedException ex) {
             NcAppHelper.logException(NcThMifTakeDirList.class.getCanonicalName(), ex);
         }
+        System.out.println("[TACKER][FINISH][EXIT]");
     }
     
 }

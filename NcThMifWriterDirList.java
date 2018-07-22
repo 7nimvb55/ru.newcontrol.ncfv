@@ -126,8 +126,11 @@ public class NcThMifWriterDirList extends Thread {
                                 throw new IllegalArgumentException(strMsgError);
                             }
 
-                            System.out.println("[Writer]From [Packer] get " + nowPack.size()
-                            + " in packet, ready path for write is "
+                            System.out.println("[Writer]From [Packer] get packet with hashCode "
+                            + nowPack.hashCode()
+                            + " toString val is " + nowPack.toString()
+                            + " size of " + nowPack.size() 
+                            + " in packet records, ready path for write is "
                             + getNew.toString());
                         } catch (InterruptedException ex) {
                             NcAppHelper.logException(NcThMifWriterDirList.class.getCanonicalName(), ex);
