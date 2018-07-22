@@ -92,6 +92,7 @@ public class NcThMifWriterDirList extends Thread {
                     }
                 } while ( !ifDataBegin );*/
                 try{
+                    Boolean boolMustBegin = Boolean.FALSE;
                     do {  
                         ConcurrentSkipListMap<UUID, NcDataListAttr> nowPack = new ConcurrentSkipListMap<>();
                         Path dirDirList = dataStorage.getDirDirList();
@@ -153,7 +154,19 @@ public class NcThMifWriterDirList extends Thread {
                                 }
                             }
                             nowPack = new ConcurrentSkipListMap<>();
-                    } while ( this.toPackDirList.size() != 0 );
+                            if( this.toPackDirList.size() != 0 ){
+                                boolMustBegin = Boolean.TRUE;
+                            }
+                            if( this.listPackInner.size() != 0 ){
+                                boolMustBegin = Boolean.TRUE;
+                            }
+                            
+                            if( (this.toPackDirList.size() == 0)
+                                && (this.listPackInner.size() == 0) ){
+                                boolMustBegin = Boolean.FALSE;
+                            }
+                            
+                    } while ( boolMustBegin );
                 } catch (IllegalArgumentException ex){
                     NcAppHelper.logException(NcThMifWriterDirList.class.getCanonicalName(), ex);    
                 }
