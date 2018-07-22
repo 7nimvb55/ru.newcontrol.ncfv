@@ -20,41 +20,37 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  *
  * @author wladimirowichbiaran
  */
-public class NcThMifRunDirList implements Runnable {
+public class NcThMifRunDirList extends Thread {
+    private String typeObject;
     private NcFsIdxFileVisitor fv;
     private Path ps;
-    private BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pd;
+    private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pd;
     
     
     public NcThMifRunDirList(
-            BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeDirListOuter,
+            ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeDirListOuter,
             Path pathToStartOuter) {
-
-        System.out.println("NcThMifRunDirList.constructor init ThreadLocal");
-        
-
-        pd = pipeDirListOuter;
-
+        this.pd = pipeDirListOuter;
         NcFsIdxFileVisitor ncFsIdxFileVisitor = new NcFsIdxFileVisitor(pd);
-        fv = ncFsIdxFileVisitor;
-
+        this.fv = ncFsIdxFileVisitor;
         Path realPath = Paths.get("/usr/src");
-        ps = realPath;
-
+        this.ps = realPath;
+        this.typeObject = "[MIFRUNDIRLIST]" + this.toString();
+        NcAppHelper.outCreateObjectMessage(this.typeObject, this.getClass());
     }
 
     
     @Override
     public void run() {
         try {
-            Files.walkFileTree(ps, fv);
+            Files.walkFileTree(this.ps, this.fv);
         } catch (IOException ex) {
             NcAppHelper.logException(NcThMifRunDirList.class.getCanonicalName(), ex);
         } catch (IllegalStateException ex) {

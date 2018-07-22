@@ -84,10 +84,32 @@ public class NcThScanListAttr {
             System.out.println("new NcThExStatus");
             System.out.println("jobStatus.getScanPath() " + jobStatus.getScanPath().toString());
             
-            NcThMifExecPool initJobParam = jobStatus.initJobParam();
             
-            initJobParam.execute(new NcThMifWriterDirList(
-            jobStatus.getPackDirList()));
+            NcThMifRunDirList runDirList = new NcThMifRunDirList(
+                    jobStatus.getPipeDirList(), 
+                    jobStatus.getScanPath());
+            
+            NcThMifTakeDirList takeDirList = new NcThMifTakeDirList(
+            jobStatus.getPipeDirList(),
+            jobStatus.getFromPipeDirWalker());
+            
+            NcThMifPackDirList packDirList = new NcThMifPackDirList(
+            jobStatus.getFromPipeDirWalker(),
+            jobStatus.getPackDirList());
+            
+            NcThMifWriterDirList writeDirList = new NcThMifWriterDirList(
+            jobStatus.getPackDirList());
+            
+            runDirList.start();
+            takeDirList.start();
+            packDirList.start();
+            writeDirList.start();
+            
+            
+            
+            /*NcThMifExecPool initJobParam = jobStatus.initJobParam();
+            
+            
             
             initJobParam.execute(new NcThMifRunDirList(
                     jobStatus.getPipeDirList(), 
@@ -101,13 +123,8 @@ public class NcThScanListAttr {
             jobStatus.getFromPipeDirWalker(),
             jobStatus.getPackDirList()));
             
-            
-            
-            System.out.println("NcThMifExecPool.execute(new NcThMifRunDirList)");
-            /*for (int i = 0; i < 10; i++) {
-                Thread.sleep(100);
-                System.out.println("jobStatus.getPipeDirList().size() = " + jobStatus.getPipeDirList().size());
-            }*/
+            initJobParam.execute(new NcThMifWriterDirList(
+            jobStatus.getPackDirList()));
             
             System.out.println("initJobParam.getActiveCount() = " + initJobParam.getActiveCount());
             System.out.println("initJobParam.getLargestPoolSize() = " + initJobParam.getLargestPoolSize());
@@ -115,7 +132,7 @@ public class NcThScanListAttr {
             System.out.println("initJobParam.getPoolSize() = " + initJobParam.getPoolSize());
             System.out.println("initJobParam.getTaskCount() = " + initJobParam.getTaskCount());
             System.out.println("initJobParam.getQueue().size() = " + initJobParam.getQueue().size());
-            initJobParam.shutdown();
+            initJobParam.shutdown();*/
     }
     /**
      * @deprecated 

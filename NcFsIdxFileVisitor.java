@@ -207,6 +207,7 @@ public class NcFsIdxFileVisitor implements FileVisitor {
         }
         try {
             this.buffDirList.put(toPipe);
+            System.out.println("[Runner]buffDirList-" + this.buffDirList.size());
         } catch (InterruptedException ex) {
                 NcAppHelper.logException(NcFsIdxFileVisitor.class.getCanonicalName(), ex);
         }

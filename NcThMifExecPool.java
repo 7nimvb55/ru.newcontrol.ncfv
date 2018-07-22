@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
  * @author wladimirowichbiaran
  */
 public class NcThMifExecPool extends ThreadPoolExecutor {
-
+    private String typeObject;
     private static final int CORE_POOL_SIZE = 5;
     private static final int MAXIMUM_POOL_SIZE = 5;
     private static final int QUEUE_LENGTH = 100;
@@ -38,6 +38,8 @@ public class NcThMifExecPool extends ThreadPoolExecutor {
                 0L,
                 TimeUnit.MILLISECONDS,
                 ARRAY_WORK_QUEUE);
+        this.typeObject = "[MIFEXECPOOL]" + this.toString();
+        NcAppHelper.outCreateObjectMessage(this.typeObject, this.getClass());
     }
     public NcThMifExecPool(int corePoolSize,
                               int maximumPoolSize,
@@ -49,6 +51,8 @@ public class NcThMifExecPool extends ThreadPoolExecutor {
                 keepAliveTime,
                 unit,
                 workQueue);
+        this.typeObject = "[MIFEXECPOOL]";
+        NcAppHelper.outCreateObjectMessage(this.typeObject, this.getClass());
     }
     
     

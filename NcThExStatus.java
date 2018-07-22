@@ -18,6 +18,7 @@ package ru.newcontrol.ncfv;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -34,43 +35,47 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author wladimirowichbiaran
  */
 public class NcThExStatus {
+    private String typeObject;
     private ReentrantLock lockFromPipeDirWalker;
     private ReentrantLock lockPackPipeDirWalker;
     private boolean fairQueue;
     private int lengthQueue;
     private Path dirForScan;
-    private BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeDirWalker;
-    private BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> fromPipeDirWalker;
+    private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeDirWalker;
+    private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> fromPipeDirWalker;
     //private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>> packPipeDirWalker;
-    private BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> packDirList;
-    
+    private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> packDirList;
+    private Map<String,String> threadStatus;
     
     
 
     public NcThExStatus(Path inputDirForScan) throws IOException {
+        this.typeObject = "[THREADSTATUS]" + this.toString();
+        NcAppHelper.outCreateObjectMessage(this.typeObject, this.getClass());
         this.lockFromPipeDirWalker = new ReentrantLock(Boolean.TRUE);
         this.lockPackPipeDirWalker = new ReentrantLock(Boolean.TRUE);
         this.fairQueue = Boolean.TRUE;
-        this.lengthQueue = 10000;
+        this.lengthQueue = 1000;
+        
         //dirForScan = new ThreadLocal<>();
         //pipeDirWalker = new ThreadLocal<>();
         //fromPipeDirWalker = new ThreadLocal<>();
         
-        BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> tArr;
-        tArr = new ArrayBlockingQueue<>(lengthQueue, fairQueue);
+        ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> tArr;
+        tArr = new ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>>(this.lengthQueue, this.fairQueue);
         
         this.pipeDirWalker = tArr;
         
-        BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> fromPipeList;
-        fromPipeList = new ArrayBlockingQueue<>(lengthQueue, fairQueue);
+        ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> fromPipeList;
+        fromPipeList = new ArrayBlockingQueue<>(this.lengthQueue, this.fairQueue);
         this.fromPipeDirWalker = fromPipeList;
         
         //ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>> forPackPipeList;
         //forPackPipeList = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>>();
         //this.packPipeDirWalker = forPackPipeList;
         
-        BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pArr;
-        pArr = new ArrayBlockingQueue<>(lengthQueue, fairQueue);
+        ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pArr;
+        pArr = new ArrayBlockingQueue<>(this.lengthQueue, this.fairQueue);
         this.packDirList = pArr;
         
         if( inputDirForScan != null){
@@ -81,6 +86,7 @@ public class NcThExStatus {
         }
         checkScanPath();
         verifyScanPath();
+        
     }
     protected NcThMifExecPool initJobParam(){
         String typeThread = "[EXECPOOL]";
@@ -112,11 +118,11 @@ public class NcThExStatus {
     }
     
     
-    protected BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> getPipeDirList(){
+    protected ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> getPipeDirList(){
         return this.pipeDirWalker;
     }
     
-    protected BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> getFromPipeDirWalker(){
+    protected ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> getFromPipeDirWalker(){
         return this.fromPipeDirWalker;
     }
     
@@ -130,7 +136,7 @@ public class NcThExStatus {
     protected ReentrantLock getLockPackPipeDirWalker(){
         return this.lockPackPipeDirWalker;
     }
-    protected BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> getPackDirList(){
+    protected ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> getPackDirList(){
         return this.packDirList;
     }
     

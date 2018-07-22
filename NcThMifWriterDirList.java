@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.NavigableSet;
 import java.util.TreeMap;
 import java.util.UUID;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
@@ -43,15 +43,17 @@ import java.util.stream.Stream;
  *
  * @author wladimirowichbiaran
  */
-public class NcThMifWriterDirList implements Runnable {
-    
+public class NcThMifWriterDirList extends Thread {
+    private String typeObject;
     private long sleepTimeDownRecordSpeed;
-    private BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> listPackInner;
+    private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> listPackInner;
 
     public NcThMifWriterDirList(
-            BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> listPackOuter) {
+            ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> listPackOuter) {
         this.sleepTimeDownRecordSpeed = 100L;
         this.listPackInner = listPackOuter;
+        this.typeObject = "[MIFWRITERDIRLIST]" + this.toString();
+        NcAppHelper.outCreateObjectMessage(this.typeObject, this.getClass());
     }
     
     
@@ -74,16 +76,16 @@ public class NcThMifWriterDirList implements Runnable {
             FileSystems.newFileSystem(uriZipIndexStorage, fsProperties)){
             
             NcParamFs dataStorage = NcFsIdxStorageInit.initStorageStructure(fsZipIndexStorage);
-            FileSystemProvider provider = fsZipIndexStorage.provider();
+            
             int dataWaitCount = 0;
             do{
-                Boolean ifDataBegin = Boolean.FALSE;
+                /*Boolean ifDataBegin = Boolean.FALSE;
                 do {                
                     if( !this.listPackInner.isEmpty() ){
                         ifDataBegin = Boolean.TRUE;
                         dataWaitCount = 0;
                     }
-                } while ( !ifDataBegin );
+                } while ( !ifDataBegin );*/
                 do {  
                     ConcurrentSkipListMap<UUID, NcDataListAttr> nowPack = new ConcurrentSkipListMap<>();
                     Path dirDirList = dataStorage.getDirDirList();
@@ -102,11 +104,11 @@ public class NcThMifWriterDirList implements Runnable {
                     }
 
                     Path getNew = fsZipIndexStorage.getPath(dirDirList.toString(), strIndex).normalize();
-                    try{ 
-                        nowPack = this.listPackInner.take();
-                    } catch (InterruptedException ex) {
+                    //try{ 
+                        nowPack = this.listPackInner.poll();
+                    /*} catch (InterruptedException ex) {
                         NcAppHelper.logException(NcThMifWriterDirList.class.getCanonicalName(), ex);
-                    }
+                    }*/
                         if(nowPack.size() == 100){
                             try(ObjectOutputStream oos = 
                             new ObjectOutputStream(
@@ -134,7 +136,16 @@ public class NcThMifWriterDirList implements Runnable {
                 NcStrLogMsgField.ERROR_CRITICAL.getStr()
                 + strMsg
             );
+        } catch (Exception ex){
+            NcAppHelper.logException(NcThMifWriterDirList.class.getCanonicalName(), ex);
+            String strMsg = "Imposible for exec operation in the index Storage, see log"
+                    + NcStrLogMsgField.EXCEPTION_MSG.getStr() + ex.getMessage();
+            NcAppHelper.outMessage(
+                NcStrLogMsgField.ERROR_CRITICAL.getStr()
+                + strMsg
+            );
         }
+        System.out.println("[WRITER][FINISH][EXIT]");
     }
     
     protected static int writeDirListData(ConcurrentSkipListMap<UUID, NcDataListAttr> dataToFile, Path dirDirList){

@@ -17,6 +17,7 @@ package ru.newcontrol.ncfv;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.locks.ReentrantLock;
@@ -25,18 +26,21 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author wladimirowichbiaran
  */
-public class NcThMifPackDirList implements Runnable {
+public class NcThMifPackDirList extends Thread {
+    private String typeObject;
     private long sleepTimeDownRecordSpeed;
-    private BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeDirListInner;
-    private BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> readyPack;
+    private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeDirListInner;
+    private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> readyPack;
     
     public NcThMifPackDirList(
-            BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeDirListOuter,
-            BlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> listPackOuter
+            ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeDirListOuter,
+            ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> listPackOuter
             ) {
         this.pipeDirListInner = pipeDirListOuter;
         this.readyPack = listPackOuter;
         this.sleepTimeDownRecordSpeed = 100L;
+        this.typeObject = "[MIFPACKDIRLIST]" + this.toString();
+        NcAppHelper.outCreateObjectMessage(this.typeObject, this.getClass());
     }
     
     @Override
@@ -47,14 +51,18 @@ public class NcThMifPackDirList implements Runnable {
                 ConcurrentSkipListMap<UUID, NcDataListAttr> dataPack =
                                 new ConcurrentSkipListMap<UUID, NcDataListAttr>();
                 do{
-                    ConcurrentSkipListMap<UUID, NcDataListAttr> take = this.pipeDirListInner.take();
-                    for (Map.Entry<UUID, NcDataListAttr> entry : take.entrySet()) {
+                    ConcurrentSkipListMap<UUID, NcDataListAttr> take = this.pipeDirListInner.poll();
+                    ConcurrentSkipListMap<UUID, NcDataListAttr> takedChunk = 
+                                new ConcurrentSkipListMap<UUID, NcDataListAttr>();
+                    takedChunk.putAll(take);
+                    take = null;
+                    for (Map.Entry<UUID, NcDataListAttr> entry : takedChunk.entrySet()) {
                         UUID key = entry.getKey();
                         NcDataListAttr value = entry.getValue();
                         int nowSize = 1;
                         int currentPackSize = dataPack.size();
                         if( currentPackSize == 100 ){
-                            this.readyPack.put(dataPack.clone());
+                            this.readyPack.put(dataPack);
                             dataPack = new ConcurrentSkipListMap<UUID, NcDataListAttr>();
                             currentPackSize = dataPack.size();
                             continue;
@@ -65,8 +73,8 @@ public class NcThMifPackDirList implements Runnable {
                             continue;
                         }
                     }
-                    System.out.println("Pack-Packets-" + this.readyPack.size()
-                    + "-DirListTacker-" + this.pipeDirListInner.size());
+                    System.out.println("[Pack]readyPack-" + this.readyPack.size()
+                    + "-pipeDirList-" + this.pipeDirListInner.size());
                 }while( this.pipeDirListInner.size() != 0 );
                 dataWaitCount++;
             }while( dataWaitCount < 50);
