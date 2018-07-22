@@ -98,7 +98,8 @@ public class NcThScanListAttr {
             jobStatus.getPackDirList());
             
             NcThMifWriterDirList writeDirList = new NcThMifWriterDirList(
-            jobStatus.getPackDirList());
+            jobStatus.getPackDirList(),
+            jobStatus.getFromPipeDirWalker());
             
             runDirList.start();
             takeDirList.start();

@@ -37,6 +37,7 @@ import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
@@ -48,11 +49,14 @@ public class NcThMifWriterDirList extends Thread {
     private String typeObject;
     private long sleepTimeDownRecordSpeed;
     private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> listPackInner;
+    private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> toPackDirList;
 
     public NcThMifWriterDirList(
-            ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> listPackOuter) {
+            ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> listPackOuter,
+            ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> toPackDirListOuter) {
         this.sleepTimeDownRecordSpeed = 100L;
         this.listPackInner = listPackOuter;
+        this.toPackDirList = toPackDirListOuter;
         this.typeObject = "[MIFWRITERDIRLIST]" + this.toString();
         NcAppHelper.outCreateObjectMessage(this.typeObject, this.getClass());
     }
@@ -77,8 +81,7 @@ public class NcThMifWriterDirList extends Thread {
             FileSystems.newFileSystem(uriZipIndexStorage, fsProperties)){
             
             NcParamFs dataStorage = NcFsIdxStorageInit.initStorageStructure(fsZipIndexStorage);
-            Path dirDirList = dataStorage.getDirDirList();
-            Path pathForViewCount = fsZipIndexStorage.getPath(dirDirList.toString()).normalize();
+            
             int dataWaitCount = 0;
             do{
                 /*Boolean ifDataBegin = Boolean.FALSE;
@@ -91,22 +94,31 @@ public class NcThMifWriterDirList extends Thread {
                 try{
                     do {  
                         ConcurrentSkipListMap<UUID, NcDataListAttr> nowPack = new ConcurrentSkipListMap<>();
+                        Path dirDirList = dataStorage.getDirDirList();
+                        Path pathForViewCount = fsZipIndexStorage.getPath(dirDirList.toString()).normalize();
                         Path getNew = pathForViewCount;
+                        Boolean existFile = Boolean.FALSE;
+                        long countFiles = 0;
+                        String strIndex = "";
                         do{
-                            long countFiles = 0;
-                            String strIndex = "";
-                            if(countFiles > 1){
+                            
+                            if(countFiles > 0){
                                 strIndex = NcStrFileDir.PRE_DIR_LIST.getStr() + Long.toString(countFiles * 100L + 100L);
                             }
                             else{
                                 strIndex = NcStrFileDir.PRE_DIR_LIST.getStr() + Long.toString(100L);
                             }
                             getNew = fsZipIndexStorage.getPath(dirDirList.toString(), strIndex).normalize();
-                        }while(Files.exists(getNew));
+                            existFile = Files.exists(getNew, LinkOption.NOFOLLOW_LINKS);
+                            if(existFile){
+                                countFiles++;
+                            }
+                           
+                        }while( existFile );
                         
-                        //try{
+                        try{
 
-                            nowPack = this.listPackInner.poll();
+                            nowPack = this.listPackInner.poll(13, TimeUnit.MICROSECONDS);
 
                             if ( nowPack == null ){
                                 String strMsgError = 
@@ -117,9 +129,9 @@ public class NcThMifWriterDirList extends Thread {
                             System.out.println("[Writer]From [Packer] get " + nowPack.size()
                             + " in packet, ready path for write is "
                             + getNew.toString());
-                        /*} catch (InterruptedException ex) {
+                        } catch (InterruptedException ex) {
                             NcAppHelper.logException(NcThMifWriterDirList.class.getCanonicalName(), ex);
-                        }*/
+                        }
                             if(nowPack.size() == 100){
                                 dataWaitCount = 0;
                                 try(ObjectOutputStream oos = 
@@ -138,7 +150,7 @@ public class NcThMifWriterDirList extends Thread {
                                 }
                             }
                             nowPack = new ConcurrentSkipListMap<>();
-                    } while ( this.listPackInner.size() != 0 );
+                    } while ( this.toPackDirList.size() != 0 );
                 } catch (IllegalArgumentException ex){
                     NcAppHelper.logException(NcThMifWriterDirList.class.getCanonicalName(), ex);    
                 }
