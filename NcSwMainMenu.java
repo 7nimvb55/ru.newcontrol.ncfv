@@ -64,6 +64,7 @@ public class NcSwMainMenu {
      */
     private static JMenu getMenuDevelop(NcSwGUIComponentStatus lComp){
         JMenu menuDevelop = new JMenu("Development");
+        menuDevelop.add(NcSwMenuItems.getDirListViewer(lComp));
         menuDevelop.add(NcSwMenuItems.getStorageWordViewer(lComp));
         menuDevelop.add(NcSwMenuItems.getLogFileReader(lComp));
         menuDevelop.add(NcSwMenuItems.getEnvironmentViewer(lComp));

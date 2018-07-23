@@ -78,9 +78,13 @@ public class NcThScanListAttr {
         //compChangeForDone(ncButton, lComp);
     }
     protected static void runMakeIndex() throws IOException, InterruptedException{
-            System.out.println("start NcThScanListAttr.runMakeIndex");
             
-            NcThExStatus jobStatus = new NcThExStatus(null);
+        Path forScanPath = Paths.get("/");
+        
+        System.out.println("start NcThScanListAttr.runMakeIndex"
+        + "for path" + forScanPath.toString());
+            
+            NcThExStatus jobStatus = new NcThExStatus(forScanPath);
             System.out.println("new NcThExStatus");
             System.out.println("jobStatus.getScanPath() " + jobStatus.getScanPath().toString());
             

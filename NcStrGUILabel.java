@@ -27,6 +27,7 @@ public enum NcStrGUILabel {
     UPDATE("Update"),
     SEARCH("Search"),
     STORAGEWORD("Storage Word"),
+    DIRECTORYLIST("Directory list"),
     LOG_VIEW("Log View"),
     ENV_VIEW("Environment View"),
     PROPERTIES_VIEW("Properties View"),

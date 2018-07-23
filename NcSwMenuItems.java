@@ -158,6 +158,14 @@ public class NcSwMenuItems {
     protected static JMenuItem getAbout(){
         return new JMenuItem(NcStrGUILabel.ABOUT.getStr());
     }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMainMenu#getMenuDevelop(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @param lComp
+     * @return 
+     */
     protected static JMenuItem getStorageWordViewer(NcSwGUIComponentStatus lComp){
         JMenuItem toRetMi = new JMenuItem(NcStrGUILabel.STORAGEWORD.getStr());
         toRetMi.addActionListener(new ActionListener(){
@@ -167,6 +175,27 @@ public class NcSwMenuItems {
                 JFrame mainFrame =
                     (JFrame) lComp.getComponentByPath(componentPath);
                 NcSwModalStorageWord.showModalStorageWord(mainFrame);
+            }
+        });
+        return toRetMi;
+    }
+    /**
+     * Used in
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.NcSwMainMenu#getMenuDevelop(ru.newcontrol.ncfv.NcSwGUIComponentStatus) }
+     * </ul>
+     * @param lComp
+     * @return 
+     */
+    protected static JMenuItem getDirListViewer(NcSwGUIComponentStatus lComp){
+        JMenuItem toRetMi = new JMenuItem(NcStrGUILabel.DIRECTORYLIST.getStr());
+        toRetMi.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                String componentPath = NcSwGUIComponentRouter.pathMainFrame();
+                JFrame mainFrame =
+                    (JFrame) lComp.getComponentByPath(componentPath);
+                NcSwModalDirectoryList.showModalDirectoryList(mainFrame);
             }
         });
         return toRetMi;
