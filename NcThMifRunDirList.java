@@ -49,6 +49,7 @@ public class NcThMifRunDirList extends Thread {
     
     @Override
     public void run() {
+        System.out.println("[RUNNER][START][IN]");
         try {
             Files.walkFileTree(this.ps, this.fv);
         } catch (IOException ex) {
