@@ -99,8 +99,19 @@ public class NcSwMenuItems {
      * For Settings
      * @return 
      */
-    protected static JMenuItem getEtcEditor(){
-        return new JMenuItem(NcStrGUILabel.SETTINGS.getStr());
+    protected static JMenuItem getEtcEditor(NcSwGUIComponentStatus lComp){
+        JMenuItem toRetMi = new JMenuItem(NcStrGUILabel.SETTINGS.getStr());
+        toRetMi.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                String componentPath = NcSwGUIComponentRouter.pathMainFrame();
+                JFrame mainFrame =
+                    (JFrame) lComp.getComponentByPath(componentPath);
+                //NcSwModalDevHelper.showModalProperties(mainFrame);
+                NcSwModalSettingsHelper.showModalProperties(mainFrame);
+            }
+        });
+        return toRetMi;
     }
     /**
      * Used in

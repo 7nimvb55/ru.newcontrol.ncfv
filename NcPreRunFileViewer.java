@@ -426,6 +426,10 @@ public class NcPreRunFileViewer {
         File fileCfg = NcIdxFileManager.getOrCreateCfgFile();
         return readCfg(NcIdxFileManager.getStrCanPathFromFile(fileCfg));
     }
+    
+    protected static ArrayList<String> getEtcCfgLinesFromDisk(){
+        return getReadedLinesFromEtcCfg();
+    }
 
     /**
      * Used in

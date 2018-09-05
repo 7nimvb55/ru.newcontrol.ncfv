@@ -32,24 +32,29 @@ public class NcThMifPackDirList extends Thread {
     private long sleepTimeDownRecordSpeed;
     private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeDirListInner;
     private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> readyPack;
+    private NcThExStatus jobStatus;
     
     public NcThMifPackDirList(
             ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeDirListOuter,
-            ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> listPackOuter
+            ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> listPackOuter,
+            NcThExStatus outerJobStatus
             ) {
         this.pipeDirListInner = pipeDirListOuter;
         this.readyPack = listPackOuter;
         this.sleepTimeDownRecordSpeed = 100L;
         this.typeObject = "[MIFPACKDIRLIST]" + this.toString();
+        this.jobStatus = outerJobStatus;
         NcAppHelper.outCreateObjectMessage(this.typeObject, this.getClass());
     }
     
     @Override
     public void run() {
         try {
-            int dataWaitCount = 0;
+            
             ConcurrentSkipListMap<UUID, NcDataListAttr> dataPack =
                                     new ConcurrentSkipListMap<UUID, NcDataListAttr>();
+            do{
+                int dataWaitCount = 0;
             do{
                 try{
                     
@@ -97,6 +102,9 @@ public class NcThMifPackDirList extends Thread {
                 }
                 dataWaitCount++;
             }while( dataWaitCount < 50);
+            }while( this.jobStatus.getTackerStatus() == Thread.State.RUNNABLE );
+            
+        
         } catch (Exception ex) {
             NcAppHelper.logException(NcThMifPackDirList.class.getCanonicalName(), ex);
         }

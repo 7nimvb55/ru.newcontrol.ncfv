@@ -50,10 +50,12 @@ public class NcThMifWriterDirList extends Thread {
     private long sleepTimeDownRecordSpeed;
     private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> listPackInner;
     private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> toPackDirList;
+    private NcThExStatus outerJobStatus;
 
     public NcThMifWriterDirList(
             ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> listPackOuter,
-            ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> toPackDirListOuter) {
+            ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> toPackDirListOuter,
+            NcThExStatus outerJobStatus) {
         this.sleepTimeDownRecordSpeed = 100L;
         this.listPackInner = listPackOuter;
         this.toPackDirList = toPackDirListOuter;
@@ -81,8 +83,9 @@ public class NcThMifWriterDirList extends Thread {
             FileSystems.newFileSystem(uriZipIndexStorage, fsProperties)){
             
             NcParamFs dataStorage = NcFsIdxStorageInit.initStorageStructure(fsZipIndexStorage);
-            
+            do{
             int dataWaitCount = 0;
+            
             do{
                 /*Boolean ifDataBegin = Boolean.FALSE;
                 do {                
@@ -172,6 +175,7 @@ public class NcThMifWriterDirList extends Thread {
                 }
                 dataWaitCount++;
             } while ( dataWaitCount < 50 );
+            } while ( outerJobStatus.getPackerStatus().RUNNABLE == Thread.State.RUNNABLE );
         } catch (IOException ex) {
             NcAppHelper.logException(NcThMifWriterDirList.class.getCanonicalName(), ex);
             String strMsg = "Imposible to create file for index Storage, see log";

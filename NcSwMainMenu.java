@@ -36,7 +36,7 @@ public class NcSwMainMenu {
         NcLogLogicGUI.NcSwMainMenuGetMainMenu();
         menuMain.add(getMenuFile());
         menuMain.add(getMenuDevelop(lComp));
-        menuMain.add(getMenuService());
+        menuMain.add(getMenuService(lComp));
         menuMain.add(getMenuHelp());
         return menuMain;
     }
@@ -90,9 +90,9 @@ public class NcSwMainMenu {
      * </ul>
      * @return 
      */
-    private static JMenu getMenuService(){
+    private static JMenu getMenuService(NcSwGUIComponentStatus lComp){
         JMenu menuService = new JMenu("Service");
-        menuService.add(NcSwMenuItems.getEtcEditor());
+        menuService.add(NcSwMenuItems.getEtcEditor(lComp));
         return menuService;
     }
     

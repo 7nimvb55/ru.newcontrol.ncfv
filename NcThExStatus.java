@@ -21,13 +21,7 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -46,6 +40,10 @@ public class NcThExStatus {
     //private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<UUID, NcDataListAttr>> packPipeDirWalker;
     private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> packDirList;
     private Map<String,String> threadStatus;
+    
+    private NcThMifRunDirList runDirList;
+    private NcThMifTakeDirList takeDirList;
+    private NcThMifPackDirList packerDirList;
     
     
 
@@ -140,4 +138,24 @@ public class NcThExStatus {
         return this.packDirList;
     }
     
+    protected Thread.State getRunnerStatus(){
+        return this.runDirList.getState();
+    }
+    protected void setRunner(NcThMifRunDirList outerRunDirList){
+        this.runDirList =  outerRunDirList;
+    }
+    
+    protected Thread.State getTackerStatus(){
+        return this.takeDirList.getState();
+    }
+    protected void setTacker(NcThMifTakeDirList outerTakeDirList){
+        this.takeDirList =  outerTakeDirList;
+    }
+    
+    protected Thread.State getPackerStatus(){
+        return this.packerDirList.getState();
+    }
+    protected void setPacker(NcThMifPackDirList outerPackerDirList){
+        this.packerDirList =  outerPackerDirList;
+    }
 }

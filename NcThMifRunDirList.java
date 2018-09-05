@@ -32,17 +32,20 @@ public class NcThMifRunDirList extends Thread {
     private NcFsIdxFileVisitor fv;
     private Path ps;
     private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pd;
+    private NcThExStatus jobStatus;
     
     
     public NcThMifRunDirList(
             ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> pipeDirListOuter,
-            Path pathToStartOuter) {
+            Path pathToStartOuter,
+            NcThExStatus outerJobStatus) {
         this.pd = pipeDirListOuter;
         NcFsIdxFileVisitor ncFsIdxFileVisitor = new NcFsIdxFileVisitor(pd);
         this.fv = ncFsIdxFileVisitor;
-        Path realPath = Paths.get("/usr/src");
+        Path realPath = Paths.get("/");
         this.ps = realPath;
         this.typeObject = "[MIFRUNDIRLIST]" + this.toString();
+        this.jobStatus = outerJobStatus;
         NcAppHelper.outCreateObjectMessage(this.typeObject, this.getClass());
     }
 
@@ -55,6 +58,8 @@ public class NcThMifRunDirList extends Thread {
         } catch (IOException ex) {
             NcAppHelper.logException(NcThMifRunDirList.class.getCanonicalName(), ex);
         } catch (IllegalStateException ex) {
+            NcAppHelper.logException(NcThMifRunDirList.class.getCanonicalName(), ex);
+        } catch (SecurityException ex) {
             NcAppHelper.logException(NcThMifRunDirList.class.getCanonicalName(), ex);
         }
         System.out.println("[RUNNER][FINISH][EXIT]");

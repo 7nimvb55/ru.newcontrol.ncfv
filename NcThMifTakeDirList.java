@@ -32,13 +32,16 @@ public class NcThMifTakeDirList extends Thread {
     private String typeObject;
     private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> fromPipeDirWalker;
     private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> toPackDirList;
+    private NcThExStatus jobStatus;
 
     public NcThMifTakeDirList(
             ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> fromPipeDirWalkerOuter,
-            ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> toPackDirListOuter) {
+            ArrayBlockingQueue<ConcurrentSkipListMap<UUID, NcDataListAttr>> toPackDirListOuter,
+            NcThExStatus outerJobStatus) {
         this.fromPipeDirWalker = fromPipeDirWalkerOuter;
         this.toPackDirList = toPackDirListOuter;
         this.typeObject = "[MIFTAKEDIRLIST]" + this.toString();
+        this.jobStatus = outerJobStatus;
         NcAppHelper.outCreateObjectMessage(this.typeObject, this.getClass());
     }
     
@@ -46,10 +49,12 @@ public class NcThMifTakeDirList extends Thread {
     
     @Override
     public void run() {
-        int emptyCount = 0;
+        
         int size = 0;
         boolean hasData = Boolean.FALSE;
         try {
+            do{
+                int emptyCount = 0;
             do {
                 do {
                     try{
@@ -77,10 +82,13 @@ public class NcThMifTakeDirList extends Thread {
                                 + this.toPackDirList.size());*/
                     } catch (IllegalArgumentException ex) {
                         NcAppHelper.logException(NcThMifTakeDirList.class.getCanonicalName(), ex);
-                    }  
+                    } catch (NullPointerException ex) {
+                        NcAppHelper.logException(NcThMifTakeDirList.class.getCanonicalName(), ex);
+                    } 
                 } while ( this.toPackDirList.size() != 0 );
                 emptyCount++;
             } while ( emptyCount < 50 );
+        }while ( this.jobStatus.getRunnerStatus() == Thread.State.RUNNABLE );
         } catch (InterruptedException ex) {
             NcAppHelper.logException(NcThMifTakeDirList.class.getCanonicalName(), ex);
         }

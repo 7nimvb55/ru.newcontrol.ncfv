@@ -82,7 +82,7 @@ public class NcThScanListAttr {
         Path forScanPath = Paths.get("/");
         
         System.out.println("start NcThScanListAttr.runMakeIndex"
-        + "for path" + forScanPath.toString());
+        + "for path:" + forScanPath.toString());
             
             NcThExStatus jobStatus = new NcThExStatus(forScanPath);
             System.out.println("new NcThExStatus");
@@ -91,19 +91,30 @@ public class NcThScanListAttr {
             
             NcThMifRunDirList runDirList = new NcThMifRunDirList(
                     jobStatus.getPipeDirList(), 
-                    jobStatus.getScanPath());
+                    jobStatus.getScanPath(),
+                    jobStatus);
+            
+            jobStatus.setRunner(runDirList);
+        
             
             NcThMifTakeDirList takeDirList = new NcThMifTakeDirList(
             jobStatus.getPipeDirList(),
-            jobStatus.getFromPipeDirWalker());
+            jobStatus.getFromPipeDirWalker(),
+            jobStatus);
+            
+            jobStatus.setTacker(takeDirList);
             
             NcThMifPackDirList packDirList = new NcThMifPackDirList(
             jobStatus.getFromPipeDirWalker(),
-            jobStatus.getPackDirList());
+            jobStatus.getPackDirList(),
+            jobStatus);
+            
+            jobStatus.setPacker(packDirList);
             
             NcThMifWriterDirList writeDirList = new NcThMifWriterDirList(
             jobStatus.getPackDirList(),
-            jobStatus.getFromPipeDirWalker());
+            jobStatus.getFromPipeDirWalker(),
+            jobStatus);
             
             runDirList.start();
             takeDirList.start();
