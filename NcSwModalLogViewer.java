@@ -178,7 +178,10 @@ public class NcSwModalLogViewer {
             }
             
             strReadedChild = getNN(strItem.getValue());
-            strReadedTime.add(strReadedChild);
+            if( strReadedChild != null ){
+                strReadedTime.add(strReadedChild);
+            }
+            
             
         }
         forTreeTop.add(strReadedParent);
@@ -193,7 +196,8 @@ public class NcSwModalLogViewer {
      * @return 
      */
     private static DefaultMutableTreeNode getNN(String strNodeName){
-        return new DefaultMutableTreeNode(strNodeName);
+        DefaultMutableTreeNode defaultMutableTreeNode = new DefaultMutableTreeNode(strNodeName);
+        return defaultMutableTreeNode;
     }
     /**
      * Used in
