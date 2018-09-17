@@ -38,12 +38,21 @@ import javax.swing.JProgressBar;
  * @author wladimirowichbiaran
  */
 public class NcThScanListAttr {
-    protected static void fsScanListAttr(JButton ncButton, NcSwGUIComponentStatus lComp, Path pathDirToScan) throws Exception{
+    protected static void fsScanListAttr(
+            JButton ncButton, 
+            NcSwGUIComponentStatus lComp, 
+            Path pathDirToScan) throws Exception{
+        
+        
         compChangeForStart(ncButton, lComp);
         System.out.println("start NcThScanListAttr.fsScanListAttr");
         //Thread.sleep(5000);
         try{
-            runMakeIndex();
+            NcThExStatus runnedMakeIndex = runMakeIndex();
+            
+            //Call create button method here for build cancel job button
+            //release all job monitoring methods here
+            
         }
         catch(InterruptedException ex){
             System.out.println("NcThScanListAttr.fsScanListAttr InterruptedException "
@@ -76,8 +85,9 @@ public class NcThScanListAttr {
         //Async start for build index of directories
         //after task finished need repaint button
         //compChangeForDone(ncButton, lComp);
+         
     }
-    protected static void runMakeIndex() throws IOException, InterruptedException{
+    protected static NcThExStatus runMakeIndex() throws IOException, InterruptedException{
             
         Path forScanPath = Paths.get("/");
         
@@ -149,6 +159,7 @@ public class NcThScanListAttr {
             System.out.println("initJobParam.getTaskCount() = " + initJobParam.getTaskCount());
             System.out.println("initJobParam.getQueue().size() = " + initJobParam.getQueue().size());
             initJobParam.shutdown();*/
+            return jobStatus;
     }
     /**
      * @deprecated 
@@ -407,6 +418,16 @@ public class NcThScanListAttr {
 
         progressBar.setIndeterminate(false);
         ncButton.setEnabled(true);
+        componentPath = NcSwGUIComponentRouter.pathMainFramePanelCenter();
+        JPanel panelCenter = (JPanel) lComp.getComponentByPath(componentPath);
+        panelCenter.repaint();
+    }
+    private static void compAddButtonJobCancel(JButton ncButton, NcSwGUIComponentStatus lComp){
+        String componentPath = NcSwGUIComponentRouter.pathMainFramePanelPageEndButton();
+        /*JProgressBar progressBar = (JProgressBar) lComp.getComponentByPath(componentPath);
+
+        progressBar.setIndeterminate(false);
+        ncButton.setEnabled(true);*/
         componentPath = NcSwGUIComponentRouter.pathMainFramePanelCenter();
         JPanel panelCenter = (JPanel) lComp.getComponentByPath(componentPath);
         panelCenter.repaint();

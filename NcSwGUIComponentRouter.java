@@ -209,6 +209,18 @@ public class NcSwGUIComponentRouter {
      * 
      * @return 
      */
+    protected static String pathMainFramePanelPageEndButton(){
+        String componentPath = NcStrGUIComponent.SMAIN.getStr()
+            + NcStrGUIComponent.SJFRAME.getStr()
+            + NcStrGUIComponent.SJPANEL.getStr()
+            + NcStrGUIComponent.SPAGEEND.getStr()
+            + NcStrGUIComponent.SJBUTTON.getStr();
+        return componentPath;
+    }
+    /**
+     * 
+     * @return 
+     */
     protected static String pathMainFramePanelCenter(){
         return NcStrGUIComponent.SMAIN.getStr()
                 + NcStrGUIComponent.SJFRAME.getStr()
