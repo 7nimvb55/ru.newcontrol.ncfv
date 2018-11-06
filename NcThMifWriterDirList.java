@@ -78,6 +78,9 @@ public class NcThMifWriterDirList extends Thread {
         /*for (Map.Entry<String, String> entry : fsProperties.entrySet()) {
             System.out.println("Key: " + entry.getKey() + " Val: " + entry.getValue());
         }*/
+        
+        Boolean ifException = Boolean.FALSE;
+        
         URI uriZipIndexStorage = URI.create("jar:file:" + pathIndexFile.toUri().getPath());
         try(FileSystem fsZipIndexStorage = 
             FileSystems.newFileSystem(uriZipIndexStorage, fsProperties)){
@@ -180,13 +183,16 @@ public class NcThMifWriterDirList extends Thread {
             } while ( (outerJobStatus.getPackerStatus() == Thread.State.RUNNABLE)
                     || (outerJobStatus.getPackerStatus() == Thread.State.TIMED_WAITING) );
         } catch (IOException ex) {
+            ex.printStackTrace();
             NcAppHelper.logException(NcThMifWriterDirList.class.getCanonicalName(), ex);
             String strMsg = "Imposible to create file for index Storage, see log";
             NcAppHelper.outMessage(
                 NcStrLogMsgField.ERROR_CRITICAL.getStr()
                 + strMsg
             );
+            ifException = Boolean.TRUE;
         } catch (Exception ex){
+            ex.printStackTrace();
             NcAppHelper.logException(NcThMifWriterDirList.class.getCanonicalName(), ex);
             String strMsg = "Imposible for exec operation in the index Storage, see log"
                     + NcStrLogMsgField.EXCEPTION_MSG.getStr() + ex.getMessage();
@@ -194,6 +200,10 @@ public class NcThMifWriterDirList extends Thread {
                 NcStrLogMsgField.ERROR_CRITICAL.getStr()
                 + strMsg
             );
+            ifException = Boolean.TRUE;
+        }
+        if( ifException ){
+            System.out.println("[WRITER][ERRROR][FINISH][EXIT]");
         }
         System.out.println("[WRITER][FINISH][EXIT]");
     }
