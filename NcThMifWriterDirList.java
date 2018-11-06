@@ -75,9 +75,9 @@ public class NcThMifWriterDirList extends Thread {
         if( !existFSfile ){
             fsProperties = NcFsIdxStorageInit.getFsPropCreate();
         }
-        for (Map.Entry<String, String> entry : fsProperties.entrySet()) {
+        /*for (Map.Entry<String, String> entry : fsProperties.entrySet()) {
             System.out.println("Key: " + entry.getKey() + " Val: " + entry.getValue());
-        }
+        }*/
         URI uriZipIndexStorage = URI.create("jar:file:" + pathIndexFile.toUri().getPath());
         try(FileSystem fsZipIndexStorage = 
             FileSystems.newFileSystem(uriZipIndexStorage, fsProperties)){
@@ -130,12 +130,12 @@ public class NcThMifWriterDirList extends Thread {
                                 throw new IllegalArgumentException(strMsgError);
                             }
 
-                            System.out.println("[Writer]From [Packer] get packet with hashCode "
+                            /*System.out.println("[Writer]From [Packer] get packet with hashCode "
                             + nowPack.hashCode()
                             + " toString val is " + nowPack.toString()
                             + " size of " + nowPack.size() 
                             + " in packet records, ready path for write is "
-                            + getNew.toString());
+                            + getNew.toString());*/
                         } catch (InterruptedException ex) {
                             NcAppHelper.logException(NcThMifWriterDirList.class.getCanonicalName(), ex);
                         }
@@ -149,7 +149,7 @@ public class NcThMifWriterDirList extends Thread {
                                 ))
                                 {
                                     oos.writeObject(nowPack);
-                                    System.out.println(getNew.toString() + " -|-|- " + nowPack.size() + " elements writed");
+                                    //System.out.println(getNew.toString() + " -|-|- " + nowPack.size() + " elements writed");
                                 }
                                 catch(Exception ex){
                                     NcAppHelper.logException(
@@ -175,7 +175,7 @@ public class NcThMifWriterDirList extends Thread {
                 }
                 dataWaitCount++;
             } while ( dataWaitCount < 50 );
-            } while ( outerJobStatus.getPackerStatus().RUNNABLE == Thread.State.RUNNABLE );
+            } while ( outerJobStatus.getPackerStatus() == Thread.State.RUNNABLE );
         } catch (IOException ex) {
             NcAppHelper.logException(NcThMifWriterDirList.class.getCanonicalName(), ex);
             String strMsg = "Imposible to create file for index Storage, see log";
