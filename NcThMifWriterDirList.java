@@ -175,7 +175,10 @@ public class NcThMifWriterDirList extends Thread {
                 }
                 dataWaitCount++;
             } while ( dataWaitCount < 50 );
-            } while ( outerJobStatus.getPackerStatus() == Thread.State.RUNNABLE );
+            System.out.println("[Writer]statusPacker-" + this.outerJobStatus.getPackerStatus().toString()
+                        + "");
+            } while ( (outerJobStatus.getPackerStatus() == Thread.State.RUNNABLE)
+                    || (outerJobStatus.getPackerStatus() == Thread.State.TIMED_WAITING) );
         } catch (IOException ex) {
             NcAppHelper.logException(NcThMifWriterDirList.class.getCanonicalName(), ex);
             String strMsg = "Imposible to create file for index Storage, see log";

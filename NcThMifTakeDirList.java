@@ -88,7 +88,10 @@ public class NcThMifTakeDirList extends Thread {
                 } while ( this.toPackDirList.size() != 0 );
                 emptyCount++;
             } while ( emptyCount < 50 );
-        }while ( this.jobStatus.getRunnerStatus() == Thread.State.RUNNABLE );
+            System.out.println("[Tacker]statusRunner-" + this.jobStatus.getRunnerStatus().toString()
+                        + "");
+        }while ( (this.jobStatus.getRunnerStatus() == Thread.State.RUNNABLE) 
+                    || (this.jobStatus.getRunnerStatus() == Thread.State.TIMED_WAITING) );
         } catch (InterruptedException ex) {
             NcAppHelper.logException(NcThMifTakeDirList.class.getCanonicalName(), ex);
         }

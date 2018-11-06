@@ -102,7 +102,10 @@ public class NcThMifPackDirList extends Thread {
                 }
                 dataWaitCount++;
             }while( dataWaitCount < 50);
-            }while( this.jobStatus.getTackerStatus() == Thread.State.RUNNABLE );
+            System.out.println("[Pack]statusTacker-" + this.jobStatus.getTackerStatus().toString()
+                        + "");
+            }while( (this.jobStatus.getTackerStatus() == Thread.State.RUNNABLE)
+                    || (this.jobStatus.getTackerStatus() == Thread.State.TIMED_WAITING) );
             
         
         } catch (Exception ex) {
