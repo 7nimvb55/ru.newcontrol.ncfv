@@ -139,21 +139,37 @@ public class NcThExStatus {
     }
     
     protected Thread.State getRunnerStatus(){
-        return this.runDirList.getState();
+        Thread.State staterunDirList = this.runDirList.getState();
+        if( staterunDirList == null ){
+            staterunDirList = this.runDirList.getState();
+        }
+        return staterunDirList;
     }
     protected void setRunner(NcThMifRunDirList outerRunDirList){
         this.runDirList =  outerRunDirList;
     }
     
     protected Thread.State getTackerStatus(){
-        return this.takeDirList.getState();
+
+        Thread.State statetakeDirList = this.takeDirList.getState();
+        if( statetakeDirList == null ){
+            statetakeDirList = this.takeDirList.getState();
+        }
+
+        return statetakeDirList;
+        
     }
     protected void setTacker(NcThMifTakeDirList outerTakeDirList){
         this.takeDirList =  outerTakeDirList;
     }
     
     protected Thread.State getPackerStatus(){
-        return this.packerDirList.getState();
+        Thread.State statepackerDirList = this.packerDirList.getState();
+        if( statepackerDirList == null ){
+            statepackerDirList = this.packerDirList.getState();
+        }
+
+        return statepackerDirList;
     }
     protected void setPacker(NcThMifPackDirList outerPackerDirList){
         this.packerDirList =  outerPackerDirList;
