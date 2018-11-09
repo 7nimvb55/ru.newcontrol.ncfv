@@ -42,7 +42,10 @@ public class Ncfv {
      */
     
     public static void main(String[] args) {
-        NcAppLoader.loadApp();
+        runVersionOfAppBeforeThreadsInUse(args);
+    }
+    private static void runVersionOfAppBeforeThreadsInUse(String[] args){
+                NcAppLoader.loadApp();
         if (args.length == 0){
             isRunInSwing = true;
             oneofAppRun = true;
