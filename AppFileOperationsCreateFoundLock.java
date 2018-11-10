@@ -19,12 +19,6 @@ package ru.newcontrol.ncfv;
  *
  * @author wladimirowichbiaran
  */
-public class AppMsgEnFiledForLog {
-    protected static String FIELD_START = "[";
-    protected static String FIELD_STOP = "]";
-    protected static String ERROR = "[ERROR]";
-    protected static String WARINING = "[WARINING]";
-    protected static String INFO = "[INFO]";
-    protected static String MSG_EXIST_THREAD_KEY = "Thread exist, found and use it with key: ";
+public class AppFileOperationsCreateFoundLock {
     
 }

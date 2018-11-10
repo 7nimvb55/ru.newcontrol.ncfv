@@ -22,5 +22,7 @@ package ru.newcontrol.ncfv;
 public class AppFileNamesConstants {
     protected static String LOG_SUB_DIR = "log";
     protected static String CFG_SUB_DIR = "etc";
+    protected static String CFG_GENERATED_FILENAME = "autogen";
+    protected static String CFG_GENERATED_EXT = ".cfg";
     protected static String LOG_EXT = ".log";
 }

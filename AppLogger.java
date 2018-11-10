@@ -40,21 +40,26 @@ import java.util.concurrent.Future;
 public class AppLogger extends Thread {
     private ArrayBlockingQueue<String> messagesQueueForLogging;
     private Integer linesCount;
+    private Path newLogFile;
 
     public AppLogger(ArrayBlockingQueue<String> messagesQueueOuter) {
         super();
         messagesQueueForLogging = messagesQueueOuter;
-        linesCount = 0;
+        linesCount = AppConstants.LOG_LINES_COUNT;
+        newLogFile = AppFileOperationsSimple.getNewLogFile();
     }
     
     @Override
     public void run() {
+        //@todo rebuild for limit str count in files, add log rotate in arch folder, create zip for old logs
         ArrayList<String> strForLog = new ArrayList<String>();
+        System.out.println("lines for log " + messagesQueueForLogging.size());
         while ( !messagesQueueForLogging.isEmpty() ) {            
             strForLog.add(messagesQueueForLogging.poll());
             linesCount++;
         }
-        Path newLogFile = AppFileOperationsSimple.getNewLogFile();
+        
+        
         ArrayList<String> lines = new ArrayList<>();
         try {
             lines.addAll(Files.readAllLines(newLogFile, Charset.forName("UTF-8")));
@@ -63,11 +68,16 @@ public class AppLogger extends Thread {
             ex.printStackTrace();
         }
         lines.addAll(strForLog);
+        
         try {
             Files.write(newLogFile, lines, Charset.forName("UTF-8"));
         } catch (IOException ex) {
             ex.getMessage();
             ex.printStackTrace();
         }
+        if(lines.size() > linesCount){
+            newLogFile = AppFileOperationsSimple.getNewLogFile();
+        }
+        
     }
 }

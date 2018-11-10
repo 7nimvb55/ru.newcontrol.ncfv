@@ -63,12 +63,33 @@ public class AppFileOperationsSimple {
         }
         return toReturn;
     }
+    protected static Path getLogSubDir(){
+        Path toReturn = Paths.get(getAppRWEDCheckedPath().toString(),
+        AppFileNamesConstants.LOG_SUB_DIR);
+        if( Files.notExists(toReturn, LinkOption.NOFOLLOW_LINKS) ){
+            try {
+                Files.createDirectories(toReturn);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                System.out.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
+                System.exit(0);
+            }
+        }
+        try {
+            pathIsNotReadWriteLink(toReturn);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            System.out.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
+            System.exit(0);
+        }
+        return toReturn;
+    }
     protected static Path getNewLogFile(){
         
-        Path toReturn = Paths.get(getAppRWEDCheckedPath().toString(),
-        AppFileNamesConstants.LOG_SUB_DIR,
-        getNowTimeStringWithMS()
-        + AppFileNamesConstants.LOG_EXT);
+        Path toReturn = Paths.get(getLogSubDir().toString(), 
+                getNowTimeStringWithMS()
+                + AppFileNamesConstants.LOG_EXT);
+        
         if( Files.exists(toReturn, LinkOption.NOFOLLOW_LINKS) ){
             try {
                 pathIsNotFile(toReturn);
@@ -155,7 +176,7 @@ public class AppFileOperationsSimple {
        //printing value of Date
        //System.out.println("current Date: " + currentDate);
       
-       DateFormat df = new SimpleDateFormat("yyyyMMddHHmmssMMM");
+       DateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
        
        //formatted value of current Date
        return df.format(currentDate);

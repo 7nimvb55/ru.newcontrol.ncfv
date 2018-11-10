@@ -42,7 +42,14 @@ public class Ncfv {
      */
     
     public static void main(String[] args) {
-        runVersionOfAppBeforeThreadsInUse(args);
+        AppListOfObjects obectsForApp = new AppListOfObjects();
+        AppThManager loggerByThreads = new AppThManager(obectsForApp);
+        System.out.println("logger test ");
+        String strForPut = new String("logging for test");
+        
+        loggerByThreads.putLogInfoMessage(strForPut);
+        loggerByThreads.doLogger();
+        //runVersionOfAppBeforeThreadsInUse(args);
     }
     private static void runVersionOfAppBeforeThreadsInUse(String[] args){
                 NcAppLoader.loadApp();

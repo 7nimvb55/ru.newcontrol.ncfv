@@ -29,14 +29,38 @@ import java.util.concurrent.ConcurrentSkipListMap;
 public class AppThManager {
     private ConcurrentSkipListMap<String,Thread> currentWorkerList;
     private ArrayBlockingQueue<String> messagesQueueForLogging;
+    private AppListOfObjects outerObectsForApp;
+    
     private final Integer messagesQueueSize = 1000;
 
-    public AppThManager() {
-        this.currentWorkerList = new ConcurrentSkipListMap<>();
-        this.messagesQueueForLogging = new ArrayBlockingQueue<String>(messagesQueueSize);
+    public AppThManager(AppListOfObjects obectsForApp) {
+        this.outerObectsForApp = obectsForApp;
+        this.currentWorkerList = obectsForApp.getWorkerList();
+        this.messagesQueueForLogging = obectsForApp.getLoggingQueue();
+        
+    }
+    protected String getPrefixInfo(){
+        String prefixStr = AppMsgEnFiledForLog.FIELD_START
+                + AppFileOperationsSimple.getNowTimeStringWithMS()
+                + AppMsgEnFiledForLog.FIELD_STOP
+                + AppMsgEnFiledForLog.INFO;
+        return prefixStr;
     }
     
-    
+    protected void putLogInfoMessage(String strToLog){
+        if( !strToLog.isEmpty() ){
+            String prefixStr = getPrefixInfo()
+                + strToLog;
+        
+            messagesQueueForLogging.add(prefixStr);
+        }
+        if( !messagesQueueForLogging.isEmpty()){
+            if( messagesQueueForLogging.size() > 100 ){
+                doLogger();
+            }
+        }
+        System.out.println("for log ready " + messagesQueueForLogging.size());
+    }
     
     protected static void createNewWorkerGroup(){
         ThreadGroup groupForThreads = new ThreadGroup("ncfvThGroup");
@@ -46,15 +70,18 @@ public class AppThManager {
         
     }
     protected void doLogger(){
-        String nameForWorker = AppMsgEnPrefixes.TH_NAME_LOG;
+        Thread foundedThread;
         Boolean existThread = Boolean.TRUE;
         try{
-            Thread foundedThread = currentWorkerList.get(nameForWorker.hashCode());
+            foundedThread = this.outerObectsForApp.getLogger();
+            foundedThread.start();
         } catch(NullPointerException ex){
-            currentWorkerList.put(nameForWorker, new Thread());
-            existThread = Boolean.FALSE;
-        }
 
+            System.out.println("null for init logger " + ex.getMessage());
+            ex.printStackTrace();
+            System.exit(0);
+        }
+        
     }
     
     protected void getAnyThread(String nameForWorker) throws CloneNotSupportedException{
