@@ -18,6 +18,9 @@
 package ru.newcontrol.ncfv;
 
 import java.io.File;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 
 /**
@@ -44,9 +47,35 @@ public class Ncfv {
     public static void main(String[] args) {
         AppListOfObjects obectsForApp = new AppListOfObjects();
         AppThManager loggerByThreads = new AppThManager(obectsForApp);
-        System.out.println("logger test ");
-        String strForPut = new String("logging for test");
         
+        String strForPut = new String("start Application");
+        loggerByThreads.putLogInfoMessage(strForPut);
+        loggerByThreads.putLogInfoMessage("[RUN]System.getenv()");
+        for (Map.Entry<String,String> arg : System.getenv().entrySet()) {
+            String key = arg.getKey();
+            String value = arg.getValue();
+            loggerByThreads.putLogInfoMessage("[KEY]" + key + "[VALUE]" + value);
+        }
+        loggerByThreads.putLogInfoMessage("[RUN]System.getProperties().stringPropertyNames()[FOR]System.getProperty(namesKey)");
+        for (String namesKey : System.getProperties().stringPropertyNames()) {
+            String value = System.getProperty(namesKey);
+            loggerByThreads.putLogInfoMessage("[KEY]" + namesKey + "[VALUE]" + value);
+        }
+        SecurityManager securityManager = System.getSecurityManager();
+        if( securityManager == null ){
+            loggerByThreads.putLogInfoMessage("[RUN]System.getSecurityManager()[VALUE]NULL");
+        } else{
+            String toString = securityManager.getSecurityContext().toString();
+            loggerByThreads.putLogInfoMessage("[RUN]securityManager.getSecurityContext().toString()[VALUE]" + toString);
+        }
+        String threadInfoToString = NcAppHelper.getThreadInfoToString(Thread.currentThread());
+        loggerByThreads.putLogInfoMessage("[RUN]NcAppHelper.getThreadInfoToString(Thread.currentThread())[VALUE]" + threadInfoToString);
+        String classInfoToString = NcAppHelper.getClassInfoToString(obectsForApp.getClass());
+        loggerByThreads.putLogInfoMessage("[RUN]NcAppHelper.getClassInfoToString(obectsForApp.getClass())[VALUE]" + classInfoToString);
+        /*strForPut = 
+        for (String arg : args) {
+            strForPut = strForPut + arg;
+        }*/
         loggerByThreads.putLogInfoMessage(strForPut);
         loggerByThreads.doLogger();
         //runVersionOfAppBeforeThreadsInUse(args);

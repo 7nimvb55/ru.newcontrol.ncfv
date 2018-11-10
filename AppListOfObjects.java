@@ -40,6 +40,11 @@ public class AppListOfObjects {
         return messagesQueueForLogging;
     }
     protected Thread getLogger(){
-        return currentWorkerList.get(AppMsgEnPrefixes.TH_NAME_LOG);
+        Thread getForReturn = currentWorkerList.get(AppMsgEnPrefixes.TH_NAME_LOG);
+        if( getForReturn == null ){
+            currentWorkerList.put(AppMsgEnPrefixes.TH_NAME_LOG, new AppLogger(messagesQueueForLogging));
+            getForReturn = currentWorkerList.get(AppMsgEnPrefixes.TH_NAME_LOG);
+        }
+        return getForReturn;
     }
 }
