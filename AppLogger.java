@@ -47,37 +47,38 @@ public class AppLogger extends Thread {
         messagesQueueForLogging = messagesQueueOuter;
         linesCount = AppConstants.LOG_LINES_COUNT;
         newLogFile = AppFileOperationsSimple.getNewLogFile();
+        System.out.println("create logger");
     }
     
     @Override
     public void run() {
-        //@todo rebuild for limit str count in files, add log rotate in arch folder, create zip for old logs
-        ArrayList<String> strForLog = new ArrayList<String>();
-        System.out.println("lines for log " + messagesQueueForLogging.size());
-        while ( !messagesQueueForLogging.isEmpty() ) {            
-            strForLog.add(messagesQueueForLogging.poll());
-            linesCount++;
-        }
-        
-        
-        ArrayList<String> lines = new ArrayList<>();
-        try {
-            lines.addAll(Files.readAllLines(newLogFile, Charset.forName("UTF-8")));
-        } catch (IOException ex) {
-            ex.getMessage();
-            ex.printStackTrace();
-        }
-        lines.addAll(strForLog);
-        
-        try {
-            Files.write(newLogFile, lines, Charset.forName("UTF-8"));
-        } catch (IOException ex) {
-            ex.getMessage();
-            ex.printStackTrace();
-        }
-        if(lines.size() > linesCount){
-            newLogFile = AppFileOperationsSimple.getNewLogFile();
-        }
-        
+
+            //@todo rebuild for limit str count in files, add log rotate in arch folder, create zip for old logs
+            ArrayList<String> strForLog = new ArrayList<String>();
+            while ( !messagesQueueForLogging.isEmpty() ) {            
+                strForLog.add(messagesQueueForLogging.poll());
+                linesCount++;
+            }
+
+
+            ArrayList<String> lines = new ArrayList<>();
+            try {
+                lines.addAll(Files.readAllLines(newLogFile, Charset.forName("UTF-8")));
+            } catch (IOException ex) {
+                ex.getMessage();
+                ex.printStackTrace();
+            }
+            lines.addAll(strForLog);
+
+            try {
+                Files.write(newLogFile, lines, Charset.forName("UTF-8"));
+            } catch (IOException ex) {
+                ex.getMessage();
+                ex.printStackTrace();
+            }
+            if(lines.size() > linesCount){
+                newLogFile = AppFileOperationsSimple.getNewLogFile();
+            }
+
     }
 }

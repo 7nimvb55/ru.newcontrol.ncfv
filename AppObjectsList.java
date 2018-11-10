@@ -22,13 +22,13 @@ import java.util.concurrent.ConcurrentSkipListMap;
  *
  * @author wladimirowichbiaran
  */
-public class AppListOfObjects {
+public class AppObjectsList {
     private ConcurrentSkipListMap<String,Thread> currentWorkerList;
     private ArrayBlockingQueue<String> messagesQueueForLogging;
     
     private final Integer messagesQueueSize = 1000;
 
-    public AppListOfObjects() {
+    public AppObjectsList() {
         this.currentWorkerList = new ConcurrentSkipListMap<>();
         this.messagesQueueForLogging = new ArrayBlockingQueue<String>(messagesQueueSize);
         currentWorkerList.put(AppMsgEnPrefixes.TH_NAME_LOG, new AppLogger(messagesQueueForLogging));

@@ -45,9 +45,14 @@ public class Ncfv {
      */
     
     public static void main(String[] args) {
-        AppListOfObjects obectsForApp = new AppListOfObjects();
-        AppThManager loggerByThreads = new AppThManager(obectsForApp);
+        AppObjectsList obectsForApp = new AppObjectsList();
+        AppThManager loggerByThreadsMain = new AppThManager(obectsForApp);
+        logInitState(loggerByThreadsMain);
         
+        //runVersionOfAppBeforeThreadsInUse(args);
+    }
+    private static void logInitState(AppThManager loggerByThreads){
+        AppObjectsList obectsForApp = loggerByThreads.getListOfObjects();
         String strForPut = new String("start Application");
         loggerByThreads.putLogInfoMessage(strForPut);
         loggerByThreads.putLogInfoMessage("[RUN]System.getenv()");
@@ -78,7 +83,32 @@ public class Ncfv {
         }*/
         loggerByThreads.putLogInfoMessage(strForPut);
         loggerByThreads.doLogger();
-        //runVersionOfAppBeforeThreadsInUse(args);
+        
+        /**
+         * @todo code for finish and release all created resurses
+         * 
+         * 
+         * 
+         * see state of threads
+        for ( Map.Entry<String, Thread> workerElement : obectsForApp.getWorkerList().entrySet() ){
+            System.out.println(workerElement.getValue().getState().toString());
+        }
+         * treminaion threads
+        for ( Map.Entry<String, Thread> workerElement : obectsForApp.getWorkerList().entrySet() ){
+            
+            try{
+                workerElement.getValue().getState().notify(); 
+                workerElement.getValue().wait();
+            } catch (InterruptedException ex){
+                String interruptedThreadInfoToString = NcAppHelper.getThreadInfoToString(workerElement.getValue());
+                System.out.println(interruptedThreadInfoToString
+                        + "[InterruptedException]" + ex.getMessage());
+                ex.printStackTrace();
+            }
+            //workerElement.getValue().getThreadGroup().destroy();
+        }
+        */
+        obectsForApp.getWorkerList().clear();
     }
     private static void runVersionOfAppBeforeThreadsInUse(String[] args){
                 NcAppLoader.loadApp();

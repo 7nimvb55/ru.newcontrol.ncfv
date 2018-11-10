@@ -29,15 +29,16 @@ import java.util.concurrent.ConcurrentSkipListMap;
 public class AppThManager {
     private ConcurrentSkipListMap<String,Thread> currentWorkerList;
     private ArrayBlockingQueue<String> messagesQueueForLogging;
-    private AppListOfObjects outerObectsForApp;
-    
-    private final Integer messagesQueueSize = 1000;
+    private AppObjectsList outerObectsForApp;
 
-    public AppThManager(AppListOfObjects obectsForApp) {
+    public AppThManager(AppObjectsList obectsForApp) {
         this.outerObectsForApp = obectsForApp;
         this.currentWorkerList = obectsForApp.getWorkerList();
         this.messagesQueueForLogging = obectsForApp.getLoggingQueue();
         
+    }
+    protected AppObjectsList getListOfObjects(){
+        return this.outerObectsForApp;
     }
     protected String getPrefixInfo(){
         String prefixStr = AppMsgEnFiledForLog.FIELD_START
@@ -59,7 +60,6 @@ public class AppThManager {
                 doLogger();
             }
         }
-        System.out.println("for log ready " + messagesQueueForLogging.size());
     }
     
     protected static void createNewWorkerGroup(){
