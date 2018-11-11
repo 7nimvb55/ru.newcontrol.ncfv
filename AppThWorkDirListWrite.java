@@ -15,10 +15,26 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.nio.file.FileSystem;
+
 /**
  *
  * @author wladimirowichbiaran
  */
-public class AppThWorkDirListWrite {
+public class AppThWorkDirListWrite extends Thread {
+    private AppThWorkDirListRule innerRuleForDirListWorkers;
+
+    public AppThWorkDirListWrite(AppThWorkDirListRule ruleForDirListWorkers) {
+        super(ruleForDirListWorkers.getThreadGroupWorkerDirList(), ruleForDirListWorkers.getNameDirListWriter());
+        this.innerRuleForDirListWorkers = ruleForDirListWorkers;
+    }
+    
+    @Override
+    public void run() {
+        Boolean needFinishStateDirListWriter = innerRuleForDirListWorkers.getNeedFinishStateDirListWriter();
+        FileSystem fsZipIndexStorage = innerRuleForDirListWorkers.getFsZipIndexStorage();
+        NcParamFs dataStorage = NcFsIdxStorageInit.initStorageStructure(fsZipIndexStorage);
+        
+    }
     
 }

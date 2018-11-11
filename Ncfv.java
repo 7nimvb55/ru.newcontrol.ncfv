@@ -48,6 +48,8 @@ public class Ncfv {
         AppObjectsList obectsForApp = new AppObjectsList();
         AppThManager loggerByThreadsMain = new AppThManager(obectsForApp);
         logInitState(loggerByThreadsMain);
+        AppObjectsManagerState withOutLogger = new AppObjectsManagerState();
+        withOutLogger.runWorkMakeDirList();
         
         //runVersionOfAppBeforeThreadsInUse(args);
     }

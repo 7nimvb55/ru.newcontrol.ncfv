@@ -19,6 +19,18 @@ package ru.newcontrol.ncfv;
  *
  * @author wladimirowichbiaran
  */
-public class AppThWorkDirListPack {
+public class AppThWorkDirListPack extends Thread {
+    private AppThWorkDirListRule innerRuleForDirListWorkers;
+
+    public AppThWorkDirListPack(AppThWorkDirListRule ruleForDirListWorkers) {
+        super(ruleForDirListWorkers.getThreadGroupWorkerDirList(), ruleForDirListWorkers.getNameDirListPacker());
+        this.innerRuleForDirListWorkers = ruleForDirListWorkers;
+    }
+    
+    @Override
+    public void run() {
+        Boolean needFinishStateDirListPacker = innerRuleForDirListWorkers.getNeedFinishStateDirListPacker();
+        this.innerRuleForDirListWorkers.startDirListWriter();
+    }
     
 }

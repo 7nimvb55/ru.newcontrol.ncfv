@@ -15,10 +15,27 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.nio.file.Path;
+
 /**
  *
  * @author wladimirowichbiaran
  */
-public class AppThWorkDirListRun {
+public class AppThWorkDirListRun extends Thread {
+    private AppThWorkDirListRule innerRuleForDirListWorkers;
+
+    public AppThWorkDirListRun(AppThWorkDirListRule ruleForDirListWorkers) {
+        super(ruleForDirListWorkers.getThreadGroupWorkerDirList(), ruleForDirListWorkers.getNameDirlistReader());
+        this.innerRuleForDirListWorkers = ruleForDirListWorkers;
+    }
+    
+    @Override
+    public void run() {
+        Boolean needFinishStateDirlistReader = innerRuleForDirListWorkers.getNeedFinishStateDirlistReader();
+        Path currentPathForMakeIndex = this.innerRuleForDirListWorkers.getCurrentPathForMakeIndex();
+        
+        this.innerRuleForDirListWorkers.startDirlistTacker();
+        
+    }
     
 }

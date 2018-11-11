@@ -19,6 +19,18 @@ package ru.newcontrol.ncfv;
  *
  * @author wladimirowichbiaran
  */
-public class AppThWorkDirListTake {
+public class AppThWorkDirListTake extends Thread {
+    private AppThWorkDirListRule innerRuleForDirListWorkers;
+
+    public AppThWorkDirListTake(AppThWorkDirListRule ruleForDirListWorkers) {
+        super(ruleForDirListWorkers.getThreadGroupWorkerDirList(), ruleForDirListWorkers.getNameDirlistTacker());
+        this.innerRuleForDirListWorkers = ruleForDirListWorkers;
+    }
+    
+    @Override
+    public void run() {
+        Boolean needFinishStateDirlistTacker = innerRuleForDirListWorkers.getNeedFinishStateDirlistTacker();
+        this.innerRuleForDirListWorkers.startDirListPacker();
+    }
     
 }
