@@ -33,7 +33,7 @@ public class AppThWorkDirListWrite extends Thread {
     public void run() {
         Boolean needFinishStateDirListWriter = innerRuleForDirListWorkers.getNeedFinishStateDirListWriter();
         FileSystem fsZipIndexStorage = innerRuleForDirListWorkers.getFsZipIndexStorage();
-        NcParamFs dataStorage = NcFsIdxStorageInit.initStorageStructure(fsZipIndexStorage);
+        //NcParamFs dataStorage = NcFsIdxStorageInit.initStorageStructure(fsZipIndexStorage);
         
     }
     

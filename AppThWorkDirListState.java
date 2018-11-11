@@ -61,6 +61,8 @@ public class AppThWorkDirListState {
         }
         this.currentFsZipIndexStorage = this.ruleForDirListWorkers.getFsZipIndexStorage();
         
+        
+        
         this.ruleForDirListWorkers.setDirlistReader(this.runDirlistReader);
         this.ruleForDirListWorkers.setDirlistTacker(this.runDirlistTacker);
         this.ruleForDirListWorkers.setDirListPacker(runDirListPacker);

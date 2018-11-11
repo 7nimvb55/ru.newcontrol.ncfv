@@ -54,8 +54,11 @@ public class AppThManagerIndexStorage extends Thread {
         try(FileSystem fsZipIndexStorage = 
             FileSystems.newFileSystem(uriZipIndexStorage, fsProperties)){
             
-        innerRuleForDirListWorkers.setFsZipIndexStorage(fsZipIndexStorage);
-        
+            innerRuleForDirListWorkers.setFsZipIndexStorage(fsZipIndexStorage);
+            //@todo thread finished before writer start and life
+            //NcParamFs dataStorage = NcFsIdxStorageInit.initStorageStructure(fsZipIndexStorage);
+            //innerRuleForDirListWorkers.getNameDirListWriter().wait();
+            //see example for pipes, open read, write
         } catch (IOException ex) {
             ex.printStackTrace();
             /*NcAppHelper.logException(NcThMifWriterDirList.class.getCanonicalName(), ex);

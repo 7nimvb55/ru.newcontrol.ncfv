@@ -76,6 +76,7 @@ public class AppObjectsManagerState {
         this.currentWorkState = new AppThWorkDirListState(this.currentSelectedPathForMakeIndex);
     }
     protected void runWorkMakeDirList(){
-        this.currentWorkState.makeDirList();
+        //@todo release storage, storage structure etc
+        //this.currentWorkState.makeDirList();
     }
 }
