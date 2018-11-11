@@ -55,6 +55,32 @@ public class AppThManagerIndexStorage extends Thread {
             FileSystems.newFileSystem(uriZipIndexStorage, fsProperties)){
             
             innerRuleForDirListWorkers.setFsZipIndexStorage(fsZipIndexStorage);
+            AppThWorkDirListState workDirListState = innerRuleForDirListWorkers.getWorkDirListState();
+            int countForSetWaitReader = 0;
+            while( !innerRuleForDirListWorkers.isDirListReaderSetted() ){
+                countForSetWaitReader++;
+            }
+            int countForSetWaitTacker = 0;
+            while( !innerRuleForDirListWorkers.isDirListTackerSetted() ){
+                countForSetWaitTacker++;
+            }
+            int countForSetWaitPacker = 0;
+            while( !innerRuleForDirListWorkers.isDirListPackerSetted()){
+                countForSetWaitPacker++;
+            }
+            int countForSetWaitWriter = 0;
+            while( !innerRuleForDirListWorkers.isDirListWriterSetted() ){
+                countForSetWaitWriter++;
+            }
+            
+            workDirListState.startDirlistReader();
+            
+            
+            workDirListState.joinDirlistReader();
+            workDirListState.joinDirlistTacker();
+            workDirListState.joinDirlistPacker();
+            workDirListState.joinDirlistWriter();
+            
             //@todo thread finished before writer start and life
             //NcParamFs dataStorage = NcFsIdxStorageInit.initStorageStructure(fsZipIndexStorage);
             //innerRuleForDirListWorkers.getNameDirListWriter().wait();

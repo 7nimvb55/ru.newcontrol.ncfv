@@ -77,6 +77,6 @@ public class AppObjectsManagerState {
     }
     protected void runWorkMakeDirList(){
         //@todo release storage, storage structure etc
-        //this.currentWorkState.makeDirList();
+        this.currentWorkState.makeDirList();
     }
 }

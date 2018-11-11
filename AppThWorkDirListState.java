@@ -65,10 +65,10 @@ public class AppThWorkDirListState {
         
         this.ruleForDirListWorkers.setDirlistReader(this.runDirlistReader);
         this.ruleForDirListWorkers.setDirlistTacker(this.runDirlistTacker);
-        this.ruleForDirListWorkers.setDirListPacker(runDirListPacker);
+        this.ruleForDirListWorkers.setDirListPacker(this.runDirListPacker);
         this.ruleForDirListWorkers.setDirListWriter(this.runDirListWriter);
         
-        this.startDirlistReader();
+        //this.startDirlistReader();
     }
     protected State getStateDirlistReader(){
         return this.runDirlistReader.getState();
@@ -107,6 +107,36 @@ public class AppThWorkDirListState {
     }
     protected void stopDirlistWriter(){
         this.ruleForDirListWorkers.sayNeedFinishDirListWriter();
+    }
+    
+    protected void joinDirlistReader(){
+        try{
+            this.runDirlistReader.join();
+        } catch(InterruptedException ex){
+            ex.printStackTrace();
+        }
+    }
+    protected void joinDirlistTacker(){
+        try{
+            this.runDirlistTacker.join();
+        } catch(InterruptedException ex){
+            ex.printStackTrace();
+        }
+    }
+    protected void joinDirlistPacker(){
+        try{
+            this.runDirListPacker.join();
+        } catch(InterruptedException ex){
+            ex.printStackTrace();
+        }
+    }
+    protected void joinDirlistWriter(){
+        try{
+            this.runDirListWriter.join();
+        } catch(InterruptedException ex){
+            ex.printStackTrace();
+        }
+        
     }
     
 }

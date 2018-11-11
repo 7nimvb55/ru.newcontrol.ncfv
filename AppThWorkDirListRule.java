@@ -39,16 +39,25 @@ public class AppThWorkDirListRule {
     
     private FileSystem currentFsZipIndexStorage;
     private Boolean storageSetted;
+    private Boolean dirlistReaderSetted;
+    private Boolean dirlistTackerSetted;
+    private Boolean dirListPackerSetted;
+    private Boolean dirListWriterSetted;
     
     private AppThWorkDirListRun runDirlistReader;
     private AppThWorkDirListTake runDirlistTacker;
     private AppThWorkDirListPack runDirListPacker;
     private AppThWorkDirListWrite runDirListWriter;
     
+    
     private AppThWorkDirListState workDirListState;
 
     public AppThWorkDirListRule(Path pathForMakeIndex) {
         this.storageSetted = Boolean.FALSE;
+        this.dirlistReaderSetted = Boolean.FALSE;
+        this.dirlistTackerSetted = Boolean.FALSE;
+        this.dirListPackerSetted = Boolean.FALSE;
+        this.dirListWriterSetted = Boolean.FALSE;
         this.nameIndexStorage = "IndexStorage";
         this.nameDirlistReader = "DirlistReader";
         this.nameDirlistTacker = "DirlistTacker";
@@ -64,11 +73,23 @@ public class AppThWorkDirListRule {
         this.needFinishDirListWriter = Boolean.FALSE;
     }
     protected void setWorkDirListState(AppThWorkDirListState outerWorkDirListState){
-        this.storageSetted = Boolean.TRUE;
         this.workDirListState = outerWorkDirListState;
+        this.storageSetted = Boolean.TRUE;
     }
     protected Boolean isStorageSetted(){
         return this.storageSetted;
+    }
+    protected Boolean isDirListReaderSetted(){
+        return this.dirlistReaderSetted;
+    }
+    protected Boolean isDirListTackerSetted(){
+        return this.dirlistTackerSetted;
+    }
+    protected Boolean isDirListPackerSetted(){
+        return this.dirListPackerSetted;
+    }
+    protected Boolean isDirListWriterSetted(){
+        return this.dirListWriterSetted;
     }
     protected AppThWorkDirListState getWorkDirListState(){
         return this.workDirListState;
@@ -101,15 +122,19 @@ public class AppThWorkDirListRule {
     
     protected void setDirlistReader(AppThWorkDirListRun outerDirlistReader){
         this.runDirlistReader = outerDirlistReader;
+        this.dirlistReaderSetted = Boolean.TRUE;
     }
     protected void setDirlistTacker(AppThWorkDirListTake outerDirlistTacker){
         this.runDirlistTacker = outerDirlistTacker;
+        this.dirlistTackerSetted = Boolean.TRUE;
     }
     protected void setDirListPacker(AppThWorkDirListPack outerDirListPacker){
         this.runDirListPacker = outerDirListPacker;
+        this.dirListPackerSetted = Boolean.TRUE;
     }
     protected void setDirListWriter(AppThWorkDirListWrite outerDirListWriter){
         this.runDirListWriter = outerDirListWriter;
+        this.dirListWriterSetted = Boolean.TRUE;
     }
     protected void startDirlistReader(){
         this.runDirlistReader.start();
