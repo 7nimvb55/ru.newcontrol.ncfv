@@ -19,7 +19,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
- *
+ * @todo logging for all createt objects and his states
+ * @todo need correct clean for free resurses
  * @author wladimirowichbiaran
  */
 public class AppObjectsList {
@@ -46,5 +47,106 @@ public class AppObjectsList {
             getForReturn = currentWorkerList.get(AppMsgEnPrefixes.TH_NAME_LOG);
         }
         return getForReturn;
+    }
+    protected String getPrefixInfo(){
+        String prefixStr = AppMsgEnFiledForLog.FIELD_START
+                + AppFileOperationsSimple.getNowTimeStringWithMS()
+                + AppMsgEnFiledForLog.FIELD_STOP
+                + AppMsgEnFiledForLog.INFO;
+        return prefixStr;
+    }
+    protected String getPrefixState(){
+        String prefixStr = AppMsgEnFiledForLog.FIELD_START
+                + AppFileOperationsSimple.getNowTimeStringWithMS()
+                + AppMsgEnFiledForLog.FIELD_STOP
+                + AppMsgEnFiledForLog.STATE;
+        return prefixStr;
+    }
+    protected String getPrefixWarning(){
+        String prefixStr = AppMsgEnFiledForLog.FIELD_START
+                + AppFileOperationsSimple.getNowTimeStringWithMS()
+                + AppMsgEnFiledForLog.FIELD_STOP
+                + AppMsgEnFiledForLog.WARINING;
+        return prefixStr;
+    }
+    protected String getPrefixError(){
+        String prefixStr = AppMsgEnFiledForLog.FIELD_START
+                + AppFileOperationsSimple.getNowTimeStringWithMS()
+                + AppMsgEnFiledForLog.FIELD_STOP
+                + AppMsgEnFiledForLog.ERROR;
+        return prefixStr;
+    }
+    
+    protected void putLogMessageInfo(String strToLog){
+        if( !strToLog.isEmpty() ){
+            String prefixStr = getPrefixInfo()
+                + strToLog;
+            messagesQueueForLogging.add(prefixStr);
+        }
+        if( !messagesQueueForLogging.isEmpty()){
+            if( messagesQueueForLogging.size() > 100 ){
+                doLogger();
+            }
+        }
+    }
+    protected void putLogMessageState(String strToLog){
+        if( !strToLog.isEmpty() ){
+            String prefixStr = getPrefixState()
+                + strToLog;
+            messagesQueueForLogging.add(prefixStr);
+        }
+        if( !messagesQueueForLogging.isEmpty()){
+            if( messagesQueueForLogging.size() > 100 ){
+                doLogger();
+            }
+        }
+    }
+    protected void putLogMessageWarning(String strToLog){
+        if( !strToLog.isEmpty() ){
+            String prefixStr = getPrefixWarning()
+                + strToLog;
+            messagesQueueForLogging.add(prefixStr);
+        }
+        if( !messagesQueueForLogging.isEmpty()){
+            if( messagesQueueForLogging.size() > 100 ){
+                doLogger();
+            }
+        }
+    }
+    protected void putLogMessageError(String strToLog){
+        if( !strToLog.isEmpty() ){
+            String prefixStr = getPrefixError()
+                + strToLog;
+            messagesQueueForLogging.add(prefixStr);
+        }
+        if( !messagesQueueForLogging.isEmpty()){
+            if( messagesQueueForLogging.size() > 100 ){
+                doLogger();
+            }
+        }
+    }
+    protected void doLogger(){
+        Thread foundedThread;
+        Boolean existThread = Boolean.TRUE;
+        try{
+            foundedThread = this.getLogger();
+            foundedThread.start();
+        } catch(NullPointerException ex){
+            System.out.println("[CRITICALERROR]null for init logger " + ex.getMessage());
+            ex.printStackTrace();
+            System.exit(0);
+        }
+    }
+    protected Thread addAnyThread(Thread workerForAdd) {
+        String nameForWorker = workerForAdd.getName();
+        Thread  foundedThread = currentWorkerList.get(nameForWorker.hashCode());
+        if( foundedThread == null ){
+            foundedThread = currentWorkerList.put(nameForWorker, workerForAdd);
+        }
+        return foundedThread;
+    }
+    protected Thread getThreadByKey(String nameForWorker){
+        Thread foundedThread = currentWorkerList.get(nameForWorker.hashCode());
+        return foundedThread;
     }
 }

@@ -38,15 +38,12 @@ public class AppThManagerIndexStorage extends Thread {
     public void run() {
         Path pathIndexFile = NcFsIdxStorageInit.buildPathToFileOfIdxStorage();
         Map<String, String> fsProperties = NcFsIdxStorageInit.getFsPropExist();
-        //System.out.println("\n\n\n file storage path: " + pathIndexFile.toString());
+        
         Boolean existFSfile = NcFsIdxOperationFiles.existAndHasAccessRWNotLink(pathIndexFile);
-        //System.out.println("NcFsIdxOperationFiles.existAndHasAccessRWNotLink(): " + existFSfile.toString());
+        
         if( !existFSfile ){
             fsProperties = NcFsIdxStorageInit.getFsPropCreate();
         }
-        /*for (Map.Entry<String, String> entry : fsProperties.entrySet()) {
-            System.out.println("Key: " + entry.getKey() + " Val: " + entry.getValue());
-        }*/
         
         Boolean ifException = Boolean.FALSE;
         
@@ -75,37 +72,17 @@ public class AppThManagerIndexStorage extends Thread {
             
             workDirListState.startDirlistReader();
             
-            
             workDirListState.joinDirlistReader();
             workDirListState.joinDirlistTacker();
             workDirListState.joinDirlistPacker();
             workDirListState.joinDirlistWriter();
-            
-            //@todo thread finished before writer start and life
-            //NcParamFs dataStorage = NcFsIdxStorageInit.initStorageStructure(fsZipIndexStorage);
-            //innerRuleForDirListWorkers.getNameDirListWriter().wait();
-            //see example for pipes, open read, write
+
         } catch (IOException ex) {
             ex.printStackTrace();
-            /*NcAppHelper.logException(NcThMifWriterDirList.class.getCanonicalName(), ex);
-            String strMsg = "Imposible to create file for index Storage, see log";
-            NcAppHelper.outMessage(
-                NcStrLogMsgField.ERROR_CRITICAL.getStr()
-                + strMsg
-            );*/
             ifException = Boolean.TRUE;
         } catch (Exception ex){
             ex.printStackTrace();
-            /*NcAppHelper.logException(NcThMifWriterDirList.class.getCanonicalName(), ex);
-            String strMsg = "Imposible for exec operation in the index Storage, see log"
-                    + NcStrLogMsgField.EXCEPTION_MSG.getStr() + ex.getMessage();
-            NcAppHelper.outMessage(
-                NcStrLogMsgField.ERROR_CRITICAL.getStr()
-                + strMsg
-            );*/
             ifException = Boolean.TRUE;
         }
-        
     }
-    
 }

@@ -25,6 +25,7 @@ public class AppMsgEnFiledForLog {
     protected static String ERROR = "[ERROR]";
     protected static String WARINING = "[WARINING]";
     protected static String INFO = "[INFO]";
+    protected static String STATE = "[STATE]";
     protected static String MSG_EXIST_THREAD_KEY = "Thread exist, found and use it with key: ";
     
 }
