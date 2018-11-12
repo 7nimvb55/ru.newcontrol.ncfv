@@ -131,7 +131,9 @@ public class AppObjectsList {
         Boolean existThread = Boolean.TRUE;
         try{
             foundedThread = this.getLogger();
+            //For use object first time whith his State.NEW = 0 used Thread.start();
             //foundedThread.start();
+            
             foundedThread.run();
         } catch(NullPointerException ex){
             System.out.println("[CRITICALERROR]NullPointerException for init logger " + ex.getMessage());
@@ -143,7 +145,8 @@ public class AppObjectsList {
         String nameForWorker = workerForAdd.getName();
         Thread  foundedThread = currentWorkerList.get(nameForWorker);
         if( foundedThread == null ){
-            foundedThread = currentWorkerList.put(nameForWorker, workerForAdd);
+            currentWorkerList.put(nameForWorker, workerForAdd);
+            foundedThread = currentWorkerList.get(nameForWorker);
         }
         if( AppConstants.LOG_LEVEL_CURRENT > AppConstants.LOG_LEVEL_SILENT ){
             putLogMessageState("[ADDOBJECTTOLIST]" + nameForWorker);

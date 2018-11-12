@@ -55,34 +55,34 @@ public class Ncfv {
         //runVersionOfAppBeforeThreadsInUse(args);
     }
     private static void logInitState(AppThManager outerAppThManager){
-        AppObjectsList obectsForApp = outerAppThManager.getListOfObjects();
+        AppObjectsList objectsForApp = outerAppThManager.getListOfObjects();
         
         String strForPut = new String("start Application");
-        obectsForApp.putLogMessageInfo(strForPut);
-        obectsForApp.putLogMessageInfo("[RUN]System.getenv()");
+        objectsForApp.putLogMessageInfo(strForPut);
+        objectsForApp.putLogMessageInfo("[RUN]System.getenv()");
         for (Map.Entry<String,String> arg : System.getenv().entrySet()) {
             String key = arg.getKey();
             String value = arg.getValue();
-            obectsForApp.putLogMessageInfo("[KEY]" + key + "[VALUE]" + value);
+            objectsForApp.putLogMessageInfo("[KEY]" + key + "[VALUE]" + value);
         }
-        obectsForApp.putLogMessageInfo("[RUN]System.getProperties().stringPropertyNames()[FOR]System.getProperty(namesKey)");
+        objectsForApp.putLogMessageInfo("[RUN]System.getProperties().stringPropertyNames()[FOR]System.getProperty(namesKey)");
         for (String namesKey : System.getProperties().stringPropertyNames()) {
             String value = System.getProperty(namesKey);
-            obectsForApp.putLogMessageInfo("[KEY]" + namesKey + "[VALUE]" + value);
+            objectsForApp.putLogMessageInfo("[KEY]" + namesKey + "[VALUE]" + value);
         }
         SecurityManager securityManager = System.getSecurityManager();
         if( securityManager == null ){
-            obectsForApp.putLogMessageInfo("[RUN]System.getSecurityManager()[VALUE]NULL");
+            objectsForApp.putLogMessageInfo("[RUN]System.getSecurityManager()[VALUE]NULL");
         } else{
             String toString = securityManager.getSecurityContext().toString();
-            obectsForApp.putLogMessageInfo("[RUN]securityManager.getSecurityContext().toString()[VALUE]" + toString);
+            objectsForApp.putLogMessageInfo("[RUN]securityManager.getSecurityContext().toString()[VALUE]" + toString);
         }
         String threadInfoToString = NcAppHelper.getThreadInfoToString(Thread.currentThread());
-        obectsForApp.putLogMessageInfo("[RUN]NcAppHelper.getThreadInfoToString(Thread.currentThread())[VALUE]" + threadInfoToString);
-        String classInfoToString = NcAppHelper.getClassInfoToString(obectsForApp.getClass());
-        obectsForApp.putLogMessageInfo("[RUN]NcAppHelper.getClassInfoToString(obectsForApp.getClass())[VALUE]" + classInfoToString);
+        objectsForApp.putLogMessageInfo("[RUN]NcAppHelper.getThreadInfoToString(Thread.currentThread())[VALUE]" + threadInfoToString);
+        String classInfoToString = NcAppHelper.getClassInfoToString(objectsForApp.getClass());
+        objectsForApp.putLogMessageInfo("[RUN]NcAppHelper.getClassInfoToString(obectsForApp.getClass())[VALUE]" + classInfoToString);
 
-        obectsForApp.putLogMessageInfo(strForPut);
+        objectsForApp.putLogMessageInfo(strForPut);
         //obectsForApp.doLogger();
         
         /**
