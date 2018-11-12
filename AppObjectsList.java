@@ -133,7 +133,7 @@ public class AppObjectsList {
             foundedThread = this.getLogger();
             //For use object first time whith his State.NEW = 0 used Thread.start();
             //foundedThread.start();
-            
+            //@todo create method restart thread...
             foundedThread.run();
         } catch(NullPointerException ex){
             System.out.println("[CRITICALERROR]NullPointerException for init logger " + ex.getMessage());
