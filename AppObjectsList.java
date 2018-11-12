@@ -132,9 +132,43 @@ public class AppObjectsList {
         try{
             foundedThread = this.getLogger();
             //For use object first time whith his State.NEW = 0 used Thread.start();
-            //foundedThread.start();
+            System.out.println("[ThreadGrpupName]" + foundedThread.getThreadGroup().getName()
+                    + "[ThreadGrpupActiveCount]" + foundedThread.getThreadGroup().activeCount()
+                    + "[ThreadGrpupActiveGroupCount]" + foundedThread.getThreadGroup().activeGroupCount()
+                    + "[State]" + foundedThread.getState().name()
+                    + "[ORDINAL]" + foundedThread.getState().ordinal() 
+                    + "[ThreadName]" + foundedThread.getName()
+                    + "[ThreadToString]" + foundedThread.toString()
+                    + "[ThreadID]" + foundedThread.getId()
+                    + "[ThreadHash]" + foundedThread.hashCode()
+                    );
+            if( foundedThread.getState().ordinal() != 0 ){
+                foundedThread = new Thread(foundedThread);
+            }
+            System.out.println("[ThreadGrpupName]" + foundedThread.getThreadGroup().getName()
+                    + "[ThreadGrpupActiveCount]" + foundedThread.getThreadGroup().activeCount()
+                    + "[ThreadGrpupActiveGroupCount]" + foundedThread.getThreadGroup().activeGroupCount()
+                    + "[State]" + foundedThread.getState().name()
+                    + "[ORDINAL]" + foundedThread.getState().ordinal() 
+                    + "[ThreadName]" + foundedThread.getName()
+                    + "[ThreadToString]" + foundedThread.toString()
+                    + "[ThreadID]" + foundedThread.getId()
+                    + "[ThreadHash]" + foundedThread.hashCode()
+                    );
+            //System.out.println("[State]" + foundedThread.getState().name() + "[ThreadName]" + foundedThread.getName());
+            //foundedThread.setName("Logger" + AppFileOperationsSimple.getNowTimeStringWithMS());
+            //System.out.println("[State]" + foundedThread.getState().name() + "[ThreadName]" + foundedThread.getName());
+            //ThreadGroup nowLogGroup = new ThreadGroup("Logger" + AppFileOperationsSimple.getNowTimeStringWithMS());
+            
+            //try{
+                foundedThread.start();
+            //} catch (IllegalStateException ex){
+            //    System.out.println("[State]" + foundedThread.getState().name() + " [ERRORMESSAGE] " + ex.getMessage());
+            //    ex.printStackTrace();
+            //}
+            
             //@todo create method restart thread...
-            foundedThread.run();
+            //foundedThread.run();
         } catch(NullPointerException ex){
             System.out.println("[CRITICALERROR]NullPointerException for init logger " + ex.getMessage());
             ex.printStackTrace();
