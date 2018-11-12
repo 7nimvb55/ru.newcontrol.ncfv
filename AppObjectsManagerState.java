@@ -70,10 +70,14 @@ import java.util.Map;
 public class AppObjectsManagerState {
     private Path currentSelectedPathForMakeIndex;
     private AppThWorkDirListState currentWorkState;
+    private AppObjectsList currentListOfObjects;
 
-    public AppObjectsManagerState() {
+    public AppObjectsManagerState(AppThManager appThManager) {
+        this.currentListOfObjects = appThManager.getListOfObjects();
         this.currentSelectedPathForMakeIndex = Paths.get("/usr/home/wladimirowichbiaran");
-        this.currentWorkState = new AppThWorkDirListState(this.currentSelectedPathForMakeIndex);
+        
+        this.currentWorkState = new AppThWorkDirListState(this.currentListOfObjects, this.currentSelectedPathForMakeIndex);
+        
     }
     protected void runWorkMakeDirList(){
         this.currentWorkState.makeDirList();

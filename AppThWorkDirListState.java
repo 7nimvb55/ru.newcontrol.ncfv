@@ -24,6 +24,7 @@ import java.nio.file.Path;
  * @author wladimirowichbiaran
  */
 public class AppThWorkDirListState {
+    private AppObjectsList currentListOfObject;
     private AppThWorkDirListRule ruleForDirListWorkers;
     
     private AppThManagerIndexStorage indexStorageManager;
@@ -35,14 +36,22 @@ public class AppThWorkDirListState {
     private FileSystem currentFsZipIndexStorage;
     
 
-    public AppThWorkDirListState(Path makeIndex) {
-        
+    public AppThWorkDirListState(AppObjectsList outerListOfObject, Path makeIndex) {
+        this.currentListOfObject = outerListOfObject;
         this.ruleForDirListWorkers = new AppThWorkDirListRule(makeIndex);
+        //threads init
         this.indexStorageManager = new AppThManagerIndexStorage(this.ruleForDirListWorkers);
+        this.currentListOfObject.addAnyThread(this.indexStorageManager);
         this.runDirlistReader = new AppThWorkDirListRun(this.ruleForDirListWorkers);
+        this.currentListOfObject.addAnyThread(this.runDirlistReader);
         this.runDirlistTacker = new AppThWorkDirListTake(this.ruleForDirListWorkers);
+        this.currentListOfObject.addAnyThread(this.runDirlistTacker);
         this.runDirListPacker = new AppThWorkDirListPack(this.ruleForDirListWorkers);
+        this.currentListOfObject.addAnyThread(this.runDirListPacker);
         this.runDirListWriter = new AppThWorkDirListWrite(this.ruleForDirListWorkers);
+        this.currentListOfObject.addAnyThread(this.runDirListWriter);
+        //this.currentListOfObject.putLogMessageInfo("Create objects for WorkDirList");
+        //this.currentListOfObject.doLogger();
     }
     protected void initWorkerGroup(){
         //@todo ThreadGroup, set names, build fields for timestamp class creation

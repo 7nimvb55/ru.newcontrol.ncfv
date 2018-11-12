@@ -46,11 +46,12 @@ public class Ncfv {
     
     public static void main(String[] args) {
         AppObjectsList obectsForApp = new AppObjectsList();
+        //@todo AppThManager, AppObjectsManagerState create one it two or... ?
         AppThManager loggerByThreadsMain = new AppThManager(obectsForApp);
         logInitState(loggerByThreadsMain);
-        AppObjectsManagerState withOutLogger = new AppObjectsManagerState();
+        AppObjectsManagerState withOutLogger = new AppObjectsManagerState(loggerByThreadsMain);
         withOutLogger.runWorkMakeDirList();
-        
+        loggerByThreadsMain.getListOfObjects().getWorkerList().clear();
         //runVersionOfAppBeforeThreadsInUse(args);
     }
     private static void logInitState(AppThManager outerAppThManager){
@@ -82,7 +83,7 @@ public class Ncfv {
         obectsForApp.putLogMessageInfo("[RUN]NcAppHelper.getClassInfoToString(obectsForApp.getClass())[VALUE]" + classInfoToString);
 
         obectsForApp.putLogMessageInfo(strForPut);
-        obectsForApp.doLogger();
+        //obectsForApp.doLogger();
         
         /**
          * @todo code for finish and release all created resurses
@@ -108,7 +109,7 @@ public class Ncfv {
             //workerElement.getValue().getThreadGroup().destroy();
         }
         */
-        obectsForApp.getWorkerList().clear();
+        
     }
     private static void runVersionOfAppBeforeThreadsInUse(String[] args){
                 NcAppLoader.loadApp();

@@ -47,7 +47,8 @@ public class AppLogger extends Thread {
         messagesQueueForLogging = messagesQueueOuter;
         linesCount = AppConstants.LOG_LINES_COUNT;
         newLogFile = AppFileOperationsSimple.getNewLogFile();
-        System.out.println("create logger");
+        String threadInfoToString = NcAppHelper.getThreadInfoToString(Thread.currentThread());
+        System.out.println("create logger" + threadInfoToString);
     }
     
     @Override

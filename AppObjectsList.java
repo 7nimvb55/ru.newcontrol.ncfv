@@ -42,6 +42,7 @@ public class AppObjectsList {
     }
     protected Thread getLogger(){
         Thread getForReturn = currentWorkerList.get(AppMsgEnPrefixes.TH_NAME_LOG);
+        
         if( getForReturn == null ){
             currentWorkerList.put(AppMsgEnPrefixes.TH_NAME_LOG, new AppLogger(messagesQueueForLogging));
             getForReturn = currentWorkerList.get(AppMsgEnPrefixes.TH_NAME_LOG);
@@ -84,7 +85,7 @@ public class AppObjectsList {
             messagesQueueForLogging.add(prefixStr);
         }
         if( !messagesQueueForLogging.isEmpty()){
-            if( messagesQueueForLogging.size() > 100 ){
+            if( messagesQueueForLogging.size() > AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT ){
                 doLogger();
             }
         }
@@ -96,7 +97,7 @@ public class AppObjectsList {
             messagesQueueForLogging.add(prefixStr);
         }
         if( !messagesQueueForLogging.isEmpty()){
-            if( messagesQueueForLogging.size() > 100 ){
+            if( messagesQueueForLogging.size() > AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT ){
                 doLogger();
             }
         }
@@ -108,7 +109,7 @@ public class AppObjectsList {
             messagesQueueForLogging.add(prefixStr);
         }
         if( !messagesQueueForLogging.isEmpty()){
-            if( messagesQueueForLogging.size() > 100 ){
+            if( messagesQueueForLogging.size() > AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT ){
                 doLogger();
             }
         }
@@ -120,7 +121,7 @@ public class AppObjectsList {
             messagesQueueForLogging.add(prefixStr);
         }
         if( !messagesQueueForLogging.isEmpty()){
-            if( messagesQueueForLogging.size() > 100 ){
+            if( messagesQueueForLogging.size() > AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT ){
                 doLogger();
             }
         }
@@ -130,18 +131,32 @@ public class AppObjectsList {
         Boolean existThread = Boolean.TRUE;
         try{
             foundedThread = this.getLogger();
-            foundedThread.start();
+            //foundedThread.start();
+            foundedThread.run();
         } catch(NullPointerException ex){
-            System.out.println("[CRITICALERROR]null for init logger " + ex.getMessage());
+            System.out.println("[CRITICALERROR]NullPointerException for init logger " + ex.getMessage());
             ex.printStackTrace();
             System.exit(0);
         }
     }
     protected Thread addAnyThread(Thread workerForAdd) {
         String nameForWorker = workerForAdd.getName();
-        Thread  foundedThread = currentWorkerList.get(nameForWorker.hashCode());
+        Thread  foundedThread = currentWorkerList.get(nameForWorker);
         if( foundedThread == null ){
             foundedThread = currentWorkerList.put(nameForWorker, workerForAdd);
+        }
+        if( AppConstants.LOG_LEVEL_CURRENT > AppConstants.LOG_LEVEL_SILENT ){
+            putLogMessageState("[ADDOBJECTTOLIST]" + nameForWorker);
+            if( AppConstants.LOG_LEVEL_CURRENT > AppConstants.LOG_LEVEL_USE ){
+                if( foundedThread != null ){
+                    String threadInfoToString = NcAppHelper.getThreadInfoToString(foundedThread);
+                    putLogMessageState("[THREAD]" + threadInfoToString);
+                    if(AppConstants.LOG_LEVEL_CURRENT > AppConstants.LOG_LEVEL_DEBUG){
+                        String classInfoToString = NcAppHelper.getClassInfoToString(foundedThread.getClass());
+                        putLogMessageState("[CLASS]" + classInfoToString);
+                    }
+                }
+            }
         }
         return foundedThread;
     }
