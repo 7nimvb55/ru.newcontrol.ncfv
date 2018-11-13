@@ -21,11 +21,11 @@ import java.nio.file.FileSystem;
  *
  * @author wladimirowichbiaran
  */
-public class AppThWorkDirListWrite extends Thread {
+public class AppThWorkDirListWrite implements Runnable {
     private AppThWorkDirListRule innerRuleForDirListWorkers;
 
     public AppThWorkDirListWrite(AppThWorkDirListRule ruleForDirListWorkers) {
-        super(ruleForDirListWorkers.getThreadGroupWorkerDirList(), ruleForDirListWorkers.getNameDirListWriter());
+        super();
         this.innerRuleForDirListWorkers = ruleForDirListWorkers;
     }
     

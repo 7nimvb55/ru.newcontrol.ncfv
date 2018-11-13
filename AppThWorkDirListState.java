@@ -27,29 +27,62 @@ public class AppThWorkDirListState {
     private AppObjectsList currentListOfObject;
     private AppThWorkDirListRule ruleForDirListWorkers;
     
-    private AppThManagerIndexStorage indexStorageManager;
+    private Thread indexStorageManager;
     
-    private AppThWorkDirListRun runDirlistReader;
-    private AppThWorkDirListTake runDirlistTacker;
-    private AppThWorkDirListPack runDirListPacker;
-    private AppThWorkDirListWrite runDirListWriter;
+    private Thread runDirlistReader;
+    private Thread runDirlistTacker;
+    private Thread runDirListPacker;
+    private Thread runDirListWriter;
     private FileSystem currentFsZipIndexStorage;
     
 
     public AppThWorkDirListState(AppObjectsList outerListOfObject, Path makeIndex) {
         this.currentListOfObject = outerListOfObject;
         this.ruleForDirListWorkers = new AppThWorkDirListRule(makeIndex);
+        
+        
+        
         //threads init
-        this.indexStorageManager = new AppThManagerIndexStorage(this.ruleForDirListWorkers);
-        this.currentListOfObject.addAnyThread(this.indexStorageManager);
-        this.runDirlistReader = new AppThWorkDirListRun(this.ruleForDirListWorkers);
-        this.currentListOfObject.addAnyThread(this.runDirlistReader);
-        this.runDirlistTacker = new AppThWorkDirListTake(this.ruleForDirListWorkers);
-        this.currentListOfObject.addAnyThread(this.runDirlistTacker);
-        this.runDirListPacker = new AppThWorkDirListPack(this.ruleForDirListWorkers);
-        this.currentListOfObject.addAnyThread(this.runDirListPacker);
-        this.runDirListWriter = new AppThWorkDirListWrite(this.ruleForDirListWorkers);
-        this.currentListOfObject.addAnyThread(this.runDirListWriter);
+        
+        this.indexStorageManager = new Thread(
+                this.ruleForDirListWorkers.getThreadGroupWorkerDirList(),
+                new AppThManagerIndexStorage(this.ruleForDirListWorkers),
+                this.ruleForDirListWorkers.getNameIndexStorage());
+        this.currentListOfObject.addAnyThread(this.indexStorageManager,
+                this.ruleForDirListWorkers.getNameIndexStorage());
+        
+        this.runDirlistReader = new Thread(
+                this.ruleForDirListWorkers.getThreadGroupWorkerDirList(),
+                new AppThWorkDirListRun(this.ruleForDirListWorkers),
+                this.ruleForDirListWorkers.getNameDirlistReader());
+        this.currentListOfObject.addAnyThread(this.runDirlistReader,
+                this.ruleForDirListWorkers.getNameDirlistReader());
+        
+        
+        this.runDirlistTacker = new Thread(
+                this.ruleForDirListWorkers.getThreadGroupWorkerDirList(),
+                new AppThWorkDirListTake(this.ruleForDirListWorkers),
+                this.ruleForDirListWorkers.getNameDirlistTacker());
+        this.currentListOfObject.addAnyThread(this.runDirlistTacker,
+                this.ruleForDirListWorkers.getNameDirlistTacker());
+        
+        
+        this.runDirListPacker = new Thread(
+                this.ruleForDirListWorkers.getThreadGroupWorkerDirList(),
+                new AppThWorkDirListPack(this.ruleForDirListWorkers),
+                this.ruleForDirListWorkers.getNameDirListPacker());
+        this.currentListOfObject.addAnyThread(this.runDirListPacker,
+                this.ruleForDirListWorkers.getNameDirListPacker());
+        
+        
+        this.runDirListWriter = new Thread(
+                this.ruleForDirListWorkers.getThreadGroupWorkerDirList(),
+                new AppThWorkDirListWrite(this.ruleForDirListWorkers),
+                this.ruleForDirListWorkers.getNameDirListWriter());
+        this.currentListOfObject.addAnyThread(this.runDirListWriter,
+                this.ruleForDirListWorkers.getNameDirListWriter());
+        
+        
         //this.currentListOfObject.putLogMessageInfo("Create objects for WorkDirList");
         //this.currentListOfObject.doLogger();
     }

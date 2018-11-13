@@ -19,11 +19,11 @@ package ru.newcontrol.ncfv;
  *
  * @author wladimirowichbiaran
  */
-public class AppThWorkDirListTake extends Thread {
+public class AppThWorkDirListTake implements Runnable {
     private AppThWorkDirListRule innerRuleForDirListWorkers;
 
     public AppThWorkDirListTake(AppThWorkDirListRule ruleForDirListWorkers) {
-        super(ruleForDirListWorkers.getThreadGroupWorkerDirList(), ruleForDirListWorkers.getNameDirlistTacker());
+        super();
         this.innerRuleForDirListWorkers = ruleForDirListWorkers;
     }
     

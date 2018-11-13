@@ -21,15 +21,24 @@ import java.util.concurrent.ConcurrentSkipListMap;
  *
  * @author wladimirowichbiaran
  */
-public class AppThExtendsBaseThread extends Thread {
+public class AppThExtendsBaseThread implements Runnable {
+    private static ThreadLocal<Integer> testValue;
 
     public AppThExtendsBaseThread() {
         super();
+        
     }
     
     @Override
     public void run() {
+        testValue = new ThreadLocal<Integer>();
+        testValue.set(15);
+        Integer get = testValue.get();
+        System.out.println(get + "[]" + this.toString());
         
-        
+        get++;
+        testValue.set(get);
+        Integer get1 = testValue.get();
+        System.out.println(get1 + "[]" + this.toString());
     }
 }

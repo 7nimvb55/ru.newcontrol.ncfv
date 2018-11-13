@@ -21,11 +21,11 @@ import java.nio.file.Path;
  *
  * @author wladimirowichbiaran
  */
-public class AppThWorkDirListRun extends Thread {
+public class AppThWorkDirListRun implements Runnable {
     private AppThWorkDirListRule innerRuleForDirListWorkers;
 
     public AppThWorkDirListRun(AppThWorkDirListRule ruleForDirListWorkers) {
-        super(ruleForDirListWorkers.getThreadGroupWorkerDirList(), ruleForDirListWorkers.getNameDirlistReader());
+        super();
         this.innerRuleForDirListWorkers = ruleForDirListWorkers;
     }
     

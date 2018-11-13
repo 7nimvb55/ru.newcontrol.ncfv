@@ -26,11 +26,11 @@ import java.util.Map;
  *
  * @author wladimirowichbiaran
  */
-public class AppThManagerIndexStorage extends Thread {
+public class AppThManagerIndexStorage implements Runnable {
     private AppThWorkDirListRule innerRuleForDirListWorkers;
 
     public AppThManagerIndexStorage(AppThWorkDirListRule ruleForDirListWorkers) {
-        super(ruleForDirListWorkers.getThreadGroupWorkerDirList(), ruleForDirListWorkers.getNameIndexStorage());
+        super();
         this.innerRuleForDirListWorkers = ruleForDirListWorkers;
     }
     

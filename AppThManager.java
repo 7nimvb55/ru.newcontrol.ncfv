@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * @author wladimirowichbiaran
  */
 public class AppThManager {
-    private ConcurrentSkipListMap<String,Thread> currentWorkerList;
+    private ConcurrentSkipListMap<String,Runnable> currentWorkerList;
     private ArrayBlockingQueue<String> messagesQueueForLogging;
     private AppObjectsList outerObectsForApp;
 

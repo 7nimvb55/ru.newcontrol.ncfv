@@ -37,7 +37,7 @@ import java.util.concurrent.Future;
  *
  * @author wladimirowichbiaran
  */
-public class AppLogger extends Thread {
+public class AppLogger implements Runnable {
     private ArrayBlockingQueue<String> messagesQueueForLogging;
     private Integer linesCount;
     private Path newLogFile;

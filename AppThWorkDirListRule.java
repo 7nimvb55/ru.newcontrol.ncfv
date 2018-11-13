@@ -15,8 +15,16 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedType;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
+import java.security.ProtectionDomain;
 
 /**
  *
@@ -44,10 +52,10 @@ public class AppThWorkDirListRule {
     private Boolean dirListPackerSetted;
     private Boolean dirListWriterSetted;
     
-    private AppThWorkDirListRun runDirlistReader;
-    private AppThWorkDirListTake runDirlistTacker;
-    private AppThWorkDirListPack runDirListPacker;
-    private AppThWorkDirListWrite runDirListWriter;
+    private Thread runDirlistReader;
+    private Thread runDirlistTacker;
+    private Thread runDirListPacker;
+    private Thread runDirListWriter;
     
     
     private AppThWorkDirListState workDirListState;
@@ -120,19 +128,21 @@ public class AppThWorkDirListRule {
         return this.currentFsZipIndexStorage;
     }
     
-    protected void setDirlistReader(AppThWorkDirListRun outerDirlistReader){
+    protected void setDirlistReader(Thread outerDirlistReader){
+        AppObjectsInfo.getThreadDebugInfo(outerDirlistReader);
+        
         this.runDirlistReader = outerDirlistReader;
         this.dirlistReaderSetted = Boolean.TRUE;
     }
-    protected void setDirlistTacker(AppThWorkDirListTake outerDirlistTacker){
+    protected void setDirlistTacker(Thread outerDirlistTacker){
         this.runDirlistTacker = outerDirlistTacker;
         this.dirlistTackerSetted = Boolean.TRUE;
     }
-    protected void setDirListPacker(AppThWorkDirListPack outerDirListPacker){
+    protected void setDirListPacker(Thread outerDirListPacker){
         this.runDirListPacker = outerDirListPacker;
         this.dirListPackerSetted = Boolean.TRUE;
     }
-    protected void setDirListWriter(AppThWorkDirListWrite outerDirListWriter){
+    protected void setDirListWriter(Thread outerDirListWriter){
         this.runDirListWriter = outerDirListWriter;
         this.dirListWriterSetted = Boolean.TRUE;
     }
