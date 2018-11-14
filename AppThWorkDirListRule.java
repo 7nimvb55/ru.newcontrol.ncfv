@@ -129,7 +129,7 @@ public class AppThWorkDirListRule {
     }
     
     protected void setDirlistReader(Thread outerDirlistReader){
-        AppObjectsInfo.getThreadDebugInfo(outerDirlistReader);
+        AppObjectsInfo.getThreadDebugInfoToHtml(outerDirlistReader);
         
         this.runDirlistReader = outerDirlistReader;
         this.dirlistReaderSetted = Boolean.TRUE;

@@ -32,7 +32,7 @@ public class AppObjectsList {
     public AppObjectsList() {
         this.currentWorkerList = new ConcurrentSkipListMap<>();
         this.messagesQueueForLogging = new ArrayBlockingQueue<String>(messagesQueueSize);
-        currentWorkerList.put(AppMsgEnPrefixes.TH_NAME_LOG, new AppLogger(messagesQueueForLogging));
+        currentWorkerList.put(AppMsgEnPrefixes.TH_NAME_LOG, new AppLoggerToTextRunnable(messagesQueueForLogging));
     }
     protected ConcurrentSkipListMap<String, Runnable> getWorkerList(){
         return currentWorkerList;
@@ -44,7 +44,7 @@ public class AppObjectsList {
         Runnable getForReturn = currentWorkerList.get(AppMsgEnPrefixes.TH_NAME_LOG);
         
         if( getForReturn == null ){
-            currentWorkerList.put(AppMsgEnPrefixes.TH_NAME_LOG, new AppLogger(messagesQueueForLogging));
+            currentWorkerList.put(AppMsgEnPrefixes.TH_NAME_LOG, new AppLoggerToTextRunnable(messagesQueueForLogging));
             getForReturn = currentWorkerList.get(AppMsgEnPrefixes.TH_NAME_LOG);
         }
         return getForReturn;

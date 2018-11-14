@@ -25,4 +25,13 @@ public class AppFileNamesConstants {
     protected static String CFG_GENERATED_FILENAME = "autogen";
     protected static String CFG_GENERATED_EXT = ".cfg";
     protected static String LOG_EXT = ".log";
+    
+    protected static String LOG_HTML_SUB_DIR = "html";
+    protected static String LOG_HTML_EXT = ".html";
+    protected static String LOG_HTML_TABLE_PREFIX = "table-";
+    protected static String LOG_HTML_MENU_PREFIX = "menu-";
+    protected static String LOG_HTML_HEADER_PREFIX = "header-";
+    protected static String LOG_HTML_FOOTER_PREFIX = "footer-";
+    protected static String LOG_INDEX_PREFIX = "index-";
+    protected static String LOG_HTML_KEY_FOR_CURRENT_SUB_DIR = "currentHtmlSubDir";
 }

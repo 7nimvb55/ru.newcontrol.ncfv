@@ -16,39 +16,28 @@
 package ru.newcontrol.ncfv;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousFileChannel;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.AbstractSet;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /**
  *
  * @author wladimirowichbiaran
  */
-public class AppLogger implements Runnable {
+public class AppLoggerToHTMLRunnable implements Runnable {
     private ArrayBlockingQueue<String> messagesQueueForLogging;
     private Integer linesCount;
     private Path newLogFile;
 
-    public AppLogger(ArrayBlockingQueue<String> messagesQueueOuter) {
+    public AppLoggerToHTMLRunnable(ArrayBlockingQueue<String> messagesQueueOuter, Path outerLogFile) {
         super();
         messagesQueueForLogging = messagesQueueOuter;
         linesCount = AppConstants.LOG_LINES_COUNT;
-        newLogFile = AppFileOperationsSimple.getNewLogFile();
+        newLogFile = outerLogFile;
         String threadInfoToString = NcAppHelper.getThreadInfoToString(Thread.currentThread());
-        System.out.println("create logger" + threadInfoToString);
+        System.out.println("create logger StrArrOutToHtml " + threadInfoToString);
     }
     
     @Override
@@ -61,7 +50,7 @@ public class AppLogger implements Runnable {
                 linesCount++;
             }
 
-
+            //@todo recode for transerring file names, only write not read
             ArrayList<String> lines = new ArrayList<>();
             try {
                 lines.addAll(Files.readAllLines(newLogFile, Charset.forName("UTF-8")));
