@@ -27,6 +27,8 @@ public class AppFileNamesConstants {
     protected static String LOG_EXT = ".log";
     
     protected static String LOG_HTML_SUB_DIR = "html";
+    protected static String LOG_HTML_CSS_SUB_DIR = "css";
+    protected static String LOG_HTML_JS_SUB_DIR = "js";
     protected static String LOG_HTML_EXT = ".html";
     protected static String LOG_HTML_TABLE_PREFIX = "table-";
     protected static String LOG_HTML_MENU_PREFIX = "menu-";

@@ -349,25 +349,41 @@ public class AppObjectsInfo {
         ConcurrentSkipListMap<String, Path> newLogFileInLogHTML = 
                 AppFileOperationsSimple.getNewLogFileInLogHTML(logForHtmlCurrentLogSubDir);
         newLogFileInLogHTML.put(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR, logForHtmlCurrentLogSubDir);
+        
+        TreeMap<Integer, String> listForLogStrs = new TreeMap<Integer, String>();
+        ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs = new ConcurrentSkipListMap<Integer, String>();
+        Path newLogHtmlTableFile = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_TABLE_PREFIX);
+        AppLoggerToHTMLRunnable loggerToHtml = new AppLoggerToHTMLRunnable(
+                listForRunnableLogStrs,
+                newLogHtmlTableFile
+        );
+        
+        
         //@todo chaos to system out
         
-        ConcurrentSkipListMap<String, String> listForLogStrs = new ConcurrentSkipListMap<String, String>();
         
-        System.out.println("* * * [Thread] * * *");
+        int indexLinesToFile = 0;
         
-        System.out.println(
+
+        
+        indexLinesToFile++;
+        listForLogStrs.put(indexLinesToFile,
                 "[NAME]" + readedThread.getName()
                 + "[CLASS]" + readedThread.getClass().getCanonicalName()
                 + "[isInstanceOf(AppThWorkDirListRun.class)]" 
                 + readedThread.getClass().isInstance(AppThWorkDirListRun.class));
         
-        System.out.println("* * * [Thread.getContextClassLoader()] * * *");
-        System.out.println("[getContextClassLoader()]" 
+        indexLinesToFile++;
+        listForLogStrs.put(indexLinesToFile,"* * * [Thread.getContextClassLoader()] * * *");
+        indexLinesToFile++;
+        listForLogStrs.put(indexLinesToFile,"[getContextClassLoader()]" 
                 + readedThread.getContextClassLoader().getClass().getCanonicalName());
-        System.out.println("[getUncaughtExceptionHandler()]" 
+        indexLinesToFile++;
+        listForLogStrs.put(indexLinesToFile,"[getUncaughtExceptionHandler()]" 
                 + readedThread.getUncaughtExceptionHandler().getClass().getCanonicalName());
         
-        System.out.println("* * * [Thread.getClass().getClasses()] * * *");
+        indexLinesToFile++;
+        listForLogStrs.put(indexLinesToFile,"* * * [Thread.getClass().getClasses()] * * *");
         String strCanonicalNames = "";
         int idxId = 0;
         Class<?>[] classes = readedThread.getClass().getClasses();
@@ -375,10 +391,12 @@ public class AppObjectsInfo {
             strCanonicalNames = strCanonicalNames + "[" + idxId + "]" + str.getCanonicalName();
             idxId++;
         }
-        System.out.println("[getClasses()]" 
+        indexLinesToFile++;
+        listForLogStrs.put(indexLinesToFile,"[getClasses()]" 
                 + strCanonicalNames);
         
-        System.out.println("* * * [Thread.getStackTrace()] * * *");
+        indexLinesToFile++;
+        listForLogStrs.put(indexLinesToFile,"* * * [Thread.getStackTrace()] * * *");
         strCanonicalNames = "";
         idxId = 0;
         StackTraceElement[] traceElements = readedThread.getStackTrace();
@@ -388,12 +406,14 @@ public class AppObjectsInfo {
             
             idxId++;
         }
-        System.out.println("[getStackTrace().length]"
+        indexLinesToFile++;
+        listForLogStrs.put(indexLinesToFile,"[getStackTrace().length]"
                 + traceElements.length
                 + "[getStackTrace()]" 
                 + strCanonicalNames);
         
-        System.out.println("* * * [Thread.getContextClassLoader().getClass().getClasses()] * * *");
+        indexLinesToFile++;
+        listForLogStrs.put(indexLinesToFile,"* * * [Thread.getContextClassLoader().getClass().getClasses()] * * *");
         Class<?>[] classesContextClassLoader = readedThread.getContextClassLoader().getClass().getClasses();
         for( Class<?> str : classesContextClassLoader ){
             strCanonicalNames = strCanonicalNames + "[" + idxId + "]" + str.getCanonicalName();
@@ -401,11 +421,14 @@ public class AppObjectsInfo {
         }
         
         
-        System.out.println("[getContextClassLoader().getClass().getClasses()]" 
+        indexLinesToFile++;
+        listForLogStrs.put(indexLinesToFile,"[getContextClassLoader().getClass().getClasses()]" 
                 + strCanonicalNames);
         
-        System.out.println("* * * [Thread.getName() | .getClass() and some methods] * * *");
-        System.out.println(
+        indexLinesToFile++;
+        listForLogStrs.put(indexLinesToFile,"* * * [Thread.getName() | .getClass() and some methods] * * *");
+        indexLinesToFile++;
+        listForLogStrs.put(indexLinesToFile,
                 "[NAME]" + readedThread.getName()
                 + "[CLASS][getName]" + readedThread.getClass().getName()
                 + "[CLASS][getCanonicalName]" + readedThread.getClass().getCanonicalName()
@@ -419,16 +442,57 @@ public class AppObjectsInfo {
                 + "[CLASS][getClass().isInstance(AppThWorkDirListRun.class)]"
                         
                 + readedThread.getClass().isInstance(AppThWorkDirListRun.class));
+        indexLinesToFile++;
+        /*int indexForRunnableList = 0;
+        listForRunnableLogStrs.put(indexForRunnableList,"<TABLE>");
+        indexForRunnableList++;
+        for( Map.Entry<Integer, String> lines: listForLogStrs.entrySet()){
+            
+                
+                listForRunnableLogStrs.put(indexForRunnableList, "<tr>" + lines.getValue() + "</tr>");
+                indexForRunnableList++;
+            
+        }
+        listForRunnableLogStrs.put(indexForRunnableList,"</TABLE>");*/
+        listForRunnableLogStrs = getStringListForSaveTable(listForRunnableLogStrs, listForLogStrs, "readedThread.getStackTrace()");
+        Thread logToHtmlTable = new Thread(loggerToHtml);
+        logToHtmlTable.start();
+        
+        try{
+            logToHtmlTable.join();
+            while( !loggerToHtml.isJobDone() ){
+                Thread curThr = Thread.currentThread();
+                curThr.sleep(50);
+            }
+        } catch(InterruptedException ex){
+            ex.printStackTrace();
+        } catch(SecurityException ex){
+            ex.printStackTrace();
+        }
+        //**************
+        newLogHtmlTableFile = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
+        while( !loggerToHtml.isLogFileNameChanged() ){
+            loggerToHtml.setNewLogFileName(newLogHtmlTableFile);
+        }
+        listForRunnableLogStrs.clear();
+        
+        //**************
+        listForLogStrs.clear();
+        listForLogStrs = new TreeMap<Integer, String>();
+        //listForLogStrs.clear();
+        
+        
         // all methods from Thread objects
         
         //readedThread.getClass().asSubclass(clazz);//Class<? extends U> 
         //readedThread.getClass().cast(idxId);//? extends Thread
         boolean desiredAssertionStatus = readedThread.getClass().desiredAssertionStatus();
         //boolean equals = readedThread.getClass().equals(idxId);
-        
+        indexLinesToFile = 0;
         AnnotatedType[] annotatedInterfaces = readedThread.getClass().getAnnotatedInterfaces();
         for(AnnotatedType element : annotatedInterfaces){
-             System.out.println(
+            indexLinesToFile++;
+            listForLogStrs.put(indexLinesToFile,
                 "getAnnotatedInterfaces()[CLASS][getCanonicalName]" + element.getClass().getCanonicalName());
         }
         
@@ -437,7 +501,8 @@ public class AppObjectsInfo {
         //readedThread.getClass().getAnnotation(annotationClass); //A
         Annotation[] annotations = readedThread.getClass().getAnnotations();
         for(Annotation element : annotations){
-             System.out.println(
+            indexLinesToFile++;
+            listForLogStrs.put(indexLinesToFile,
                 "getAnnotations()[CLASS][getCanonicalName]" + element.annotationType().getClass().getCanonicalName());
         }
         
@@ -451,7 +516,8 @@ public class AppObjectsInfo {
         
         Class<?>[] classes1 = readedThread.getClass().getClasses();
         for(Class element : classes1){
-             System.out.println(
+            indexLinesToFile++;
+            listForLogStrs.put(indexLinesToFile,
                 "getClasses()[CLASS][getCanonicalName]" + element.getClass().getCanonicalName());
         }
         
@@ -461,7 +527,8 @@ public class AppObjectsInfo {
         
         Constructor<?>[] constructors = readedThread.getClass().getConstructors();
         for(Constructor element : constructors){
-             System.out.println(
+            indexLinesToFile++;
+            listForLogStrs.put(indexLinesToFile,
                 "getConstructors()[CLASS][getCanonicalName]" + element.getClass().getCanonicalName());
         }
         
@@ -469,7 +536,8 @@ public class AppObjectsInfo {
         
         Annotation[] declaredAnnotations = readedThread.getClass().getDeclaredAnnotations();
         for(Annotation element : declaredAnnotations){
-             System.out.println("getDeclaredAnnotations()[CLASS]"
+            indexLinesToFile++;
+            listForLogStrs.put(indexLinesToFile,"getDeclaredAnnotations()[CLASS]"
                 + "[toString()]" + element.toString()
                 + "[annotationType().getCanonicalName()]" + element.annotationType().getCanonicalName()
                 + "[getCanonicalName]" + element.getClass().getCanonicalName());
@@ -479,7 +547,8 @@ public class AppObjectsInfo {
         
         Class<?>[] declaredClasses = readedThread.getClass().getDeclaredClasses();
         for(Class element : declaredClasses){
-             System.out.println("getDeclaredClasses()[CLASS]"
+            indexLinesToFile++;
+            listForLogStrs.put(indexLinesToFile,"getDeclaredClasses()[CLASS]"
                 + "[getName()]" + element.getName()
                 + "[getCanonicalName]" + element.getClass().getCanonicalName());
         }
@@ -488,7 +557,8 @@ public class AppObjectsInfo {
         
         Constructor<?>[] declaredConstructors = readedThread.getClass().getDeclaredConstructors();
         for(Constructor element : declaredConstructors){
-             System.out.println("getDeclaredConstructors()[CLASS]"
+            indexLinesToFile++;
+            listForLogStrs.put(indexLinesToFile,"getDeclaredConstructors()[CLASS]"
                 + "[getName()]" + element.getName()
                 + "[getCanonicalName]" + element.getClass().getCanonicalName());
         }
@@ -497,7 +567,8 @@ public class AppObjectsInfo {
         
         Field[] declaredFields = readedThread.getClass().getDeclaredFields();
         for(Field element : declaredFields){
-             System.out.println("getDeclaredFields()[CLASS]"
+            indexLinesToFile++;
+            listForLogStrs.put(indexLinesToFile,"getDeclaredFields()[CLASS]"
                 + "[getName()]" + element.getName()
                 + "[getCanonicalName]" + element.getClass().getCanonicalName());
         }
@@ -506,7 +577,8 @@ public class AppObjectsInfo {
         
         Method[] declaredMethods = readedThread.getClass().getDeclaredMethods();
         for(Method element : declaredMethods){
-             System.out.println("getDeclaredMethods()[CLASS]"
+            indexLinesToFile++;
+            listForLogStrs.put(indexLinesToFile,"getDeclaredMethods()[CLASS]"
                 + "[getName()]" + element.getName()
                 + "[getCanonicalName]" + element.getClass().getCanonicalName());
         }
@@ -520,14 +592,16 @@ public class AppObjectsInfo {
         
         Field[] fields = readedThread.getClass().getFields();
         for(Field element : fields){
-             System.out.println(
+            indexLinesToFile++;
+            listForLogStrs.put(indexLinesToFile,
                 "getFields()[CLASS][getCanonicalName]" + element.getClass().getCanonicalName());
         }
         
         
         Type[] genericInterfaces = readedThread.getClass().getGenericInterfaces();
         for(Type element : genericInterfaces){
-             System.out.println(
+            indexLinesToFile++;
+            listForLogStrs.put(indexLinesToFile,
                 "getGenericInterfaces()[CLASS][getCanonicalName]" + element.getClass().getCanonicalName());
         }
         
@@ -535,7 +609,8 @@ public class AppObjectsInfo {
         
         Class<?>[] interfaces = readedThread.getClass().getInterfaces();
         for(Class element : interfaces){
-             System.out.println(
+            indexLinesToFile++;
+            listForLogStrs.put(indexLinesToFile,
                 "getInterfaces()[CLASS][getCanonicalName]" + element.getClass().getCanonicalName());
         }
         
@@ -543,7 +618,8 @@ public class AppObjectsInfo {
         
         Method[] methods = readedThread.getClass().getMethods();
         for(Method element : methods){
-             System.out.println(
+            indexLinesToFile++;
+            listForLogStrs.put(indexLinesToFile,
                 "getMethods()[CLASS][getCanonicalName]" + element.getClass().getCanonicalName());
         }
         
@@ -562,9 +638,11 @@ public class AppObjectsInfo {
         Object[] signers = readedThread.getClass().getSigners();
         if( signers != null  ){
             for(Object element : signers){
-                if( element != null )
-                 System.out.println(
-                    "getSigners()[CLASS][getCanonicalName]" + element.getClass().getCanonicalName());
+                if( element != null ){
+                    indexLinesToFile++;
+                    listForLogStrs.put(indexLinesToFile,
+                        "getSigners()[CLASS][getCanonicalName]" + element.getClass().getCanonicalName());
+                }
             }
         }
         
@@ -577,7 +655,8 @@ public class AppObjectsInfo {
         
         TypeVariable<? extends Class<? extends Thread>>[] typeParameters = readedThread.getClass().getTypeParameters();
         for(TypeVariable<? extends Class<? extends Thread>> element : typeParameters){
-             System.out.println(
+            indexLinesToFile++;
+            listForLogStrs.put(indexLinesToFile,
                 "getTypeParameters()[CLASS][getCanonicalName]" + element.getClass().getCanonicalName());
         }
         
@@ -605,11 +684,77 @@ public class AppObjectsInfo {
         readedThread.getClass().toGenericString();
         readedThread.getClass().toString();
         
+        listForRunnableLogStrs.clear();
+        /*indexForRunnableList = 0;
+        listForRunnableLogStrs.put(indexForRunnableList,"<TABLE>");
+        indexForRunnableList++;
+        for( Map.Entry<Integer, String> lines: listForLogStrs.entrySet()){
+            
+                
+                listForRunnableLogStrs.put(indexForRunnableList, "<tr>" + lines.getValue() + "</tr>");
+                indexForRunnableList++;
+            
+        }
+        listForRunnableLogStrs.put(indexForRunnableList,"</TABLE>");*/
+        listForRunnableLogStrs = getStringListForSaveTable(listForRunnableLogStrs, listForLogStrs, "readedThread.getClass().getTypeParameters()");
+        
+        logToHtmlTable = new Thread(loggerToHtml);
+        logToHtmlTable.start();
+        
+        try{
+            logToHtmlTable.join();
+            while( !loggerToHtml.isJobDone() ){
+                Thread curThr = Thread.currentThread();
+                curThr.sleep(50);
+            }
+        } catch(InterruptedException ex){
+            ex.printStackTrace();
+        } catch(SecurityException ex){
+            ex.printStackTrace();
+        }
+        //**************
+        
         //readedThread.getClass().notify();
         //readedThread.getClass().notifyAll();
         //readedThread.getClass().wait();
         //readedThread.getClass().wait(idxId);
         //readedThread.getClass().wait(idxId, idxId);
-
+        
+    }
+    
+    protected static TreeMap<Integer, String> getStringListForSaveTableAddThead(String headString,TreeMap<Integer, String> listForLogStrs){
+        TreeMap<Integer, String> withTheadLogStrs = new TreeMap<Integer, String>();
+        int indexStrs = 0;
+        withTheadLogStrs.put(indexStrs, "<TABLE>");
+        indexStrs++;
+        
+        withTheadLogStrs.put(indexStrs, "<THEAD>");
+        indexStrs++;
+        withTheadLogStrs.put(indexStrs, "<TR><TD>" + headString + "</TD></TR>");
+        indexStrs++;
+        withTheadLogStrs.put(indexStrs, "</THEAD>");
+        indexStrs++;
+        
+        withTheadLogStrs.put(indexStrs, "<TBODY>");
+        indexStrs++;
+        for( Map.Entry<Integer, String> lines: listForLogStrs.entrySet()){
+            withTheadLogStrs.put(indexStrs, "<TR><TD>" + lines.getValue() + "</TD></TR>");
+            indexStrs++;
+        }
+        withTheadLogStrs.put(indexStrs, "</TBODY>");
+        indexStrs++;
+        withTheadLogStrs.put(indexStrs, "</TABLE>");
+        indexStrs++;
+        return withTheadLogStrs;
+    }
+    
+    protected static ConcurrentSkipListMap<Integer, String> getStringListForSaveTable(
+            ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs,
+            TreeMap<Integer, String> srcDataLogStrs,
+            String runnedCmdStr){
+        
+        TreeMap<Integer, String> listForLogStrs = getStringListForSaveTableAddThead(runnedCmdStr, srcDataLogStrs);
+        listForRunnableLogStrs.putAll(listForLogStrs);
+        return listForRunnableLogStrs;
     }
 }

@@ -108,6 +108,27 @@ public class AppFileOperationsSimple {
         }
         return toReturn;
     }
+    protected static Path getLogForHtmlCurrentLogAnySubDir(Path currentLogSubDir, String anySubDirName){
+        Path toReturn = Paths.get(currentLogSubDir.toString(),
+        anySubDirName);
+        if( Files.notExists(toReturn, LinkOption.NOFOLLOW_LINKS) ){
+            try {
+                Files.createDirectories(toReturn);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                System.out.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
+                System.exit(0);
+            }
+        }
+        try {
+            pathIsNotReadWriteLink(toReturn);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            System.out.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
+            System.exit(0);
+        }
+        return toReturn;
+    }
     protected static Path getLogForHtmlCurrentLogSubDir(String currentDateTimeStamp){
         Path toReturn = Paths.get(getLogSubDir().toString(),
         currentDateTimeStamp);
@@ -131,7 +152,8 @@ public class AppFileOperationsSimple {
     }
     protected static ConcurrentSkipListMap<String, Path> getNewLogFileInLogHTML(Path currentDirForLog){
         ConcurrentSkipListMap<String, Path> listFilesForHtmlLog = new ConcurrentSkipListMap<String, Path>();
-        
+        getLogForHtmlCurrentLogAnySubDir(currentDirForLog, AppFileNamesConstants.LOG_HTML_CSS_SUB_DIR);
+        getLogForHtmlCurrentLogAnySubDir(currentDirForLog, AppFileNamesConstants.LOG_HTML_JS_SUB_DIR);
         listFilesForHtmlLog.put(AppFileNamesConstants.LOG_HTML_HEADER_PREFIX, 
                 Paths.get(currentDirForLog.toString(),
                 AppFileNamesConstants.LOG_HTML_HEADER_PREFIX
@@ -204,6 +226,48 @@ public class AppFileOperationsSimple {
             }
         }
         return listFilesForHtmlLog;
+    }
+    protected static Path getNewLogHtmlTableFile(Path currentDirForLog){
+        
+        Path toReturn = Paths.get(currentDirForLog.toString(),
+                AppFileNamesConstants.LOG_HTML_TABLE_PREFIX
+                + getNowTimeStringWithMS()
+                + AppFileNamesConstants.LOG_HTML_EXT);
+        
+        if( Files.exists(toReturn, LinkOption.NOFOLLOW_LINKS) ){
+            try {
+                pathIsNotFile(toReturn);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                System.out.println("[ERROR] Not file " + toReturn.toString());
+            }
+            try {
+                pathIsNotReadWriteLink(toReturn);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                System.out.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
+            }
+            return toReturn;
+        }
+        try {
+            Files.createFile(toReturn);
+            try {
+                pathIsNotFile(toReturn);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                System.out.println("[ERROR] Not file " + toReturn.toString());
+            }
+            try {
+                pathIsNotReadWriteLink(toReturn);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                System.out.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            System.out.println("[ERROR] Can`t createFile " + toReturn.toString());
+        }
+        return toReturn;
     }
     protected static Path getNewLogFile(){
         
