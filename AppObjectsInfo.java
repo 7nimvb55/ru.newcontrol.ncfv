@@ -730,7 +730,7 @@ public class AppObjectsInfo {
         
         withTheadLogStrs.put(indexStrs, "<THEAD>");
         indexStrs++;
-        withTheadLogStrs.put(indexStrs, "<TR><TD>" + headString + "</TD></TR>");
+        withTheadLogStrs.put(indexStrs, "<TR><TH>" + headString + "</TH></TR>");
         indexStrs++;
         withTheadLogStrs.put(indexStrs, "</THEAD>");
         indexStrs++;
