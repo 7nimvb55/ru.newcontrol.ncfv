@@ -330,7 +330,7 @@ public class AppObjectsInfo {
                     + NcStrLogMsgField.VALUE.getStr()
                     + declaredField.get(classInFunc.getClass()).toString();
                 declaredField.setAccessible(boolAccValFlag);
-            } catch (Exception ex){
+            } catch (IllegalAccessException | IllegalArgumentException | SecurityException ex){
                 strToOut = strToOut
                     + NcStrLogMsgField.EXCEPTION_MSG.getStr()
                     + ex.getMessage();
@@ -340,7 +340,26 @@ public class AppObjectsInfo {
         }
         return listStrToRet;
     }
-    
+    protected static ArrayList<String> getStringsToJSFile(){
+        ArrayList<String> strToFile = new ArrayList<String>();
+        strToFile.add("body{");
+        strToFile.add("background-color: #666666;");
+        strToFile.add("}");
+        strToFile.add("frame-table{");
+        strToFile.add("border: 1px solid #d6e9c6;");
+        strToFile.add("}");
+        return strToFile;
+    }
+    protected static ArrayList<String> getStringsToCSSFile(){
+        ArrayList<String> strToFile = new ArrayList<String>();
+        strToFile.add("body{");
+        strToFile.add("background-color: #666666;");
+        strToFile.add("}");
+        strToFile.add("frame-table{");
+        strToFile.add("border: 1px solid #d6e9c6;");
+        strToFile.add("}");
+        return strToFile;
+    }
     protected static void getThreadDebugInfoToHtml(Thread readedThread){
         String nowTimeStringWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
@@ -713,13 +732,135 @@ public class AppObjectsInfo {
             ex.printStackTrace();
         }
         //**************
-        
         //readedThread.getClass().notify();
         //readedThread.getClass().notifyAll();
         //readedThread.getClass().wait();
         //readedThread.getClass().wait(idxId);
         //readedThread.getClass().wait(idxId, idxId);
-        
+        ConcurrentSkipListMap<Integer, String> generateIndexFile = generateIndexFile(newLogFileInLogHTML);
+        if( generateIndexFile.size() > 0 ){
+            newLogHtmlTableFile = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_INDEX_PREFIX);
+            while( !loggerToHtml.isLogFileNameChanged() ){
+                loggerToHtml.setNewLogFileName(newLogHtmlTableFile);
+            }
+            listForRunnableLogStrs.clear();
+            for(Map.Entry<Integer, String> elementForLog : generateIndexFile.entrySet()){
+                listForRunnableLogStrs.put(elementForLog.getKey(), elementForLog.getValue());
+            }
+            logToHtmlTable = new Thread(loggerToHtml);
+            logToHtmlTable.start();
+
+            try{
+                logToHtmlTable.join();
+                while( !loggerToHtml.isJobDone() ){
+                    Thread curThr = Thread.currentThread();
+                    curThr.sleep(50);
+                }
+            } catch(InterruptedException ex){
+                ex.printStackTrace();
+            } catch(SecurityException ex){
+                ex.printStackTrace();
+            }
+        }
+            
+    }
+    
+    protected static ConcurrentSkipListMap<Integer, String> generateIndexFile(ConcurrentSkipListMap<String, Path> newLogFileInLogHTML){
+        Path dirForRead = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR);
+        ArrayList<Path> filesByMaskFromDir = AppFileOperationsSimple.getFilesByMaskFromDir(
+                dirForRead,
+                "{" + AppFileNamesConstants.LOG_HTML_TABLE_PREFIX + "}*");
+        ConcurrentSkipListMap<Integer, String> readedLinesFromLogHTML = new ConcurrentSkipListMap<Integer, String>();
+        TreeMap<Path, TreeMap<Integer, String>> filePathlinesFromReadedHtmlTable = 
+                new TreeMap<Path, TreeMap<Integer, String>>();
+        if( filesByMaskFromDir.size() > 0 ){
+            TreeMap<Integer, String> linesFromReadedHtmlTable = new TreeMap<Integer, String>();
+            Path forFirstRead = filesByMaskFromDir.get(0);
+            AppLoggerFromHTMLRunnable readerFromHtmlFile = new AppLoggerFromHTMLRunnable(
+                    readedLinesFromLogHTML,
+                    forFirstRead);
+            Thread readFromHtmlTable = new Thread(readerFromHtmlFile);
+            readFromHtmlTable.start();
+
+            try{
+                readFromHtmlTable.join();
+                while( !readerFromHtmlFile.isJobDone() ){
+                    Thread curThr = Thread.currentThread();
+                    curThr.sleep(50);
+                }
+                
+                Map.Entry<Integer, String> pollFirstEntry;
+                do{
+                    pollFirstEntry = readedLinesFromLogHTML.pollFirstEntry();
+                    if( pollFirstEntry != null ){
+                        linesFromReadedHtmlTable.put(pollFirstEntry.getKey(), pollFirstEntry.getValue());
+                    }
+                }while(pollFirstEntry != null);
+                
+                filePathlinesFromReadedHtmlTable.put(forFirstRead, linesFromReadedHtmlTable);
+                
+            } catch(InterruptedException ex){
+                ex.printStackTrace();
+            } catch(SecurityException ex){
+                ex.printStackTrace();
+            }
+            for( Path fileForRead : filesByMaskFromDir ){
+                if( forFirstRead.compareTo(fileForRead) != 0 ){
+                    linesFromReadedHtmlTable.clear();
+                    while( !readerFromHtmlFile.isLogFileNameChanged() ){
+                        readerFromHtmlFile.setNewLogFileName(fileForRead);
+                    }
+                    readFromHtmlTable = new Thread(readerFromHtmlFile);
+                    readFromHtmlTable.start();
+
+                    try{
+                        readFromHtmlTable.join();
+                        while( !readerFromHtmlFile.isJobDone() ){
+                            Thread curThr = Thread.currentThread();
+                            curThr.sleep(50);
+                        }
+                        
+                        Map.Entry<Integer, String> pollFirstEntry;
+                        do{
+                            pollFirstEntry = readedLinesFromLogHTML.pollFirstEntry();
+                            if( pollFirstEntry != null ){
+                                linesFromReadedHtmlTable.put(pollFirstEntry.getKey(), pollFirstEntry.getValue());
+                            }
+                        }while(pollFirstEntry != null);
+
+                        filePathlinesFromReadedHtmlTable.put(fileForRead, linesFromReadedHtmlTable);
+                        
+                    } catch(InterruptedException ex){
+                        ex.printStackTrace();
+                    } catch(SecurityException ex){
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        }
+        if( filePathlinesFromReadedHtmlTable.size() > 0 ){
+            ConcurrentSkipListMap<Integer, String> topLines = getLinesForTopSaveIndex();
+            int indexOfLines = topLines.lastKey();
+            indexOfLines++;
+            for( Map.Entry<Path, TreeMap<Integer, String>> element : filePathlinesFromReadedHtmlTable.entrySet() ){
+                indexOfLines++;
+                topLines.put(indexOfLines, "<h1>" + element.getKey().toString() + "</h1>");
+                indexOfLines++;
+                for( Map.Entry<Integer, String> elementOfLines : element.getValue().entrySet() ){
+                    topLines.put(indexOfLines, elementOfLines.getValue() );
+                    indexOfLines++;
+                }
+            }
+            indexOfLines++;
+            ConcurrentSkipListMap<Integer, String> bottomLines = getLinesForBottomSaveIndex();
+            for( Map.Entry<Integer, String> elementOfLines : bottomLines.entrySet() ){
+                    topLines.put(indexOfLines, elementOfLines.getValue() );
+                    indexOfLines++;
+            }
+            
+            return topLines;
+        }
+        return new ConcurrentSkipListMap<Integer, String>();
     }
     
     protected static TreeMap<Integer, String> getStringListForSaveTableAddThead(String headString,TreeMap<Integer, String> listForLogStrs){
@@ -755,6 +896,505 @@ public class AppObjectsInfo {
         
         TreeMap<Integer, String> listForLogStrs = getStringListForSaveTableAddThead(runnedCmdStr, srcDataLogStrs);
         listForRunnableLogStrs.putAll(listForLogStrs);
+        return listForRunnableLogStrs;
+    }
+    
+    protected static ConcurrentSkipListMap<Integer, String> getLinesForTopSaveIndex(){
+        ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs = new ConcurrentSkipListMap<Integer, String>();
+        int strIndex = 0;
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"<html lang=\"en-US\" xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en-US\">");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></meta>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"<title>Log report for created Thread Object</title>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"<script src=\"./js/menu.js\" type=\"text/javascript\" defer=\"YES\"></script>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"<link rel=\"stylesheet\" href=\"./css/report.css\" type=\"text/css\"></link>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"<link rel=\"import\" href=\"table-20181115100212827.html\"></link>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"</head>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"<body class=\"body\" onload=\"allClose()\">");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        <div id=\"header-content\" class=\"content-header\">Лось жывотное коварное");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        </div>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        <div id=\"menu-content\" class=\"content-menu-items\">");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        <ul id=\"menu\">");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 1</a>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                <ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 1</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 2</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 3</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 4</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 5</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 6</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 7</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"               </ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            </li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 2</a>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                <ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 1</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 2</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 3</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 4</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 5</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 6</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 7</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"               </ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            </li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 3</a>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                <ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 1</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 2</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 3</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 4</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 5</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 6</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 7</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"               </ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            </li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 4</a>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                <ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 1</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 2</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 3</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 4</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 5</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 6</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 7</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"               </ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            </li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        </ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        </div>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        <div id=\"page-content\" class=\"content-imported-page\">");
+        
+        return listForRunnableLogStrs;
+    }
+    protected static ConcurrentSkipListMap<Integer, String> getLinesForBottomSaveIndex(){
+        ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs = new ConcurrentSkipListMap<Integer, String>();
+        int strIndex = 0;
+        
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        </div>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        <div id=\"footer-content\" class=\"footer-page\">");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            footer of page report");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        </div>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    </body>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"</html>");
+        return listForRunnableLogStrs;
+    }
+    
+    protected static ConcurrentSkipListMap<Integer, String> getLinesForSaveIndex(){
+        ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs = new ConcurrentSkipListMap<Integer, String>();
+        int strIndex = 0;
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"<html lang=\"en-US\" xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en-US\">");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></meta>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"<title>Log report for created Thread Object</title>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"<script src=\"./js/menu.js\" type=\"text/javascript\" defer=\"YES\"></script>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"<link rel=\"stylesheet\" href=\"./css/report.css\" type=\"text/css\"></link>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"<link rel=\"import\" href=\"table-20181115100212827.html\"></link>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"</head>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"<body class=\"body\" onload=\"allClose()\">");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        <div id=\"header-content\" class=\"content-header\">Лось жывотное коварное");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        </div>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        <div id=\"menu-content\" class=\"content-menu-items\">");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        <ul id=\"menu\">");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 1</a>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                <ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 1</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 2</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 3</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 4</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 5</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 6</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 7</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"               </ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            </li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 2</a>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                <ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 1</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 2</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 3</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 4</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 5</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 6</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 7</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"               </ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            </li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 3</a>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                <ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 1</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 2</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 3</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 4</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 5</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 6</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 7</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"               </ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            </li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 4</a>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                <ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 1</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 2</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 3</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 4</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 5</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 6</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 7</a></li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"               </ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            </li>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        </ul>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        </div>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        <div id=\"page-content\" class=\"content-imported-page\">");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            <div id=\"item-content1\"><iframe id=\"datatable\" src=\"./table-20181115100212827.html\" class=\"frame-table\" width=\"70%\"></iframe></div>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            <div id=\"item-content2\"><iframe id=\"datatable\" src=\"./table-20181115100212944.html\" class=\"frame-table\" width=\"70%\"></iframe></div>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        </div>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        <div id=\"footer-content\" class=\"footer-page\">");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"            footer of page report");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"        </div>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    </body>");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"</html>");
+        return listForRunnableLogStrs;
+    }
+    
+    
+    
+    protected static ConcurrentSkipListMap<Integer, String> getLinesForSaveCss(){
+        ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs = new ConcurrentSkipListMap<Integer, String>();
+        int strIndex = 0;
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,".body{");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    padding:0;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    margin:0;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    background-color: #666666;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    text-align: center;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"frame-table{");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    border: 1px solid #d6e9c6;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"#header-content{");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    background: #FF8000;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    padding: 24px;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    border-bottom: 3px solid #B5B5B5;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    min-width: 355px;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"#page-content{");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    align-content: flex-end;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    text-decoration: underline;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    height:500px;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    padding: 29px;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    background: #888888;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    min-width: 355px;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"#item-content-1{");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    height:250px;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    margin-right: 350px;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    background: #f6cf65;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    display: inline-block;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"#item-content-2{");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    height:250px;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    margin-right: 350px;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    background: #f6cf65;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    display: inline-block;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"#menu-content{");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    height: 500px;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    width: 300px;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    float: left;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    overflow: auto;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"#menu{");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    background:#80FF00;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    width:280px;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    list-style-type:none;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    padding:0;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    margin:0");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"#menu li{");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    border-bottom:1px solid #FFFFFF;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    padding:3px");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"#menu li a{");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    color:#000000;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    font-family:verdana,arial,sans-serif;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    text-decoration:none");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"#menu li ul{");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    border-top:1px solid #FFFFFF;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    padding:0;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    margin:0;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    list-style-type:square;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    list-style-position:inside");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"#menu li ul li{");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    border:0;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    list-style-type:square;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    color:#FFFFFF;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    list-style-position:inside");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"#footer-content{");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    background: #FF8000;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    padding: 11px;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    min-width: 355px;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
+        return listForRunnableLogStrs;
+    }
+    protected static ConcurrentSkipListMap<Integer, String> getLinesForSaveJsMenu(){
+        ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs = new ConcurrentSkipListMap<Integer, String>();
+        int strIndex = 0;
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"function openMenu(node){");
+	strIndex++;
+        listForRunnableLogStrs.put(strIndex,"var subMenu = node.parentNode.getElementsByTagName(\"ul\")[0];");
+	strIndex++;
+        listForRunnableLogStrs.put(strIndex,"subMenu.style.display === \"none\" ? subMenu.style.display = \"block\" : subMenu.style.display = \"none\";");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"function allClose(){");
+	strIndex++;
+        listForRunnableLogStrs.put(strIndex,"var list = document.getElementById(\"menu\").getElementsByTagName(\"ul\");");
+	strIndex++;
+        listForRunnableLogStrs.put(strIndex,"for(var i=0;i<list.length;i++){");
+	strIndex++;
+        listForRunnableLogStrs.put(strIndex,"	list[i].style.display = \"none\";");
+	strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
+        return listForRunnableLogStrs;
+    }
+    protected static ConcurrentSkipListMap<Integer, String> getLinesForSaveJsLoadHtml(){
+        ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs = new ConcurrentSkipListMap<Integer, String>();
+        int strIndex = 0;
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"function importTable20181115100212944(){");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"var link = document.createElement('link');");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"link.rel = 'import';");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"link.href = 'table-20181115100212944.html';");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"link.onload = function(this.e){console.log('Loaded import: ' + e.target.href);};");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"link.onerror = function(this.e){console.log('Error loading import: ' + e.target.href);};");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"function importTable001(){");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"var content = document.querySelector('link[rel=\"import\"]').import;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"alert(content);");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"document.body.appendChild(content.cloneNode(true));");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"}");
         return listForRunnableLogStrs;
     }
 }

@@ -16,6 +16,8 @@
 package ru.newcontrol.ncfv;
 
 import java.io.IOException;
+import java.nio.file.DirectoryIteratorException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -379,5 +381,21 @@ public class AppFileOperationsSimple {
        
        //formatted value of current Date
        return df.format(currentDate);
+    }
+    protected static ArrayList<Path> getFilesByMaskFromDir(Path dirForRead, String maskForReturn){
+        ArrayList<Path> toReturn = new ArrayList<Path>();
+        int count = 0;
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dirForRead, maskForReturn)) {
+        for (Path entry : stream) {
+            count++;
+            toReturn.add(entry);
+        }
+        if( count == 0 ){
+            //System.out.println("Directory is Empty, put some " + maskForReturn + " files into " + dirForRead.toString());
+        }
+        } catch (IOException | DirectoryIteratorException ex) {
+            ex.printStackTrace();
+        }
+        return toReturn;
     }
 }
