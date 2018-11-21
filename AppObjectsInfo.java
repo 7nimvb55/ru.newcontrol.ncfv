@@ -844,7 +844,7 @@ public class AppObjectsInfo {
             indexOfLines++;
             for( Map.Entry<Path, TreeMap<Integer, String>> element : filePathlinesFromReadedHtmlTable.entrySet() ){
                 indexOfLines++;
-                topLines.put(indexOfLines, "<h1>" + element.getKey().toString() + "</h1>");
+                topLines.put(indexOfLines, "<h2>" + element.getKey().toString() + "</h2>");
                 indexOfLines++;
                 for( Map.Entry<Integer, String> elementOfLines : element.getValue().entrySet() ){
                     topLines.put(indexOfLines, elementOfLines.getValue() );
@@ -914,14 +914,13 @@ public class AppObjectsInfo {
         listForRunnableLogStrs.put(strIndex,"<script src=\"./js/menu.js\" type=\"text/javascript\" defer=\"YES\"></script>");
         strIndex++;
         listForRunnableLogStrs.put(strIndex,"<link rel=\"stylesheet\" href=\"./css/report.css\" type=\"text/css\"></link>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<link rel=\"import\" href=\"table-20181115100212827.html\"></link>");
+
         strIndex++;
         listForRunnableLogStrs.put(strIndex,"</head>");
         strIndex++;
         listForRunnableLogStrs.put(strIndex,"<body class=\"body\" onload=\"allClose()\">");
         strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        <div id=\"header-content\" class=\"content-header\">Лось жывотное коварное");
+        listForRunnableLogStrs.put(strIndex,"        <div id=\"header-content\" class=\"content-header\">header page Report for threads state");
         strIndex++;
         listForRunnableLogStrs.put(strIndex,"        </div>");
         strIndex++;
