@@ -969,6 +969,7 @@ public class AppObjectsInfo {
     protected static void generateIndexFile(
             ConcurrentSkipListMap<Integer, String> returnedLinesForIndexFile,
             ConcurrentSkipListMap<String, Path> listOfFileInLogHTML){
+        
         Path dirForRead = listOfFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR);
         ArrayList<Path> filesByMaskFromDir = AppFileOperationsSimple.getFilesByMaskFromDir(
                 dirForRead,
@@ -1075,7 +1076,9 @@ public class AppObjectsInfo {
         //concatination for top lines of html, data from table files, bottom lines of html
         if( filePathlinesFromReadedHtmlTable.size() > 0 ){
             //ConcurrentSkipListMap<Integer, String> topLines = getLinesForTopSaveIndex();
-            getLinesForTopSaveIndex(returnedLinesForIndexFile);
+            Path fileJsMenuPrefix = listOfFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX).getFileName();
+            Path fileCssPrefix = listOfFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX).getFileName();
+            getLinesForTopSaveIndex(returnedLinesForIndexFile, fileJsMenuPrefix, fileCssPrefix);
             int indexOfLines = returnedLinesForIndexFile.lastKey();
             indexOfLines++;
             for( Map.Entry<Path, TreeMap<Integer, String>> element : filePathlinesFromReadedHtmlTable.entrySet() ){
@@ -1135,7 +1138,11 @@ public class AppObjectsInfo {
         return listForRunnableLogStrs;
     }
     
-    protected static ConcurrentSkipListMap<Integer, String> getLinesForTopSaveIndex(ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs){
+    protected static ConcurrentSkipListMap<Integer, String> getLinesForTopSaveIndex(
+            ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs,
+            Path fileJsMenuPrefix,
+            Path fileCssPrefix
+    ){
         
         int strIndex = 0;
         strIndex++;
@@ -1147,9 +1154,9 @@ public class AppObjectsInfo {
         strIndex++;
         listForRunnableLogStrs.put(strIndex,"<title>Log report for created Thread Object</title>");
         strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<script src=\"./js/menu.js\" type=\"text/javascript\" defer=\"YES\"></script>");
+        listForRunnableLogStrs.put(strIndex,"<script src=\"./js/" + fileJsMenuPrefix.toString() + "\" type=\"text/javascript\" defer=\"YES\"></script>");
         strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<link rel=\"stylesheet\" href=\"./css/report.css\" type=\"text/css\"></link>");
+        listForRunnableLogStrs.put(strIndex,"<link rel=\"stylesheet\" href=\"./css/" + fileCssPrefix.toString() + "\" type=\"text/css\"></link>");
 
         strIndex++;
         listForRunnableLogStrs.put(strIndex,"</head>");
