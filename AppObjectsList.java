@@ -233,7 +233,7 @@ public class AppObjectsList {
             putLogMessageState("[ADDOBJECTTOLIST]" + nameForWorker);
             if( AppConstants.LOG_LEVEL_CURRENT > AppConstants.LOG_LEVEL_USE ){
                 if( foundedThread != null ){
-                    String classInfoToString = AppObjectsInfo.getClassInfoToString(foundedThread.getClass());
+                    String classInfoToString = AppObjectsInfoHelperClasses.getClassInfoToString(foundedThread.getClass());
                     putLogMessageState("[CLASS]" + classInfoToString);
                 }
             }

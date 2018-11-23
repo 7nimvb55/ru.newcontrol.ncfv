@@ -35,331 +35,8 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * @author wladimirowichbiaran
  */
 public class AppObjectsInfo {
-    protected static String getThreadInfoToString(Thread forStrBuild){
-        ThreadGroup threadGroup = forStrBuild.getThreadGroup();
-        String nameThreadGroup = threadGroup.getName();
-        int activeCountThreadGroup = threadGroup.activeCount();
-        int activeGroupCount = threadGroup.activeGroupCount();
-        Class<?> aClass = forStrBuild.getClass();
-        return NcStrLogMsgField.INFO.getStr()
-                    + NcStrLogMsgField.THREAD_GROUP_NAME.getStr()
-                    + nameThreadGroup
-                    + NcStrLogMsgField.ACTIVE.getStr()        
-                    + NcStrLogMsgField.COUNT.getStr()
-                    + String.valueOf(activeCountThreadGroup)
-                    + NcStrLogMsgField.ACTIVE.getStr()
-                    + NcStrLogMsgField.GROUP.getStr()
-                    + NcStrLogMsgField.COUNT.getStr()
-                    + String.valueOf(activeGroupCount)
-                    + NcStrLogMsgField.THREAD.getStr()
-                    + NcStrLogMsgField.ID.getStr()
-                    + String.valueOf(forStrBuild.getId())
-                    + NcStrLogMsgField.PRIORITY.getStr()        
-                    + String.valueOf(forStrBuild.getPriority())
-                    + NcStrLogMsgField.NAME.getStr()
-                    + forStrBuild.getName()
-                    + NcStrLogMsgField.CANONICALNAME.getStr()
-                    + aClass.getCanonicalName()
-                    + NcStrLogMsgField.GENERICSTRING.getStr()
-                    + aClass.toGenericString();
-    }
-    protected static String getClassInfoToString(Class<?> forStrBuild){
-        return NcStrLogMsgField.INFO.getStr()
-            + NcStrLogMsgField.CLASSNAME.getStr()
-            + forStrBuild.getName()
-            + NcStrLogMsgField.TYPENAME.getStr()
-            + forStrBuild.getTypeName()
-            + NcStrLogMsgField.CANONICALNAME.getStr()
-            + forStrBuild.getCanonicalName()
-            + NcStrLogMsgField.GENERICSTRING.getStr()
-            + forStrBuild.toGenericString();
-    }
-    protected static void outCreateObjectMessage(String strMsg, Class<?> forStrBuild){
-        String classInfoToString = NcAppHelper.getClassInfoToString(forStrBuild);
-            NcAppHelper.outMessage( NcStrLogMsgField.INFO.getStr()
-                    + NcStrLogMsgField.CREATE.getStr()
-                    + strMsg
-                    + classInfoToString);
-    }
-    protected static TreeMap<Long, String> getThreadStackTraceToString(Thread t){
-        String strTimeAndMsg = AppFileOperationsSimple.getNowTimeStringWithMS();
-        TreeMap<Long, String> strForLog = new TreeMap<Long, String>();
-
-
-        StackTraceElement[] nowT = t.getStackTrace();
-        long idx = 0;
-        strForLog.put(idx, strTimeAndMsg);
-        idx++;
-        String strThread = NcStrLogMsgField.THREAD.getStr()
-        + NcStrLogMsgField.COUNT.getStr()
-        + Thread.activeCount()
-        + NcStrLogMsgField.THREAD_GROUP_NAME.getStr()
-        + t.getThreadGroup().getName()
-        + NcStrLogMsgField.ACTIVE.getStr()        
-        + NcStrLogMsgField.COUNT.getStr()
-        + t.getThreadGroup().activeCount()
-        + NcStrLogMsgField.ACTIVE.getStr()
-        + NcStrLogMsgField.GROUP.getStr()
-        + NcStrLogMsgField.COUNT.getStr()
-        + t.getThreadGroup().activeGroupCount();
-        strForLog.put(idx, strThread);
-        idx++;
-        String strLoader = NcStrLogMsgField.CLASSLOADER.getStr()
-            + NcStrLogMsgField.CANONICALNAME.getStr()
-            + t.getContextClassLoader().getClass().getCanonicalName();
-        strForLog.put(idx, strLoader);
-        idx++;
-        strForLog.put(idx, NcStrLogMsgField.THREAD.getStr()
-            + NcStrLogMsgField.TOSTRING.getStr()
-            + t.toString());
-        idx++;
-        strForLog.put(idx, NcStrLogMsgField.THREAD.getStr()
-            + NcStrLogMsgField.NAME.getStr()
-            + t.getName());
-        idx++;
-        strForLog.put(idx, NcStrLogMsgField.THREAD.getStr()
-            + NcStrLogMsgField.CANONICALNAME.getStr()
-            + t.getClass().getCanonicalName());
-        idx++;
-        strForLog.put(idx, NcStrLogMsgField.THREAD.getStr()
-                + NcStrLogMsgField.ID.getStr() + t.getId());
-        idx++;
-        strForLog.put(idx, NcStrLogMsgField.THREAD.getStr()
-            + NcStrLogMsgField.STATE.getStr()
-            + NcStrLogMsgField.NAME.getStr() + t.getState().name());
-        idx++;
-        String strTrace = "";
-        int stackIdx = 0;
-        for(StackTraceElement itemT : nowT ){
-            if( stackIdx > 1
-                || NcfvRunVariables.isOutToLogFileTraceWithPrintFunc() ){
-
-                String strOutFile = "";
-                if( NcfvRunVariables.isOutToLogFileIncludeFile() ){
-
-                    strOutFile = NcStrLogMsgField.FILENAME.getStr()
-                        + itemT.getFileName();
-                }
-                String strOut = 
-                    NcStrLogMsgField.CLASSNAME.getStr()
-                    + itemT.getClassName()
-                    + NcStrLogMsgField.METHODNAME.getStr()
-                    + itemT.getMethodName()
-                    + NcStrLogMsgField.LINENUM.getStr()
-                    + itemT.getLineNumber()
-                    + (itemT.isNativeMethod()
-                        ? NcStrLogMsgField.NATIVE.getStr() : "");
-
-                strTrace = NcStrLogMsgField.ELEMENTNUM.getStr()
-                        + stackIdx + strOutFile + strOut;
-                stackIdx++;
-            }
-            if( strTrace.length() > 0 ){
-
-                strForLog.put(idx, strTrace);
-            }
-            strTrace = "";
-            idx++;
-        }
-       
-        return strForLog;   
-    }
     
-    protected static ArrayList<String> getAllStack(){
-        ArrayList<String> listStrToRet = new ArrayList<String>();
-        
-        Map<Thread, StackTraceElement[]> allStackTraces = 
-                Thread.getAllStackTraces();
-        for (Map.Entry<Thread, StackTraceElement[]> allStackTrace
-                : allStackTraces.entrySet()) {
-            listStrToRet.addAll(
-                    getThreadInfo(allStackTrace.getKey()));
-            listStrToRet.addAll(
-                    getStackTraceInfo(allStackTrace.getValue()));
-        }
-        return listStrToRet;
-    }
-    private static ArrayList<String> getThreadInfo(Thread inFuncThread){
-        ArrayList<String> listStrToRet = new ArrayList<String>();
-        String strToOut = "";
-        long id = inFuncThread.getId();
-        String name = inFuncThread.getName();
-        int priority = inFuncThread.getPriority();
-        String stateName = inFuncThread.getState().name();
-        strToOut = NcStrLogMsgField.THREAD.getStr()
-                + NcStrLogMsgField.ID.getStr()
-                + Long.toString(id)
-                + NcStrLogMsgField.NAME.getStr()
-                + name
-                + NcStrLogMsgField.PRIORITY.getStr()
-                + Integer.toString(priority)
-                + NcStrLogMsgField.STATE.getStr()
-                + NcStrLogMsgField.NAME.getStr()
-                + stateName;
-        listStrToRet.add(strToOut);
-        ThreadGroup threadGroup = inFuncThread.getThreadGroup();
-        listStrToRet.addAll(getThreadGroupInfo(threadGroup));
-        return listStrToRet;
-    }
-    private static ArrayList<String> getThreadGroupInfo(ThreadGroup inFuncThreadGroup){
-        ArrayList<String> listStrToRet = new ArrayList<String>();
-        String strToOut = "";
-        int activeCount = inFuncThreadGroup.activeCount();
-        int activeGroupCount = inFuncThreadGroup.activeGroupCount();
-        int maxPriority = inFuncThreadGroup.getMaxPriority();
-        String name = inFuncThreadGroup.getName();
-        boolean daemon = inFuncThreadGroup.isDaemon();
-        String strDaemon = daemon ? "true" : "false";
-        boolean destroyed = inFuncThreadGroup.isDestroyed();
-        String strDestroyed = destroyed ? "true" : "false";
-        strToOut = NcStrLogMsgField.THREAD_GROUP.getStr()
-                + NcStrLogMsgField.NAME.getStr()
-                + name
-                + NcStrLogMsgField.MAX.getStr()
-                + NcStrLogMsgField.PRIORITY.getStr()
-                + Integer.toString(maxPriority)
-                + NcStrLogMsgField.ACTIVE.getStr()
-                + NcStrLogMsgField.COUNT.getStr()
-                + Integer.toString(activeCount)
-                + NcStrLogMsgField.ACTIVE.getStr()
-                + NcStrLogMsgField.GROUP.getStr()
-                + NcStrLogMsgField.COUNT.getStr()
-                + Integer.toString(activeGroupCount)
-                + NcStrLogMsgField.IS.getStr()
-                + NcStrLogMsgField.DAEMON.getStr()
-                + strDaemon
-                + NcStrLogMsgField.IS.getStr()
-                + strDestroyed
-                + NcStrLogMsgField.DESTROYED.getStr();
-        
-        listStrToRet.add(strToOut);
-        
-        return listStrToRet;
-    }
-    private static ArrayList<String> getStackTraceInfo(StackTraceElement[] inFuncStackTrace){
-        ArrayList<String> listStrToRet = new ArrayList<String>();
-        String strToOut = "";
-        int idx = 0;
-        String strToOutPref = NcStrLogMsgField.STACK.getStr()
-            + NcStrLogMsgField.TRACE.getStr()
-            + NcStrLogMsgField.ELEMENT.getStr();
-        for (StackTraceElement stackItem : inFuncStackTrace) {
 
-            Class<?> classItem = stackItem.getClass();
-            strToOut = strToOutPref
-                    + NcStrLogMsgField.NUM.getStr() 
-                    + idx
-                    + NcStrLogMsgField.CLASSNAME.getStr()
-                    + stackItem.getClassName();
-            listStrToRet.add(strToOut);
-            
-            ArrayList<String> declMeth = getDeclaredMethodsInfo(classItem);
-            for (String strMeth : declMeth) {
-                strToOut = strToOutPref
-                    + NcStrLogMsgField.NUM.getStr() 
-                    + idx
-                    + strMeth;
-                listStrToRet.add(strToOut);
-            }
-            
-            ArrayList<String> declField = getDeclaredFieldsInfo(classItem);
-            for (String strField : declField) {
-                strToOut = strToOutPref
-                    + NcStrLogMsgField.NUM.getStr() 
-                    + idx
-                    + strField;
-                listStrToRet.add(strToOut);
-            }
-            
-            idx++;
-        }
-        return listStrToRet;
-    }
-    private static ArrayList<String> getDeclaredMethodsInfo(Class<?> classInFunc){
-        ArrayList<String> listStrToRet = new ArrayList<String>();
-        String strToOut = "";
-        Method[] declaredMethods = classInFunc.getClass().getDeclaredMethods();
-        int methodIdx = 0;
-        for (Method declaredMethod : declaredMethods) {
-            String strName = declaredMethod.getName();
-            strToOut = NcStrLogMsgField.METHOD.getStr()
-                + NcStrLogMsgField.NUM.getStr()
-                + Integer.toString(methodIdx)
-                + NcStrLogMsgField.NAME.getStr()
-                + strName;
-            listStrToRet.add(strToOut);
-            Parameter[] parameters = declaredMethod.getParameters();
-            int paramIdx = 0;
-            for (Parameter parameter : parameters) {
-                String paramName = parameter.getName();
-                String paramType = parameter.getType().getCanonicalName();
-                strToOut = NcStrLogMsgField.PARAMETER.getStr()
-                + NcStrLogMsgField.NUM.getStr()
-                + Integer.toString(paramIdx)
-                + NcStrLogMsgField.NAME.getStr()
-                + paramName
-                + NcStrLogMsgField.TYPE.getStr()
-                + paramType;
-                paramIdx++;
-            }
-            methodIdx++;
-        }
-        return listStrToRet;
-    }
-    private static ArrayList<String> getDeclaredFieldsInfo(Class<?> classInFunc){
-        ArrayList<String> listStrToRet = new ArrayList<String>();
-        String strToOut = "";
-        int fieldIdx = 0;
-        Field[] declaredFields = classInFunc.getClass().getDeclaredFields();
-        for (Field declaredField : declaredFields) {
-            strToOut = NcStrLogMsgField.FIELD.getStr()
-                + NcStrLogMsgField.NUM.getStr()
-                + fieldIdx;
-            try {
-                boolean boolAccValFlag = declaredField.isAccessible();
-                declaredField.setAccessible(true);
-                strToOut = strToOut
-                    + NcStrLogMsgField.TYPE.getStr()
-                    + declaredField.getType().getCanonicalName();
-                
-                strToOut = strToOut
-                    + NcStrLogMsgField.NAME.getStr()
-                    + declaredField.getName();
-                
-                strToOut = strToOut
-                    + NcStrLogMsgField.VALUE.getStr()
-                    + declaredField.get(classInFunc.getClass()).toString();
-                declaredField.setAccessible(boolAccValFlag);
-            } catch (IllegalAccessException | IllegalArgumentException | SecurityException ex){
-                strToOut = strToOut
-                    + NcStrLogMsgField.EXCEPTION_MSG.getStr()
-                    + ex.getMessage();
-            }
-            listStrToRet.add(strToOut);
-            fieldIdx++;
-        }
-        return listStrToRet;
-    }
-    protected static ArrayList<String> getStringsToJSFile(){
-        ArrayList<String> strToFile = new ArrayList<String>();
-        strToFile.add("body{");
-        strToFile.add("background-color: #666666;");
-        strToFile.add("}");
-        strToFile.add("frame-table{");
-        strToFile.add("border: 1px solid #d6e9c6;");
-        strToFile.add("}");
-        return strToFile;
-    }
-    protected static ArrayList<String> getStringsToCSSFile(){
-        ArrayList<String> strToFile = new ArrayList<String>();
-        strToFile.add("body{");
-        strToFile.add("background-color: #666666;");
-        strToFile.add("}");
-        strToFile.add("frame-table{");
-        strToFile.add("border: 1px solid #d6e9c6;");
-        strToFile.add("}");
-        return strToFile;
-    }
     protected static void getThreadDebugInfoToHtml(Thread readedThread){
         String nowTimeStringWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
@@ -462,41 +139,11 @@ public class AppObjectsInfo {
                         
                 + readedThread.getClass().isInstance(AppThWorkDirListRun.class));
         indexLinesToFile++;
-        /*int indexForRunnableList = 0;
-        listForRunnableLogStrs.put(indexForRunnableList,"<TABLE>");
-        indexForRunnableList++;
-        for( Map.Entry<Integer, String> lines: listForLogStrs.entrySet()){
-            
-                
-                listForRunnableLogStrs.put(indexForRunnableList, "<tr>" + lines.getValue() + "</tr>");
-                indexForRunnableList++;
-            
-        }
-        listForRunnableLogStrs.put(indexForRunnableList,"</TABLE>");*/
-        listForRunnableLogStrs = getStringListForSaveTable(listForRunnableLogStrs, listForLogStrs, "readedThread.getStackTrace()");
+        
+        listForRunnableLogStrs = AppObjectsInfoHelperHtml.getStringListForSaveTable(listForRunnableLogStrs, listForLogStrs, "readedThread.getStackTrace()");
         System.out.println("for first record " + listForRunnableLogStrs.size() + "file name" + newLogHtmlTableFile.toString());
         writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
-        /*Thread logToHtmlTable = new Thread(loggerToHtml);
-        logToHtmlTable.start();
-        
-        try{
-            logToHtmlTable.join();
-            while( !loggerToHtml.isJobDone() ){
-                Thread curThr = Thread.currentThread();
-                curThr.sleep(50);
-            }
-        } catch(InterruptedException ex){
-            ex.printStackTrace();
-        } catch(SecurityException ex){
-            ex.printStackTrace();
-        }
-        //**************
-        newLogHtmlTableFile = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
-        while( !loggerToHtml.isLogFileNameChanged() ){
-            loggerToHtml.setNewLogFileName(newLogHtmlTableFile);
-        }
-        listForRunnableLogStrs.clear();*/
-        
+                
         //**************
         listForLogStrs.clear();
         listForLogStrs = new TreeMap<Integer, String>();
@@ -706,50 +353,17 @@ public class AppObjectsInfo {
         readedThread.getClass().toString();
         
         listForRunnableLogStrs.clear();
-        /*indexForRunnableList = 0;
-        listForRunnableLogStrs.put(indexForRunnableList,"<TABLE>");
-        indexForRunnableList++;
-        for( Map.Entry<Integer, String> lines: listForLogStrs.entrySet()){
-            
-                
-                listForRunnableLogStrs.put(indexForRunnableList, "<tr>" + lines.getValue() + "</tr>");
-                indexForRunnableList++;
-            
-        }
-        listForRunnableLogStrs.put(indexForRunnableList,"</TABLE>");*/
+        // end for first block lines into recording list
         newLogHtmlTableFile = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
-        listForRunnableLogStrs = getStringListForSaveTable(listForRunnableLogStrs, listForLogStrs, "readedThread.getClass().getTypeParameters()");
+        listForRunnableLogStrs = AppObjectsInfoHelperHtml.getStringListForSaveTable(listForRunnableLogStrs, listForLogStrs, "readedThread.getClass().getTypeParameters()");
         System.out.println("for second record " + listForRunnableLogStrs.size() + newLogHtmlTableFile.toString());
         writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
-        
-        /*logToHtmlTable = new Thread(loggerToHtml);
-        logToHtmlTable.start();
-        
-        try{
-            logToHtmlTable.join();
-            while( !loggerToHtml.isJobDone() ){
-                Thread curThr = Thread.currentThread();
-                curThr.sleep(50);
-            }
-        } catch(InterruptedException ex){
-            ex.printStackTrace();
-        } catch(SecurityException ex){
-            ex.printStackTrace();
-        }
-        listForRunnableLogStrs.clear();*/
-        
-        //create css file
-        
-        //**************
-        //readedThread.getClass().notify();
-        //readedThread.getClass().notifyAll();
-        //readedThread.getClass().wait();
-        //readedThread.getClass().wait(idxId);
-        //readedThread.getClass().wait(idxId, idxId);
-        //********* ************* ************ ************** ************** ***************
+        // end for write first block lines into file
         newLogHtmlTableFile = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX);
         listForRunnableLogStrs.clear();
-        ConcurrentSkipListMap<Integer, String> linesForSaveJsMenu = getLinesForSaveJsMenu();
+        
+        
+        ConcurrentSkipListMap<Integer, String> linesForSaveJsMenu = AppObjectsInfoHelperHtml.getLinesForSaveJsMenu();
         Map.Entry<Integer, String> pollFirstEntryJsMenu;
         do{
             pollFirstEntryJsMenu = linesForSaveJsMenu.pollFirstEntry();
@@ -762,7 +376,7 @@ public class AppObjectsInfo {
         //********* ************* ************ ************** ************** ***************
         newLogHtmlTableFile = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX);
         listForRunnableLogStrs.clear();
-        ConcurrentSkipListMap<Integer, String> linesForSaveCss = getLinesForSaveCss();
+        ConcurrentSkipListMap<Integer, String> linesForSaveCss = AppObjectsInfoHelperHtml.getLinesForSaveCss();
         Map.Entry<Integer, String> pollFirstEntryCss;
         do{
             pollFirstEntryCss = linesForSaveCss.pollFirstEntry();
@@ -776,21 +390,12 @@ public class AppObjectsInfo {
         ConcurrentSkipListMap<Integer, String> generatedLinesForIndexFile =
                 new ConcurrentSkipListMap<Integer, String>();
         generateIndexFile(generatedLinesForIndexFile, newLogFileInLogHTML);
-        
-                /*ConcurrentSkipListMap<Integer, String> generateIndexFile = new ConcurrentSkipListMap<Integer, String>();
-                generateIndexFile.put(0, "stroka1");
-                generateIndexFile.put(1, "stroka2");
-                generateIndexFile.put(2, "stroka3");*/
+        // make index file
         if( generatedLinesForIndexFile.size() > 0 ){
             newLogHtmlTableFile = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_INDEX_PREFIX);
-            /*while( !loggerToHtml.isLogFileNameChanged() ){
-                loggerToHtml.setNewLogFileName(newLogHtmlTableFile);
-            }*/
+
             listForRunnableLogStrs.clear();
-            /*for(Map.Entry<Integer, String> elementForLog : generateIndexFile.entrySet()){
-                listForRunnableLogStrs.put(elementForLog.getKey(), elementForLog.getValue());
-                
-            }*/
+
             Map.Entry<Integer, String> pollFirstEntryIndexFile;
             do{
                 pollFirstEntryIndexFile = generatedLinesForIndexFile.pollFirstEntry();
@@ -801,24 +406,7 @@ public class AppObjectsInfo {
             
             System.out.println(" for index record " + listForRunnableLogStrs.size() + newLogHtmlTableFile.toString());
             writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
-            /*generateIndexFile = null;
-            logToHtmlTable = null;
-            logToHtmlTable = new Thread(loggerToHtml);
-            logToHtmlTable.start();
-
-            try{
-                logToHtmlTable.join();
-                while( !loggerToHtml.isJobDone() ){
-                    Thread curThr = Thread.currentThread();
-                    curThr.sleep(50);
-                }
-            } catch(InterruptedException ex){
-                ex.printStackTrace();
-            } catch(SecurityException ex){
-                ex.printStackTrace();
-            }*/
         }
-           
     }
     protected static void writeLinesToFileByRunnable(ConcurrentSkipListMap<Integer, String> listStrForLog,
             AppLoggerToHTMLRunnable writerToHtmlRunnable,
@@ -870,25 +458,7 @@ public class AppObjectsInfo {
             }
             System.out.println("State writer" + writeToHtmlByThread.getState().name());
             //@todo destroy for threadgroups...
-            
-            /*try{
-                while( writeToHtmlByThread.isAlive() ){
-                    Thread curThr = Thread.currentThread();
-                    curThr.sleep(50);
-                    //curThr.notifyAll();
-                }
-            } catch(InterruptedException ex){
-                ex.printStackTrace();
-            } catch(SecurityException ex){
-                ex.printStackTrace();
-            }
-            
-            try{
-                //newJobThreadGroup.list();
-                newJobThreadGroup.destroy();
-            } catch(IllegalThreadStateException ex){
-                ex.printStackTrace();
-            }*/
+
             listStrForLog.clear();
         }
     }
@@ -900,7 +470,7 @@ public class AppObjectsInfo {
         if (listStrFromFile.size() == 0){
             String nowTimeStringWithMS = 
                     AppFileOperationsSimple.getNowTimeStringWithMS();
-            ThreadGroup newJobThreadGroup = new ThreadGroup("TmpGroupReadFile-" + nowTimeStringWithMS);
+            
             
             if( !readerFromHtmlFile.isNewRunner() ){
                 //Check for old job is done
@@ -916,15 +486,14 @@ public class AppObjectsInfo {
                 }
             }
             
-            
             while( !readerFromHtmlFile.isLogFileNameChanged() ){
                 readerFromHtmlFile.setNewLogFileName(fileForWrite);
             }
-            
-            
+            //@todo check stack trace to see for runned threads by his names and classes
+            ThreadGroup newJobThreadGroup = new ThreadGroup("TmpGroupReadFile-" + nowTimeStringWithMS);
             Thread readFromHtmlByThread = new Thread(newJobThreadGroup, readerFromHtmlFile, "readerFromHtml-" + nowTimeStringWithMS);
             System.out.println("State reader " + readFromHtmlByThread.getState().name());
-            //Thread writeToHtmlByThread = new Thread(writerToHtmlRunnable, "writerToHtml-" + nowTimeStringWithMS);
+            
             readFromHtmlByThread.start();
             System.out.println("State reader " + readFromHtmlByThread.getState().name());
             //Check for now job is done
@@ -942,27 +511,8 @@ public class AppObjectsInfo {
                 ex.printStackTrace();
             }
             System.out.println("State reader " + readFromHtmlByThread.getState().name());
-            //@todo destroy for threadgroups...
-            
-            /*try{
-                while( writeToHtmlByThread.isAlive() ){
-                    Thread curThr = Thread.currentThread();
-                    curThr.sleep(50);
-                    //curThr.notifyAll();
-                }
-            } catch(InterruptedException ex){
-                ex.printStackTrace();
-            } catch(SecurityException ex){
-                ex.printStackTrace();
-            }
-            
-            try{
-                //newJobThreadGroup.list();
-                newJobThreadGroup.destroy();
-            } catch(IllegalThreadStateException ex){
-                ex.printStackTrace();
-            }*/
-            //listStrFromFile.clear();
+            //@todo destroy for threadgroups... see core threadgroup.destroy
+
         }
     }
     
@@ -983,102 +533,29 @@ public class AppObjectsInfo {
             AppLoggerFromHTMLRunnable readerFromHtmlFile = new AppLoggerFromHTMLRunnable(
                     readedLinesFromLogHTML,
                     forFirstRead);
-                    /*ThreadGroup clonedThread = new ThreadGroup("TmpGroup0");
-                    Thread readFromHtmlTable = new Thread(clonedThread, readerFromHtmlFile, "readerFromHtmlTables0");
-                    System.out.println("reader " + readFromHtmlTable.getState().name());
-                    readFromHtmlTable.start();
-
-                    try{
-                        //readFromHtmlTable.join();
-                        System.out.println("reader " + readFromHtmlTable.getState().name());
-                        while( !readerFromHtmlFile.isJobDone() ){
-                            Thread curThr = Thread.currentThread();
-                            curThr.sleep(50);
-                        }
-                        System.out.println("reader " + readFromHtmlTable.getState().name());
-                        Map.Entry<Integer, String> pollFirstEntry;
-                        do{
-                            pollFirstEntry = readedLinesFromLogHTML.pollFirstEntry();
-                            if( pollFirstEntry != null ){
-                                linesFromReadedHtmlTable.put(pollFirstEntry.getKey(), pollFirstEntry.getValue());
-                            }
-                        }while(pollFirstEntry != null);
-                        TreeMap<Integer, String> linesTransfer  = (TreeMap<Integer, String>) linesFromReadedHtmlTable.clone();
-                        filePathlinesFromReadedHtmlTable.put(forFirstRead, linesTransfer);
-
-                    } catch(InterruptedException ex){
-                        ex.printStackTrace();
-                    } catch(SecurityException ex){
-                        ex.printStackTrace();
-                    }*/
+                    
             for( Path fileForRead : filesByMaskFromDir ){
-                //if( forFirstRead.compareTo(fileForRead) != 0 ){
                     linesFromReadedHtmlTable.clear();
-                            /*while( !readerFromHtmlFile.isLogFileNameChanged() ){
-                                readerFromHtmlFile.setNewLogFileName(fileForRead);
-                            }
-                            readFromHtmlTable = null;
-
-                            try{
-                                clonedThread.destroy();
-                            } catch(IllegalThreadStateException ex){
-                                ex.printStackTrace();
-                            }*/
-                    
-                    //clonedThread = null;
-                    //********** ************ *************
-                            /*clonedThread = new ThreadGroup("TmpGroup1");
-                            readFromHtmlTable = new Thread(clonedThread, readerFromHtmlFile, "readerFromHtmlTables1");
-
-                            readFromHtmlTable = new Thread(readerFromHtmlFile);
-                            System.out.println("reader " + readFromHtmlTable.getState().name());
-                            readFromHtmlTable.start();
-                            System.out.println("reader " + readFromHtmlTable.getState().name());*/
-                    
                     readLinesFromFileByRunnable(readedLinesFromLogHTML, readerFromHtmlFile, fileForRead);
-                    
-                    //try{
-                        //readFromHtmlTable.join();
-                        /*while( !readerFromHtmlFile.isJobDone() ){
-                            Thread curThr = Thread.currentThread();
-                            curThr.sleep(50);
-                        }
-                        System.out.println("reader " + readFromHtmlTable.getState().name());*/
+
                         Map.Entry<Integer, String> pollFirstEntry;
                         do{
                             pollFirstEntry = readedLinesFromLogHTML.pollFirstEntry();
                             if( pollFirstEntry != null ){
                                 linesFromReadedHtmlTable.put(pollFirstEntry.getKey(), pollFirstEntry.getValue());
                             }
-                        }while(pollFirstEntry != null);
+                        }while( pollFirstEntry != null );
                         
                         TreeMap<Integer, String> linesTransfer  = (TreeMap<Integer, String>) linesFromReadedHtmlTable.clone();
                         filePathlinesFromReadedHtmlTable.put(fileForRead, linesTransfer);
-                        
-                    /*} catch(InterruptedException ex){
-                        ex.printStackTrace();
-                    } catch(SecurityException ex){
-                        ex.printStackTrace();
-                    }*/
-                    //******** ********* *********
-                    /*try{
-                        clonedThread.destroy();
-                    } catch(IllegalThreadStateException ex){
-                        ex.printStackTrace();
-                    }*/
-                //}
             }
             readedLinesFromLogHTML.clear();
-            //readedLinesFromLogHTML = null;
-            //readerFromHtmlFile = null;
-            
         }
         //concatination for top lines of html, data from table files, bottom lines of html
         if( filePathlinesFromReadedHtmlTable.size() > 0 ){
-            //ConcurrentSkipListMap<Integer, String> topLines = getLinesForTopSaveIndex();
             Path fileJsMenuPrefix = listOfFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX).getFileName();
             Path fileCssPrefix = listOfFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX).getFileName();
-            getLinesForTopSaveIndex(returnedLinesForIndexFile, fileJsMenuPrefix, fileCssPrefix);
+            AppObjectsInfoHelperHtml.getLinesForTopSaveIndex(returnedLinesForIndexFile, fileJsMenuPrefix, fileCssPrefix);
             int indexOfLines = returnedLinesForIndexFile.lastKey();
             indexOfLines++;
             for( Map.Entry<Path, TreeMap<Integer, String>> element : filePathlinesFromReadedHtmlTable.entrySet() ){
@@ -1091,554 +568,13 @@ public class AppObjectsInfo {
                 }
             }
             indexOfLines++;
-            ConcurrentSkipListMap<Integer, String> bottomLines = getLinesForBottomSaveIndex();
+            ConcurrentSkipListMap<Integer, String> bottomLines = AppObjectsInfoHelperHtml.getLinesForBottomSaveIndex();
             for( Map.Entry<Integer, String> elementOfLines : bottomLines.entrySet() ){
                     returnedLinesForIndexFile.put(indexOfLines, elementOfLines.getValue() );
                     indexOfLines++;
             }
-            
-            //return returnedLinesForIndexFile;
         }
-        //return new ConcurrentSkipListMap<Integer, String>();
-    }
-    
-    protected static TreeMap<Integer, String> getStringListForSaveTableAddThead(String headString,TreeMap<Integer, String> listForLogStrs){
-        TreeMap<Integer, String> withTheadLogStrs = new TreeMap<Integer, String>();
-        int indexStrs = 0;
-        withTheadLogStrs.put(indexStrs, "<TABLE>");
-        indexStrs++;
-        
-        withTheadLogStrs.put(indexStrs, "<THEAD>");
-        indexStrs++;
-        withTheadLogStrs.put(indexStrs, "<TR><TH>" + headString + "</TH></TR>");
-        indexStrs++;
-        withTheadLogStrs.put(indexStrs, "</THEAD>");
-        indexStrs++;
-        
-        withTheadLogStrs.put(indexStrs, "<TBODY>");
-        indexStrs++;
-        for( Map.Entry<Integer, String> lines: listForLogStrs.entrySet()){
-            withTheadLogStrs.put(indexStrs, "<TR><TD>" + lines.getValue() + "</TD></TR>");
-            indexStrs++;
-        }
-        withTheadLogStrs.put(indexStrs, "</TBODY>");
-        indexStrs++;
-        withTheadLogStrs.put(indexStrs, "</TABLE>");
-        indexStrs++;
-        return withTheadLogStrs;
-    }
-    
-    protected static ConcurrentSkipListMap<Integer, String> getStringListForSaveTable(
-            ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs,
-            TreeMap<Integer, String> srcDataLogStrs,
-            String runnedCmdStr){
-        
-        TreeMap<Integer, String> listForLogStrs = getStringListForSaveTableAddThead(runnedCmdStr, srcDataLogStrs);
-        listForRunnableLogStrs.putAll(listForLogStrs);
-        return listForRunnableLogStrs;
-    }
-    
-    protected static ConcurrentSkipListMap<Integer, String> getLinesForTopSaveIndex(
-            ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs,
-            Path fileJsMenuPrefix,
-            Path fileCssPrefix
-    ){
-        
-        int strIndex = 0;
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<html lang=\"en-US\" xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en-US\">");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></meta>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<title>Log report for created Thread Object</title>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<script src=\"./js/" + fileJsMenuPrefix.toString() + "\" type=\"text/javascript\" defer=\"YES\"></script>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<link rel=\"stylesheet\" href=\"./css/" + fileCssPrefix.toString() + "\" type=\"text/css\"></link>");
-
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"</head>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<body class=\"body\" onload=\"allClose()\">");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        <div id=\"header-content\" class=\"content-header\">header page Report for threads state");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        </div>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        <div id=\"menu-content\" class=\"content-menu-items\">");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        <ul id=\"menu\">");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 1</a>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                <ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 1</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 2</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 3</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 4</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 5</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 6</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 7</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"               </ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            </li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 2</a>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                <ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 1</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 2</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 3</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 4</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 5</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 6</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 7</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"               </ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            </li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 3</a>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                <ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 1</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 2</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 3</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 4</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 5</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 6</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 7</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"               </ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            </li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 4</a>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                <ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 1</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 2</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 3</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 4</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 5</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 6</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 7</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"               </ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            </li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        </ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        </div>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        <div id=\"page-content\" class=\"content-imported-page\">");
-        
-        return listForRunnableLogStrs;
-    }
-    protected static ConcurrentSkipListMap<Integer, String> getLinesForBottomSaveIndex(){
-        ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs = new ConcurrentSkipListMap<Integer, String>();
-        int strIndex = 0;
-        
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        </div>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        <div id=\"footer-content\" class=\"footer-page\">");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            footer of page report");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        </div>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    </body>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"</html>");
-        return listForRunnableLogStrs;
-    }
-    
-    protected static ConcurrentSkipListMap<Integer, String> getLinesForSaveIndex(){
-        ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs = new ConcurrentSkipListMap<Integer, String>();
-        int strIndex = 0;
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<html lang=\"en-US\" xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en-US\">");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></meta>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<title>Log report for created Thread Object</title>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<script src=\"./js/menu.js\" type=\"text/javascript\" defer=\"YES\"></script>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<link rel=\"stylesheet\" href=\"./css/report.css\" type=\"text/css\"></link>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<link rel=\"import\" href=\"table-20181115100212827.html\"></link>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"</head>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"<body class=\"body\" onload=\"allClose()\">");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        <div id=\"header-content\" class=\"content-header\">Лось жывотное коварное");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        </div>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        <div id=\"menu-content\" class=\"content-menu-items\">");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        <ul id=\"menu\">");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 1</a>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                <ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 1</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 2</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 3</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 4</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 5</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 6</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 7</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"               </ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            </li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 2</a>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                <ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 1</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 2</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 3</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 4</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 5</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 6</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 7</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"               </ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            </li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 3</a>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                <ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 1</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 2</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 3</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 4</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 5</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 6</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 7</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"               </ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            </li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 4</a>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                <ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 1</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 2</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 3</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 4</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 5</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 6</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"                  <li><a href=\"#\">sub menu 7</a></li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"               </ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            </li>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        </ul>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        </div>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        <div id=\"page-content\" class=\"content-imported-page\">");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            <div id=\"item-content1\"><iframe id=\"datatable\" src=\"./table-20181115100212827.html\" class=\"frame-table\" width=\"70%\"></iframe></div>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            <div id=\"item-content2\"><iframe id=\"datatable\" src=\"./table-20181115100212944.html\" class=\"frame-table\" width=\"70%\"></iframe></div>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        </div>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        <div id=\"footer-content\" class=\"footer-page\">");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"            footer of page report");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"        </div>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    </body>");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"</html>");
-        return listForRunnableLogStrs;
     }
     
     
-    
-    protected static ConcurrentSkipListMap<Integer, String> getLinesForSaveCss(){
-        ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs = new ConcurrentSkipListMap<Integer, String>();
-        int strIndex = 0;
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,".body{");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    padding:0;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    margin:0;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    background-color: #666666;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    text-align: center;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"frame-table{");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    border: 1px solid #d6e9c6;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"#header-content{");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    background: #FF8000;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    padding: 24px;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    border-bottom: 3px solid #B5B5B5;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    min-width: 355px;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"#page-content{");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    align-content: flex-end;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    text-decoration: underline;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    height:500px;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    padding: 29px;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    background: #888888;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    min-width: 355px;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    overflow: auto;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"#item-content-1{");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    height:250px;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    margin-right: 350px;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    background: #f6cf65;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    display: inline-block;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"#item-content-2{");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    height:250px;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    margin-right: 350px;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    background: #f6cf65;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    display: inline-block;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"#menu-content{");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    height: 500px;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    width: 300px;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    float: left;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    overflow: auto;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"#menu{");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    background:#80FF00;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    width:280px;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    list-style-type:none;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    padding:0;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    margin:0");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"#menu li{");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    border-bottom:1px solid #FFFFFF;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    padding:3px");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"#menu li a{");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    color:#000000;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    font-family:verdana,arial,sans-serif;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    text-decoration:none");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"#menu li ul{");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    border-top:1px solid #FFFFFF;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    padding:0;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    margin:0;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    list-style-type:square;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    list-style-position:inside");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"#menu li ul li{");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    border:0;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    list-style-type:square;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    color:#FFFFFF;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    list-style-position:inside");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"#footer-content{");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    background: #FF8000;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    padding: 11px;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"    min-width: 355px;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        return listForRunnableLogStrs;
-    }
-    protected static ConcurrentSkipListMap<Integer, String> getLinesForSaveJsMenu(){
-        ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs = new ConcurrentSkipListMap<Integer, String>();
-        int strIndex = 0;
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"function openMenu(node){");
-	strIndex++;
-        listForRunnableLogStrs.put(strIndex,"var subMenu = node.parentNode.getElementsByTagName(\"ul\")[0];");
-	strIndex++;
-        listForRunnableLogStrs.put(strIndex,"subMenu.style.display === \"none\" ? subMenu.style.display = \"block\" : subMenu.style.display = \"none\";");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"function allClose(){");
-	strIndex++;
-        listForRunnableLogStrs.put(strIndex,"var list = document.getElementById(\"menu\").getElementsByTagName(\"ul\");");
-	strIndex++;
-        listForRunnableLogStrs.put(strIndex,"for(var i=0;i<list.length;i++){");
-	strIndex++;
-        listForRunnableLogStrs.put(strIndex,"	list[i].style.display = \"none\";");
-	strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        return listForRunnableLogStrs;
-    }
-    protected static ConcurrentSkipListMap<Integer, String> getLinesForSaveJsLoadHtml(){
-        ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs = new ConcurrentSkipListMap<Integer, String>();
-        int strIndex = 0;
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"function importTable20181115100212944(){");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"var link = document.createElement('link');");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"link.rel = 'import';");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"link.href = 'table-20181115100212944.html';");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"link.onload = function(this.e){console.log('Loaded import: ' + e.target.href);};");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"link.onerror = function(this.e){console.log('Error loading import: ' + e.target.href);};");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"function importTable001(){");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"var content = document.querySelector('link[rel=\"import\"]').import;");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"alert(content);");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"document.body.appendChild(content.cloneNode(true));");
-        strIndex++;
-        listForRunnableLogStrs.put(strIndex,"}");
-        return listForRunnableLogStrs;
-    }
 }
