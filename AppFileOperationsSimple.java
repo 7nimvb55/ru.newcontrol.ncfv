@@ -155,7 +155,23 @@ public class AppFileOperationsSimple {
     protected static ConcurrentSkipListMap<String, Path> getNewLogFileInLogHTML(Path currentDirForLog){
         ConcurrentSkipListMap<String, Path> listFilesForHtmlLog = new ConcurrentSkipListMap<String, Path>();
         Path logForHtmlCurrentLogAnySubDirCSS = getLogForHtmlCurrentLogAnySubDir(currentDirForLog, AppFileNamesConstants.LOG_HTML_CSS_SUB_DIR);
+        
+        listFilesForHtmlLog.put(AppFileNamesConstants.LOG_HTML_CSS_PREFIX, 
+                Paths.get(logForHtmlCurrentLogAnySubDirCSS.toString(),
+                AppFileNamesConstants.LOG_HTML_CSS_PREFIX
+                + getNowTimeStringWithMS()
+                + AppFileNamesConstants.LOG_HTML_CSS_EXT)
+        );
+        
         Path logForHtmlCurrentLogAnySubDirJS = getLogForHtmlCurrentLogAnySubDir(currentDirForLog, AppFileNamesConstants.LOG_HTML_JS_SUB_DIR);
+        
+        listFilesForHtmlLog.put(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX, 
+                Paths.get(logForHtmlCurrentLogAnySubDirJS.toString(),
+                AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX
+                + getNowTimeStringWithMS()
+                + AppFileNamesConstants.LOG_HTML_JS_EXT)
+        );
+        
         listFilesForHtmlLog.put(AppFileNamesConstants.LOG_HTML_HEADER_PREFIX, 
                 Paths.get(currentDirForLog.toString(),
                 AppFileNamesConstants.LOG_HTML_HEADER_PREFIX

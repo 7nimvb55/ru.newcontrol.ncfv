@@ -33,11 +33,13 @@ public class AppLoggerToHTMLRunnable implements Runnable {
     private Path logFile;
     private Boolean logFileChanged;
     private Boolean jobIsDone;
+    private Boolean isNewRunner;
 
     public AppLoggerToHTMLRunnable(
             ConcurrentSkipListMap<Integer, String> listForLogStrs, 
             Path outerLogFile) {
         super();
+        this.isNewRunner = Boolean.TRUE;
         this.logFileChanged = Boolean.FALSE;
         this.jobIsDone = Boolean.FALSE;
         this.listForLogStrings = listForLogStrs;
@@ -48,6 +50,7 @@ public class AppLoggerToHTMLRunnable implements Runnable {
     
     @Override
     public void run() {
+        
         this.jobIsDone = Boolean.FALSE;
         try {
             Files.write(this.logFile, listForLogStrings.values(), Charset.forName("UTF-8"));
@@ -57,6 +60,7 @@ public class AppLoggerToHTMLRunnable implements Runnable {
             ex.printStackTrace();
         }
         this.jobIsDone = Boolean.TRUE;
+        this.isNewRunner = Boolean.FALSE;
     }
     protected void setNewLogFileName(Path newLogFileName){
         this.logFile = newLogFileName;
@@ -70,5 +74,8 @@ public class AppLoggerToHTMLRunnable implements Runnable {
     }
     protected Boolean isJobDone(){
         return this.jobIsDone;
+    }
+    protected Boolean isNewRunner(){
+        return this.isNewRunner;
     }
 }

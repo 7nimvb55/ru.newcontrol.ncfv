@@ -474,7 +474,9 @@ public class AppObjectsInfo {
         }
         listForRunnableLogStrs.put(indexForRunnableList,"</TABLE>");*/
         listForRunnableLogStrs = getStringListForSaveTable(listForRunnableLogStrs, listForLogStrs, "readedThread.getStackTrace()");
-        Thread logToHtmlTable = new Thread(loggerToHtml);
+        System.out.println("for first record " + listForRunnableLogStrs.size() + "file name" + newLogHtmlTableFile.toString());
+        writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
+        /*Thread logToHtmlTable = new Thread(loggerToHtml);
         logToHtmlTable.start();
         
         try{
@@ -493,7 +495,7 @@ public class AppObjectsInfo {
         while( !loggerToHtml.isLogFileNameChanged() ){
             loggerToHtml.setNewLogFileName(newLogHtmlTableFile);
         }
-        listForRunnableLogStrs.clear();
+        listForRunnableLogStrs.clear();*/
         
         //**************
         listForLogStrs.clear();
@@ -715,9 +717,12 @@ public class AppObjectsInfo {
             
         }
         listForRunnableLogStrs.put(indexForRunnableList,"</TABLE>");*/
+        newLogHtmlTableFile = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
         listForRunnableLogStrs = getStringListForSaveTable(listForRunnableLogStrs, listForLogStrs, "readedThread.getClass().getTypeParameters()");
+        System.out.println("for second record " + listForRunnableLogStrs.size() + newLogHtmlTableFile.toString());
+        writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
         
-        logToHtmlTable = new Thread(loggerToHtml);
+        /*logToHtmlTable = new Thread(loggerToHtml);
         logToHtmlTable.start();
         
         try{
@@ -731,22 +736,73 @@ public class AppObjectsInfo {
         } catch(SecurityException ex){
             ex.printStackTrace();
         }
+        listForRunnableLogStrs.clear();*/
+        
+        //create css file
+        
         //**************
         //readedThread.getClass().notify();
         //readedThread.getClass().notifyAll();
         //readedThread.getClass().wait();
         //readedThread.getClass().wait(idxId);
         //readedThread.getClass().wait(idxId, idxId);
-        ConcurrentSkipListMap<Integer, String> generateIndexFile = generateIndexFile(newLogFileInLogHTML);
-        if( generateIndexFile.size() > 0 ){
+        //********* ************* ************ ************** ************** ***************
+        newLogHtmlTableFile = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX);
+        listForRunnableLogStrs.clear();
+        ConcurrentSkipListMap<Integer, String> linesForSaveJsMenu = getLinesForSaveJsMenu();
+        Map.Entry<Integer, String> pollFirstEntryJsMenu;
+        do{
+            pollFirstEntryJsMenu = linesForSaveJsMenu.pollFirstEntry();
+            if(pollFirstEntryJsMenu != null){
+                listForRunnableLogStrs.put(pollFirstEntryJsMenu.getKey(), pollFirstEntryJsMenu.getValue());
+            }
+        }while( pollFirstEntryJsMenu != null );
+        
+        writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
+        //********* ************* ************ ************** ************** ***************
+        newLogHtmlTableFile = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX);
+        listForRunnableLogStrs.clear();
+        ConcurrentSkipListMap<Integer, String> linesForSaveCss = getLinesForSaveCss();
+        Map.Entry<Integer, String> pollFirstEntryCss;
+        do{
+            pollFirstEntryCss = linesForSaveCss.pollFirstEntry();
+            if( pollFirstEntryCss != null ){
+                listForRunnableLogStrs.put(pollFirstEntryCss.getKey(), pollFirstEntryCss.getValue());
+            }
+        }while( pollFirstEntryCss != null );
+        
+        writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
+        //********* ************* ************ ************** ************** ***************
+        ConcurrentSkipListMap<Integer, String> generatedLinesForIndexFile =
+                new ConcurrentSkipListMap<Integer, String>();
+        generateIndexFile(generatedLinesForIndexFile, newLogFileInLogHTML);
+        
+                /*ConcurrentSkipListMap<Integer, String> generateIndexFile = new ConcurrentSkipListMap<Integer, String>();
+                generateIndexFile.put(0, "stroka1");
+                generateIndexFile.put(1, "stroka2");
+                generateIndexFile.put(2, "stroka3");*/
+        if( generatedLinesForIndexFile.size() > 0 ){
             newLogHtmlTableFile = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_INDEX_PREFIX);
-            while( !loggerToHtml.isLogFileNameChanged() ){
+            /*while( !loggerToHtml.isLogFileNameChanged() ){
                 loggerToHtml.setNewLogFileName(newLogHtmlTableFile);
-            }
+            }*/
             listForRunnableLogStrs.clear();
-            for(Map.Entry<Integer, String> elementForLog : generateIndexFile.entrySet()){
+            /*for(Map.Entry<Integer, String> elementForLog : generateIndexFile.entrySet()){
                 listForRunnableLogStrs.put(elementForLog.getKey(), elementForLog.getValue());
-            }
+                
+            }*/
+            Map.Entry<Integer, String> pollFirstEntryIndexFile;
+            do{
+                pollFirstEntryIndexFile = generatedLinesForIndexFile.pollFirstEntry();
+                if( pollFirstEntryIndexFile != null ){
+                    listForRunnableLogStrs.put(pollFirstEntryIndexFile.getKey(), pollFirstEntryIndexFile.getValue());
+                }
+            }while( pollFirstEntryIndexFile != null );
+            
+            System.out.println(" for index record " + listForRunnableLogStrs.size() + newLogHtmlTableFile.toString());
+            writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
+            /*generateIndexFile = null;
+            logToHtmlTable = null;
             logToHtmlTable = new Thread(loggerToHtml);
             logToHtmlTable.start();
 
@@ -760,13 +816,160 @@ public class AppObjectsInfo {
                 ex.printStackTrace();
             } catch(SecurityException ex){
                 ex.printStackTrace();
-            }
+            }*/
         }
+           
+    }
+    protected static void writeLinesToFileByRunnable(ConcurrentSkipListMap<Integer, String> listStrForLog,
+            AppLoggerToHTMLRunnable writerToHtmlRunnable,
+            Path fileForWrite){
+        
+        if (listStrForLog.size() > 0){
+            String nowTimeStringWithMS = 
+                    AppFileOperationsSimple.getNowTimeStringWithMS();
+            ThreadGroup newJobThreadGroup = new ThreadGroup("TmpGroup-" + nowTimeStringWithMS);
             
+            if( !writerToHtmlRunnable.isNewRunner() ){
+                //Check for old job is done
+                try{
+                    while( !writerToHtmlRunnable.isJobDone() ){
+                        Thread curThr = Thread.currentThread();
+                        curThr.sleep(50);
+                    }
+                } catch(InterruptedException ex){
+                    ex.printStackTrace();
+                } catch(SecurityException ex){
+                    ex.printStackTrace();
+                }
+            }
+            
+            
+            while( !writerToHtmlRunnable.isLogFileNameChanged() ){
+                writerToHtmlRunnable.setNewLogFileName(fileForWrite);
+            }
+            
+            
+            Thread writeToHtmlByThread = new Thread(newJobThreadGroup, writerToHtmlRunnable, "writerToHtml-" + nowTimeStringWithMS);
+            System.out.println("State writer " + writeToHtmlByThread.getState().name());
+            //Thread writeToHtmlByThread = new Thread(writerToHtmlRunnable, "writerToHtml-" + nowTimeStringWithMS);
+            writeToHtmlByThread.start();
+            System.out.println("State writer " + writeToHtmlByThread.getState().name());
+            //Check for now job is done
+            try{
+                writeToHtmlByThread.join();
+                while( !writerToHtmlRunnable.isJobDone() ){
+                    Thread curThr = Thread.currentThread();
+                    curThr.sleep(50);
+                    //curThr.notifyAll();
+                    System.out.println("State writer" + writeToHtmlByThread.getState().name());
+                }
+            } catch(InterruptedException ex){
+                ex.printStackTrace();
+            } catch(SecurityException ex){
+                ex.printStackTrace();
+            }
+            System.out.println("State writer" + writeToHtmlByThread.getState().name());
+            //@todo destroy for threadgroups...
+            
+            /*try{
+                while( writeToHtmlByThread.isAlive() ){
+                    Thread curThr = Thread.currentThread();
+                    curThr.sleep(50);
+                    //curThr.notifyAll();
+                }
+            } catch(InterruptedException ex){
+                ex.printStackTrace();
+            } catch(SecurityException ex){
+                ex.printStackTrace();
+            }
+            
+            try{
+                //newJobThreadGroup.list();
+                newJobThreadGroup.destroy();
+            } catch(IllegalThreadStateException ex){
+                ex.printStackTrace();
+            }*/
+            listStrForLog.clear();
+        }
     }
     
-    protected static ConcurrentSkipListMap<Integer, String> generateIndexFile(ConcurrentSkipListMap<String, Path> newLogFileInLogHTML){
-        Path dirForRead = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR);
+    protected static void readLinesFromFileByRunnable(ConcurrentSkipListMap<Integer, String> listStrFromFile,
+            AppLoggerFromHTMLRunnable readerFromHtmlFile,
+            Path fileForWrite){
+        
+        if (listStrFromFile.size() == 0){
+            String nowTimeStringWithMS = 
+                    AppFileOperationsSimple.getNowTimeStringWithMS();
+            ThreadGroup newJobThreadGroup = new ThreadGroup("TmpGroupReadFile-" + nowTimeStringWithMS);
+            
+            if( !readerFromHtmlFile.isNewRunner() ){
+                //Check for old job is done
+                try{
+                    while( !readerFromHtmlFile.isJobDone() ){
+                        Thread curThr = Thread.currentThread();
+                        curThr.sleep(50);
+                    }
+                } catch(InterruptedException ex){
+                    ex.printStackTrace();
+                } catch(SecurityException ex){
+                    ex.printStackTrace();
+                }
+            }
+            
+            
+            while( !readerFromHtmlFile.isLogFileNameChanged() ){
+                readerFromHtmlFile.setNewLogFileName(fileForWrite);
+            }
+            
+            
+            Thread readFromHtmlByThread = new Thread(newJobThreadGroup, readerFromHtmlFile, "readerFromHtml-" + nowTimeStringWithMS);
+            System.out.println("State reader " + readFromHtmlByThread.getState().name());
+            //Thread writeToHtmlByThread = new Thread(writerToHtmlRunnable, "writerToHtml-" + nowTimeStringWithMS);
+            readFromHtmlByThread.start();
+            System.out.println("State reader " + readFromHtmlByThread.getState().name());
+            //Check for now job is done
+            try{
+                readFromHtmlByThread.join();
+                while( !readerFromHtmlFile.isJobDone() ){
+                    Thread curThr = Thread.currentThread();
+                    curThr.sleep(50);
+                    //curThr.notifyAll();
+                    System.out.println("State reader " + readFromHtmlByThread.getState().name());
+                }
+            } catch(InterruptedException ex){
+                ex.printStackTrace();
+            } catch(SecurityException ex){
+                ex.printStackTrace();
+            }
+            System.out.println("State reader " + readFromHtmlByThread.getState().name());
+            //@todo destroy for threadgroups...
+            
+            /*try{
+                while( writeToHtmlByThread.isAlive() ){
+                    Thread curThr = Thread.currentThread();
+                    curThr.sleep(50);
+                    //curThr.notifyAll();
+                }
+            } catch(InterruptedException ex){
+                ex.printStackTrace();
+            } catch(SecurityException ex){
+                ex.printStackTrace();
+            }
+            
+            try{
+                //newJobThreadGroup.list();
+                newJobThreadGroup.destroy();
+            } catch(IllegalThreadStateException ex){
+                ex.printStackTrace();
+            }*/
+            //listStrFromFile.clear();
+        }
+    }
+    
+    protected static void generateIndexFile(
+            ConcurrentSkipListMap<Integer, String> returnedLinesForIndexFile,
+            ConcurrentSkipListMap<String, Path> listOfFileInLogHTML){
+        Path dirForRead = listOfFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR);
         ArrayList<Path> filesByMaskFromDir = AppFileOperationsSimple.getFilesByMaskFromDir(
                 dirForRead,
                 "{" + AppFileNamesConstants.LOG_HTML_TABLE_PREFIX + "}*");
@@ -779,47 +982,19 @@ public class AppObjectsInfo {
             AppLoggerFromHTMLRunnable readerFromHtmlFile = new AppLoggerFromHTMLRunnable(
                     readedLinesFromLogHTML,
                     forFirstRead);
-            Thread readFromHtmlTable = new Thread(readerFromHtmlFile);
-            readFromHtmlTable.start();
-
-            try{
-                readFromHtmlTable.join();
-                while( !readerFromHtmlFile.isJobDone() ){
-                    Thread curThr = Thread.currentThread();
-                    curThr.sleep(50);
-                }
-                
-                Map.Entry<Integer, String> pollFirstEntry;
-                do{
-                    pollFirstEntry = readedLinesFromLogHTML.pollFirstEntry();
-                    if( pollFirstEntry != null ){
-                        linesFromReadedHtmlTable.put(pollFirstEntry.getKey(), pollFirstEntry.getValue());
-                    }
-                }while(pollFirstEntry != null);
-                
-                filePathlinesFromReadedHtmlTable.put(forFirstRead, linesFromReadedHtmlTable);
-                
-            } catch(InterruptedException ex){
-                ex.printStackTrace();
-            } catch(SecurityException ex){
-                ex.printStackTrace();
-            }
-            for( Path fileForRead : filesByMaskFromDir ){
-                if( forFirstRead.compareTo(fileForRead) != 0 ){
-                    linesFromReadedHtmlTable.clear();
-                    while( !readerFromHtmlFile.isLogFileNameChanged() ){
-                        readerFromHtmlFile.setNewLogFileName(fileForRead);
-                    }
-                    readFromHtmlTable = new Thread(readerFromHtmlFile);
+                    /*ThreadGroup clonedThread = new ThreadGroup("TmpGroup0");
+                    Thread readFromHtmlTable = new Thread(clonedThread, readerFromHtmlFile, "readerFromHtmlTables0");
+                    System.out.println("reader " + readFromHtmlTable.getState().name());
                     readFromHtmlTable.start();
 
                     try{
-                        readFromHtmlTable.join();
+                        //readFromHtmlTable.join();
+                        System.out.println("reader " + readFromHtmlTable.getState().name());
                         while( !readerFromHtmlFile.isJobDone() ){
                             Thread curThr = Thread.currentThread();
                             curThr.sleep(50);
                         }
-                        
+                        System.out.println("reader " + readFromHtmlTable.getState().name());
                         Map.Entry<Integer, String> pollFirstEntry;
                         do{
                             pollFirstEntry = readedLinesFromLogHTML.pollFirstEntry();
@@ -827,40 +1002,101 @@ public class AppObjectsInfo {
                                 linesFromReadedHtmlTable.put(pollFirstEntry.getKey(), pollFirstEntry.getValue());
                             }
                         }while(pollFirstEntry != null);
+                        TreeMap<Integer, String> linesTransfer  = (TreeMap<Integer, String>) linesFromReadedHtmlTable.clone();
+                        filePathlinesFromReadedHtmlTable.put(forFirstRead, linesTransfer);
 
-                        filePathlinesFromReadedHtmlTable.put(fileForRead, linesFromReadedHtmlTable);
-                        
                     } catch(InterruptedException ex){
                         ex.printStackTrace();
                     } catch(SecurityException ex){
                         ex.printStackTrace();
-                    }
-                }
+                    }*/
+            for( Path fileForRead : filesByMaskFromDir ){
+                //if( forFirstRead.compareTo(fileForRead) != 0 ){
+                    linesFromReadedHtmlTable.clear();
+                            /*while( !readerFromHtmlFile.isLogFileNameChanged() ){
+                                readerFromHtmlFile.setNewLogFileName(fileForRead);
+                            }
+                            readFromHtmlTable = null;
+
+                            try{
+                                clonedThread.destroy();
+                            } catch(IllegalThreadStateException ex){
+                                ex.printStackTrace();
+                            }*/
+                    
+                    //clonedThread = null;
+                    //********** ************ *************
+                            /*clonedThread = new ThreadGroup("TmpGroup1");
+                            readFromHtmlTable = new Thread(clonedThread, readerFromHtmlFile, "readerFromHtmlTables1");
+
+                            readFromHtmlTable = new Thread(readerFromHtmlFile);
+                            System.out.println("reader " + readFromHtmlTable.getState().name());
+                            readFromHtmlTable.start();
+                            System.out.println("reader " + readFromHtmlTable.getState().name());*/
+                    
+                    readLinesFromFileByRunnable(readedLinesFromLogHTML, readerFromHtmlFile, fileForRead);
+                    
+                    //try{
+                        //readFromHtmlTable.join();
+                        /*while( !readerFromHtmlFile.isJobDone() ){
+                            Thread curThr = Thread.currentThread();
+                            curThr.sleep(50);
+                        }
+                        System.out.println("reader " + readFromHtmlTable.getState().name());*/
+                        Map.Entry<Integer, String> pollFirstEntry;
+                        do{
+                            pollFirstEntry = readedLinesFromLogHTML.pollFirstEntry();
+                            if( pollFirstEntry != null ){
+                                linesFromReadedHtmlTable.put(pollFirstEntry.getKey(), pollFirstEntry.getValue());
+                            }
+                        }while(pollFirstEntry != null);
+                        
+                        TreeMap<Integer, String> linesTransfer  = (TreeMap<Integer, String>) linesFromReadedHtmlTable.clone();
+                        filePathlinesFromReadedHtmlTable.put(fileForRead, linesTransfer);
+                        
+                    /*} catch(InterruptedException ex){
+                        ex.printStackTrace();
+                    } catch(SecurityException ex){
+                        ex.printStackTrace();
+                    }*/
+                    //******** ********* *********
+                    /*try{
+                        clonedThread.destroy();
+                    } catch(IllegalThreadStateException ex){
+                        ex.printStackTrace();
+                    }*/
+                //}
             }
+            readedLinesFromLogHTML.clear();
+            //readedLinesFromLogHTML = null;
+            //readerFromHtmlFile = null;
+            
         }
+        //concatination for top lines of html, data from table files, bottom lines of html
         if( filePathlinesFromReadedHtmlTable.size() > 0 ){
-            ConcurrentSkipListMap<Integer, String> topLines = getLinesForTopSaveIndex();
-            int indexOfLines = topLines.lastKey();
+            //ConcurrentSkipListMap<Integer, String> topLines = getLinesForTopSaveIndex();
+            getLinesForTopSaveIndex(returnedLinesForIndexFile);
+            int indexOfLines = returnedLinesForIndexFile.lastKey();
             indexOfLines++;
             for( Map.Entry<Path, TreeMap<Integer, String>> element : filePathlinesFromReadedHtmlTable.entrySet() ){
                 indexOfLines++;
-                topLines.put(indexOfLines, "<h2>" + element.getKey().toString() + "</h2>");
+                returnedLinesForIndexFile.put(indexOfLines, "<h2>" + element.getKey().toString() + "</h2>");
                 indexOfLines++;
                 for( Map.Entry<Integer, String> elementOfLines : element.getValue().entrySet() ){
-                    topLines.put(indexOfLines, elementOfLines.getValue() );
+                    returnedLinesForIndexFile.put(indexOfLines, elementOfLines.getValue() );
                     indexOfLines++;
                 }
             }
             indexOfLines++;
             ConcurrentSkipListMap<Integer, String> bottomLines = getLinesForBottomSaveIndex();
             for( Map.Entry<Integer, String> elementOfLines : bottomLines.entrySet() ){
-                    topLines.put(indexOfLines, elementOfLines.getValue() );
+                    returnedLinesForIndexFile.put(indexOfLines, elementOfLines.getValue() );
                     indexOfLines++;
             }
             
-            return topLines;
+            //return returnedLinesForIndexFile;
         }
-        return new ConcurrentSkipListMap<Integer, String>();
+        //return new ConcurrentSkipListMap<Integer, String>();
     }
     
     protected static TreeMap<Integer, String> getStringListForSaveTableAddThead(String headString,TreeMap<Integer, String> listForLogStrs){
@@ -899,8 +1135,8 @@ public class AppObjectsInfo {
         return listForRunnableLogStrs;
     }
     
-    protected static ConcurrentSkipListMap<Integer, String> getLinesForTopSaveIndex(){
-        ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs = new ConcurrentSkipListMap<Integer, String>();
+    protected static ConcurrentSkipListMap<Integer, String> getLinesForTopSaveIndex(ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs){
+        
         int strIndex = 0;
         strIndex++;
         listForRunnableLogStrs.put(strIndex,"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
@@ -1234,6 +1470,8 @@ public class AppObjectsInfo {
         listForRunnableLogStrs.put(strIndex,"    background: #888888;");
         strIndex++;
         listForRunnableLogStrs.put(strIndex,"    min-width: 355px;");
+        strIndex++;
+        listForRunnableLogStrs.put(strIndex,"    overflow: auto;");
         strIndex++;
         listForRunnableLogStrs.put(strIndex,"}");
         strIndex++;

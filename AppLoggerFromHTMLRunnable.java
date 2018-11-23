@@ -32,17 +32,19 @@ public class AppLoggerFromHTMLRunnable implements Runnable {
     private Path logFile;
     private Boolean logFileChanged;
     private Boolean jobIsDone;
+    private Boolean isNewRunner;
 
     public AppLoggerFromHTMLRunnable(
             ConcurrentSkipListMap<Integer, String> listForLogStrs, 
             Path readedLogFile) {
         super();
+        this.isNewRunner = Boolean.TRUE;
         this.logFileChanged = Boolean.FALSE;
         this.jobIsDone = Boolean.FALSE;
         this.listForLogStrings = listForLogStrs;
         this.logFile = readedLogFile;
         String threadInfoToString = NcAppHelper.getThreadInfoToString(Thread.currentThread());
-        System.out.println("create log reader " + threadInfoToString);
+        System.out.println("*** *** *** *** *** create log reader *** *** *** *** ***" + threadInfoToString);
     }
     
     @Override
@@ -62,6 +64,7 @@ public class AppLoggerFromHTMLRunnable implements Runnable {
             ex.printStackTrace();
         }
         this.jobIsDone = Boolean.TRUE;
+        this.isNewRunner = Boolean.FALSE;
     }
     protected ConcurrentSkipListMap<Integer, String> getReadedString(){
         return this.listForLogStrings;
@@ -78,5 +81,8 @@ public class AppLoggerFromHTMLRunnable implements Runnable {
     }
     protected Boolean isJobDone(){
         return this.jobIsDone;
+    }
+    protected Boolean isNewRunner(){
+        return this.isNewRunner;
     }
 }
