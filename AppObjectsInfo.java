@@ -407,6 +407,7 @@ public class AppObjectsInfo {
             System.out.println(" for index record " + listForRunnableLogStrs.size() + newLogHtmlTableFile.toString());
             writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
         }
+        listForRunnableLogStrs.clear();
     }
     protected static void writeLinesToFileByRunnable(ConcurrentSkipListMap<Integer, String> listStrForLog,
             AppLoggerToHTMLRunnable writerToHtmlRunnable,
@@ -448,15 +449,14 @@ public class AppObjectsInfo {
                 while( !writerToHtmlRunnable.isJobDone() ){
                     Thread curThr = Thread.currentThread();
                     curThr.sleep(50);
-                    //curThr.notifyAll();
-                    System.out.println("State writer" + writeToHtmlByThread.getState().name());
+                    System.out.println("State writer " + writeToHtmlByThread.getState().name());
                 }
             } catch(InterruptedException ex){
                 ex.printStackTrace();
             } catch(SecurityException ex){
                 ex.printStackTrace();
             }
-            System.out.println("State writer" + writeToHtmlByThread.getState().name());
+            System.out.println("State writer " + writeToHtmlByThread.getState().name());
             //@todo destroy for threadgroups...
 
             listStrForLog.clear();
@@ -470,8 +470,8 @@ public class AppObjectsInfo {
         if (listStrFromFile.size() == 0){
             String nowTimeStringWithMS = 
                     AppFileOperationsSimple.getNowTimeStringWithMS();
-            
-            
+            //@todo check stack trace to see for runned threads by his names and classes
+            ThreadGroup newJobThreadGroup = new ThreadGroup("TmpGroupReadFile-" + nowTimeStringWithMS);
             if( !readerFromHtmlFile.isNewRunner() ){
                 //Check for old job is done
                 try{
@@ -489,8 +489,8 @@ public class AppObjectsInfo {
             while( !readerFromHtmlFile.isLogFileNameChanged() ){
                 readerFromHtmlFile.setNewLogFileName(fileForWrite);
             }
-            //@todo check stack trace to see for runned threads by his names and classes
-            ThreadGroup newJobThreadGroup = new ThreadGroup("TmpGroupReadFile-" + nowTimeStringWithMS);
+            
+            
             Thread readFromHtmlByThread = new Thread(newJobThreadGroup, readerFromHtmlFile, "readerFromHtml-" + nowTimeStringWithMS);
             System.out.println("State reader " + readFromHtmlByThread.getState().name());
             
@@ -524,6 +524,7 @@ public class AppObjectsInfo {
         ArrayList<Path> filesByMaskFromDir = AppFileOperationsSimple.getFilesByMaskFromDir(
                 dirForRead,
                 "{" + AppFileNamesConstants.LOG_HTML_TABLE_PREFIX + "}*");
+        
         ConcurrentSkipListMap<Integer, String> readedLinesFromLogHTML = new ConcurrentSkipListMap<Integer, String>();
         TreeMap<Path, TreeMap<Integer, String>> filePathlinesFromReadedHtmlTable = 
                 new TreeMap<Path, TreeMap<Integer, String>>();
@@ -568,11 +569,8 @@ public class AppObjectsInfo {
                 }
             }
             indexOfLines++;
-            ConcurrentSkipListMap<Integer, String> bottomLines = AppObjectsInfoHelperHtml.getLinesForBottomSaveIndex();
-            for( Map.Entry<Integer, String> elementOfLines : bottomLines.entrySet() ){
-                    returnedLinesForIndexFile.put(indexOfLines, elementOfLines.getValue() );
-                    indexOfLines++;
-            }
+            AppObjectsInfoHelperHtml.getLinesForBottomSaveIndex(returnedLinesForIndexFile);
+            
         }
     }
     

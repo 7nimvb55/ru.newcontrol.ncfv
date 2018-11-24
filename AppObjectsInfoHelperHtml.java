@@ -188,9 +188,11 @@ public class AppObjectsInfoHelperHtml {
         
         return listForRunnableLogStrs;
     }
-    protected static ConcurrentSkipListMap<Integer, String> getLinesForBottomSaveIndex(){
-        ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs = new ConcurrentSkipListMap<Integer, String>();
-        int strIndex = 0;
+    protected static void getLinesForBottomSaveIndex(
+            ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs
+    ){
+        
+        int strIndex = listForRunnableLogStrs.lastKey();
         strIndex++;
         listForRunnableLogStrs.put(strIndex,"        </div>");
         strIndex++;
@@ -203,7 +205,7 @@ public class AppObjectsInfoHelperHtml {
         listForRunnableLogStrs.put(strIndex,"    </body>");
         strIndex++;
         listForRunnableLogStrs.put(strIndex,"</html>");
-        return listForRunnableLogStrs;
+        
     }
     
     protected static ConcurrentSkipListMap<Integer, String> getLinesForSaveIndex(){
