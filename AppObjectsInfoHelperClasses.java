@@ -21,6 +21,7 @@ import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
@@ -29,13 +30,13 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class AppObjectsInfoHelperClasses {
     
-    protected static void getInitBusInfo(ConcurrentSkipListMap<Integer,ArrayList<String>> commandsOutPut){
+    protected static void getInitBusInfo(ArrayBlockingQueue<ArrayList<String>> commandsOutPut){
         String nowTimeStringWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
         int recIndex = 0;
         ArrayList<String> initRecTime = new ArrayList<String>();
         initRecTime.add(nowTimeStringWithMS);
-        commandsOutPut.put(recIndex, initRecTime);
+        commandsOutPut.add(initRecTime);
     }
     
     protected static void getThreadName(Thread detectedThread, ConcurrentSkipListMap<Integer,ArrayList<String>> commandsOutPut){

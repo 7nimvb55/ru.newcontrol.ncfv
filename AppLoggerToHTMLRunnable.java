@@ -29,14 +29,14 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class AppLoggerToHTMLRunnable implements Runnable {
     
-    private ConcurrentSkipListMap<Integer, String> listForLogStrings;
+    private ArrayBlockingQueue<String> listForLogStrings;
     private Path logFile;
     private Boolean logFileChanged;
     private Boolean jobIsDone;
     private Boolean isNewRunner;
 
     public AppLoggerToHTMLRunnable(
-            ConcurrentSkipListMap<Integer, String> listForLogStrs, 
+            ArrayBlockingQueue<String> listForLogStrs, 
             Path outerLogFile) {
         super();
         this.isNewRunner = Boolean.TRUE;
@@ -53,8 +53,9 @@ public class AppLoggerToHTMLRunnable implements Runnable {
         
         this.jobIsDone = Boolean.FALSE;
         try {
-            Files.write(this.logFile, listForLogStrings.values(), Charset.forName("UTF-8"));
+            Files.write(this.logFile, this.listForLogStrings, Charset.forName("UTF-8"));
             this.logFileChanged = Boolean.FALSE;
+            this.listForLogStrings.clear();
         } catch (IOException ex) {
             ex.getMessage();
             ex.printStackTrace();

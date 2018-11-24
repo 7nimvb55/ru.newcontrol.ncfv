@@ -28,6 +28,7 @@ import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
@@ -47,12 +48,15 @@ public class AppObjectsInfo {
         ConcurrentSkipListMap<String, Path> newLogFileInLogHTML = 
                 AppFileOperationsSimple.getNewLogFileInLogHTML(logForHtmlCurrentLogSubDir);
         newLogFileInLogHTML.put(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR, logForHtmlCurrentLogSubDir);
-        
-        ConcurrentSkipListMap<Integer,ArrayList<String>> commandsOutPut = new ConcurrentSkipListMap<Integer,ArrayList<String>>();
+        Integer messagesQueueSize = 1000;
+        ArrayBlockingQueue<ArrayList<String>> commandsOutPut = new ArrayBlockingQueue<ArrayList<String>>(messagesQueueSize);
         AppObjectsInfoHelperClasses.getInitBusInfo(commandsOutPut);
         
         TreeMap<Integer, String> listForLogStrs = new TreeMap<Integer, String>();
-        ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs = new ConcurrentSkipListMap<Integer, String>();
+        
+        
+        
+        ArrayBlockingQueue<String> listForRunnableLogStrs = new ArrayBlockingQueue<String>(messagesQueueSize);
         Path newLogHtmlTableFile = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_TABLE_PREFIX);
         
         
@@ -379,7 +383,7 @@ public class AppObjectsInfo {
         do{
             pollFirstEntryJsMenu = linesForSaveJsMenu.pollFirstEntry();
             if(pollFirstEntryJsMenu != null){
-                listForRunnableLogStrs.put(pollFirstEntryJsMenu.getKey(), pollFirstEntryJsMenu.getValue());
+                listForRunnableLogStrs.add(pollFirstEntryJsMenu.getValue());
             }
         }while( pollFirstEntryJsMenu != null );
         
@@ -392,7 +396,7 @@ public class AppObjectsInfo {
         do{
             pollFirstEntryCss = linesForSaveCss.pollFirstEntry();
             if( pollFirstEntryCss != null ){
-                listForRunnableLogStrs.put(pollFirstEntryCss.getKey(), pollFirstEntryCss.getValue());
+                listForRunnableLogStrs.add(pollFirstEntryCss.getValue());
             }
         }while( pollFirstEntryCss != null );
         
@@ -411,16 +415,16 @@ public class AppObjectsInfo {
             do{
                 pollFirstEntryIndexFile = generatedLinesForIndexFile.pollFirstEntry();
                 if( pollFirstEntryIndexFile != null ){
-                    listForRunnableLogStrs.put(pollFirstEntryIndexFile.getKey(), pollFirstEntryIndexFile.getValue());
+                    listForRunnableLogStrs.add(pollFirstEntryIndexFile.getValue());
                 }
             }while( pollFirstEntryIndexFile != null );
             
             System.out.println(" for index record " + listForRunnableLogStrs.size() + newLogHtmlTableFile.toString());
             writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
         }
-        listForRunnableLogStrs.clear();
+        
     }
-    protected static void writeLinesToFileByRunnable(ConcurrentSkipListMap<Integer, String> listStrForLog,
+    protected static void writeLinesToFileByRunnable(ArrayBlockingQueue<String> listStrForLog,
             AppLoggerToHTMLRunnable writerToHtmlRunnable,
             Path fileForWrite){
         
@@ -470,7 +474,7 @@ public class AppObjectsInfo {
             System.out.println("State writer " + writeToHtmlByThread.getState().name());
             //@todo destroy for threadgroups...
 
-            listStrForLog.clear();
+            
         }
     }
     

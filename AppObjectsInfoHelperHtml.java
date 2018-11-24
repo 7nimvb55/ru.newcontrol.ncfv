@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
@@ -27,16 +28,16 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class AppObjectsInfoHelperHtml {
     protected static void commandOutPutBusToHtml(
-            ConcurrentSkipListMap<Integer,ArrayList<String>> commandsOutPutBusData,
-            ConcurrentSkipListMap<Integer, String> listStringsForLogInRunnable){
-        Map.Entry<Integer,ArrayList<String>> pollFirstEntryToLog;
+            ArrayBlockingQueue<ArrayList<String>> commandsOutPutBusData,
+            ArrayBlockingQueue<String> listStringsForLogInRunnable){
+        ArrayList<String> pollFirstEntryToLog;
+        int indexedSwitch = 0;
         do{
-            pollFirstEntryToLog = commandsOutPutBusData.pollFirstEntry();
+            pollFirstEntryToLog = commandsOutPutBusData.poll();
             if( pollFirstEntryToLog != null ){
-                int indexedSwitch = 0;
                 String forOutPutToLog = "";
-                if( pollFirstEntryToLog.getValue().size() > 1 ){
-                    for( String element : pollFirstEntryToLog.getValue() ){
+                if( pollFirstEntryToLog.size() > 1 ){
+                    for( String element : pollFirstEntryToLog ){
                         if( indexedSwitch == 0 ){
 
                             indexedSwitch++;
@@ -51,23 +52,23 @@ public class AppObjectsInfoHelperHtml {
                         }
                     }
                 }
-                if( pollFirstEntryToLog.getValue().size() == 1 ){
-                    String forOutTimeStamp = pollFirstEntryToLog.getValue().get(0).length() == 17 
-                            ? getFormatedTimeStamp(pollFirstEntryToLog.getValue().get(0))
+                if( pollFirstEntryToLog.size() == 1 ){
+                    String forOutTimeStamp = pollFirstEntryToLog.get(0).length() == 17 
+                            ? getFormatedTimeStamp(pollFirstEntryToLog.get(0))
                             : "";
                     if( forOutTimeStamp.isEmpty() ){
                         continue;
                     }
                     forOutPutToLog = "<h1>Time stamp: " + forOutTimeStamp + "</h1>";
                 }
-                if( pollFirstEntryToLog.getValue().size() == 0 ){
+                if( pollFirstEntryToLog.size() == 0 ){
                     continue;
                 }
-                listStringsForLogInRunnable.put(pollFirstEntryToLog.getKey(), forOutPutToLog);
+                listStringsForLogInRunnable.add(forOutPutToLog);
             }
         }while( pollFirstEntryToLog != null );
-        
     }
+    
     protected static String getFormatedTimeStamp(String strForFormat){
         char[] bytesForStampFormat = strForFormat.toCharArray();
         char[] newStampFormat = {
@@ -125,18 +126,17 @@ public class AppObjectsInfoHelperHtml {
     }
     
     protected static void getStringListForSaveTable(
-            ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs,
+            ArrayBlockingQueue<String> listForRunnableLogStrs,
             TreeMap<Integer, String> srcDataLogStrs,
             String runnedCmdStr){
         
         TreeMap<Integer, String> listForLogStrs = getStringListForSaveTableAddThead(runnedCmdStr, srcDataLogStrs);
-        Integer lastKey = listForRunnableLogStrs.isEmpty() ? 0 : listForRunnableLogStrs.lastKey();
+        
         Map.Entry<Integer, String> pollFirstEntryToLog;
         do{
             pollFirstEntryToLog = listForLogStrs.pollFirstEntry();
             if( pollFirstEntryToLog != null ){
-                lastKey++;
-                listForRunnableLogStrs.put(lastKey, pollFirstEntryToLog.getValue());
+                listForRunnableLogStrs.add(pollFirstEntryToLog.getValue());
             }
         }while( pollFirstEntryToLog != null );
         
