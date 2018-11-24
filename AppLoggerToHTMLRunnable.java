@@ -50,12 +50,18 @@ public class AppLoggerToHTMLRunnable implements Runnable {
     
     @Override
     public void run() {
+        ArrayList<String> forRecord = new ArrayList<String>();
+        String poll;
+        do{
+            poll = this.listForLogStrings.poll();
+            forRecord.add(poll);
+        }while( !this.listForLogStrings.isEmpty() );
+        
         
         this.jobIsDone = Boolean.FALSE;
         try {
-            Files.write(this.logFile, this.listForLogStrings, Charset.forName("UTF-8"));
+            Files.write(this.logFile, forRecord, Charset.forName("UTF-8"));
             this.logFileChanged = Boolean.FALSE;
-            this.listForLogStrings.clear();
         } catch (IOException ex) {
             ex.getMessage();
             ex.printStackTrace();

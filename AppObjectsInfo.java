@@ -369,7 +369,8 @@ public class AppObjectsInfo {
         newLogHtmlTableFile = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
         
         AppObjectsInfoHelperHtml.getStringListForSaveTable(listForRunnableLogStrs, listForLogStrs, "readedThread.getClass().getTypeParameters()");
-        
+        listForLogStrs.clear();
+        listForLogStrs = new TreeMap<Integer, String>();
         System.out.println("for second record " + listForRunnableLogStrs.size() + newLogHtmlTableFile.toString());
         
         writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
