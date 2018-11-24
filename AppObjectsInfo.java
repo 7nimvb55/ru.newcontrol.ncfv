@@ -36,6 +36,8 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class AppObjectsInfo {
     
+    
+    
 
     protected static void getThreadDebugInfoToHtml(Thread readedThread){
         String nowTimeStringWithMS = 
@@ -46,9 +48,14 @@ public class AppObjectsInfo {
                 AppFileOperationsSimple.getNewLogFileInLogHTML(logForHtmlCurrentLogSubDir);
         newLogFileInLogHTML.put(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR, logForHtmlCurrentLogSubDir);
         
+        ConcurrentSkipListMap<Integer,ArrayList<String>> commandsOutPut = new ConcurrentSkipListMap<Integer,ArrayList<String>>();
+        AppObjectsInfoHelperClasses.getInitBusInfo(commandsOutPut);
+        
         TreeMap<Integer, String> listForLogStrs = new TreeMap<Integer, String>();
         ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs = new ConcurrentSkipListMap<Integer, String>();
         Path newLogHtmlTableFile = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_TABLE_PREFIX);
+        
+        
         AppLoggerToHTMLRunnable loggerToHtml = new AppLoggerToHTMLRunnable(
                 listForRunnableLogStrs,
                 newLogHtmlTableFile
@@ -60,7 +67,7 @@ public class AppObjectsInfo {
         
         int indexLinesToFile = 0;
         
-
+        AppObjectsInfoHelperHtml.commandOutPutBusToHtml(commandsOutPut,listForRunnableLogStrs);
         
         indexLinesToFile++;
         listForLogStrs.put(indexLinesToFile,
@@ -140,12 +147,13 @@ public class AppObjectsInfo {
                 + readedThread.getClass().isInstance(AppThWorkDirListRun.class));
         indexLinesToFile++;
         
-        listForRunnableLogStrs = AppObjectsInfoHelperHtml.getStringListForSaveTable(listForRunnableLogStrs, listForLogStrs, "readedThread.getStackTrace()");
+        AppObjectsInfoHelperHtml.getStringListForSaveTable(listForRunnableLogStrs, listForLogStrs, "readedThread.getStackTrace()");
         System.out.println("for first record " + listForRunnableLogStrs.size() + "file name" + newLogHtmlTableFile.toString());
         writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
                 
-        //**************
+        
         listForLogStrs.clear();
+        //************** ************** ************** ************** **************
         listForLogStrs = new TreeMap<Integer, String>();
         //listForLogStrs.clear();
         
@@ -355,8 +363,11 @@ public class AppObjectsInfo {
         listForRunnableLogStrs.clear();
         // end for first block lines into recording list
         newLogHtmlTableFile = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
-        listForRunnableLogStrs = AppObjectsInfoHelperHtml.getStringListForSaveTable(listForRunnableLogStrs, listForLogStrs, "readedThread.getClass().getTypeParameters()");
+        
+        AppObjectsInfoHelperHtml.getStringListForSaveTable(listForRunnableLogStrs, listForLogStrs, "readedThread.getClass().getTypeParameters()");
+        
         System.out.println("for second record " + listForRunnableLogStrs.size() + newLogHtmlTableFile.toString());
+        
         writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
         // end for write first block lines into file
         newLogHtmlTableFile = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX);

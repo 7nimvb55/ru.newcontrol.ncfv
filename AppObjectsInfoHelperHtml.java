@@ -16,6 +16,7 @@
 package ru.newcontrol.ncfv;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -25,6 +26,78 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * @author wladimirowichbiaran
  */
 public class AppObjectsInfoHelperHtml {
+    protected static void commandOutPutBusToHtml(
+            ConcurrentSkipListMap<Integer,ArrayList<String>> commandsOutPutBusData,
+            ConcurrentSkipListMap<Integer, String> listStringsForLogInRunnable){
+        Map.Entry<Integer,ArrayList<String>> pollFirstEntryToLog;
+        do{
+            pollFirstEntryToLog = commandsOutPutBusData.pollFirstEntry();
+            if( pollFirstEntryToLog != null ){
+                int indexedSwitch = 0;
+                String forOutPutToLog = "";
+                if( pollFirstEntryToLog.getValue().size() > 1 ){
+                    for( String element : pollFirstEntryToLog.getValue() ){
+                        if( indexedSwitch == 0 ){
+
+                            indexedSwitch++;
+                        }
+                        if( indexedSwitch == 1 ){
+
+                            indexedSwitch = 2;
+                        }
+                        if( indexedSwitch == 2 ){
+
+                            indexedSwitch = 1;
+                        }
+                    }
+                }
+                if( pollFirstEntryToLog.getValue().size() == 1 ){
+                    String forOutTimeStamp = pollFirstEntryToLog.getValue().get(0).length() == 17 
+                            ? getFormatedTimeStamp(pollFirstEntryToLog.getValue().get(0))
+                            : "";
+                    if( forOutTimeStamp.isEmpty() ){
+                        continue;
+                    }
+                    forOutPutToLog = "<h1>Time stamp: " + forOutTimeStamp + "</h1>";
+                }
+                if( pollFirstEntryToLog.getValue().size() == 0 ){
+                    continue;
+                }
+                listStringsForLogInRunnable.put(pollFirstEntryToLog.getKey(), forOutPutToLog);
+            }
+        }while( pollFirstEntryToLog != null );
+        
+    }
+    protected static String getFormatedTimeStamp(String strForFormat){
+        char[] bytesForStampFormat = strForFormat.toCharArray();
+        char[] newStampFormat = {
+            bytesForStampFormat[0],
+            bytesForStampFormat[1],
+            bytesForStampFormat[2],
+            bytesForStampFormat[3],
+            '-',
+            bytesForStampFormat[4],
+            bytesForStampFormat[5],
+            '-',
+            bytesForStampFormat[6],
+            bytesForStampFormat[7],
+            ' ',
+            bytesForStampFormat[8],
+            bytesForStampFormat[9],
+            ':',
+            bytesForStampFormat[10],
+            bytesForStampFormat[11],
+            ':',
+            bytesForStampFormat[12],
+            bytesForStampFormat[13],
+            '.',
+            bytesForStampFormat[14],
+            bytesForStampFormat[15],
+            bytesForStampFormat[16]
+        };
+        String strForReturn = new String(newStampFormat);
+        return strForReturn;
+    }
     protected static TreeMap<Integer, String> getStringListForSaveTableAddThead(String headString,TreeMap<Integer, String> listForLogStrs){
         TreeMap<Integer, String> withTheadLogStrs = new TreeMap<Integer, String>();
         int indexStrs = 0;
@@ -51,14 +124,22 @@ public class AppObjectsInfoHelperHtml {
         return withTheadLogStrs;
     }
     
-    protected static ConcurrentSkipListMap<Integer, String> getStringListForSaveTable(
+    protected static void getStringListForSaveTable(
             ConcurrentSkipListMap<Integer, String> listForRunnableLogStrs,
             TreeMap<Integer, String> srcDataLogStrs,
             String runnedCmdStr){
         
         TreeMap<Integer, String> listForLogStrs = getStringListForSaveTableAddThead(runnedCmdStr, srcDataLogStrs);
-        listForRunnableLogStrs.putAll(listForLogStrs);
-        return listForRunnableLogStrs;
+        Integer lastKey = listForRunnableLogStrs.isEmpty() ? 0 : listForRunnableLogStrs.lastKey();
+        Map.Entry<Integer, String> pollFirstEntryToLog;
+        do{
+            pollFirstEntryToLog = listForLogStrs.pollFirstEntry();
+            if( pollFirstEntryToLog != null ){
+                lastKey++;
+                listForRunnableLogStrs.put(lastKey, pollFirstEntryToLog.getValue());
+            }
+        }while( pollFirstEntryToLog != null );
+        
     }
     
     protected static ConcurrentSkipListMap<Integer, String> getLinesForTopSaveIndex(
