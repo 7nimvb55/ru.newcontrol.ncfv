@@ -39,9 +39,24 @@ public class AppObjectsInfoHelperClasses {
         commandsOutPut.add(initRecTime);
     }
     
-    protected static void getThreadName(Thread detectedThread, ConcurrentSkipListMap<Integer,ArrayList<String>> commandsOutPut){
+    protected static void getThreadName(Thread detectedThread, ArrayBlockingQueue<ArrayList<String>> commandsOutPut){
         String nowTimeStringWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
+        ArrayList<String> strForOut = new ArrayList<String>();
+        strForOut.add(nowTimeStringWithMS);
+        strForOut.add("Thread.toString()");
+        strForOut.add(detectedThread.toString());
+        strForOut.add("Thread.getName()");
+        strForOut.add(detectedThread.getName());
+        strForOut.add("Thread.getPriority()");
+        strForOut.add(String.valueOf(detectedThread.getPriority()));
+        strForOut.add("Thread.getId()");
+        strForOut.add(String.valueOf(detectedThread.getId()));
+        strForOut.add("Thread.getState().name()");
+        strForOut.add(detectedThread.getState().name());
+        strForOut.add("Thread.detectedThread.getState().ordinal()");
+        strForOut.add(String.valueOf(detectedThread.getState().ordinal()));
+        commandsOutPut.add(strForOut);
     }
     
     protected static String getThreadInfoToString(Thread forStrBuild){

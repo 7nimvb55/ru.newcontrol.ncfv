@@ -37,36 +37,50 @@ public class AppObjectsInfoHelperHtml {
             if( pollFirstEntryToLog != null ){
                 String forOutPutToLog = "";
                 if( pollFirstEntryToLog.size() > 1 ){
+                    String forCmdResultOut = "<TBODY>";
+                    listStringsForLogInRunnable.add("<TABLE>");
                     for( String element : pollFirstEntryToLog ){
+                        
                         if( indexedSwitch == 0 ){
-
-                            indexedSwitch++;
-                        }
-                        if( indexedSwitch == 1 ){
-
-                            indexedSwitch = 2;
+                            String forOutTimeStamp = pollFirstEntryToLog.get(0).length() == 17 
+                                ? getFormatedTimeStamp(pollFirstEntryToLog.get(0))
+                                : "";
+                            if( !forOutTimeStamp.isEmpty() ){
+                                listStringsForLogInRunnable.add("<THEAD>");
+                                forOutPutToLog = "<TR><TD>Time stamp</TD><TD>" + forOutTimeStamp + "</TD></TR>";
+                                listStringsForLogInRunnable.add(forOutPutToLog);
+                                forOutPutToLog = "<TR><TD>Command</TD><TD>Result</TD></TR>";
+                                listStringsForLogInRunnable.add(forOutPutToLog);
+                                listStringsForLogInRunnable.add("</THEAD>");
+                            }
+                            indexedSwitch = 1;
+                            continue;
                         }
                         if( indexedSwitch == 2 ){
-
+                            listStringsForLogInRunnable.add(forCmdResultOut.concat("<TD>" + element + "</TD>") + "</TR>");
+                            forCmdResultOut = "";
                             indexedSwitch = 1;
                         }
+                        if( indexedSwitch == 1 ){
+                            forCmdResultOut = forCmdResultOut.concat("<TR><TD>" + element + "</TD>");
+                            indexedSwitch = 2;
+                        }
+                        
                     }
+                    listStringsForLogInRunnable.add("</TBODY>");
+                    listStringsForLogInRunnable.add("</TABLE>");
                 }
                 if( pollFirstEntryToLog.size() == 1 ){
                     String forOutTimeStamp = pollFirstEntryToLog.get(0).length() == 17 
                             ? getFormatedTimeStamp(pollFirstEntryToLog.get(0))
                             : "";
-                    if( forOutTimeStamp.isEmpty() ){
-                        continue;
+                    if( !forOutTimeStamp.isEmpty() ){
+                        forOutPutToLog = "<h1>Time stamp: " + forOutTimeStamp + "</h1>";
+                        listStringsForLogInRunnable.add(forOutPutToLog);
                     }
-                    forOutPutToLog = "<h1>Time stamp: " + forOutTimeStamp + "</h1>";
                 }
-                if( pollFirstEntryToLog.size() == 0 ){
-                    continue;
-                }
-                listStringsForLogInRunnable.add(forOutPutToLog);
             }
-        }while( pollFirstEntryToLog != null );
+        }while( !commandsOutPutBusData.isEmpty() );
     }
     
     protected static String getFormatedTimeStamp(String strForFormat){

@@ -50,13 +50,13 @@ public class AppLoggerToHTMLRunnable implements Runnable {
     
     @Override
     public void run() {
-        ArrayList<String> forRecord = new ArrayList<String>();
+        /*ArrayList<String> forRecord = new ArrayList<String>();
         String poll;
         do{
             poll = this.listForLogStrings.poll();
             forRecord.add(poll);
-        }while( !this.listForLogStrings.isEmpty() );
-        
+        }while( !this.listForLogStrings.isEmpty() );*/
+        ArrayList<String> forRecord = AppObjectsBusHelper.cleanBusArrayBlockingToArrayString(this.listForLogStrings);
         
         this.jobIsDone = Boolean.FALSE;
         try {

@@ -48,17 +48,17 @@ public class AppObjectsInfo {
         ConcurrentSkipListMap<String, Path> newLogFileInLogHTML = 
                 AppFileOperationsSimple.getNewLogFileInLogHTML(logForHtmlCurrentLogSubDir);
         newLogFileInLogHTML.put(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR, logForHtmlCurrentLogSubDir);
+        
+        
         Integer messagesQueueSize = 1000;
         ArrayBlockingQueue<ArrayList<String>> commandsOutPut = new ArrayBlockingQueue<ArrayList<String>>(messagesQueueSize);
         AppObjectsInfoHelperClasses.getInitBusInfo(commandsOutPut);
         
+        ArrayBlockingQueue<String> listForRunnableLogStrs = new ArrayBlockingQueue<String>(messagesQueueSize);
+        
         TreeMap<Integer, String> listForLogStrs = new TreeMap<Integer, String>();
         
-        
-        
-        ArrayBlockingQueue<String> listForRunnableLogStrs = new ArrayBlockingQueue<String>(messagesQueueSize);
         Path newLogHtmlTableFile = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_TABLE_PREFIX);
-        
         
         AppLoggerToHTMLRunnable loggerToHtml = new AppLoggerToHTMLRunnable(
                 listForRunnableLogStrs,
@@ -71,7 +71,10 @@ public class AppObjectsInfo {
         
         int indexLinesToFile = 0;
         
+        AppObjectsInfoHelperClasses.getThreadName(readedThread, commandsOutPut);
+        
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(commandsOutPut,listForRunnableLogStrs);
+        
         
         indexLinesToFile++;
         listForLogStrs.put(indexLinesToFile,
@@ -420,8 +423,9 @@ public class AppObjectsInfo {
                 }
             }while( pollFirstEntryIndexFile != null );
             
-            System.out.println(" for index record " + listForRunnableLogStrs.size() + newLogHtmlTableFile.toString());
+            System.out.println(" for index record " + listForRunnableLogStrs.size() + " open in browser " + newLogHtmlTableFile.toString());
             writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
+            
         }
         
     }
