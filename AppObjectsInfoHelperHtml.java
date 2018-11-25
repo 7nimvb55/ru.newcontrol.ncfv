@@ -40,7 +40,6 @@ public class AppObjectsInfoHelperHtml {
                     String forCmdResultOut = "<TBODY>";
                     listStringsForLogInRunnable.add("<TABLE>");
                     for( String element : pollFirstEntryToLog ){
-                        
                         if( indexedSwitch == 0 ){
                             String forOutTimeStamp = pollFirstEntryToLog.get(0).length() == 17 
                                 ? getFormatedTimeStamp(pollFirstEntryToLog.get(0))
@@ -52,6 +51,7 @@ public class AppObjectsInfoHelperHtml {
                                 forOutPutToLog = "<TR><TH>Command</TH><TH>Result</TH></TR>";
                                 listStringsForLogInRunnable.add(forOutPutToLog);
                                 listStringsForLogInRunnable.add("</THEAD>");
+                                forOutPutToLog = "";
                             }
                             indexedSwitch = 1;
                             continue;
@@ -60,12 +60,13 @@ public class AppObjectsInfoHelperHtml {
                             listStringsForLogInRunnable.add(forCmdResultOut.concat("<TD>" + element + "</TD>") + "</TR>");
                             forCmdResultOut = "";
                             indexedSwitch = 1;
+                            continue;
                         }
                         if( indexedSwitch == 1 ){
                             forCmdResultOut = forCmdResultOut.concat("<TR><TD>" + element + "</TD>");
                             indexedSwitch = 2;
+                            continue;
                         }
-                        
                     }
                     listStringsForLogInRunnable.add("</TBODY>");
                     listStringsForLogInRunnable.add("</TABLE>");

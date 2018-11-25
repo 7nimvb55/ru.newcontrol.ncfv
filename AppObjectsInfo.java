@@ -74,7 +74,8 @@ public class AppObjectsInfo {
         AppObjectsInfoHelperClasses.getThreadName(readedThread, commandsOutPut);
         
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(commandsOutPut,listForRunnableLogStrs);
-        
+        AppObjectsInfoHelperClasses.getThreadClass(readedThread, commandsOutPut);
+        AppObjectsInfoHelperHtml.commandOutPutBusToHtml(commandsOutPut,listForRunnableLogStrs);
         
         indexLinesToFile++;
         listForLogStrs.put(indexLinesToFile,

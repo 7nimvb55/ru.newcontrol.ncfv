@@ -54,8 +54,85 @@ public class AppObjectsInfoHelperClasses {
         strForOut.add(String.valueOf(detectedThread.getId()));
         strForOut.add("Thread.getState().name()");
         strForOut.add(detectedThread.getState().name());
-        strForOut.add("Thread.detectedThread.getState().ordinal()");
+        strForOut.add("Thread.getState().ordinal()");
         strForOut.add(String.valueOf(detectedThread.getState().ordinal()));
+        strForOut.add("Thread.hashCode()");
+        strForOut.add(String.valueOf(detectedThread.hashCode()));
+        strForOut.add("Thread.isAlive()");
+        strForOut.add(String.valueOf(detectedThread.isAlive()));
+        strForOut.add("Thread.isDaemon()");
+        strForOut.add(String.valueOf(detectedThread.isDaemon()));
+        strForOut.add("Thread.isInterrupted()");
+        strForOut.add(String.valueOf(detectedThread.isInterrupted()));
+        commandsOutPut.add(strForOut);
+    }
+    
+    protected static void getThreadClass(Thread detectedThread, ArrayBlockingQueue<ArrayList<String>> commandsOutPut){
+        String nowTimeStringWithMS = 
+                AppFileOperationsSimple.getNowTimeStringWithMS();
+        ArrayList<String> strForOut = new ArrayList<String>();
+        strForOut.add(nowTimeStringWithMS);
+        strForOut.add("Thread.getClass().getName()");
+        strForOut.add(detectedThread.getClass().getName());
+        strForOut.add("Thread.getClass().getCanonicalName()");
+        strForOut.add(detectedThread.getClass().getCanonicalName());
+        strForOut.add("Thread.getClass().getModifiers()");
+        strForOut.add(String.valueOf(detectedThread.getClass().getModifiers()));
+        strForOut.add("Thread.getClass().getSimpleName()");
+        strForOut.add(detectedThread.getClass().getSimpleName());
+        strForOut.add("Thread.getClass().getTypeName()");
+        strForOut.add(detectedThread.getClass().getTypeName());
+        strForOut.add("Thread.getClass().toGenericString()");
+        strForOut.add(detectedThread.getClass().toGenericString());
+        strForOut.add("Thread.getClass().hashCode()");
+        strForOut.add(String.valueOf(detectedThread.getClass().hashCode()));
+        // get all methods returned resuts in array
+        strForOut.add("Thread.getClass().getAnnotatedInterfaces().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getAnnotatedInterfaces().length));
+        strForOut.add("Thread.getClass().getAnnotations().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getAnnotations().length));
+        strForOut.add("Thread.getClass().getClasses().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getClasses().length));
+        strForOut.add("Thread.getClass().getConstructors().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getConstructors().length));
+        strForOut.add("Thread.getClass().getDeclaredAnnotations().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getDeclaredAnnotations().length));
+        strForOut.add("Thread.getClass().getDeclaredClasses().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getDeclaredClasses().length));
+        strForOut.add("Thread.getClass().getDeclaredConstructors().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getDeclaredConstructors().length));
+        strForOut.add("Thread.getClass().getDeclaredFields().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getDeclaredFields().length));
+        strForOut.add("Thread.getClass().getDeclaredMethods().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getDeclaredMethods().length));
+//        strForOut.add("Thread.getClass().getEnumConstants().toString()");
+//        strForOut.add(String.valueOf(detectedThread.getClass().getEnumConstants().toString()));
+        strForOut.add("Thread.getClass().getEnumConstants().length");
+        Object resultGetEnumConstants[] = detectedThread.getClass().getEnumConstants();
+        if( resultGetEnumConstants != null ){
+            strForOut.add(String.valueOf(resultGetEnumConstants.length));
+        } else {
+            strForOut.add("null");
+        }
+        strForOut.add("Thread.getClass().getFields().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getFields().length));
+        strForOut.add("Thread.getClass().getGenericInterfaces().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getGenericInterfaces().length));
+        strForOut.add("Thread.getClass().getInterfaces().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getInterfaces().length));
+        strForOut.add("Thread.getClass().getMethods().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getMethods().length));
+//        strForOut.add("Thread.getClass().getSigners().length");
+//        strForOut.add(String.valueOf(detectedThread.getClass().getSigners().length));
+        strForOut.add("Thread.getClass().getSigners().length");
+        Object resultGetSigners[] = detectedThread.getClass().getSigners();
+        if( resultGetSigners != null ){
+            strForOut.add(String.valueOf(resultGetSigners.length));
+        } else {
+            strForOut.add("null");
+        }
+        strForOut.add("Thread.getClass().getTypeParameters().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getTypeParameters().length));
         commandsOutPut.add(strForOut);
     }
     
@@ -299,6 +376,7 @@ public class AppObjectsInfoHelperClasses {
         }
         return listStrToRet;
     }
+    //@todo this and next function recode for getThreadClassFormat
     private static ArrayList<String> getDeclaredMethodsInfo(Class<?> classInFunc){
         ArrayList<String> listStrToRet = new ArrayList<String>();
         String strToOut = "";
