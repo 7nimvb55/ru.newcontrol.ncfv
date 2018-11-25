@@ -199,8 +199,28 @@ public class AppObjectsInfoHelperClasses {
                     strForOut.add(String.valueOf(parameters.length));
                     int indexOfParam = 0;
                     for (Parameter parameter : parameters) {
+                        //String results
                         strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].getName()");
                         strForOut.add(parameter.getName());
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].toString()");
+                        strForOut.add(parameter.toString());
+                        //Integer results
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].getModifiers()");
+                        strForOut.add(String.valueOf(parameter.getModifiers()));
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].hashCode()");
+                        strForOut.add(String.valueOf(parameter.hashCode()));
+                        //Boolean results
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].isImplicit()");
+                        strForOut.add(String.valueOf(parameter.isImplicit()));
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].isNamePresent()");
+                        strForOut.add(String.valueOf(parameter.isNamePresent()));
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].isSynthetic()");
+                        strForOut.add(String.valueOf(parameter.isSynthetic()));
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].isVarArgs()");
+                        strForOut.add(String.valueOf(parameter.isVarArgs()));
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].getParameterizedType().getTypeName()");
+                        //String results
+                        strForOut.add(String.valueOf(parameter.getParameterizedType().getTypeName()));
                         indexOfParam++;
                     }
                 } else {
