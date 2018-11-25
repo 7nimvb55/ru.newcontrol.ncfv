@@ -133,9 +133,67 @@ public class AppObjectsInfoHelperClasses {
         }
         strForOut.add("Thread.getClass().getTypeParameters().length");
         strForOut.add(String.valueOf(detectedThread.getClass().getTypeParameters().length));
+        //get all methods and returned result in boolean
+        strForOut.add("Thread.getClass().desiredAssertionStatus()");
+        strForOut.add(String.valueOf(detectedThread.getClass().desiredAssertionStatus()));
+        strForOut.add("Thread.getClass().isAnnotation()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isAnnotation()));
+        strForOut.add("Thread.getClass().isAnonymousClass()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isAnonymousClass()));
+        strForOut.add("Thread.getClass().isArray()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isArray()));
+        strForOut.add("Thread.getClass().isEnum()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isEnum()));
+        strForOut.add("Thread.getClass().isInterface()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isInterface()));
+        strForOut.add("Thread.getClass().isLocalClass()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isLocalClass()));
+        strForOut.add("Thread.getClass().isMemberClass()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isMemberClass()));
+        strForOut.add("Thread.getClass().isPrimitive()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isPrimitive()));
+        strForOut.add("Thread.getClass().isSynthetic()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isSynthetic()));
         commandsOutPut.add(strForOut);
     }
-    
+    protected static void  getThreadClassGetDeclaredMethods(Thread detectedThread, ArrayBlockingQueue<ArrayList<String>> commandsOutPut){
+        String nowTimeStringWithMS = 
+                AppFileOperationsSimple.getNowTimeStringWithMS();
+        ArrayList<String> strForOut = new ArrayList<String>();
+        strForOut.add(nowTimeStringWithMS);
+        strForOut.add("Thread.getClass().getDeclaredMethods().length");
+        Method resultGetDeclaredMethods[] = detectedThread.getClass().getDeclaredMethods();
+        if( resultGetDeclaredMethods != null ){
+            strForOut.add(String.valueOf(resultGetDeclaredMethods.length));
+            int idexOfMethod = 0;
+            for(Method elementOfMethods : resultGetDeclaredMethods){
+                strForOut.add("Thread.getClass().getDeclaredMethods()[" + idexOfMethod + "].getName()");
+                strForOut.add(elementOfMethods.getName());
+                strForOut.add("Thread.getClass().getDeclaredMethods()[" + idexOfMethod + "].getParameters().length");
+                Parameter[] parameters = elementOfMethods.getParameters();
+                if( resultGetDeclaredMethods != null ){
+                    strForOut.add(String.valueOf(parameters.length));
+                    int indexOfParam = 0;
+                    for (Parameter parameter : parameters) {
+                        strForOut.add("Thread.getClass().getDeclaredMethods()[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].getName(");
+                        strForOut.add(parameter.getName());
+                        indexOfParam++;
+                    }
+                } else {
+                    strForOut.add("null");
+                }
+                idexOfMethod++;
+            }
+            
+            
+        } else {
+            strForOut.add("null");
+        }
+        
+        
+        
+        commandsOutPut.add(strForOut);
+    }
     protected static String getThreadInfoToString(Thread forStrBuild){
         ThreadGroup threadGroup = forStrBuild.getThreadGroup();
         String nameThreadGroup = threadGroup.getName();
