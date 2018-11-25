@@ -50,7 +50,7 @@ public class AppObjectsInfo {
         newLogFileInLogHTML.put(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR, logForHtmlCurrentLogSubDir);
         
         
-        Integer messagesQueueSize = 1000;
+        Integer messagesQueueSize = 10000;
         ArrayBlockingQueue<ArrayList<String>> commandsOutPut = new ArrayBlockingQueue<ArrayList<String>>(messagesQueueSize);
         AppObjectsInfoHelperClasses.getInitBusInfo(commandsOutPut);
         
@@ -77,6 +77,9 @@ public class AppObjectsInfo {
         AppObjectsInfoHelperClasses.getThreadClass(readedThread, commandsOutPut);
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(commandsOutPut,listForRunnableLogStrs);
         
+        
+        AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethods(readedThread, commandsOutPut);
+        AppObjectsInfoHelperHtml.commandOutPutBusToHtml(commandsOutPut,listForRunnableLogStrs);
         indexLinesToFile++;
         listForLogStrs.put(indexLinesToFile,
                 "[NAME]" + readedThread.getName()
@@ -158,9 +161,9 @@ public class AppObjectsInfo {
         AppObjectsInfoHelperHtml.getStringListForSaveTable(listForRunnableLogStrs, listForLogStrs, "readedThread.getStackTrace()");
         System.out.println("for first record " + listForRunnableLogStrs.size() + "file name" + newLogHtmlTableFile.toString());
         writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
-                
+        listForLogStrs.clear();        
         
-        listForLogStrs.clear();
+        
         //************** ************** ************** ************** **************
         listForLogStrs = new TreeMap<Integer, String>();
         //listForLogStrs.clear();

@@ -167,15 +167,39 @@ public class AppObjectsInfoHelperClasses {
             strForOut.add(String.valueOf(resultGetDeclaredMethods.length));
             int idexOfMethod = 0;
             for(Method elementOfMethods : resultGetDeclaredMethods){
-                strForOut.add("Thread.getClass().getDeclaredMethods()[" + idexOfMethod + "].getName()");
+                //Strings results
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].getName()");
                 strForOut.add(elementOfMethods.getName());
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].toGenericString()");
+                strForOut.add(elementOfMethods.toGenericString());
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].toString()");
+                strForOut.add(elementOfMethods.toString());
+                //Booleans results
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].isAccessible()");
+                strForOut.add(String.valueOf(elementOfMethods.isAccessible()));
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].isBridge()");
+                strForOut.add(String.valueOf(elementOfMethods.isBridge()));
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].isDefault()");
+                strForOut.add(String.valueOf(elementOfMethods.isDefault()));
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].isSynthetic()");
+                strForOut.add(String.valueOf(elementOfMethods.isSynthetic()));
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].isVarArgs()");
+                strForOut.add(String.valueOf(elementOfMethods.isVarArgs()));
+                //Integer results
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].getModifiers()");
+                strForOut.add(String.valueOf(elementOfMethods.getModifiers()));
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].getParameterCount()");
+                strForOut.add(String.valueOf(elementOfMethods.getParameterCount()));
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].hashCode()");
+                strForOut.add(String.valueOf(elementOfMethods.hashCode()));
+                
                 strForOut.add("Thread.getClass().getDeclaredMethods()[" + idexOfMethod + "].getParameters().length");
                 Parameter[] parameters = elementOfMethods.getParameters();
                 if( resultGetDeclaredMethods != null ){
                     strForOut.add(String.valueOf(parameters.length));
                     int indexOfParam = 0;
                     for (Parameter parameter : parameters) {
-                        strForOut.add("Thread.getClass().getDeclaredMethods()[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].getName(");
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].getName()");
                         strForOut.add(parameter.getName());
                         indexOfParam++;
                     }
