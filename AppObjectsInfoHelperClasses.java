@@ -156,7 +156,9 @@ public class AppObjectsInfoHelperClasses {
         strForOut.add(String.valueOf(detectedThread.getClass().isSynthetic()));
         commandsOutPut.add(strForOut);
     }
-    protected static void  getThreadClassGetDeclaredMethods(Thread detectedThread, ArrayBlockingQueue<ArrayList<String>> commandsOutPut){
+    protected static void  getThreadClassGetDeclaredMethods(
+            Thread detectedThread, 
+            ArrayBlockingQueue<ArrayList<String>> commandsOutPut){
         String nowTimeStringWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
         ArrayList<String> strForOut = new ArrayList<String>();

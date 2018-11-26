@@ -71,15 +71,24 @@ public class AppObjectsInfo {
         
         int indexLinesToFile = 0;
         
-        AppObjectsInfoHelperClasses.getThreadName(readedThread, commandsOutPut);
         
+        AppObjectsInfoHelperClasses.getThreadName(readedThread, commandsOutPut);
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(commandsOutPut,listForRunnableLogStrs);
+        
+        writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
+        
+        newLogHtmlTableFile = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
+        
         AppObjectsInfoHelperClasses.getThreadClass(readedThread, commandsOutPut);
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(commandsOutPut,listForRunnableLogStrs);
+        writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
         
+        newLogHtmlTableFile = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
         
         AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethods(readedThread, commandsOutPut);
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(commandsOutPut,listForRunnableLogStrs);
+        writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
+        
         indexLinesToFile++;
         listForLogStrs.put(indexLinesToFile,
                 "[NAME]" + readedThread.getName()
@@ -157,7 +166,7 @@ public class AppObjectsInfo {
                         
                 + readedThread.getClass().isInstance(AppThWorkDirListRun.class));
         indexLinesToFile++;
-        
+        newLogHtmlTableFile = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
         AppObjectsInfoHelperHtml.getStringListForSaveTable(listForRunnableLogStrs, listForLogStrs, "readedThread.getStackTrace()");
         System.out.println("for first record " + listForRunnableLogStrs.size() + "file name" + newLogHtmlTableFile.toString());
         writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
@@ -386,32 +395,34 @@ public class AppObjectsInfo {
         listForRunnableLogStrs.clear();
         
         
-        ConcurrentSkipListMap<Integer, String> linesForSaveJsMenu = AppObjectsInfoHelperHtml.getLinesForSaveJsMenu();
-        Map.Entry<Integer, String> pollFirstEntryJsMenu;
+        ArrayBlockingQueue<String> linesForSaveJsMenu = AppObjectsInfoHelperHtml.getLinesForSaveJsMenu();
+        /*Map.Entry<Integer, String> pollFirstEntryJsMenu;
         do{
             pollFirstEntryJsMenu = linesForSaveJsMenu.pollFirstEntry();
             if(pollFirstEntryJsMenu != null){
                 listForRunnableLogStrs.add(pollFirstEntryJsMenu.getValue());
             }
-        }while( pollFirstEntryJsMenu != null );
+        }while( pollFirstEntryJsMenu != null );*/
         
-        writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
+        writeLinesToFileByRunnable(linesForSaveJsMenu, loggerToHtml, newLogHtmlTableFile);
         //********* ************* ************ ************** ************** ***************
         newLogHtmlTableFile = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX);
         listForRunnableLogStrs.clear();
-        ConcurrentSkipListMap<Integer, String> linesForSaveCss = AppObjectsInfoHelperHtml.getLinesForSaveCss();
-        Map.Entry<Integer, String> pollFirstEntryCss;
+        ArrayBlockingQueue<String> linesForSaveCss = AppObjectsInfoHelperHtml.getLinesForSaveCss();
+        /*Map.Entry<Integer, String> pollFirstEntryCss;
         do{
             pollFirstEntryCss = linesForSaveCss.pollFirstEntry();
             if( pollFirstEntryCss != null ){
                 listForRunnableLogStrs.add(pollFirstEntryCss.getValue());
             }
-        }while( pollFirstEntryCss != null );
+        }while( pollFirstEntryCss != null );*/
         
-        writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
+        writeLinesToFileByRunnable(linesForSaveCss, loggerToHtml, newLogHtmlTableFile);
         //********* ************* ************ ************** ************** ***************
-        ConcurrentSkipListMap<Integer, String> generatedLinesForIndexFile =
-                new ConcurrentSkipListMap<Integer, String>();
+        
+        ArrayBlockingQueue<String> generatedLinesForIndexFile = new ArrayBlockingQueue<String>(messagesQueueSize);
+        /*ConcurrentSkipListMap<Integer, String> generatedLinesForIndexFile =
+                new ConcurrentSkipListMap<Integer, String>();*/
         generateIndexFile(generatedLinesForIndexFile, newLogFileInLogHTML);
         // make index file
         if( generatedLinesForIndexFile.size() > 0 ){
@@ -419,13 +430,13 @@ public class AppObjectsInfo {
 
             listForRunnableLogStrs.clear();
 
-            Map.Entry<Integer, String> pollFirstEntryIndexFile;
+            String pollFirstEntryIndexFile = "";
             do{
-                pollFirstEntryIndexFile = generatedLinesForIndexFile.pollFirstEntry();
+                pollFirstEntryIndexFile = generatedLinesForIndexFile.poll();
                 if( pollFirstEntryIndexFile != null ){
-                    listForRunnableLogStrs.add(pollFirstEntryIndexFile.getValue());
+                    listForRunnableLogStrs.add(pollFirstEntryIndexFile);
                 }
-            }while( pollFirstEntryIndexFile != null );
+            }while( !generatedLinesForIndexFile.isEmpty() );
             
             System.out.println(" for index record " + listForRunnableLogStrs.size() + " open in browser " + newLogHtmlTableFile.toString());
             writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
@@ -487,7 +498,7 @@ public class AppObjectsInfo {
         }
     }
     
-    protected static void readLinesFromFileByRunnable(ConcurrentSkipListMap<Integer, String> listStrFromFile,
+    protected static void readLinesFromFileByRunnable(ArrayBlockingQueue<String> listStrFromFile,
             AppLoggerFromHTMLRunnable readerFromHtmlFile,
             Path fileForWrite){
         
@@ -541,58 +552,32 @@ public class AppObjectsInfo {
     }
     
     protected static void generateIndexFile(
-            ConcurrentSkipListMap<Integer, String> returnedLinesForIndexFile,
+            ArrayBlockingQueue<String> returnedLinesForIndexFile,
             ConcurrentSkipListMap<String, Path> listOfFileInLogHTML){
         
         Path dirForRead = listOfFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR);
         ArrayList<Path> filesByMaskFromDir = AppFileOperationsSimple.getFilesByMaskFromDir(
                 dirForRead,
                 "{" + AppFileNamesConstants.LOG_HTML_TABLE_PREFIX + "}*");
-        
-        ConcurrentSkipListMap<Integer, String> readedLinesFromLogHTML = new ConcurrentSkipListMap<Integer, String>();
-        TreeMap<Path, TreeMap<Integer, String>> filePathlinesFromReadedHtmlTable = 
-                new TreeMap<Path, TreeMap<Integer, String>>();
+        Integer messagesQueueSize = 10000;
+        ArrayBlockingQueue<String> readedLinesFromLogHTML = new ArrayBlockingQueue<String>(messagesQueueSize);
+        //ConcurrentSkipListMap<Integer, String> readedLinesFromLogHTML = new ConcurrentSkipListMap<Integer, String>();
+        ConcurrentSkipListMap<Path, ArrayBlockingQueue<String>> filePathlinesFromReadedHtmlTable = 
+                new ConcurrentSkipListMap<Path, ArrayBlockingQueue<String>>();
         if( filesByMaskFromDir.size() > 0 ){
-            TreeMap<Integer, String> linesFromReadedHtmlTable = new TreeMap<Integer, String>();
             Path forFirstRead = filesByMaskFromDir.get(0);
             AppLoggerFromHTMLRunnable readerFromHtmlFile = new AppLoggerFromHTMLRunnable(
                     readedLinesFromLogHTML,
                     forFirstRead);
-                    
-            for( Path fileForRead : filesByMaskFromDir ){
-                    linesFromReadedHtmlTable.clear();
-                    readLinesFromFileByRunnable(readedLinesFromLogHTML, readerFromHtmlFile, fileForRead);
-
-                        Map.Entry<Integer, String> pollFirstEntry;
-                        do{
-                            pollFirstEntry = readedLinesFromLogHTML.pollFirstEntry();
-                            if( pollFirstEntry != null ){
-                                linesFromReadedHtmlTable.put(pollFirstEntry.getKey(), pollFirstEntry.getValue());
-                            }
-                        }while( pollFirstEntry != null );
-                        
-                        TreeMap<Integer, String> linesTransfer  = (TreeMap<Integer, String>) linesFromReadedHtmlTable.clone();
-                        filePathlinesFromReadedHtmlTable.put(fileForRead, linesTransfer);
-            }
-            readedLinesFromLogHTML.clear();
-        }
-        //concatination for top lines of html, data from table files, bottom lines of html
-        if( filePathlinesFromReadedHtmlTable.size() > 0 ){
             Path fileJsMenuPrefix = listOfFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX).getFileName();
             Path fileCssPrefix = listOfFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX).getFileName();
-            AppObjectsInfoHelperHtml.getLinesForTopSaveIndex(returnedLinesForIndexFile, fileJsMenuPrefix, fileCssPrefix);
-            int indexOfLines = returnedLinesForIndexFile.lastKey();
-            indexOfLines++;
-            for( Map.Entry<Path, TreeMap<Integer, String>> element : filePathlinesFromReadedHtmlTable.entrySet() ){
-                indexOfLines++;
-                returnedLinesForIndexFile.put(indexOfLines, "<h2>" + element.getKey().toString() + "</h2>");
-                indexOfLines++;
-                for( Map.Entry<Integer, String> elementOfLines : element.getValue().entrySet() ){
-                    returnedLinesForIndexFile.put(indexOfLines, elementOfLines.getValue() );
-                    indexOfLines++;
-                }
+            AppObjectsInfoHelperHtml.getLinesForTopSaveIndex(returnedLinesForIndexFile, fileJsMenuPrefix, fileCssPrefix);        
+            for( Path fileForRead : filesByMaskFromDir ){
+                readLinesFromFileByRunnable(returnedLinesForIndexFile, readerFromHtmlFile, fileForRead);
+                String strForAncor = "<a name=\"" + fileForRead.getFileName().toString().split("\\.")[0] + "\">";
+                returnedLinesForIndexFile.add("<p>" + fileForRead.toString() + "</p>" + "</a>");
             }
-            indexOfLines++;
+            //indexOfLines++;
             AppObjectsInfoHelperHtml.getLinesForBottomSaveIndex(returnedLinesForIndexFile);
             
         }

@@ -20,6 +20,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
@@ -28,14 +29,14 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class AppLoggerFromHTMLRunnable implements Runnable {
     
-    private ConcurrentSkipListMap<Integer, String> listForLogStrings;
+    private ArrayBlockingQueue<String> listForLogStrings;
     private Path logFile;
     private Boolean logFileChanged;
     private Boolean jobIsDone;
     private Boolean isNewRunner;
 
     public AppLoggerFromHTMLRunnable(
-            ConcurrentSkipListMap<Integer, String> listForLogStrs, 
+            ArrayBlockingQueue<String> listForLogStrs, 
             Path readedLogFile) {
         super();
         this.isNewRunner = Boolean.TRUE;
@@ -53,10 +54,10 @@ public class AppLoggerFromHTMLRunnable implements Runnable {
         ArrayList<String> readedLines = new ArrayList<String>();
         try {
             readedLines.addAll(Files.readAllLines(this.logFile, Charset.forName("UTF-8")));
-            int readedLinesIndex = 0;
+            
             for(String lineElement : readedLines){
-                this.listForLogStrings.put(readedLinesIndex, lineElement);
-                readedLinesIndex++;
+                this.listForLogStrings.add(lineElement);
+                
             }
             this.logFileChanged = Boolean.FALSE;
         } catch (IOException ex) {
@@ -66,7 +67,7 @@ public class AppLoggerFromHTMLRunnable implements Runnable {
         this.jobIsDone = Boolean.TRUE;
         this.isNewRunner = Boolean.FALSE;
     }
-    protected ConcurrentSkipListMap<Integer, String> getReadedString(){
+    protected ArrayBlockingQueue<String> getReadedString(){
         return this.listForLogStrings;
     }
     protected void setNewLogFileName(Path newLogFileName){
