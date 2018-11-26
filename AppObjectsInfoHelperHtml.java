@@ -229,11 +229,11 @@ public class AppObjectsInfoHelperHtml {
             String strForAncor = fileForRead.getFileName().toString().split("\\.")[0];
             String strForMenuTitle = strForAncor.split("-")[1];
             
-            listForRunnableLogStrs.add("            <li><a href=\"#" 
-                    + strForAncor 
-                    + "\" onclick=\"openMenu(this);return false\">" + strForMenuTitle + "</a>");
+            listForRunnableLogStrs.add("            <li><a href=\"#\" onclick=\"openMenu(this);return false\">" + strForMenuTitle + "</a>");
             listForRunnableLogStrs.add("                <ul>");
-            listForRunnableLogStrs.add("                  <li><a href=\"#\">sub menu 1</a></li>");
+            listForRunnableLogStrs.add("                  <li><a href=\"#" 
+                + strForAncor 
+                + "\">goto table</a></li>");
             listForRunnableLogStrs.add("                  <li><a href=\"#\">sub menu 2</a></li>");
             listForRunnableLogStrs.add("                  <li><a href=\"#\">sub menu 3</a></li>");
             listForRunnableLogStrs.add("                  <li><a href=\"#\">sub menu 4</a></li>");
