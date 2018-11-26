@@ -561,9 +561,7 @@ public class AppObjectsInfo {
                 "{" + AppFileNamesConstants.LOG_HTML_TABLE_PREFIX + "}*");
         Integer messagesQueueSize = 10000;
         ArrayBlockingQueue<String> readedLinesFromLogHTML = new ArrayBlockingQueue<String>(messagesQueueSize);
-        //ConcurrentSkipListMap<Integer, String> readedLinesFromLogHTML = new ConcurrentSkipListMap<Integer, String>();
-        ConcurrentSkipListMap<Path, ArrayBlockingQueue<String>> filePathlinesFromReadedHtmlTable = 
-                new ConcurrentSkipListMap<Path, ArrayBlockingQueue<String>>();
+
         if( filesByMaskFromDir.size() > 0 ){
             Path forFirstRead = filesByMaskFromDir.get(0);
             AppLoggerFromHTMLRunnable readerFromHtmlFile = new AppLoggerFromHTMLRunnable(
@@ -573,9 +571,11 @@ public class AppObjectsInfo {
             Path fileCssPrefix = listOfFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX).getFileName();
             AppObjectsInfoHelperHtml.getLinesForTopSaveIndex(returnedLinesForIndexFile, fileJsMenuPrefix, fileCssPrefix);        
             for( Path fileForRead : filesByMaskFromDir ){
-                readLinesFromFileByRunnable(returnedLinesForIndexFile, readerFromHtmlFile, fileForRead);
+                readLinesFromFileByRunnable(readedLinesFromLogHTML, readerFromHtmlFile, fileForRead);
                 String strForAncor = "<a name=\"" + fileForRead.getFileName().toString().split("\\.")[0] + "\">";
-                returnedLinesForIndexFile.add("<p>" + fileForRead.toString() + "</p>" + "</a>");
+                readedLinesFromLogHTML.add("<p>" + fileForRead.toString() + "</p>" + "</a>");
+                returnedLinesForIndexFile.addAll(readedLinesFromLogHTML);
+                readedLinesFromLogHTML.clear();
             }
             //indexOfLines++;
             AppObjectsInfoHelperHtml.getLinesForBottomSaveIndex(returnedLinesForIndexFile);
