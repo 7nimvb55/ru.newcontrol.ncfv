@@ -396,28 +396,28 @@ public class AppObjectsInfo {
         
         
         ArrayBlockingQueue<String> linesForSaveJsMenu = AppObjectsInfoHelperHtml.getLinesForSaveJsMenu();
-        /*Map.Entry<Integer, String> pollFirstEntryJsMenu;
-        do{
-            pollFirstEntryJsMenu = linesForSaveJsMenu.pollFirstEntry();
-            if(pollFirstEntryJsMenu != null){
-                listForRunnableLogStrs.add(pollFirstEntryJsMenu.getValue());
-            }
-        }while( pollFirstEntryJsMenu != null );*/
+        String pollFirstForSaveJsMenu = "";
+            do{
+                pollFirstForSaveJsMenu = linesForSaveJsMenu.poll();
+                if( pollFirstForSaveJsMenu != null ){
+                    listForRunnableLogStrs.add(pollFirstForSaveJsMenu);
+                }
+            }while( !linesForSaveJsMenu.isEmpty() );
         
-        writeLinesToFileByRunnable(linesForSaveJsMenu, loggerToHtml, newLogHtmlTableFile);
+        writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
         //********* ************* ************ ************** ************** ***************
         newLogHtmlTableFile = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX);
         listForRunnableLogStrs.clear();
         ArrayBlockingQueue<String> linesForSaveCss = AppObjectsInfoHelperHtml.getLinesForSaveCss();
-        /*Map.Entry<Integer, String> pollFirstEntryCss;
-        do{
-            pollFirstEntryCss = linesForSaveCss.pollFirstEntry();
-            if( pollFirstEntryCss != null ){
-                listForRunnableLogStrs.add(pollFirstEntryCss.getValue());
-            }
-        }while( pollFirstEntryCss != null );*/
+        String pollFirstForSaveCss = "";
+            do{
+                pollFirstForSaveCss = linesForSaveCss.poll();
+                if( pollFirstForSaveCss != null ){
+                    listForRunnableLogStrs.add(pollFirstForSaveCss);
+                }
+            }while( !linesForSaveCss.isEmpty() );
         
-        writeLinesToFileByRunnable(linesForSaveCss, loggerToHtml, newLogHtmlTableFile);
+        writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
         //********* ************* ************ ************** ************** ***************
         
         ArrayBlockingQueue<String> generatedLinesForIndexFile = new ArrayBlockingQueue<String>(messagesQueueSize);
@@ -571,17 +571,17 @@ public class AppObjectsInfo {
             Path fileCssPrefix = listOfFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX).getFileName();
             AppObjectsInfoHelperHtml.getLinesForTopSaveIndex(returnedLinesForIndexFile, fileJsMenuPrefix, fileCssPrefix);        
             for( Path fileForRead : filesByMaskFromDir ){
+                String strForAncor = "<p><a name=\"" + fileForRead.getFileName().toString().split("\\.")[0] + "\">"
+                        + fileForRead.toString() + "</a></p>";
+                returnedLinesForIndexFile.add(strForAncor);
                 readLinesFromFileByRunnable(readedLinesFromLogHTML, readerFromHtmlFile, fileForRead);
-                String strForAncor = "<a name=\"" + fileForRead.getFileName().toString().split("\\.")[0] + "\">";
-                readedLinesFromLogHTML.add("<p>" + fileForRead.toString() + "</p>" + "</a>");
+                
+                readedLinesFromLogHTML.add(strForAncor);
                 returnedLinesForIndexFile.addAll(readedLinesFromLogHTML);
                 readedLinesFromLogHTML.clear();
             }
             //indexOfLines++;
             AppObjectsInfoHelperHtml.getLinesForBottomSaveIndex(returnedLinesForIndexFile);
-            
         }
     }
-    
-    
 }
