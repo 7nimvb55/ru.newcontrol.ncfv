@@ -410,12 +410,12 @@ public class AppObjectsInfo {
         listForRunnableLogStrs.clear();
         ArrayBlockingQueue<String> linesForSaveCss = AppObjectsInfoHelperHtml.getLinesForSaveCss();
         String pollFirstForSaveCss = "";
-            do{
-                pollFirstForSaveCss = linesForSaveCss.poll();
-                if( pollFirstForSaveCss != null ){
-                    listForRunnableLogStrs.add(pollFirstForSaveCss);
-                }
-            }while( !linesForSaveCss.isEmpty() );
+        do{
+            pollFirstForSaveCss = linesForSaveCss.poll();
+            if( pollFirstForSaveCss != null ){
+                listForRunnableLogStrs.add(pollFirstForSaveCss);
+            }
+        }while( !linesForSaveCss.isEmpty() );
         
         writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
         //********* ************* ************ ************** ************** ***************
@@ -569,7 +569,7 @@ public class AppObjectsInfo {
                     forFirstRead);
             Path fileJsMenuPrefix = listOfFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX).getFileName();
             Path fileCssPrefix = listOfFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX).getFileName();
-            AppObjectsInfoHelperHtml.getLinesForTopSaveIndex(returnedLinesForIndexFile, fileJsMenuPrefix, fileCssPrefix);        
+            AppObjectsInfoHelperHtml.getLinesForTopSaveIndex(returnedLinesForIndexFile, fileJsMenuPrefix, fileCssPrefix, filesByMaskFromDir);        
             for( Path fileForRead : filesByMaskFromDir ){
                 String strForAncor = "<p><a name=\"" + fileForRead.getFileName().toString().split("\\.")[0] + "\">"
                         + fileForRead.toString() + "</a></p>";

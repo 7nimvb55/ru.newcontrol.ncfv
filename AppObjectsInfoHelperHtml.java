@@ -157,7 +157,8 @@ public class AppObjectsInfoHelperHtml {
     protected static void getLinesForTopSaveIndex(
             ArrayBlockingQueue<String> listForRunnableLogStrs,
             Path fileJsMenuPrefix,
-            Path fileCssPrefix
+            Path fileCssPrefix,
+            ArrayList<Path> filesByMaskFromDir
     ){
         listForRunnableLogStrs.add("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
         listForRunnableLogStrs.add("<html lang=\"en-US\" xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en-US\">");
@@ -171,7 +172,8 @@ public class AppObjectsInfoHelperHtml {
         listForRunnableLogStrs.add("        </div>");
         listForRunnableLogStrs.add("        <div id=\"menu-content\" class=\"content-menu-items\">");
         listForRunnableLogStrs.add("        <ul id=\"menu\">");
-        listForRunnableLogStrs.add("            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 1</a>");
+        AppObjectsInfoHelperHtml.getMenuItems(listForRunnableLogStrs, filesByMaskFromDir);
+        /*listForRunnableLogStrs.add("            <li><a href=\"#\" onclick=\"openMenu(this);return false\">menu 1</a>");
         listForRunnableLogStrs.add("                <ul>");
         listForRunnableLogStrs.add("                  <li><a href=\"#\">sub menu 1</a></li>");
         listForRunnableLogStrs.add("                  <li><a href=\"#\">sub menu 2</a></li>");
@@ -214,10 +216,33 @@ public class AppObjectsInfoHelperHtml {
         listForRunnableLogStrs.add("                  <li><a href=\"#\">sub menu 6</a></li>");
         listForRunnableLogStrs.add("                  <li><a href=\"#\">sub menu 7</a></li>");
         listForRunnableLogStrs.add("               </ul>");
-        listForRunnableLogStrs.add("            </li>");
+        listForRunnableLogStrs.add("            </li>");*/
         listForRunnableLogStrs.add("        </ul>");
         listForRunnableLogStrs.add("        </div>");
         listForRunnableLogStrs.add("        <div id=\"page-content\" class=\"content-imported-page\">");
+    }
+    protected static void getMenuItems(
+            ArrayBlockingQueue<String> listForRunnableLogStrs, 
+            ArrayList<Path> filesByMaskFromDir){
+        
+        for( Path fileForRead : filesByMaskFromDir ){
+            String strForAncor = fileForRead.getFileName().toString().split("\\.")[0];
+            String strForMenuTitle = strForAncor.split("-")[1];
+            
+            listForRunnableLogStrs.add("            <li><a href=\"#" 
+                    + strForAncor 
+                    + "\" onclick=\"openMenu(this);return false\">" + strForMenuTitle + "</a>");
+            listForRunnableLogStrs.add("                <ul>");
+            listForRunnableLogStrs.add("                  <li><a href=\"#\">sub menu 1</a></li>");
+            listForRunnableLogStrs.add("                  <li><a href=\"#\">sub menu 2</a></li>");
+            listForRunnableLogStrs.add("                  <li><a href=\"#\">sub menu 3</a></li>");
+            listForRunnableLogStrs.add("                  <li><a href=\"#\">sub menu 4</a></li>");
+            listForRunnableLogStrs.add("                  <li><a href=\"#\">sub menu 5</a></li>");
+            listForRunnableLogStrs.add("                  <li><a href=\"#\">sub menu 6</a></li>");
+            listForRunnableLogStrs.add("                  <li><a href=\"#\">sub menu 7</a></li>");
+            listForRunnableLogStrs.add("               </ul>");
+            listForRunnableLogStrs.add("            </li>");
+        }
     }
     protected static void getLinesForBottomSaveIndex(
             ArrayBlockingQueue<String> listForRunnableLogStrs
