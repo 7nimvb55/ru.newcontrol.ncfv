@@ -38,9 +38,54 @@ import java.util.concurrent.ConcurrentSkipListMap;
 public class AppObjectsInfo {
     
     
-    
-
     protected static void getThreadDebugInfoToHtml(Thread readedThread){
+      
+        AppLoggerList loggerHtml = new AppLoggerList();
+        AppObjectsInfoHelperClasses.getThreadName(readedThread, loggerHtml.getCommandsOutPut());
+        AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getCommandsOutPut(),loggerHtml.getListForRunnableLogStrs());
+        
+        loggerHtml.doWriteToLogHtmlCurrentFile();
+        
+        AppObjectsInfoHelperClasses.getThreadClass(readedThread, loggerHtml.getCommandsOutPut());
+        AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getCommandsOutPut(),loggerHtml.getListForRunnableLogStrs());
+        
+        loggerHtml.doWriteToLogHtmlCurrentFile();
+        
+        AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethods(readedThread, loggerHtml.getCommandsOutPut());
+        AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getCommandsOutPut(),loggerHtml.getListForRunnableLogStrs());
+        
+        loggerHtml.doWriteToLogHtmlCurrentFile();
+        
+        loggerHtml.addAllStringsToRunnableBus(AppObjectsInfoHelperHtml.getLinesForSaveJsMenu());
+        loggerHtml.setTrueNeedForSaveJs();
+        loggerHtml.doWriteToLogHtmlCurrentFile();
+        loggerHtml.setFalseNeedForSaveJs();
+        
+        loggerHtml.addAllStringsToRunnableBus(AppObjectsInfoHelperHtml.getLinesForSaveCss());
+        loggerHtml.setTrueNeedForSaveCss();
+        loggerHtml.doWriteToLogHtmlCurrentFile();
+        loggerHtml.setFalseNeedForSaveCss();
+        
+        ArrayList<Path> filesByMaskFromDir = new ArrayList<Path>();
+        
+        for( Path fileForRead : loggerHtml.getLogHtmlListTableFiles() ){
+            filesByMaskFromDir.add(fileForRead);
+        }
+        
+        Path fileJsMenuPrefix = loggerHtml.getLogFilesListElement(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX).getFileName();
+        Path fileCssPrefix = loggerHtml.getLogFilesListElement(AppFileNamesConstants.LOG_HTML_CSS_PREFIX).getFileName();
+        AppObjectsInfoHelperHtml.getLinesForTopSaveIndex(loggerHtml.getListForRunnableLogStrs(), fileJsMenuPrefix, fileCssPrefix, filesByMaskFromDir);        
+        loggerHtml.doReadFromLogHtmlListOfTables();
+        
+        AppObjectsInfoHelperHtml.getLinesForBottomSaveIndex(loggerHtml.getListForRunnableLogStrs());
+        
+        loggerHtml.setTrueNeedForSaveIndexHtml();
+        loggerHtml.doWriteToLogHtmlCurrentFile();
+        loggerHtml.setFalseNeedForSaveIndexHtml();
+        
+    }
+
+    protected static void getThreadDebugInfoToHtmlOldVersion(Thread readedThread){
         String nowTimeStringWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
         Path logForHtmlCurrentLogSubDir = 
@@ -71,20 +116,20 @@ public class AppObjectsInfo {
         
         int indexLinesToFile = 0;
         
-        
+        //rel
         AppObjectsInfoHelperClasses.getThreadName(readedThread, commandsOutPut);
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(commandsOutPut,listForRunnableLogStrs);
         
         writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
         
         newLogHtmlTableFile = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
-        
+        //rel
         AppObjectsInfoHelperClasses.getThreadClass(readedThread, commandsOutPut);
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(commandsOutPut,listForRunnableLogStrs);
         writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
         
         newLogHtmlTableFile = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
-        
+        //rel
         AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethods(readedThread, commandsOutPut);
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(commandsOutPut,listForRunnableLogStrs);
         writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
@@ -388,9 +433,10 @@ public class AppObjectsInfo {
         listForLogStrs.clear();
         listForLogStrs = new TreeMap<Integer, String>();
         System.out.println("for second record " + listForRunnableLogStrs.size() + newLogHtmlTableFile.toString());
-        
+        //rel
         writeLinesToFileByRunnable(listForRunnableLogStrs, loggerToHtml, newLogHtmlTableFile);
         // end for write first block lines into file
+        
         newLogHtmlTableFile = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX);
         listForRunnableLogStrs.clear();
         
@@ -408,6 +454,7 @@ public class AppObjectsInfo {
         //********* ************* ************ ************** ************** ***************
         newLogHtmlTableFile = newLogFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX);
         listForRunnableLogStrs.clear();
+        //rel
         ArrayBlockingQueue<String> linesForSaveCss = AppObjectsInfoHelperHtml.getLinesForSaveCss();
         String pollFirstForSaveCss = "";
         do{
@@ -556,6 +603,9 @@ public class AppObjectsInfo {
             ConcurrentSkipListMap<String, Path> listOfFileInLogHTML){
         
         Path dirForRead = listOfFileInLogHTML.get(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR);
+        
+        //@todo in the loggerList (or Rule... xz) need flag for stop run reader if not set filesByMaskFromDir
+        
         ArrayList<Path> filesByMaskFromDir = AppFileOperationsSimple.getFilesByMaskFromDir(
                 dirForRead,
                 "{" + AppFileNamesConstants.LOG_HTML_TABLE_PREFIX + "}*");
