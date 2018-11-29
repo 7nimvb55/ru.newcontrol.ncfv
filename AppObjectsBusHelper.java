@@ -24,7 +24,7 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class AppObjectsBusHelper {
     protected static ArrayList<String> cleanBusArrayBlockingToArrayString(ArrayBlockingQueue<String> listForLogStrs){
-        System.out.println("--------size bus in converter " + listForLogStrs.size());
+        System.out.println("--------size bus in AppObjectsBusHelper.cleanBusArrayBlockingToArrayString " + listForLogStrs.size());
         ArrayList<String> forRecord = new ArrayList<String>();
         String poll;
         do{
@@ -33,11 +33,11 @@ public class AppObjectsBusHelper {
                 forRecord.add(poll);
             }
         }while( !listForLogStrs.isEmpty() );
-        System.out.println("--------size converted array for write " + forRecord.size());
+        System.out.println("--------size AppObjectsBusHelper.cleanBusArrayBlockingToArrayString array for write " + forRecord.size());
         return forRecord;
     }
     protected static ArrayBlockingQueue<String> cleanBusForRunnables(ArrayBlockingQueue<String> listForLogStrs){
-        System.out.println("--------size bus in converter " + listForLogStrs.size());
+        System.out.println("--------size bus in AppObjectsBusHelper.cleanBusForRunnables " + listForLogStrs.size());
         ArrayBlockingQueue<String> forRecord = new ArrayBlockingQueue<String>(listForLogStrs.size() + 100);
         String poll;
         do{
@@ -46,7 +46,7 @@ public class AppObjectsBusHelper {
                 forRecord.add(poll);
             }
         }while( !listForLogStrs.isEmpty() );
-        System.out.println("--------size converted array for write " + forRecord.size());
+        System.out.println("--------size AppObjectsBusHelper.cleanBusForRunnables array for write " + forRecord.size());
         return forRecord;
     }
 }

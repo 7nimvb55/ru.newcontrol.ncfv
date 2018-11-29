@@ -45,7 +45,10 @@ public class AppLoggerRunnableHtmlRead implements Runnable {
         try {
             readedLines.addAll(Files.readAllLines(currentJob.getFromHTMLLogFileName(), Charset.forName("UTF-8")));
             if( readedLines != null){
-                System.out.println("_|_|_|_|_|_" + readedLines.size());
+                System.out.println("_|_|_|_|_|_ currentJob.getFromHTMLLogFileName() " 
+                        + currentJob.getFromHTMLLogFileName().toString() 
+                        + " _|_|_|_|_|_"
+                        + " readedLines.size() " + readedLines.size());
                 this.managerForThis.setStringBusForLogRead(readedLines);
             }
             

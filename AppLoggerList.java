@@ -109,18 +109,18 @@ public class AppLoggerList {
     protected void makeWrite(){
         
         this.managerForOrder.setStringBusForLogWrite(AppObjectsBusHelper.cleanBusForRunnables(this.listForRunnableLogStrs));
-        System.out.println("-------|||||||||-----------|||||||||------------make write for " + this.managerForOrder.getStringBusForLogWrite().size());
-        System.out.println("-------|||||||||-----------|||||||||------------make write to " + this.managerForOrder.getCurrentJob().getToHTMLLogFileName().toString());
+        System.out.println("-------|||||||||-----------|||||||||------------AppLoggerList.makeWrite for " + this.managerForOrder.getStringBusForLogWrite().size());
+        System.out.println("-------|||||||||-----------|||||||||------------AppLoggerList.makeWrite to " + this.managerForOrder.getCurrentJob().getToHTMLLogFileName().toString());
         waitForPrevJobDoneForWriter();
         String nowTimeStringWithMS = 
                     AppFileOperationsSimple.getNowTimeStringWithMS();
         ThreadGroup newJobThreadGroup = new ThreadGroup("WriterGroup-" + nowTimeStringWithMS);
         Thread writeToHtmlByThread = new Thread(newJobThreadGroup, this.managerForOrder.getRunnableWriter(), "writerToHtml-" + nowTimeStringWithMS);
-        System.out.println("Thread id " + writeToHtmlByThread.getId() +  " thread name " + writeToHtmlByThread.getName() + " State writer " + writeToHtmlByThread.getState().name());
+        System.out.println("Write Thread id " + writeToHtmlByThread.getId() +  " thread name " + writeToHtmlByThread.getName() + " State " + writeToHtmlByThread.getState().name());
         writeToHtmlByThread.start();
-        System.out.println("State writer " + writeToHtmlByThread.getState().name());
+        System.out.println("Write Thread id " + writeToHtmlByThread.getId() +  " thread name " + writeToHtmlByThread.getName() + " State " + writeToHtmlByThread.getState().name());
         waitForPrevJobDoneForWriter();
-        System.out.println("State writer " + writeToHtmlByThread.getState().name());
+        System.out.println("Write Thread id " + writeToHtmlByThread.getId() +  " thread name " + writeToHtmlByThread.getName() + " State " + writeToHtmlByThread.getState().name());
         //cleanLogStingQueue();
     }
     protected void cleanLogStingQueue(){
@@ -201,14 +201,14 @@ public class AppLoggerList {
         waitForPrevJobDoneForReader();
         String nowTimeStringWithMS = 
                     AppFileOperationsSimple.getNowTimeStringWithMS();
-        this.managerForOrder.setStringBusForLogRead(this.readedLinesFromTablesWork);
+        //this.managerForOrder.setStringBusForLogRead(this.readedLinesFromTablesWork);
         ThreadGroup newJobThreadGroup = new ThreadGroup("ReaderGroup-" + nowTimeStringWithMS);
         Thread readFromHtmlByThread = new Thread(newJobThreadGroup, this.managerForOrder.getRunnableReader(), "readToHtml-" + nowTimeStringWithMS);
-        System.out.println("State reader " + readFromHtmlByThread.getState().name());
+        System.out.println("Write Thread id " + readFromHtmlByThread.getId() +  " thread name " + readFromHtmlByThread.getName() + " State " + readFromHtmlByThread.getState().name());
         readFromHtmlByThread.start();
-        System.out.println("State reader " + readFromHtmlByThread.getState().name());
+        System.out.println("Write Thread id " + readFromHtmlByThread.getId() +  " thread name " + readFromHtmlByThread.getName() + " State " + readFromHtmlByThread.getState().name());
         waitForPrevJobDoneForReader();
-        System.out.println("State reader " + readFromHtmlByThread.getState().name());
+        System.out.println("Write Thread id " + readFromHtmlByThread.getId() +  " thread name " + readFromHtmlByThread.getName() + " State " + readFromHtmlByThread.getState().name());
         this.readedArrayForLines.add(this.managerForOrder.getStringBusForLogRead());
     }
     protected void setNextReadedFileFromLogHtml(Path elementOfTables){

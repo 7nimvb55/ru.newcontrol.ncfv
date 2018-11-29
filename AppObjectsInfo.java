@@ -47,27 +47,31 @@ public class AppObjectsInfo {
         
         loggerHtml.doWriteToLogHtmlCurrentFile();
         loggerHtml.waitForPrevJobDoneForWriter();
-        System.out.println("+++++++++++|||||||||+++++++++++|||||||||+++++++++++first write ");
+        System.out.println("+|0000001|+|||||||||+++++++++++|||||||||+++++++++++AppObjectsInfoHelperClasses.getThreadName(); ");
         AppObjectsInfoHelperClasses.getThreadClass(readedThread, loggerHtml.getCommandsOutPut());
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getCommandsOutPut(),loggerHtml.getListForRunnableLogStrs());
         
         loggerHtml.doWriteToLogHtmlCurrentFile();
         loggerHtml.waitForPrevJobDoneForWriter();
+        System.out.println("+|0000002|+|||||||||+++++++++++|||||||||+++++++++++AppObjectsInfoHelperClasses.getThreadClass(); ");
         AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethods(readedThread, loggerHtml.getCommandsOutPut());
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getCommandsOutPut(),loggerHtml.getListForRunnableLogStrs());
         
         loggerHtml.doWriteToLogHtmlCurrentFile();
         loggerHtml.waitForPrevJobDoneForWriter();
+        System.out.println("+|0000003|+|||||||||+++++++++++|||||||||+++++++++++AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethods(); ");
         loggerHtml.addAllStringsToRunnableBus(AppObjectsInfoHelperHtml.getLinesForSaveJsMenu());
         loggerHtml.setTrueNeedForSaveJs();
         loggerHtml.doWriteToLogHtmlCurrentFile();
         loggerHtml.waitForPrevJobDoneForWriter();
+        System.out.println("+|0000004|+|||||||||+++++++++++|||||||||+++++++++++loggerHtml.setTrueNeedForSaveJs(); ");
         loggerHtml.setFalseNeedForSaveJs();
         
         loggerHtml.addAllStringsToRunnableBus(AppObjectsInfoHelperHtml.getLinesForSaveCss());
         loggerHtml.setTrueNeedForSaveCss();
         loggerHtml.doWriteToLogHtmlCurrentFile();
         loggerHtml.waitForPrevJobDoneForWriter();
+        System.out.println("+|0000005|+|||||||||+++++++++++|||||||||+++++++++++loggerHtml.setTrueNeedForSaveCss(); ");
         loggerHtml.setFalseNeedForSaveCss();
         
         ArrayList<Path> filesByMaskFromDir = new ArrayList<Path>();
@@ -79,21 +83,22 @@ public class AppObjectsInfo {
         Path fileJsMenuPrefix = loggerHtml.getLogFilesListElement(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX).getFileName();
         Path fileCssPrefix = loggerHtml.getLogFilesListElement(AppFileNamesConstants.LOG_HTML_CSS_PREFIX).getFileName();
         
-        
-        
         AppObjectsInfoHelperHtml.getLinesForTopSaveIndex(loggerHtml.getListForRunnableLogStrs(), fileJsMenuPrefix, fileCssPrefix, filesByMaskFromDir);        
+        System.out.println("+|0000006|+|||||||||+++++++++++|||||||||+++++++++++AppObjectsInfoHelperHtml.getLinesForTopSaveIndex(); ");
         loggerHtml.doReadFromLogHtmlListOfTables();
+        System.out.println("+|0000007|+|||||||||+++++++++++|||||||||+++++++++++loggerHtml.doReadFromLogHtmlListOfTables(); ");
         loggerHtml.addReadedTablesIntoList();
         AppObjectsInfoHelperHtml.getLinesForBottomSaveIndex(loggerHtml.getListForRunnableLogStrs());
-        
+        System.out.println("+|0000008|+|||||||||+++++++++++|||||||||+++++++++++AppObjectsInfoHelperHtml.getLinesForBottomSaveIndex(); ");
         loggerHtml.setTrueNeedForSaveIndexHtml();
         loggerHtml.doWriteToLogHtmlCurrentFile();
         loggerHtml.waitForPrevJobDoneForWriter();
+        System.out.println("+|0000009|+|||||||||+++++++++++|||||||||+++++++++++loggerHtml.doWriteToLogHtmlCurrentFile(); ");
         loggerHtml.setFalseNeedForSaveIndexHtml();
         
     }
 
-    protected static void getThreadDebugInfoToHtmlOldVersion(Thread readedThread){
+    protected static void getThreadDebugInfoToHtmlOld(Thread readedThread){
         
         String nowTimeStringWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
