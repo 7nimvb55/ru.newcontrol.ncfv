@@ -103,7 +103,8 @@ public class AppLoggerList {
         makeWrite();
     }
     protected void makeWrite(){
-        System.out.println("-------|||||||||-----------|||||||||------------make write ");
+        System.out.println("-------|||||||||-----------|||||||||------------make write for " + this.managerForOrder.getStringBusForLogWrite().size());
+        System.out.println("-------|||||||||-----------|||||||||------------make write to " + this.managerForOrder.getCurrentJob().getToHTMLLogFileName().toString());
         waitForPrevJobDoneForWriter();
         String nowTimeStringWithMS = 
                     AppFileOperationsSimple.getNowTimeStringWithMS();

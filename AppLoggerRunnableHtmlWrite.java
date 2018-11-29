@@ -44,8 +44,13 @@ public class AppLoggerRunnableHtmlWrite implements Runnable {
         AppLoggerState currentJob = this.managerForThis.getCurrentJob();
         ArrayList<String> forRecord = AppObjectsBusHelper.cleanBusArrayBlockingToArrayString(stringBusForLog);
         currentJob.setFalseToHTMLJobDone();
+        System.out.println("report writerRunnable size for " 
+                + forRecord.size()
+                + " write to "
+                + currentJob.getToHTMLLogFileName().toString()
+        );
         try {
-            if( currentJob.isFromHTMLLogFileNameChanged() ){
+            if( currentJob.isToHTMLLogFileNameChanged() ){
                 Files.write(currentJob.getToHTMLLogFileName(), forRecord, Charset.forName("UTF-8"));
                 currentJob.setFalseToHTMLLogFileNameChanged();
             }

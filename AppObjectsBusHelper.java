@@ -24,12 +24,14 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class AppObjectsBusHelper {
     protected static ArrayList<String> cleanBusArrayBlockingToArrayString(ArrayBlockingQueue<String> listForLogStrs){
-    ArrayList<String> forRecord = new ArrayList<String>();
+        System.out.println("--------size bus in converter " + listForLogStrs.size());
+        ArrayList<String> forRecord = new ArrayList<String>();
         String poll;
         do{
             poll = listForLogStrs.poll();
             forRecord.add(poll);
         }while( !listForLogStrs.isEmpty() );
+        System.out.println("--------size converted array for write " + forRecord.size());
         return forRecord;
     }
 }

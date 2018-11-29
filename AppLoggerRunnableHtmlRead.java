@@ -34,7 +34,7 @@ public class AppLoggerRunnableHtmlRead implements Runnable {
     this.managerForThis = outerManagerForThis;
     this.managerForThis.getCurrentJob().setTrueFromHTMLNewRunner();
         String threadInfoToString = NcAppHelper.getThreadInfoToString(Thread.currentThread());
-        System.out.println("*** ||| *** ||| *** create log reader *** ||| *** ||| ***");
+        System.out.println("*** ||| *** ||| *** create log reader *** ||| *** ||| ***" + threadInfoToString);
     }
     
     @Override
