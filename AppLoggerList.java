@@ -103,6 +103,8 @@ public class AppLoggerList {
         makeWrite();
     }
     protected void makeWrite(){
+        
+        this.managerForOrder.setStringBusForLogWrite(AppObjectsBusHelper.cleanBusForRunnables(this.listForRunnableLogStrs));
         System.out.println("-------|||||||||-----------|||||||||------------make write for " + this.managerForOrder.getStringBusForLogWrite().size());
         System.out.println("-------|||||||||-----------|||||||||------------make write to " + this.managerForOrder.getCurrentJob().getToHTMLLogFileName().toString());
         waitForPrevJobDoneForWriter();

@@ -34,4 +34,15 @@ public class AppObjectsBusHelper {
         System.out.println("--------size converted array for write " + forRecord.size());
         return forRecord;
     }
+    protected static ArrayBlockingQueue<String> cleanBusForRunnables(ArrayBlockingQueue<String> listForLogStrs){
+        System.out.println("--------size bus in converter " + listForLogStrs.size());
+        ArrayBlockingQueue<String> forRecord = new ArrayBlockingQueue<String>(listForLogStrs.size() + 100);
+        String poll;
+        do{
+            poll = listForLogStrs.poll();
+            forRecord.add(poll);
+        }while( !listForLogStrs.isEmpty() );
+        System.out.println("--------size converted array for write " + forRecord.size());
+        return forRecord;
+    }
 }

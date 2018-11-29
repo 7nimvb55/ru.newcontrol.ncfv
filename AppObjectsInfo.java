@@ -39,7 +39,8 @@ public class AppObjectsInfo {
     
     
     protected static void getThreadDebugInfoToHtml(Thread readedThread){
-      
+        //@todo check sizes in add content for bus
+        //@todo into currentjob methods pull data in new busses
         AppLoggerList loggerHtml = new AppLoggerList();
         AppObjectsInfoHelperClasses.getThreadName(readedThread, loggerHtml.getCommandsOutPut());
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getCommandsOutPut(),loggerHtml.getListForRunnableLogStrs());
@@ -71,7 +72,7 @@ public class AppObjectsInfo {
         for( Path fileForRead : loggerHtml.getLogHtmlListTableFiles() ){
             filesByMaskFromDir.add(fileForRead);
         }
-        
+        //@todo fix it
         Path fileJsMenuPrefix = loggerHtml.getLogFilesListElement(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX).getFileName();
         Path fileCssPrefix = loggerHtml.getLogFilesListElement(AppFileNamesConstants.LOG_HTML_CSS_PREFIX).getFileName();
         AppObjectsInfoHelperHtml.getLinesForTopSaveIndex(loggerHtml.getListForRunnableLogStrs(), fileJsMenuPrefix, fileCssPrefix, filesByMaskFromDir);        
@@ -86,6 +87,7 @@ public class AppObjectsInfo {
     }
 
     protected static void getThreadDebugInfoToHtmlOldVersion(Thread readedThread){
+        
         String nowTimeStringWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
         Path logForHtmlCurrentLogSubDir = 
