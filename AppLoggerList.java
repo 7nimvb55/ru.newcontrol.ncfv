@@ -116,11 +116,12 @@ public class AppLoggerList {
                     AppFileOperationsSimple.getNowTimeStringWithMS();
         ThreadGroup newJobThreadGroup = new ThreadGroup("WriterGroup-" + nowTimeStringWithMS);
         Thread writeToHtmlByThread = new Thread(newJobThreadGroup, this.managerForOrder.getRunnableWriter(), "writerToHtml-" + nowTimeStringWithMS);
-        System.out.println("State writer " + writeToHtmlByThread.getState().name());
+        System.out.println("Thread id " + writeToHtmlByThread.getId() +  " thread name " + writeToHtmlByThread.getName() + " State writer " + writeToHtmlByThread.getState().name());
         writeToHtmlByThread.start();
         System.out.println("State writer " + writeToHtmlByThread.getState().name());
         waitForPrevJobDoneForWriter();
-        cleanLogStingQueue();
+        System.out.println("State writer " + writeToHtmlByThread.getState().name());
+        //cleanLogStingQueue();
     }
     protected void cleanLogStingQueue(){
         this.listForRunnableLogStrs.clear();
@@ -129,10 +130,12 @@ public class AppLoggerList {
         System.out.println("-------|||||||||-----------|||||||||------------make write prev isjobdone " + this.currentJob.isToHTMLJobDone());
         if( !this.currentJob.isToHTMLNewRunner() ){
             try{
+                System.out.println("wait for prev done");
                 while( !this.currentJob.isToHTMLJobDone() ){
                     Thread curThr = Thread.currentThread();
                     curThr.sleep(50);
                 }
+                 System.out.println(" end wait for prev done");
             } catch(InterruptedException ex){
                 ex.printStackTrace();
             } catch(SecurityException ex){
@@ -206,7 +209,7 @@ public class AppLoggerList {
         System.out.println("State reader " + readFromHtmlByThread.getState().name());
         waitForPrevJobDoneForReader();
         System.out.println("State reader " + readFromHtmlByThread.getState().name());
-        this.readedArrayForLines.add(AppObjectsBusHelper.cleanBusForRunnables(this.managerForOrder.getStringBusForLogRead()));
+        this.readedArrayForLines.add(this.managerForOrder.getStringBusForLogRead());
     }
     protected void setNextReadedFileFromLogHtml(Path elementOfTables){
         if( !this.currentJob.isFromHTMLLogFileNameChanged() ){

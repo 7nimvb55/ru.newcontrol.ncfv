@@ -29,7 +29,9 @@ public class AppObjectsBusHelper {
         String poll;
         do{
             poll = listForLogStrs.poll();
-            forRecord.add(poll);
+            if( poll != null ){
+                forRecord.add(poll);
+            }
         }while( !listForLogStrs.isEmpty() );
         System.out.println("--------size converted array for write " + forRecord.size());
         return forRecord;
@@ -40,7 +42,9 @@ public class AppObjectsBusHelper {
         String poll;
         do{
             poll = listForLogStrs.poll();
-            forRecord.add(poll);
+            if( poll != null ){
+                forRecord.add(poll);
+            }
         }while( !listForLogStrs.isEmpty() );
         System.out.println("--------size converted array for write " + forRecord.size());
         return forRecord;

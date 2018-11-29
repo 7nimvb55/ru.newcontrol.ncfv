@@ -61,7 +61,7 @@ public class AppLoggerRule {
         this.stringForLogHtmlWrite = outerListForLogStrs;
     }
     protected void setStringBusForLogRead(ArrayBlockingQueue<String> readedLinesFromLogHtmlBus){
-        this.linesFromLogHtmlRead = readedLinesFromLogHtmlBus;
+        this.linesFromLogHtmlRead = AppObjectsBusHelper.cleanBusForRunnables(readedLinesFromLogHtmlBus);
     }
     
     protected void setFalseCreatedRunnableWriter(){

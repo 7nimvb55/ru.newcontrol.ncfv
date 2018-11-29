@@ -46,25 +46,28 @@ public class AppObjectsInfo {
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getCommandsOutPut(),loggerHtml.getListForRunnableLogStrs());
         
         loggerHtml.doWriteToLogHtmlCurrentFile();
-        System.out.println("-------|||||||||-----------|||||||||------------first write ");
+        loggerHtml.waitForPrevJobDoneForWriter();
+        System.out.println("+++++++++++|||||||||+++++++++++|||||||||+++++++++++first write ");
         AppObjectsInfoHelperClasses.getThreadClass(readedThread, loggerHtml.getCommandsOutPut());
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getCommandsOutPut(),loggerHtml.getListForRunnableLogStrs());
         
         loggerHtml.doWriteToLogHtmlCurrentFile();
-        
+        loggerHtml.waitForPrevJobDoneForWriter();
         AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethods(readedThread, loggerHtml.getCommandsOutPut());
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getCommandsOutPut(),loggerHtml.getListForRunnableLogStrs());
         
         loggerHtml.doWriteToLogHtmlCurrentFile();
-        
+        loggerHtml.waitForPrevJobDoneForWriter();
         loggerHtml.addAllStringsToRunnableBus(AppObjectsInfoHelperHtml.getLinesForSaveJsMenu());
         loggerHtml.setTrueNeedForSaveJs();
         loggerHtml.doWriteToLogHtmlCurrentFile();
+        loggerHtml.waitForPrevJobDoneForWriter();
         loggerHtml.setFalseNeedForSaveJs();
         
         loggerHtml.addAllStringsToRunnableBus(AppObjectsInfoHelperHtml.getLinesForSaveCss());
         loggerHtml.setTrueNeedForSaveCss();
         loggerHtml.doWriteToLogHtmlCurrentFile();
+        loggerHtml.waitForPrevJobDoneForWriter();
         loggerHtml.setFalseNeedForSaveCss();
         
         ArrayList<Path> filesByMaskFromDir = new ArrayList<Path>();
@@ -85,6 +88,7 @@ public class AppObjectsInfo {
         
         loggerHtml.setTrueNeedForSaveIndexHtml();
         loggerHtml.doWriteToLogHtmlCurrentFile();
+        loggerHtml.waitForPrevJobDoneForWriter();
         loggerHtml.setFalseNeedForSaveIndexHtml();
         
     }
