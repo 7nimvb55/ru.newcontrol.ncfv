@@ -45,7 +45,7 @@ public class AppObjectsInfo {
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getCommandsOutPut(),loggerHtml.getListForRunnableLogStrs());
         
         loggerHtml.doWriteToLogHtmlCurrentFile();
-        
+        System.out.println("-------|||||||||-----------|||||||||------------first write ");
         AppObjectsInfoHelperClasses.getThreadClass(readedThread, loggerHtml.getCommandsOutPut());
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getCommandsOutPut(),loggerHtml.getListForRunnableLogStrs());
         

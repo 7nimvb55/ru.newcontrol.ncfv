@@ -103,6 +103,7 @@ public class AppLoggerList {
         makeWrite();
     }
     protected void makeWrite(){
+        System.out.println("-------|||||||||-----------|||||||||------------make write ");
         waitForPrevJobDoneForWriter();
         String nowTimeStringWithMS = 
                     AppFileOperationsSimple.getNowTimeStringWithMS();
@@ -118,27 +119,32 @@ public class AppLoggerList {
         this.listForRunnableLogStrs.clear();
     }
     protected void waitForPrevJobDoneForWriter(){
-        try{
-            while( !this.currentJob.isToHTMLJobDone() ){
-                Thread curThr = Thread.currentThread();
-                curThr.sleep(50);
+        System.out.println("-------|||||||||-----------|||||||||------------make write prev isjobdone " + this.currentJob.isToHTMLJobDone());
+        if( !this.currentJob.isToHTMLNewRunner() ){
+            try{
+                while( !this.currentJob.isToHTMLJobDone() ){
+                    Thread curThr = Thread.currentThread();
+                    curThr.sleep(50);
+                }
+            } catch(InterruptedException ex){
+                ex.printStackTrace();
+            } catch(SecurityException ex){
+                ex.printStackTrace();
             }
-        } catch(InterruptedException ex){
-            ex.printStackTrace();
-        } catch(SecurityException ex){
-            ex.printStackTrace();
         }
     }
     protected void waitForPrevJobDoneForReader(){
-        try{
-            while( !this.currentJob.isFromHTMLJobDone() ){
-                Thread curThr = Thread.currentThread();
-                curThr.sleep(50);
+        if( !this.currentJob.isFromHTMLNewRunner() ){
+            try{
+                while( !this.currentJob.isFromHTMLJobDone() ){
+                    Thread curThr = Thread.currentThread();
+                    curThr.sleep(50);
+                }
+            } catch(InterruptedException ex){
+                ex.printStackTrace();
+            } catch(SecurityException ex){
+                ex.printStackTrace();
             }
-        } catch(InterruptedException ex){
-            ex.printStackTrace();
-        } catch(SecurityException ex){
-            ex.printStackTrace();
         }
     }
     protected void setNewCssFileForLogHtml(){
@@ -155,9 +161,10 @@ public class AppLoggerList {
     }
     protected void setNewTableFileForLogHtml(){
         if( !this.currentJob.isToHTMLLogFileNameChanged() ){
-            this.fileForWrite = AppFileOperationsSimple.getNewLogHtmlTableFile(getCurrentLogHtmlStorageSubDir());
+            this.fileForWrite = getNewFileForLogHtml();
             this.currentJob.setToHTMLFileName(this.fileForWrite);
         }
+        System.out.println("file for write " + this.fileForWrite.toString());
     }
     protected void doReadFromLogHtmlListOfTables(){
         ArrayBlockingQueue<Path> logHtmlListTableFiles = getLogHtmlListTableFiles();
@@ -274,6 +281,7 @@ public class AppLoggerList {
             this.listLogStorageFiles = 
                     AppFileOperationsSimple.getNewLogFileInLogHTML(logForHtmlCurrentLogSubDir);
             this.listLogStorageFiles.put(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR, logForHtmlCurrentLogSubDir);
+            this.fileForWrite = getLogFilesListElement(AppFileNamesConstants.LOG_HTML_TABLE_PREFIX);
             setTrueForLogHtmlStorage();
         }
         return this.listLogStorageFiles;
