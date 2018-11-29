@@ -18,6 +18,7 @@ package ru.newcontrol.ncfv;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.TreeMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -28,9 +29,9 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class AppObjectsInfoHelperHtml {
     protected static void commandOutPutBusToHtml(
-            ArrayBlockingQueue<ArrayList<String>> commandsOutPutBusData,
+            ArrayBlockingQueue<ArrayBlockingQueue<String>> commandsOutPutBusData,
             ArrayBlockingQueue<String> listStringsForLogInRunnable){
-        ArrayList<String> pollFirstEntryToLog;
+        ArrayBlockingQueue<String> pollFirstEntryToLog;
         int indexedSwitch = 0;
         do{
             pollFirstEntryToLog = commandsOutPutBusData.poll();
@@ -41,9 +42,14 @@ public class AppObjectsInfoHelperHtml {
                     listStringsForLogInRunnable.add("<TABLE>");
                     for( String element : pollFirstEntryToLog ){
                         if( indexedSwitch == 0 ){
-                            String forOutTimeStamp = pollFirstEntryToLog.get(0).length() == 17 
-                                ? getFormatedTimeStamp(pollFirstEntryToLog.get(0))
+                            String forOutTimeStamp = "";
+                            try{
+                            forOutTimeStamp = pollFirstEntryToLog.element().length() == 17 
+                                ? getFormatedTimeStamp(pollFirstEntryToLog.element())
                                 : "";
+                            } catch (NoSuchElementException ex){
+                                ex.printStackTrace();
+                            }
                             if( !forOutTimeStamp.isEmpty() ){
                                 listStringsForLogInRunnable.add("<THEAD>");
                                 forOutPutToLog = "<TR><TH>Time stamp</TH><TH>" + forOutTimeStamp + "</TH></TR>";
@@ -72,9 +78,14 @@ public class AppObjectsInfoHelperHtml {
                     listStringsForLogInRunnable.add("</TABLE>");
                 }
                 if( pollFirstEntryToLog.size() == 1 ){
-                    String forOutTimeStamp = pollFirstEntryToLog.get(0).length() == 17 
-                            ? getFormatedTimeStamp(pollFirstEntryToLog.get(0))
-                            : "";
+                    String forOutTimeStamp = "";
+                    try{
+                    forOutTimeStamp = pollFirstEntryToLog.element().length() == 17 
+                        ? getFormatedTimeStamp(pollFirstEntryToLog.element())
+                        : "";
+                    } catch (NoSuchElementException ex){
+                        ex.printStackTrace();
+                    }
                     if( !forOutTimeStamp.isEmpty() ){
                         forOutPutToLog = "<h1>Time stamp: " + forOutTimeStamp + "</h1>";
                         listStringsForLogInRunnable.add(forOutPutToLog);

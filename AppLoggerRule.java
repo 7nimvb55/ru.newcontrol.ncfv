@@ -25,7 +25,8 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class AppLoggerRule {
     private ArrayBlockingQueue<String> stringForLogHtmlWrite;
-    private ArrayBlockingQueue<String> linesFromLogHtmlRead;
+    //private ArrayBlockingQueue<String> linesFromLogHtmlRead;
+    ArrayBlockingQueue<ArrayBlockingQueue<String>> readedArrayForLines;
     
     private AppLoggerRunnableHtmlWrite writerToHtmlRunnable;
     private AppLoggerRunnableHtmlRead readerFromHtmlRunnable;
@@ -37,10 +38,12 @@ public class AppLoggerRule {
     private ConcurrentSkipListMap<String, Path> currentLogHTMLStorage;
 
     public AppLoggerRule(ArrayBlockingQueue<String> outerListForLogStrs,
-            ArrayBlockingQueue<String> readedLinesFromLogHtmlBus,
+            ArrayBlockingQueue<ArrayBlockingQueue<String>> readedArrayForLinesFromBus,
+            //ArrayBlockingQueue<String> readedLinesFromLogHtmlBus,
             ConcurrentSkipListMap<String, Path> storageForLogHtml) {
         this.stringForLogHtmlWrite = outerListForLogStrs;
-        this.linesFromLogHtmlRead = readedLinesFromLogHtmlBus;
+        this.readedArrayForLines = readedArrayForLinesFromBus;
+        //this.linesFromLogHtmlRead = readedLinesFromLogHtmlBus;
         Path newLogHtmlTableFile = storageForLogHtml.get(AppFileNamesConstants.LOG_HTML_TABLE_PREFIX);
         
         this.stateJobForRunner = new AppLoggerState();
@@ -54,14 +57,16 @@ public class AppLoggerRule {
     protected ArrayBlockingQueue<String> getStringBusForLogWrite(){
         return this.stringForLogHtmlWrite;
     }
-    protected ArrayBlockingQueue<String> getStringBusForLogRead(){
-        return this.linesFromLogHtmlRead;
+    protected ArrayBlockingQueue<ArrayBlockingQueue<String>> getStringBusForLogRead(){
+        return this.readedArrayForLines;
+        //return this.linesFromLogHtmlRead;
     }
     protected void setStringBusForLogWrite(ArrayBlockingQueue<String> outerListForLogStrs){
         this.stringForLogHtmlWrite = outerListForLogStrs;
     }
-    protected void setStringBusForLogRead(ArrayBlockingQueue<String> readedLinesFromLogHtmlBus){
-        this.linesFromLogHtmlRead = AppObjectsBusHelper.cleanBusForRunnables(readedLinesFromLogHtmlBus);
+    protected void setStringBusForLogRead(ArrayBlockingQueue<String> readedLinesFromReaderRunner){
+        this.readedArrayForLines.add(AppObjectsBusHelper.cleanBusForRunnables(readedLinesFromReaderRunner));
+        //this.linesFromLogHtmlRead = AppObjectsBusHelper.cleanBusForRunnables(readedLinesFromLogHtmlBus);
     }
     
     protected void setFalseCreatedRunnableWriter(){

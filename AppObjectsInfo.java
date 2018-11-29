@@ -42,32 +42,32 @@ public class AppObjectsInfo {
         //@todo check sizes in add content for bus
         //@todo into currentjob methods pull data in new busses
         AppLoggerList loggerHtml = new AppLoggerList();
-        AppObjectsInfoHelperClasses.getThreadName(readedThread, loggerHtml.getCommandsOutPut());
-        AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getCommandsOutPut(),loggerHtml.getListForRunnableLogStrs());
+        AppObjectsInfoHelperClasses.getThreadName(readedThread, loggerHtml.getLoggerBus().getCommandsOutPut());
+        AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getLoggerBus().getCommandsOutPut(),loggerHtml.getLoggerBus().getListForRunnableLogStrs());
         
         loggerHtml.doWriteToLogHtmlCurrentFile();
         loggerHtml.waitForPrevJobDoneForWriter();
         System.out.println("+|0000001|+|||||||||+++++++++++|||||||||+++++++++++AppObjectsInfoHelperClasses.getThreadName(); ");
-        AppObjectsInfoHelperClasses.getThreadClass(readedThread, loggerHtml.getCommandsOutPut());
-        AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getCommandsOutPut(),loggerHtml.getListForRunnableLogStrs());
+        AppObjectsInfoHelperClasses.getThreadClass(readedThread, loggerHtml.getLoggerBus().getCommandsOutPut());
+        AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getLoggerBus().getCommandsOutPut(),loggerHtml.getLoggerBus().getListForRunnableLogStrs());
         
         loggerHtml.doWriteToLogHtmlCurrentFile();
         loggerHtml.waitForPrevJobDoneForWriter();
         System.out.println("+|0000002|+|||||||||+++++++++++|||||||||+++++++++++AppObjectsInfoHelperClasses.getThreadClass(); ");
-        AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethods(readedThread, loggerHtml.getCommandsOutPut());
-        AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getCommandsOutPut(),loggerHtml.getListForRunnableLogStrs());
+        AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethods(readedThread, loggerHtml.getLoggerBus().getCommandsOutPut());
+        AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getLoggerBus().getCommandsOutPut(),loggerHtml.getLoggerBus().getListForRunnableLogStrs());
         
         loggerHtml.doWriteToLogHtmlCurrentFile();
         loggerHtml.waitForPrevJobDoneForWriter();
         System.out.println("+|0000003|+|||||||||+++++++++++|||||||||+++++++++++AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethods(); ");
-        loggerHtml.addAllStringsToRunnableBus(AppObjectsInfoHelperHtml.getLinesForSaveJsMenu());
+        loggerHtml.getLoggerBus().addAllStringsToRunnableBus(AppObjectsInfoHelperHtml.getLinesForSaveJsMenu());
         loggerHtml.setTrueNeedForSaveJs();
         loggerHtml.doWriteToLogHtmlCurrentFile();
         loggerHtml.waitForPrevJobDoneForWriter();
         System.out.println("+|0000004|+|||||||||+++++++++++|||||||||+++++++++++loggerHtml.setTrueNeedForSaveJs(); ");
         loggerHtml.setFalseNeedForSaveJs();
         
-        loggerHtml.addAllStringsToRunnableBus(AppObjectsInfoHelperHtml.getLinesForSaveCss());
+        loggerHtml.getLoggerBus().addAllStringsToRunnableBus(AppObjectsInfoHelperHtml.getLinesForSaveCss());
         loggerHtml.setTrueNeedForSaveCss();
         loggerHtml.doWriteToLogHtmlCurrentFile();
         loggerHtml.waitForPrevJobDoneForWriter();
@@ -76,19 +76,19 @@ public class AppObjectsInfo {
         
         ArrayList<Path> filesByMaskFromDir = new ArrayList<Path>();
         
-        for( Path fileForRead : loggerHtml.getLogHtmlListTableFiles() ){
+        for( Path fileForRead : loggerHtml.getLoggerBus().getLogHtmlListTableFiles() ){
             filesByMaskFromDir.add(fileForRead);
         }
         //@todo fix it
-        Path fileJsMenuPrefix = loggerHtml.getLogFilesListElement(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX).getFileName();
-        Path fileCssPrefix = loggerHtml.getLogFilesListElement(AppFileNamesConstants.LOG_HTML_CSS_PREFIX).getFileName();
+        Path fileJsMenuPrefix = loggerHtml.getLoggerBus().getLogFilesListElement(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX).getFileName();
+        Path fileCssPrefix = loggerHtml.getLoggerBus().getLogFilesListElement(AppFileNamesConstants.LOG_HTML_CSS_PREFIX).getFileName();
         
-        AppObjectsInfoHelperHtml.getLinesForTopSaveIndex(loggerHtml.getListForRunnableLogStrs(), fileJsMenuPrefix, fileCssPrefix, filesByMaskFromDir);        
+        AppObjectsInfoHelperHtml.getLinesForTopSaveIndex(loggerHtml.getLoggerBus().getListForRunnableLogStrs(), fileJsMenuPrefix, fileCssPrefix, filesByMaskFromDir);        
         System.out.println("+|0000006|+|||||||||+++++++++++|||||||||+++++++++++AppObjectsInfoHelperHtml.getLinesForTopSaveIndex(); ");
         loggerHtml.doReadFromLogHtmlListOfTables();
         System.out.println("+|0000007|+|||||||||+++++++++++|||||||||+++++++++++loggerHtml.doReadFromLogHtmlListOfTables(); ");
         loggerHtml.addReadedTablesIntoList();
-        AppObjectsInfoHelperHtml.getLinesForBottomSaveIndex(loggerHtml.getListForRunnableLogStrs());
+        AppObjectsInfoHelperHtml.getLinesForBottomSaveIndex(loggerHtml.getLoggerBus().getListForRunnableLogStrs());
         System.out.println("+|0000008|+|||||||||+++++++++++|||||||||+++++++++++AppObjectsInfoHelperHtml.getLinesForBottomSaveIndex(); ");
         loggerHtml.setTrueNeedForSaveIndexHtml();
         loggerHtml.doWriteToLogHtmlCurrentFile();
@@ -110,7 +110,7 @@ public class AppObjectsInfo {
         
         
         Integer messagesQueueSize = 10000;
-        ArrayBlockingQueue<ArrayList<String>> commandsOutPut = new ArrayBlockingQueue<ArrayList<String>>(messagesQueueSize);
+        ArrayBlockingQueue<ArrayBlockingQueue<String>> commandsOutPut = new ArrayBlockingQueue<ArrayBlockingQueue<String>>(messagesQueueSize);
         AppObjectsInfoHelperClasses.getInitBusInfo(commandsOutPut);
         
         ArrayBlockingQueue<String> listForRunnableLogStrs = new ArrayBlockingQueue<String>(messagesQueueSize);

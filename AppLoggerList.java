@@ -40,23 +40,24 @@ public class AppLoggerList {
     private Boolean isNeedForSaveJs;
     private Boolean isNeedForSaveIndexHtml;
     
-    private int countOfToQueueCapacityChange;
-    
-    private ArrayBlockingQueue<ArrayList<String>> commandsOutPut;
-    private ArrayBlockingQueue<String> listForRunnableLogStrs;
-    private ArrayBlockingQueue<String> readedLinesFromLogHTML;
-    private ArrayList<ArrayBlockingQueue<String>> readedArrayForLines;
-    private ArrayBlockingQueue<String> readedLinesFromTablesWork;
-    private ConcurrentSkipListMap<String, Path> listLogStorageFiles;
-    private Boolean isLogHtmlStorageInit;
-    
-    private ArrayBlockingQueue<Path> readedFilesListInLogHtmlByTableMask;
-    private Boolean isLogHtmlListTableFilesInit;
-    
+    private AppLoggerBus loggerBus;
     private AppLoggerRule managerForOrder;
     private AppLoggerState currentJob;
     
-    private String instanceStartTimeWithMS;
+    private ArrayBlockingQueue<ArrayBlockingQueue<String>> commandsOutPut;
+    private ArrayBlockingQueue<String> listForRunnableLogStrs;
+    private ArrayBlockingQueue<String> readedLinesFromLogHTML;
+    private ArrayBlockingQueue<ArrayBlockingQueue<String>> readedArrayForLines;
+    //private ArrayBlockingQueue<String> readedLinesFromTablesWork;
+    private ConcurrentSkipListMap<String, Path> listLogStorageFiles;
+    
+    
+    private ArrayBlockingQueue<Path> readedFilesListInLogHtmlByTableMask;
+    
+    
+    
+    
+    
     
     private Path fileForWrite;
     private Path fileForRead;
@@ -66,30 +67,29 @@ public class AppLoggerList {
     public AppLoggerList() {
         setTrueNewLoggerList();
         
-        this.countOfToQueueCapacityChange = 0;
-        
         setFalseNeedForSaveCss();
         setFalseNeedForSaveJs();
         setFalseNeedForSaveIndexHtml();
         
-        this.commandsOutPut = new ArrayBlockingQueue<ArrayList<String>>(AppConstants.LOG_HTML_MESSAGES_QUEUE_SIZE);
-        this.listForRunnableLogStrs = new ArrayBlockingQueue<String>(AppConstants.LOG_HTML_MESSAGES_QUEUE_SIZE);
-        this.readedLinesFromLogHTML = new ArrayBlockingQueue<String>(AppConstants.LOG_HTML_MESSAGES_QUEUE_SIZE);
-        this.readedLinesFromTablesWork = new ArrayBlockingQueue<String>(AppConstants.LOG_HTML_MESSAGES_QUEUE_SIZE);
+        this.loggerBus = new AppLoggerBus();
         
-        this.readedArrayForLines = new ArrayList<ArrayBlockingQueue<String>>();
+        this.commandsOutPut = loggerBus.getCommandsOutPut();
+        this.listForRunnableLogStrs = loggerBus.getListForRunnableLogStrs();
+        this.readedLinesFromLogHTML = loggerBus.getReadedLinesFromLogHTML();
+        //this.readedLinesFromTablesWork = 
         
-        setFalseForLogHtmlListTableFiles();
-        setFalseForLogHtmlStorage();
+        //this.readedArrayForLines = loggerBus.
         
-        this.instanceStartTimeWithMS = 
-                AppFileOperationsSimple.getNowTimeStringWithMS();
-        this.listLogStorageFiles = getLogHtmlStorageList();
+
         
-        this.managerForOrder = new AppLoggerRule(this.listForRunnableLogStrs, this.readedLinesFromTablesWork, this.listLogStorageFiles);
+        this.managerForOrder = new AppLoggerRule(this.listForRunnableLogStrs, 
+                this.readedArrayForLines, 
+                this.listLogStorageFiles);
         this.currentJob = this.managerForOrder.getCurrentJob();
     }
-    
+    protected AppLoggerBus getLoggerBus(){
+        return this.loggerBus;
+    }
     protected void doWriteToLogHtmlCurrentFile(){
         if( isNeedForSaveIndexHtml() ){
             setNewIndexFileForLogHtml();
@@ -171,13 +171,13 @@ public class AppLoggerList {
     }
     protected void setNewTableFileForLogHtml(){
         if( !this.currentJob.isToHTMLLogFileNameChanged() ){
-            this.fileForWrite = getNewFileForLogHtml();
+            this.fileForWrite = this.loggerBus.getNewFileForLogHtml();
             this.currentJob.setToHTMLFileName(this.fileForWrite);
         }
-        System.out.println("file for write " + this.fileForWrite.toString());
+        System.out.println("AppLoggerList.setNewTableFileForLogHtml() for write " + this.fileForWrite.toString());
     }
     protected void doReadFromLogHtmlListOfTables(){
-        ArrayBlockingQueue<Path> logHtmlListTableFiles = getLogHtmlListTableFiles();
+        ArrayBlockingQueue<Path> logHtmlListTableFiles = this.loggerBus.getLogHtmlListTableFiles();
         for(Path elementOfTables : logHtmlListTableFiles){
             waitForPrevJobDoneForReader();
             setNextReadedFileFromLogHtml(elementOfTables);
@@ -188,14 +188,15 @@ public class AppLoggerList {
         addReadedTablesIntoList();
     }
     protected void addReadedTablesIntoList(){
-        for(ArrayBlockingQueue<String> tableItems : this.readedArrayForLines){
+        ArrayBlockingQueue<ArrayBlockingQueue<String>> readedArrayLinesFromRunner = this.managerForOrder.getStringBusForLogRead();
+        for( ArrayBlockingQueue<String> tableItems : readedArrayLinesFromRunner ){
             this.listForRunnableLogStrs.addAll(tableItems);
         }
     }
     protected void addAncorStructure(Path fileForRead){
         String strForAncor = "<p><a name=\"" + fileForRead.getFileName().toString().split("\\.")[0] + "\">"
                         + fileForRead.toString() + "</a></p>";
-        addStringToRunnableBus(strForAncor);
+        this.loggerBus.addStringToRunnableBus(strForAncor);
     }
     protected void readListOfTables(){
         waitForPrevJobDoneForReader();
@@ -209,7 +210,7 @@ public class AppLoggerList {
         System.out.println("Write Thread id " + readFromHtmlByThread.getId() +  " thread name " + readFromHtmlByThread.getName() + " State " + readFromHtmlByThread.getState().name());
         waitForPrevJobDoneForReader();
         System.out.println("Write Thread id " + readFromHtmlByThread.getId() +  " thread name " + readFromHtmlByThread.getName() + " State " + readFromHtmlByThread.getState().name());
-        this.readedArrayForLines.add(this.managerForOrder.getStringBusForLogRead());
+        //this.readedArrayForLines.add(this.managerForOrder.getStringBusForLogRead());
     }
     protected void setNextReadedFileFromLogHtml(Path elementOfTables){
         if( !this.currentJob.isFromHTMLLogFileNameChanged() ){
@@ -253,141 +254,7 @@ public class AppLoggerList {
     protected Boolean isNewLoggerList(){
         return this.isNewLoggerList;
     }
-    protected void setFalseForLogHtmlListTableFiles(){
-        this.isLogHtmlListTableFilesInit = Boolean.FALSE;
-    }
-    protected void setTrueForLogHtmlListTableFiles(){
-        this.isLogHtmlListTableFilesInit = Boolean.TRUE;
-    }
-    protected Boolean isSetForLogHtmlListTableFiles(){
-        return this.isLogHtmlListTableFilesInit;
-    }
-    protected ArrayBlockingQueue<Path> getLogHtmlListTableFiles(){
-        if( !isSetForLogHtmlListTableFiles() ){
-            Path dirForRead = this.listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR);
-            ArrayList<Path> filesByMaskFromDir = AppFileOperationsSimple.getFilesByMaskFromDir(
-                dirForRead,
-                "{" + AppFileNamesConstants.LOG_HTML_TABLE_PREFIX + "}*");
-            this.readedFilesListInLogHtmlByTableMask = new ArrayBlockingQueue<Path>(filesByMaskFromDir.size());
-            for( Path fileForRead : filesByMaskFromDir ){
-                this.readedFilesListInLogHtmlByTableMask.add(fileForRead);
-            }
-            setTrueForLogHtmlListTableFiles();
-        }
-        return this.readedFilesListInLogHtmlByTableMask;
-    }
-    protected ArrayBlockingQueue<Path> updateLogHtmlListTableFiles(){
-        if( isSetForLogHtmlListTableFiles() ){
-            setFalseForLogHtmlListTableFiles();
-            this.readedFilesListInLogHtmlByTableMask.clear();
-        }
-        return this.getLogHtmlListTableFiles();
-    }
     
-    protected void setFalseForLogHtmlStorage(){
-        this.isLogHtmlStorageInit = Boolean.FALSE;
-    }
-    protected void setTrueForLogHtmlStorage(){
-        this.isLogHtmlStorageInit = Boolean.TRUE;
-    }
-    protected Boolean isSetForLogHtmlStorage(){
-        return this.isLogHtmlStorageInit;
-    }
-    protected ConcurrentSkipListMap<String, Path> getLogHtmlStorageList(){
-        if( !isSetForLogHtmlStorage() ){
-            Path logForHtmlCurrentLogSubDir = 
-                    AppFileOperationsSimple.getLogForHtmlCurrentLogSubDir(this.instanceStartTimeWithMS);
-            this.listLogStorageFiles = 
-                    AppFileOperationsSimple.getNewLogFileInLogHTML(logForHtmlCurrentLogSubDir);
-            this.listLogStorageFiles.put(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR, logForHtmlCurrentLogSubDir);
-            this.fileForWrite = getLogFilesListElement(AppFileNamesConstants.LOG_HTML_TABLE_PREFIX);
-            setTrueForLogHtmlStorage();
-        }
-        return this.listLogStorageFiles;
-    }
-    protected void addAllStringsToRunnableBus(ArrayBlockingQueue<String> linesForSave){
-        String pollFirstForSaveJsMenu = "";
-        do{
-            pollFirstForSaveJsMenu = linesForSave.poll();
-            if( pollFirstForSaveJsMenu != null ){
-                addStringToRunnableBus(pollFirstForSaveJsMenu);
-            }
-        }while( !linesForSave.isEmpty() );
-    }
     
-    protected void addStringToRunnableBus(String forPut){
-        extendSizeForStringToQueue();
-        this.listForRunnableLogStrs.add(forPut);
-    }
-    /**
-     * @todo need develop code for write to file part when queue is full,
-     * save data about writed part and save more parts in the next iterations
-     */
-    protected void extendSizeForStringToQueue(){
-        if( ((this.listForRunnableLogStrs.size() 
-                - (this.listForRunnableLogStrs.size() % 10)) / 10) 
-                > this.listForRunnableLogStrs.remainingCapacity() 
-        ){
-            System.out.println("-|-|-|-|-QUEUE WARNING SIZE "
-                + this.listForRunnableLogStrs.size()
-                + "-|-|-|-|-QUEUE REMAINING CAPACITY "
-                + this.listForRunnableLogStrs.remainingCapacity()
-                + "-|-|-|-|-COUNT OF CHANGE QUEUE CAPACITY"
-                + getCountOfToQueueCapacityChange()
-            );
-            int nowSize = this.listForRunnableLogStrs.size() + this.listForRunnableLogStrs.remainingCapacity();
-            ArrayBlockingQueue<String> extendedQueue = new ArrayBlockingQueue<String>(nowSize * 10);
-            do{ 
-                String poll = this.listForRunnableLogStrs.poll();
-                if( poll != null ){
-                    extendedQueue.add(poll);
-                }
-            }while( !this.listForRunnableLogStrs.isEmpty() );
-            incrementCountOfToQueueCapacityChange();
-            this.listForRunnableLogStrs = extendedQueue;
-        }
-        
-    }
-    protected int getCountOfToQueueCapacityChange(){
-        return this.countOfToQueueCapacityChange;
-    }
-    protected void incrementCountOfToQueueCapacityChange(){
-        this.countOfToQueueCapacityChange++;
-    }
-    protected void addStringFromRunnableBus(String forPut){
-        this.readedLinesFromLogHTML.add(forPut);
-    }
-    protected Path getLogFilesListElement(String keyForPath){
-        return this.listLogStorageFiles.get(keyForPath);
-    }
-    protected void setLogFilesListElement(String keyForPath, Path ementForPut){
-        this.listLogStorageFiles.put(keyForPath, ementForPut);
-    }
-    protected Path getCurrentLogHtmlStorageSubDir(){
-        return this.listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR);
-    }
-    protected Path getNewFileForLogHtml(){
-        return AppFileOperationsSimple.getNewLogHtmlTableFile(getCurrentLogHtmlStorageSubDir());
-    }
-    protected void addToCommandsResultBus(ArrayList<String> forPut){
-        this.commandsOutPut.add(forPut);
-    }
-    protected void clearCommandsResultBus(){
-        this.commandsOutPut.clear();
-    }
-    protected void clearStringToRunnableBus(){
-        this.listForRunnableLogStrs.clear();
-    }
-    protected void clearStringFromRunnableBus(){
-        this.readedLinesFromLogHTML.clear();
-    }
-    protected ArrayBlockingQueue<ArrayList<String>> getCommandsOutPut(){
-        return this.commandsOutPut;
-    }
-    protected ArrayBlockingQueue<String> getListForRunnableLogStrs(){
-        return this.listForRunnableLogStrs;
-    }
-    protected ArrayBlockingQueue<String> getReadedLinesFromLogHTML(){
-        return this.readedLinesFromLogHTML;
-    }
+    
 }

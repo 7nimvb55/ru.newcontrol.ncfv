@@ -30,19 +30,19 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class AppObjectsInfoHelperClasses {
     
-    protected static void getInitBusInfo(ArrayBlockingQueue<ArrayList<String>> commandsOutPut){
+    protected static void getInitBusInfo(ArrayBlockingQueue<ArrayBlockingQueue<String>> commandsOutPut){
         String nowTimeStringWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
         int recIndex = 0;
-        ArrayList<String> initRecTime = new ArrayList<String>();
+        ArrayBlockingQueue<String> initRecTime = new ArrayBlockingQueue<String>(1000);
         initRecTime.add(nowTimeStringWithMS);
         commandsOutPut.add(initRecTime);
     }
     
-    protected static void getThreadName(Thread detectedThread, ArrayBlockingQueue<ArrayList<String>> commandsOutPut){
+    protected static void getThreadName(Thread detectedThread, ArrayBlockingQueue<ArrayBlockingQueue<String>> commandsOutPut){
         String nowTimeStringWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
-        ArrayList<String> strForOut = new ArrayList<String>();
+        ArrayBlockingQueue<String> strForOut = new ArrayBlockingQueue<String>(1000);
         strForOut.add(nowTimeStringWithMS);
         strForOut.add("Thread.toString()");
         strForOut.add(detectedThread.toString());
@@ -67,10 +67,10 @@ public class AppObjectsInfoHelperClasses {
         commandsOutPut.add(strForOut);
     }
     
-    protected static void getThreadClass(Thread detectedThread, ArrayBlockingQueue<ArrayList<String>> commandsOutPut){
+    protected static void getThreadClass(Thread detectedThread, ArrayBlockingQueue<ArrayBlockingQueue<String>> commandsOutPut){
         String nowTimeStringWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
-        ArrayList<String> strForOut = new ArrayList<String>();
+        ArrayBlockingQueue<String> strForOut = new ArrayBlockingQueue<String>(1000);
         strForOut.add(nowTimeStringWithMS);
         strForOut.add("Thread.getClass().getName()");
         strForOut.add(detectedThread.getClass().getName());
@@ -158,10 +158,10 @@ public class AppObjectsInfoHelperClasses {
     }
     protected static void  getThreadClassGetDeclaredMethods(
             Thread detectedThread, 
-            ArrayBlockingQueue<ArrayList<String>> commandsOutPut){
+            ArrayBlockingQueue<ArrayBlockingQueue<String>> commandsOutPut){
         String nowTimeStringWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
-        ArrayList<String> strForOut = new ArrayList<String>();
+        ArrayBlockingQueue<String> strForOut = new ArrayBlockingQueue<String>(1000);
         strForOut.add(nowTimeStringWithMS);
         strForOut.add("Thread.getClass().getDeclaredMethods().length");
         Method resultGetDeclaredMethods[] = detectedThread.getClass().getDeclaredMethods();
