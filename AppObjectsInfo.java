@@ -75,6 +75,9 @@ public class AppObjectsInfo {
         //@todo fix it
         Path fileJsMenuPrefix = loggerHtml.getLogFilesListElement(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX).getFileName();
         Path fileCssPrefix = loggerHtml.getLogFilesListElement(AppFileNamesConstants.LOG_HTML_CSS_PREFIX).getFileName();
+        
+        
+        
         AppObjectsInfoHelperHtml.getLinesForTopSaveIndex(loggerHtml.getListForRunnableLogStrs(), fileJsMenuPrefix, fileCssPrefix, filesByMaskFromDir);        
         loggerHtml.doReadFromLogHtmlListOfTables();
         
