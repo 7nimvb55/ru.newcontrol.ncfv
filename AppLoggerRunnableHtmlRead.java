@@ -41,12 +41,14 @@ public class AppLoggerRunnableHtmlRead implements Runnable {
     public void run() {
         AppLoggerState currentJob = this.managerForThis.getCurrentJob();
         currentJob.setFalseFromHTMLJobDone();
-        ArrayList<String> readedLines = new ArrayList<String>();
+        ArrayBlockingQueue<String> readedLines = new ArrayBlockingQueue<String>(1000);
         try {
             readedLines.addAll(Files.readAllLines(currentJob.getFromHTMLLogFileName(), Charset.forName("UTF-8")));
-            for(String lineElement : readedLines){
-                this.managerForThis.getStringBusForLogRead().add(lineElement);
+            if( readedLines != null){
+                System.out.println("_|_|_|_|_|_" + readedLines.size());
+                this.managerForThis.setStringBusForLogRead(AppObjectsBusHelper.cleanBusForRunnables(readedLines));
             }
+            
             currentJob.setFalseFromHTMLLogFileNameChanged();
         } catch (IOException ex) {
             ex.getMessage();

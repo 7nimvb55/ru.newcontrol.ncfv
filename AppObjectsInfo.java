@@ -80,7 +80,7 @@ public class AppObjectsInfo {
         
         AppObjectsInfoHelperHtml.getLinesForTopSaveIndex(loggerHtml.getListForRunnableLogStrs(), fileJsMenuPrefix, fileCssPrefix, filesByMaskFromDir);        
         loggerHtml.doReadFromLogHtmlListOfTables();
-        
+        loggerHtml.addReadedTablesIntoList();
         AppObjectsInfoHelperHtml.getLinesForBottomSaveIndex(loggerHtml.getListForRunnableLogStrs());
         
         loggerHtml.setTrueNeedForSaveIndexHtml();

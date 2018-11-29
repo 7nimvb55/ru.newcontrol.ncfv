@@ -45,7 +45,8 @@ public class AppLoggerList {
     private ArrayBlockingQueue<ArrayList<String>> commandsOutPut;
     private ArrayBlockingQueue<String> listForRunnableLogStrs;
     private ArrayBlockingQueue<String> readedLinesFromLogHTML;
-    
+    private ArrayList<ArrayBlockingQueue<String>> readedArrayForLines;
+    private ArrayBlockingQueue<String> readedLinesFromTablesWork;
     private ConcurrentSkipListMap<String, Path> listLogStorageFiles;
     private Boolean isLogHtmlStorageInit;
     
@@ -74,6 +75,9 @@ public class AppLoggerList {
         this.commandsOutPut = new ArrayBlockingQueue<ArrayList<String>>(AppConstants.LOG_HTML_MESSAGES_QUEUE_SIZE);
         this.listForRunnableLogStrs = new ArrayBlockingQueue<String>(AppConstants.LOG_HTML_MESSAGES_QUEUE_SIZE);
         this.readedLinesFromLogHTML = new ArrayBlockingQueue<String>(AppConstants.LOG_HTML_MESSAGES_QUEUE_SIZE);
+        this.readedLinesFromTablesWork = new ArrayBlockingQueue<String>(AppConstants.LOG_HTML_MESSAGES_QUEUE_SIZE);
+        
+        this.readedArrayForLines = new ArrayList<ArrayBlockingQueue<String>>();
         
         setFalseForLogHtmlListTableFiles();
         setFalseForLogHtmlStorage();
@@ -82,7 +86,7 @@ public class AppLoggerList {
                 AppFileOperationsSimple.getNowTimeStringWithMS();
         this.listLogStorageFiles = getLogHtmlStorageList();
         
-        this.managerForOrder = new AppLoggerRule(this.listForRunnableLogStrs, this.readedLinesFromLogHTML, this.listLogStorageFiles);
+        this.managerForOrder = new AppLoggerRule(this.listForRunnableLogStrs, this.readedLinesFromTablesWork, this.listLogStorageFiles);
         this.currentJob = this.managerForOrder.getCurrentJob();
     }
     
@@ -178,6 +182,12 @@ public class AppLoggerList {
             readListOfTables();
             waitForPrevJobDoneForReader();
         }
+        addReadedTablesIntoList();
+    }
+    protected void addReadedTablesIntoList(){
+        for(ArrayBlockingQueue<String> tableItems : this.readedArrayForLines){
+            this.listForRunnableLogStrs.addAll(tableItems);
+        }
     }
     protected void addAncorStructure(Path fileForRead){
         String strForAncor = "<p><a name=\"" + fileForRead.getFileName().toString().split("\\.")[0] + "\">"
@@ -188,12 +198,15 @@ public class AppLoggerList {
         waitForPrevJobDoneForReader();
         String nowTimeStringWithMS = 
                     AppFileOperationsSimple.getNowTimeStringWithMS();
+        this.managerForOrder.setStringBusForLogRead(this.readedLinesFromTablesWork);
         ThreadGroup newJobThreadGroup = new ThreadGroup("ReaderGroup-" + nowTimeStringWithMS);
         Thread readFromHtmlByThread = new Thread(newJobThreadGroup, this.managerForOrder.getRunnableReader(), "readToHtml-" + nowTimeStringWithMS);
         System.out.println("State reader " + readFromHtmlByThread.getState().name());
         readFromHtmlByThread.start();
         System.out.println("State reader " + readFromHtmlByThread.getState().name());
         waitForPrevJobDoneForReader();
+        System.out.println("State reader " + readFromHtmlByThread.getState().name());
+        this.readedArrayForLines.add(AppObjectsBusHelper.cleanBusForRunnables(this.managerForOrder.getStringBusForLogRead()));
     }
     protected void setNextReadedFileFromLogHtml(Path elementOfTables){
         if( !this.currentJob.isFromHTMLLogFileNameChanged() ){
