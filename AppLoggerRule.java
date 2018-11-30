@@ -34,24 +34,51 @@ public class AppLoggerRule {
     private Boolean isCreatedRunnableWriter;
     private Boolean isCreatedRunnableReader;
     
-    private AppLoggerState stateJobForRunner;
+    private AppLoggerBus logBus;
+    private AppLoggerBusJob logJobBus;
+    // for compatable new and old versions uncomment
+    //private AppLoggerState stateJobForRunner;
     private ConcurrentSkipListMap<String, Path> currentLogHTMLStorage;
 
-    public AppLoggerRule(ArrayBlockingQueue<String> outerListForLogStrs,
-            ArrayBlockingQueue<ArrayBlockingQueue<String>> readedArrayForLinesFromBus,
-            //ArrayBlockingQueue<String> readedLinesFromLogHtmlBus,
-            ConcurrentSkipListMap<String, Path> storageForLogHtml) {
-        this.stringForLogHtmlWrite = outerListForLogStrs;
-        this.readedArrayForLines = readedArrayForLinesFromBus;
+    public AppLoggerRule(AppLoggerBus outerLoggerBus, AppLoggerBusJob outerLoggerJobBus) {
+        this.logBus = outerLoggerBus;
+        this.logJobBus = outerLoggerJobBus;
+        this.logBus.getCommandsOutPut();
+        this.logBus.getListForRunnableLogStrs();
+        this.logBus.getLogHtmlStorageList();
+        this.stringForLogHtmlWrite = this.logBus.getListForRunnableLogStrs();
+        //this.readedArrayForLines = loggerBus.;
         //this.linesFromLogHtmlRead = readedLinesFromLogHtmlBus;
-        Path newLogHtmlTableFile = storageForLogHtml.get(AppFileNamesConstants.LOG_HTML_TABLE_PREFIX);
         
-        this.stateJobForRunner = new AppLoggerState();
+        
+        // for compatable new and old versions uncomment
+        //this.stateJobForRunner = new AppLoggerState();
         this.stateJobForRunner.setToHTMLFileName(newLogHtmlTableFile);
         setFalseCreatedRunnableWriter();
         setFalseCreatedRunnableReader();
     }
-    protected AppLoggerState getCurrentJob(){
+    // for compatable new and old versions uncomment
+    /*protected AppLoggerState getCurrentJob(){
+        return this.stateJobForRunner;
+    }*/
+    
+    
+    protected AppLoggerStateReader getReaderCurrentJob(){
+        AppLoggerStateReader createNewReaderJob = AppLoggerRuleHelper.createNewReaderJob();
+        
+        return this.stateJobForRunner;
+    }
+    protected AppLoggerStateWriter getWriterCurrentJob(
+            ArrayBlockingQueue<String> partLinesForWrite,
+            String newJobThreadGroupName,
+            String writeToHtmlByThreadName,
+            Path fileNameForWrite
+    ){
+        AppLoggerStateWriter createNewWriterJob = AppLoggerRuleHelper.createNewWriterJob();
+        createNewWriterJob.setPartLinesForWrite(partLinesForWrite);
+        createNewWriterJob.setThreadGroupName(newJobThreadGroupName);
+        createNewWriterJob.setThreadName(writeToHtmlByThreadName);
+        createNewWriterJob.setToHTMLFileName(fileNameForWrite);
         return this.stateJobForRunner;
     }
     protected ArrayBlockingQueue<String> getStringBusForLogWrite(){

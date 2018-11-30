@@ -19,14 +19,14 @@ package ru.newcontrol.ncfv;
  *
  * @author wladimirowichbiaran
  */
-public class AppConstants {
-    protected static final Integer LOG_HTML_JOB_QUEUE_SIZE = 100;
-    protected static final Integer LOG_HTML_MESSAGES_QUEUE_SIZE = 10000;
-    protected static final Integer LOG_LINES_COUNT = 1000;
-    protected static final Integer LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT = 1;
-    protected static final Integer LOG_LEVEL_DEVELOPMENT = 7;
-    protected static final Integer LOG_LEVEL_DEBUG = 5;
-    protected static final Integer LOG_LEVEL_USE = 3;
-    protected static final Integer LOG_LEVEL_SILENT = 1;
-    protected static final Integer LOG_LEVEL_CURRENT = LOG_LEVEL_DEVELOPMENT;
+public class AppLoggerRuleHelper {
+    protected static AppLoggerStateReader createNewReaderJob(){
+        return new AppLoggerStateReader();
+    }
+    protected static AppLoggerStateWriter createNewWriterJob(){
+        return new AppLoggerStateWriter();
+    }
+    /**
+     * check for logger job bus writer or reader, when all job is done, then run new job (say start for ready thread)
+     */
 }

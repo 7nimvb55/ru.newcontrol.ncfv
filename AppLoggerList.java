@@ -42,6 +42,7 @@ public class AppLoggerList {
     
     private AppLoggerBus loggerBus;
     private AppLoggerRule managerForOrder;
+    private AppLoggerBusJob loggerJobBus;
     private AppLoggerState currentJob;
     
     private ArrayBlockingQueue<ArrayBlockingQueue<String>> commandsOutPut;
@@ -72,7 +73,9 @@ public class AppLoggerList {
         setFalseNeedForSaveIndexHtml();
         
         this.loggerBus = new AppLoggerBus();
-        System.out.println("+|0000001|+|||||||||+++++++++++|||||||||+++++++++++new AppLoggerList(); ");
+        this.loggerJobBus = new AppLoggerBusJob();
+        
+        System.out.println("+|0000001|+|AppLoggerList||||||||+++++++++++|||||||||+++++++++++new AppLoggerList(); ");
         this.commandsOutPut = loggerBus.getCommandsOutPut();
         this.listForRunnableLogStrs = loggerBus.getListForRunnableLogStrs();
         //this.readedLinesFromLogHTML = loggerBus.getReadedLinesFromLogHTML();
@@ -82,9 +85,7 @@ public class AppLoggerList {
         this.listLogStorageFiles = this.loggerBus.getLogHtmlStorageList();
         this.fileForWrite = this.listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_TABLE_PREFIX);
         
-        this.managerForOrder = new AppLoggerRule(this.listForRunnableLogStrs, 
-                this.readedArrayForLines, 
-                this.listLogStorageFiles);
+        this.managerForOrder = new AppLoggerRule(this.loggerBus, this.loggerJobBus);
         this.currentJob = this.managerForOrder.getCurrentJob();
     }
     protected AppLoggerBus getLoggerBus(){
@@ -109,26 +110,53 @@ public class AppLoggerList {
     }
     protected void makeWrite(){
         
-        this.managerForOrder.setStringBusForLogWrite(AppObjectsBusHelper.cleanBusForRunnables(this.listForRunnableLogStrs));
-        System.out.println("-------|||||||||-----------|||||||||------------AppLoggerList.makeWrite for " + this.managerForOrder.getStringBusForLogWrite().size());
-        System.out.println("-------|||||||||-----------|||||||||------------AppLoggerList.makeWrite to " + this.managerForOrder.getCurrentJob().getToHTMLLogFileName().toString());
+        //this.managerForOrder.setStringBusForLogWrite(AppObjectsBusHelper.cleanBusForRunnables(this.listForRunnableLogStrs));
+        System.out.println("-------|||||||||-----------|||||||||------------AppLoggerList.makeWrite for " 
+                + this.managerForOrder.getStringBusForLogWrite().size());
+        System.out.println("-------|||||||||-----------|||||||||------------AppLoggerList.makeWrite to " 
+                + this.managerForOrder.getCurrentJob().getToHTMLLogFileName().toString());
         waitForPrevJobDoneForWriter();
         String nowTimeStringWithMS = 
                     AppFileOperationsSimple.getNowTimeStringWithMS();
-        ThreadGroup newJobThreadGroup = new ThreadGroup("WriterGroup-" + nowTimeStringWithMS);
-        Thread writeToHtmlByThread = new Thread(newJobThreadGroup, this.managerForOrder.getRunnableWriter(), "writerToHtml-" + nowTimeStringWithMS);
-        System.out.println("Write Thread id " + writeToHtmlByThread.getId() +  " thread name " + writeToHtmlByThread.getName() + " State " + writeToHtmlByThread.getState().name());
+        String nameJobThreadGroup = "WriterGroup-" + nowTimeStringWithMS;
+        ThreadGroup newJobThreadGroup = new ThreadGroup(nameJobThreadGroup);
+        String nameJobThread = "writerToHtml-" + nowTimeStringWithMS;
+        
+        Thread writeToHtmlByThread = new Thread(newJobThreadGroup, this.managerForOrder.getRunnableWriter(), nameJobThread);
+        this.managerForOrder.getWriterCurrentJob(
+            AppObjectsBusHelper.cleanBusForRunnables(this.listForRunnableLogStrs),
+            newJobThreadGroup,
+            writeToHtmlByThread,
+            this.fileForWrite
+        );
+        System.out.println("Write Thread id " 
+                + writeToHtmlByThread.getId() 
+                +  " thread name " 
+                + writeToHtmlByThread.getName() 
+                + " State " 
+                + writeToHtmlByThread.getState().name());
         writeToHtmlByThread.start();
-        System.out.println("Write Thread id " + writeToHtmlByThread.getId() +  " thread name " + writeToHtmlByThread.getName() + " State " + writeToHtmlByThread.getState().name());
+        System.out.println("Write Thread id " 
+                + writeToHtmlByThread.getId() 
+                +  " thread name " 
+                + writeToHtmlByThread.getName() 
+                + " State " 
+                + writeToHtmlByThread.getState().name());
         waitForPrevJobDoneForWriter();
-        System.out.println("Write Thread id " + writeToHtmlByThread.getId() +  " thread name " + writeToHtmlByThread.getName() + " State " + writeToHtmlByThread.getState().name());
+        System.out.println("Write Thread id " 
+                + writeToHtmlByThread.getId() 
+                +  " thread name " 
+                + writeToHtmlByThread.getName() 
+                + " State " 
+                + writeToHtmlByThread.getState().name());
         //cleanLogStingQueue();
     }
     protected void cleanLogStingQueue(){
         this.listForRunnableLogStrs.clear();
     }
     protected void waitForPrevJobDoneForWriter(){
-        System.out.println("-------|||||||||-----------|||||||||------------make write prev isjobdone " + this.currentJob.isToHTMLJobDone());
+        System.out.println("-------|||||||||-----------|||||||||------------make write prev isjobdone " 
+                + this.currentJob.isToHTMLJobDone());
         if( !this.currentJob.isToHTMLNewRunner() ){
             try{
                 System.out.println("wait for prev done");

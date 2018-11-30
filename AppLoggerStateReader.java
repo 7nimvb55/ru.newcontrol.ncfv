@@ -16,89 +16,73 @@
 package ru.newcontrol.ncfv;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  *
  * @author wladimirowichbiaran
  */
-public class AppLoggerState {
-    private Path toHTMLlogFile;
-    private Boolean toHtmlFileNameSet;
-    private Boolean toHTMLlogFileChanged;
-    private Boolean toHTMLjobIsDone;
-    private Boolean toHTMLisNewRunner;
-    
+public class AppLoggerStateReader {
     private Path fromHTMLlogFile;
     private Boolean fromHtmlFileNameSet;
     private Boolean fromHTMLlogFileChanged;
+    private Boolean fromHTMLjobInitStart;
+    private long initStartNanoTime;
+    //@todo work place start time
+    private Boolean fromHTMLjobInitEnd;
+    private long initEndNanoTime;
+    //@todo work place end time
+    private Boolean fromHTMLjobWrokPalceInit;
+    //@todo work place param: thread, thread, group, thread id, thread name
+    
+    
     private Boolean fromHTMLjobIsDone;
     private Boolean fromHTMLisNewRunner;
+    private final UUID randomUUID;
+    private final long CreationNanoTime;
+    private String newJobThreadGroupName;
+    private String newJobThreadName;
+    
 
-    public AppLoggerState() {
-        setFalseToHTMLLogFileNameChanged();
-        setFalseToHTMLJobDone();
-        setTrueToHTMLNewRunner();
+    public AppLoggerStateReader() {
         
+        randomUUID = UUID.randomUUID();
+        CreationNanoTime = System.nanoTime();
         setFalseFromHTMLLogFileNameChanged();
         setFalseFromHTMLJobDone();
-        setTrueFromHTMLNewRunner();
+        setFalseFromHTMLNewRunner();
+    }
+    
+    
+    protected void setThreadGroupName(String outerThreadGroupName){
+        this.newJobThreadGroupName = outerThreadGroupName;
+    }
+    protected String getThreadGroupName(){
+        return this.newJobThreadGroupName;
+    }
+            
+    protected void setThreadName(String outerThreadName){
+        this.newJobThreadName = outerThreadName;
+    }
+    protected String getThreadName(){
+        return this.newJobThreadName;
+    }
+    
+    protected UUID getID(){
+        return this.randomUUID;
+    }
+    protected long getCreationTime(){
+        return this.CreationNanoTime;
     }
     
     protected Boolean isFromHtmlFileNameSet(){
-        return this.fromHtmlFileNameSet;
-    }
-    
-    protected Boolean isToHtmlFileNameSet(){
-        return this.toHtmlFileNameSet;
-    }
-    
-    protected void setTrueToHtmlFileNameSet(){
-        this.toHtmlFileNameSet = Boolean.TRUE;
-    }
-    protected void setFalseToHtmlFileNameSet(){
-        this.toHtmlFileNameSet = Boolean.FALSE;
-    }
-    
-    protected void setTrueToHTMLNewRunner(){
-        this.toHTMLisNewRunner = Boolean.TRUE;
-    }
-    protected void setTrueToHTMLJobDone(){
-        this.toHTMLjobIsDone = Boolean.TRUE;
-    }
-    protected void setTrueToHTMLLogFileNameChanged(){
-        this.toHTMLlogFileChanged = Boolean.TRUE;
-    }
-    protected void setFalseToHTMLNewRunner(){
-        this.toHTMLisNewRunner = Boolean.FALSE;
-    }
-    protected void setFalseToHTMLJobDone(){
-        this.toHTMLjobIsDone = Boolean.FALSE;
-    }
-    protected void setFalseToHTMLLogFileNameChanged(){
-        this.toHTMLlogFileChanged = Boolean.FALSE;
-    }
-    protected void setToHTMLFileName(Path newLogFileName){
-        this.toHTMLlogFile = newLogFileName;
-        setTrueToHTMLLogFileNameChanged();
-    }
-    protected Path getToHTMLLogFileName(){
-        return this.toHTMLlogFile;
-    }
-    
-    
-    protected Boolean isToHTMLNewRunner(){
-        return this.toHTMLisNewRunner;
-    }
-    protected Boolean isToHTMLJobDone(){
-        if( this.toHTMLjobIsDone ){
+        if( this.fromHtmlFileNameSet ){
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
     }
-    protected Boolean isToHTMLLogFileNameChanged(){
-        return this.toHTMLlogFileChanged;
-    }
-    
     protected void setTrueFromHtmlFileNameSet(){
         this.fromHtmlFileNameSet = Boolean.TRUE;
     }
@@ -133,10 +117,13 @@ public class AppLoggerState {
     }
     
     protected Boolean isFromHTMLLogFileNameChanged(){
-        return this.fromHTMLlogFileChanged;
+        if( this.fromHTMLlogFileChanged ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
     protected Path getFromHTMLLogFileName(){
-        return this.fromHTMLlogFile;
+        return Paths.get(this.fromHTMLlogFile.toString());
     }
     protected Boolean isFromHTMLJobDone(){
         if( this.fromHTMLjobIsDone ){
@@ -145,7 +132,9 @@ public class AppLoggerState {
         return Boolean.FALSE;
     }
     protected Boolean isFromHTMLNewRunner(){
-        return this.fromHTMLisNewRunner;
+        if( this.fromHTMLisNewRunner ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
-    
 }
