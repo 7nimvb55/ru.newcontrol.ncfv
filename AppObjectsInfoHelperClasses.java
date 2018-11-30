@@ -161,7 +161,7 @@ public class AppObjectsInfoHelperClasses {
             ArrayBlockingQueue<ArrayBlockingQueue<String>> commandsOutPut){
         String nowTimeStringWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
-        ArrayBlockingQueue<String> strForOut = new ArrayBlockingQueue<String>(1000);
+        ArrayBlockingQueue<String> strForOut = new ArrayBlockingQueue<String>(AppConstants.LOG_HTML_MESSAGES_QUEUE_SIZE);
         strForOut.add(nowTimeStringWithMS);
         strForOut.add("Thread.getClass().getDeclaredMethods().length");
         Method resultGetDeclaredMethods[] = detectedThread.getClass().getDeclaredMethods();

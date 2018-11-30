@@ -72,15 +72,15 @@ public class AppLoggerList {
         setFalseNeedForSaveIndexHtml();
         
         this.loggerBus = new AppLoggerBus();
-        
+        System.out.println("+|0000001|+|||||||||+++++++++++|||||||||+++++++++++new AppLoggerList(); ");
         this.commandsOutPut = loggerBus.getCommandsOutPut();
         this.listForRunnableLogStrs = loggerBus.getListForRunnableLogStrs();
-        this.readedLinesFromLogHTML = loggerBus.getReadedLinesFromLogHTML();
+        //this.readedLinesFromLogHTML = loggerBus.getReadedLinesFromLogHTML();
         //this.readedLinesFromTablesWork = 
         
         //this.readedArrayForLines = loggerBus.
-        
-
+        this.listLogStorageFiles = this.loggerBus.getLogHtmlStorageList();
+        this.fileForWrite = this.listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_TABLE_PREFIX);
         
         this.managerForOrder = new AppLoggerRule(this.listForRunnableLogStrs, 
                 this.readedArrayForLines, 
@@ -101,6 +101,7 @@ public class AppLoggerList {
             setNewJsFileForLogHtml();
         }
         else if( !isNewLoggerList() ){
+            
             setNewTableFileForLogHtml();
         }
         setFalseNewLoggerList();
@@ -182,6 +183,7 @@ public class AppLoggerList {
             waitForPrevJobDoneForReader();
             setNextReadedFileFromLogHtml(elementOfTables);
             addAncorStructure(elementOfTables);
+            System.out.println("AppLoggerList.doReadFromLogHtmlListOfTables() for read file " + elementOfTables.toString());
             readListOfTables();
             waitForPrevJobDoneForReader();
         }
