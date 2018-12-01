@@ -75,10 +75,11 @@ public class AppObjectsInfo {
         System.out.println("+|0000005|+|AppObjectsInfo||||||||+++++++++++|||||||||+++++++++++loggerHtml.setTrueNeedForSaveCss(); ");
         loggerHtml.setFalseNeedForSaveCss();
         
-        /*ArrayList<Path> filesByMaskFromDir = new ArrayList<Path>();
-        
+        ArrayList<Path> filesByMaskFromDir = new ArrayList<Path>();
+        System.out.println("+|0000005-1|+|AppObjectsInfo||||||||+++++++++++|||||||||+++++++++++loggerHtml.getLoggerBus().getLogHtmlListTableFiles(); ");
         for( Path fileForRead : loggerHtml.getLoggerBus().getLogHtmlListTableFiles() ){
             filesByMaskFromDir.add(fileForRead);
+            System.out.println("+|" + fileForRead.toString());
         }
         //@todo fix it
         Path fileJsMenuPrefix = loggerHtml.getLoggerBus().getLogFilesListElement(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX).getFileName();
@@ -88,14 +89,14 @@ public class AppObjectsInfo {
         System.out.println("+|0000006|+|AppObjectsInfo||||||||+++++++++++|||||||||+++++++++++AppObjectsInfoHelperHtml.getLinesForTopSaveIndex(); ");
         loggerHtml.doReadFromLogHtmlListOfTables();
         System.out.println("+|0000007|+|AppObjectsInfo||||||||+++++++++++|||||||||+++++++++++loggerHtml.doReadFromLogHtmlListOfTables(); ");
-        loggerHtml.addReadedTablesIntoList();
+        //loggerHtml.addReadedTablesIntoList();
         AppObjectsInfoHelperHtml.getLinesForBottomSaveIndex(loggerHtml.getLoggerBus().getListForRunnableLogStrs());
         System.out.println("+|0000008|+|AppObjectsInfo||||||||+++++++++++|||||||||+++++++++++AppObjectsInfoHelperHtml.getLinesForBottomSaveIndex(); ");
         loggerHtml.setTrueNeedForSaveIndexHtml();
         loggerHtml.doWriteToLogHtmlCurrentFile();
         loggerHtml.waitForPrevJobDoneForWriter();
         System.out.println("+|0000009|+|AppObjectsInfo||||||||+++++++++++|||||||||+++++++++++loggerHtml.doWriteToLogHtmlCurrentFile(); ");
-        loggerHtml.setFalseNeedForSaveIndexHtml();*/
+        loggerHtml.setFalseNeedForSaveIndexHtml();
         
     }
 

@@ -40,6 +40,9 @@ public class AppLoggerRule {
     private AppLoggerStateWriter stateJobForWriteRunner;
     private Boolean isJobForWriter;
     
+    private AppLoggerStateReader stateJobForReaderRunner;
+    private Boolean isJobForReader;
+    
     private ConcurrentSkipListMap<String, Path> currentLogHTMLStorage;
 
     public AppLoggerRule(AppLoggerBus outerLoggerBus, AppLoggerBusJob outerLoggerJobBus) {
@@ -57,6 +60,7 @@ public class AppLoggerRule {
         //this.stateJobForRunner = new AppLoggerState();
         //this.stateJobForRunner.setToHTMLFileName(newLogHtmlTableFile);
         setFalseJobForWriter();
+        setFalseJobForReader();
         setFalseCreatedRunnableWriter();
         setFalseCreatedRunnableReader();
     }
@@ -73,8 +77,20 @@ public class AppLoggerRule {
         }
         return Boolean.FALSE;
     }
+    protected void setTrueJobForReader(){
+        this.isJobForReader = Boolean.TRUE;
+    }
+    protected void setFalseJobForReader(){
+        this.isJobForReader = Boolean.FALSE;
+    }
+    protected Boolean isCurrentReaderJob(){
+        if( this.isJobForReader ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
     
-    // for compatable new and old versions uncomment
+    
     protected AppLoggerStateWriter currentWriterJob(){
         if( !this.logJobBus.isJobForWriterEmpty() ){
             
@@ -88,7 +104,19 @@ public class AppLoggerRule {
         setFalseJobForWriter();
         return new AppLoggerStateWriter("HaventJobForRun-AppLoggerRule.getCurrentJob");
     }
-    
+    protected AppLoggerStateReader currentReaderJob(){
+        if( !this.logJobBus.isJobForReaderEmpty() ){
+            
+            this.stateJobForReaderRunner = this.logJobBus.getInitedForReader();
+            setTrueJobForReader();
+        } /*else {
+            if( !this.stateJobForReaderRunner.isFromHTMLJobDone() ){
+                return this.stateJobForReaderRunner;
+            }
+        }*/
+        setFalseJobForReader();
+        return new AppLoggerStateReader("HaventJobForRun-AppLoggerRule.getCurrentJob");
+    }
     
     protected AppLoggerStateReader initReaderNewJob(
             String newJobThreadGroupName,

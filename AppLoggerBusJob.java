@@ -48,6 +48,16 @@ public class AppLoggerBusJob {
         return new AppLoggerStateWriter("HaventJobForRun-AppLoggerBusJob.getInitedForWriter");
     }
     /**
+     * 
+     */
+    protected AppLoggerStateReader getInitedForReader(){
+        AppLoggerStateReader poll = this.listJobForReaderRunnable.poll();
+        if( poll != null ){
+            return poll;
+        }
+        return new AppLoggerStateReader("HaventJobForRun-AppLoggerBusJob.getInitedForReader");
+    }
+    /**
      * Job For Reader Runnables Part
      * @todo select methods for isJobDone, isFileSet, isNewRunner
      * @return 
