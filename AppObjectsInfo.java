@@ -55,7 +55,7 @@ public class AppObjectsInfo {
         loggerHtml.doWriteToLogHtmlCurrentFile();
         loggerHtml.waitForPrevJobDoneForWriter();
         System.out.println("+|0000002|+|AppObjectsInfo||||||||+++++++++++|||||||||+++++++++++AppObjectsInfoHelperClasses.getThreadClass(); ");
-        /*AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethods(readedThread, loggerHtml.getLoggerBus().getCommandsOutPut());
+        AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethods(readedThread, loggerHtml.getLoggerBus().getCommandsOutPut());
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getLoggerBus().getCommandsOutPut(),loggerHtml.getLoggerBus().getListForRunnableLogStrs());
         
         loggerHtml.doWriteToLogHtmlCurrentFile();
@@ -75,7 +75,7 @@ public class AppObjectsInfo {
         System.out.println("+|0000005|+|AppObjectsInfo||||||||+++++++++++|||||||||+++++++++++loggerHtml.setTrueNeedForSaveCss(); ");
         loggerHtml.setFalseNeedForSaveCss();
         
-        ArrayList<Path> filesByMaskFromDir = new ArrayList<Path>();
+        /*ArrayList<Path> filesByMaskFromDir = new ArrayList<Path>();
         
         for( Path fileForRead : loggerHtml.getLoggerBus().getLogHtmlListTableFiles() ){
             filesByMaskFromDir.add(fileForRead);
