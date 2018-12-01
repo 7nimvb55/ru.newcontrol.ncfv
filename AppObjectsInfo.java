@@ -55,7 +55,7 @@ public class AppObjectsInfo {
         loggerHtml.doWriteToLogHtmlCurrentFile();
         loggerHtml.waitForPrevJobDoneForWriter();
         System.out.println("+|0000002|+|AppObjectsInfo||||||||+++++++++++|||||||||+++++++++++AppObjectsInfoHelperClasses.getThreadClass(); ");
-        AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethods(readedThread, loggerHtml.getLoggerBus().getCommandsOutPut());
+        /*AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethods(readedThread, loggerHtml.getLoggerBus().getCommandsOutPut());
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getLoggerBus().getCommandsOutPut(),loggerHtml.getLoggerBus().getListForRunnableLogStrs());
         
         loggerHtml.doWriteToLogHtmlCurrentFile();
@@ -97,7 +97,7 @@ public class AppObjectsInfo {
         loggerHtml.doWriteToLogHtmlCurrentFile();
         loggerHtml.waitForPrevJobDoneForWriter();
         System.out.println("+|0000009|+|AppObjectsInfo||||||||+++++++++++|||||||||+++++++++++loggerHtml.doWriteToLogHtmlCurrentFile(); ");
-        loggerHtml.setFalseNeedForSaveIndexHtml();
+        loggerHtml.setFalseNeedForSaveIndexHtml();*/
         
     }
 
