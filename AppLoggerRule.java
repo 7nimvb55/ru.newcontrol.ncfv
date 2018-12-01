@@ -42,6 +42,8 @@ public class AppLoggerRule {
     
     private AppLoggerStateReader stateJobForReaderRunner;
     private Boolean isJobForReader;
+    private Boolean isReadedJobComplete;
+    private Boolean isReadedJobBegin;
     
     private ConcurrentSkipListMap<String, Path> currentLogHTMLStorage;
 
@@ -59,12 +61,37 @@ public class AppLoggerRule {
         // for compatable new and old versions uncomment
         //this.stateJobForRunner = new AppLoggerState();
         //this.stateJobForRunner.setToHTMLFileName(newLogHtmlTableFile);
+        setFalseAllReadedJobComplete();
+        setFalseAllReadedJobBegin();
         setFalseJobForWriter();
         setFalseJobForReader();
         setFalseCreatedRunnableWriter();
         setFalseCreatedRunnableReader();
     }
-    
+    protected void setTrueAllReadedJobBegin(){
+        this.isReadedJobBegin = Boolean.TRUE;
+    }
+    protected void setFalseAllReadedJobBegin(){
+        this.isReadedJobBegin = Boolean.FALSE;
+    }
+    protected Boolean isAllReadedJobBegin(){
+        if( this.isReadedJobBegin ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    protected void setTrueAllReadedJobComplete(){
+        this.isReadedJobComplete = Boolean.TRUE;
+    }
+    protected void setFalseAllReadedJobComplete(){
+        this.isReadedJobComplete = Boolean.FALSE;
+    }
+    protected Boolean isAllReadedJobComplete(){
+        if( this.isReadedJobComplete ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
     protected void setTrueJobForWriter(){
         this.isJobForWriter = Boolean.TRUE;
     }
@@ -95,7 +122,9 @@ public class AppLoggerRule {
         if( !this.logJobBus.isJobForWriterEmpty() ){
             
             this.stateJobForWriteRunner = this.logJobBus.getInitedForWriter();
-            setTrueJobForWriter();
+            if( !this.stateJobForWriteRunner.isToHTMLJobDone() ){
+                setTrueJobForWriter();
+            }
         } else {
             if( !this.stateJobForWriteRunner.isToHTMLJobDone() ){
                 return this.stateJobForWriteRunner;
@@ -105,10 +134,25 @@ public class AppLoggerRule {
         return new AppLoggerStateWriter("HaventJobForRun-AppLoggerRule.getCurrentJob");
     }
     protected AppLoggerStateReader currentReaderJob(){
+        System.out.println("                           AppLoggerRule.currentReaderJob()  jobBus.getCountJobForReader  " 
+                + this.logJobBus.getCountJobForReader()
+                + "     jobBus.isJobForReaderEmpty()      "
+                + this.logJobBus.isJobForReaderEmpty()
+        );
+        if( this.isJobForReader ){
+            System.out.println("          AppLoggerRule.isJobForReader " 
+                    + this.isJobForReader 
+                    + "              " 
+                    
+                            );
+        }
         if( !this.logJobBus.isJobForReaderEmpty() ){
             
             this.stateJobForReaderRunner = this.logJobBus.getInitedForReader();
-            setTrueJobForReader();
+            if( !this.stateJobForReaderRunner.isFromHTMLJobDone() ){
+                setTrueJobForReader();
+                return this.stateJobForReaderRunner;
+            }
         } /*else {
             if( !this.stateJobForReaderRunner.isFromHTMLJobDone() ){
                 return this.stateJobForReaderRunner;

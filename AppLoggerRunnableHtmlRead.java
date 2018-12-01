@@ -48,6 +48,10 @@ public class AppLoggerRunnableHtmlRead implements Runnable {
                             + " _|_|_|_|_|_"
                             + " start for read file");
             ArrayBlockingQueue<String> readedLines = new ArrayBlockingQueue<String>(1000);
+            String ancorString = currentJob.getAncorString();
+            if( ancorString.length() > 17 ){
+                readedLines.add(ancorString);
+            }
             try {
                 readedLines.addAll(Files.readAllLines(fileForReadInThisJob, Charset.forName("UTF-8")));
                 if( readedLines != null){

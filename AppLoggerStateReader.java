@@ -45,6 +45,9 @@ public class AppLoggerStateReader {
     private String newJobThreadGroupName;
     private String newJobThreadName;
     
+    private Boolean fromHtmlAncorString;
+    private String ancorForHtml;
+    
 
     public AppLoggerStateReader() {
         
@@ -56,6 +59,7 @@ public class AppLoggerStateReader {
         setFalseFromHTMLNewRunner();
         setFalseInitStartRead();
         setFalseInitEndRead();
+        setFalseAncorStructure();
     }
     public AppLoggerStateReader(String strForEmptyWork) {
         randomUUID = UUID.randomUUID();
@@ -68,6 +72,30 @@ public class AppLoggerStateReader {
         setFalseFromHTMLNewRunner();
         setFalseInitStartRead();
         setFalseInitEndRead();
+        setFalseAncorStructure();
+    }
+    protected String getAncorString(){
+        if( isAncorStructure() ){
+            return new String(this.ancorForHtml);
+        }
+        return new String("");
+    }
+    protected void setAncorString(String strForAncor){
+        setTrueAncorStructure();
+        this.ancorForHtml = strForAncor;
+    }
+    protected Boolean isAncorStructure(){
+        if( this.fromHtmlAncorString ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    
+    protected void setTrueAncorStructure(){
+        this.fromHtmlAncorString = Boolean.TRUE;
+    }
+    protected void setFalseAncorStructure(){
+        this.fromHtmlAncorString = Boolean.FALSE;
     }
     protected Boolean isInitStartRead(){
         if( this.fromHTMLjobInitStart ){
