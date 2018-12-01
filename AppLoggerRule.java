@@ -193,6 +193,10 @@ public class AppLoggerRule {
     protected ArrayBlockingQueue<String> getStringBusForLogWrite(){
         return this.stringForLogHtmlWrite;
     }
+    /**
+     * @deprecated 
+     * @return 
+     */
     protected ArrayBlockingQueue<ArrayBlockingQueue<String>> getStringBusForLogRead(){
         return this.readedArrayForLines;
         //return this.linesFromLogHtmlRead;
@@ -201,7 +205,7 @@ public class AppLoggerRule {
         this.stringForLogHtmlWrite = outerListForLogStrs;
     }
     protected void setStringBusForLogRead(ArrayBlockingQueue<String> readedLinesFromReaderRunner){
-        this.readedArrayForLines.add(AppObjectsBusHelper.cleanBusForRunnables(readedLinesFromReaderRunner));
+        this.logBus.addToArrayBusForHtmlRead(readedLinesFromReaderRunner);
         //this.linesFromLogHtmlRead = AppObjectsBusHelper.cleanBusForRunnables(readedLinesFromLogHtmlBus);
     }
     

@@ -56,6 +56,24 @@ public class AppLoggerBus {
         this.listLogStorageFiles = getLogHtmlStorageList();
     }
     
+    protected ArrayBlockingQueue<ArrayBlockingQueue<String>> getArrayBusForHtmlRead(){
+        return this.readedArrayForLines;
+    }
+    protected void addToArrayBusForHtmlRead(ArrayBlockingQueue<String> readedFormHtmlLines){
+        ArrayBlockingQueue<String> fromReadFile = new ArrayBlockingQueue<String>(AppConstants.LOG_HTML_MESSAGES_QUEUE_SIZE);
+        String pollFirstForSaveJsMenu = "";
+        do{
+            pollFirstForSaveJsMenu = readedFormHtmlLines.poll();
+            if( pollFirstForSaveJsMenu != null ){
+                fromReadFile.add(new String(pollFirstForSaveJsMenu));
+            }
+        }while( !readedFormHtmlLines.isEmpty() );
+        this.readedArrayForLines.add(fromReadFile);
+    }
+    protected int countOfArrayBusForHtmlRead(){
+        return this.readedArrayForLines.size();
+    }
+    
     protected void setFalseForLogHtmlListTableFiles(){
         this.isLogHtmlListTableFilesInit = Boolean.FALSE;
     }

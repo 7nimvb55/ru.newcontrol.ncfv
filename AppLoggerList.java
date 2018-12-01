@@ -95,7 +95,12 @@ public class AppLoggerList {
         if( isNeedForSaveIndexHtml() ){
             if( this.managerForOrder.isAllReadedJobBegin() ){
                 System.out.println("----------------------------------------AppLoggerBusJob.getCountJobForReader() " 
-                        + this.loggerJobBus.getCountJobForReader());
+                        + this.loggerJobBus.getCountJobForReader()
+                );
+                System.out.println("+|+|+|+");
+                System.out.println("+|+|+|+AppLoggerBus.countOfArrayBusForHtmlRead() "
+                        + this.loggerBus.countOfArrayBusForHtmlRead()
+                );
                 setNewIndexFileForLogHtml();
             }
         }

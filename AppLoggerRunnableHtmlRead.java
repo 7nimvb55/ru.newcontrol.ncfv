@@ -39,6 +39,7 @@ public class AppLoggerRunnableHtmlRead implements Runnable {
     
     @Override
     public void run() {
+        
         AppLoggerStateReader currentJob = this.managerForThis.currentReaderJob();
         if( !currentJob.isFromHTMLJobDone() ){
             Path fileForReadInThisJob = currentJob.getFromHTMLLogFileName();
@@ -47,7 +48,7 @@ public class AppLoggerRunnableHtmlRead implements Runnable {
                             + fileForReadInThisJob.toString() 
                             + " _|_|_|_|_|_"
                             + " start for read file");
-            ArrayBlockingQueue<String> readedLines = new ArrayBlockingQueue<String>(1000);
+            ArrayBlockingQueue<String> readedLines = new ArrayBlockingQueue<String>(AppConstants.LOG_HTML_MESSAGES_QUEUE_SIZE);
             String ancorString = currentJob.getAncorString();
             if( ancorString.length() > 17 ){
                 readedLines.add(ancorString);
