@@ -32,14 +32,14 @@ public class AppLoggerRunnableHtmlRead implements Runnable {
     public AppLoggerRunnableHtmlRead(AppLoggerRule outerManagerForThis){
         super();
     this.managerForThis = outerManagerForThis;
-    this.managerForThis.getCurrentJob().setTrueFromHTMLNewRunner();
+    //this.managerForThis..setTrueFromHTMLNewRunner();
         String threadInfoToString = NcAppHelper.getThreadInfoToString(Thread.currentThread());
         System.out.println("*** ||| *** ||| *** create log reader *** ||| *** ||| ***" + threadInfoToString);
     }
     
     @Override
     public void run() {
-        AppLoggerState currentJob = this.managerForThis.getCurrentJob();
+        /*AppLoggerState currentJob = this.managerForThis.getCurrentJob();
         Path fromHTMLLogFileName = this.managerForThis.getCurrentJob().getFromHTMLLogFileName();
         currentJob.setFalseFromHTMLJobDone();
         System.out.println("_|_|_|_|_|_ AppLoggerRunnableHtmlRead.run() fromHTMLLogFileName " 
@@ -69,7 +69,7 @@ public class AppLoggerRunnableHtmlRead implements Runnable {
             ex.printStackTrace();
         }
         currentJob.setTrueFromHTMLJobDone();
-        currentJob.setFalseFromHTMLNewRunner();
+        currentJob.setFalseFromHTMLNewRunner();*/
     }
 
 }

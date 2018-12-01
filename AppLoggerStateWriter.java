@@ -29,8 +29,10 @@ public class AppLoggerStateWriter {
     private Boolean toHtmlFileNameSet;
     private Boolean toHTMLlogFileChanged;
     private Boolean toHTMLjobInitStart;
+    private long initStartNanoTime;
     //@todo work place start time
     private Boolean toHTMLjobInitEnd;
+    private long initEndNanoTime;
     //@todo work place end time
     private Boolean toHTMLjobWrokPalceInit;
     //@todo work place param: thread, thread group, thread id, thread name
@@ -48,8 +50,52 @@ public class AppLoggerStateWriter {
         randomUUID = UUID.randomUUID();
         CreationNanoTime = System.nanoTime();
         setFalseToHTMLLogFileNameChanged();
+        setFalseToHtmlFileNameSet();
         setFalseToHTMLJobDone();
         setFalseToHTMLNewRunner();
+        setFalseInitStartWrite();
+        setFalseInitEndWrite();
+    }
+    public AppLoggerStateWriter(String strForEmptyWork) {
+        setFalsePartLinesForWrite();
+        randomUUID = UUID.randomUUID();
+        CreationNanoTime = System.nanoTime();
+        setFalseToHTMLLogFileNameChanged();
+        setFalseToHtmlFileNameSet();
+        setThreadName(strForEmptyWork);
+        setThreadName(strForEmptyWork);
+        setTrueToHTMLJobDone();
+        setFalseToHTMLNewRunner();
+        setFalseInitStartWrite();
+        setFalseInitEndWrite();
+    }
+    protected Boolean isInitStartWrite(){
+        if( this.toHTMLjobInitStart ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    
+    protected void setTrueInitStartWrite(){
+        this.initStartNanoTime = System.nanoTime();
+        this.toHTMLjobInitStart = Boolean.TRUE;
+    }
+    protected void setFalseInitStartWrite(){
+        this.toHTMLjobInitStart = Boolean.FALSE;
+    }
+    protected Boolean isEndStartWrite(){
+        if( this.toHTMLjobInitEnd ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    
+    protected void setTrueInitEndWrite(){
+        this.initEndNanoTime = System.nanoTime();
+        this.toHTMLjobInitEnd = Boolean.TRUE;
+    }
+    protected void setFalseInitEndWrite(){
+        this.toHTMLjobInitEnd = Boolean.FALSE;
     }
     protected void setPartLinesForWrite(ArrayBlockingQueue<String> outerPartLinesForWrite){
         this.partLinesForWrite = outerPartLinesForWrite;
@@ -130,6 +176,7 @@ public class AppLoggerStateWriter {
     protected void setToHTMLFileName(Path newLogFileName){
         this.toHTMLlogFile = newLogFileName;
         setTrueToHTMLLogFileNameChanged();
+        setTrueToHtmlFileNameSet();
     }
     protected Path getToHTMLLogFileName(){
         return Paths.get(this.toHTMLlogFile.toString());

@@ -38,6 +38,16 @@ public class AppLoggerBusJob {
         this.countOfJobForWriterQueueCapacityChange = 0;
     }
     /**
+     * 
+     */
+    protected AppLoggerStateWriter getInitedForWriter(){
+        AppLoggerStateWriter poll = this.listJobForWriterRunnable.poll();
+        if( poll != null ){
+            return poll;
+        }
+        return new AppLoggerStateWriter("HaventJobForRun-AppLoggerBusJob.getInitedForWriter");
+    }
+    /**
      * Job For Reader Runnables Part
      * @todo select methods for isJobDone, isFileSet, isNewRunner
      * @return 

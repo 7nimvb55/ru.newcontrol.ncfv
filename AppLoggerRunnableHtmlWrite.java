@@ -34,29 +34,32 @@ public class AppLoggerRunnableHtmlWrite implements Runnable {
     ) {
         super();
         this.managerForThis = outerManagerForThis;
-        this.managerForThis.getCurrentJob().setTrueToHTMLNewRunner();
+        this.managerForThis.currentWriterJob().setTrueToHTMLNewRunner();
         System.out.println("*** ||| *** ||| *** create log writer *** ||| *** ||| ***");
     }
     
     @Override
     public void run() {
-        ArrayBlockingQueue<String> stringBusForLog = this.managerForThis.getStringBusForLogWrite();
-        AppLoggerState currentJob = this.managerForThis.getCurrentJob();
-        ArrayList<String> forRecord = AppObjectsBusHelper.cleanBusArrayBlockingToArrayString(stringBusForLog);
-        currentJob.setFalseToHTMLJobDone();
-        System.out.println("report writerRunnable size for " 
-                + forRecord.size()
-                + " write to "
-                + currentJob.getToHTMLLogFileName().toString()
-        );
-        try {
-            if( currentJob.isToHTMLLogFileNameChanged() ){
-                Files.write(currentJob.getToHTMLLogFileName(), forRecord, Charset.forName("UTF-8"));
-                currentJob.setFalseToHTMLLogFileNameChanged();
+        AppLoggerStateWriter currentJob = this.managerForThis.currentWriterJob();
+        if( !currentJob.isToHTMLJobDone() ){
+            ArrayList<String> forRecord = 
+                    AppObjectsBusHelper.cleanBusArrayBlockingToArrayString(
+                            currentJob.getPartLinesForWrite());
+
+            System.out.println("report writerRunnable size for " 
+                    + forRecord.size()
+                    + " write to "
+                    + currentJob.getToHTMLLogFileName().toString()
+            );
+            try {
+                if( currentJob.isToHtmlFileNameSet() ){
+                    Files.write(currentJob.getToHTMLLogFileName(), forRecord, Charset.forName("UTF-8"));
+                    currentJob.setFalseToHTMLLogFileNameChanged();
+                }
+            } catch (IOException ex) {
+                ex.getMessage();
+                ex.printStackTrace();
             }
-        } catch (IOException ex) {
-            ex.getMessage();
-            ex.printStackTrace();
         }
         currentJob.setFalseToHTMLNewRunner();
         currentJob.setTrueToHTMLJobDone();

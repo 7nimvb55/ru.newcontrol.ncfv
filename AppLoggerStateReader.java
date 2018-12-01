@@ -51,10 +51,52 @@ public class AppLoggerStateReader {
         randomUUID = UUID.randomUUID();
         CreationNanoTime = System.nanoTime();
         setFalseFromHTMLLogFileNameChanged();
+        setFalseFromHtmlFileNameSet();
         setFalseFromHTMLJobDone();
         setFalseFromHTMLNewRunner();
+        setFalseInitStartRead();
+        setFalseInitEndRead();
+    }
+    public AppLoggerStateReader(String strForEmptyWork) {
+        randomUUID = UUID.randomUUID();
+        CreationNanoTime = System.nanoTime();
+        setFalseFromHTMLLogFileNameChanged();
+        setFalseFromHtmlFileNameSet();
+        setThreadName(strForEmptyWork);
+        setThreadName(strForEmptyWork);
+        setTrueFromHTMLJobDone();
+        setFalseFromHTMLNewRunner();
+        setFalseInitStartRead();
+        setFalseInitEndRead();
+    }
+    protected Boolean isInitStartRead(){
+        if( this.fromHTMLjobInitStart ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
     
+    protected void setTrueInitStartRead(){
+        this.initStartNanoTime = System.nanoTime();
+        this.fromHTMLjobInitStart = Boolean.TRUE;
+    }
+    protected void setFalseInitStartRead(){
+        this.fromHTMLjobInitStart = Boolean.FALSE;
+    }
+    protected Boolean isEndStartRead(){
+        if( this.fromHTMLjobInitEnd ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    
+    protected void setTrueInitEndRead(){
+        this.initEndNanoTime = System.nanoTime();
+        this.fromHTMLjobInitEnd = Boolean.TRUE;
+    }
+    protected void setFalseInitEndRead(){
+        this.fromHTMLjobInitEnd = Boolean.FALSE;
+    }
     
     protected void setThreadGroupName(String outerThreadGroupName){
         this.newJobThreadGroupName = outerThreadGroupName;
@@ -114,6 +156,7 @@ public class AppLoggerStateReader {
     protected void setFromHTMLFileName(Path newLogFileName){
         this.fromHTMLlogFile = newLogFileName;
         setTrueFromHTMLLogFileNameChanged();
+        setTrueFromHtmlFileNameSet();
     }
     
     protected Boolean isFromHTMLLogFileNameChanged(){
