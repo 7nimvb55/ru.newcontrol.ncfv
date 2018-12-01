@@ -61,9 +61,9 @@ public class AppLoggerRunnableHtmlRead implements Runnable {
                             + " readedLines.size() " + readedLines.size());
                     this.managerForThis.setStringBusForLogRead(readedLines);
                 } else {
-                    System.out.println("_|_|_|_|_|_ AppLoggerRunnableHtmlRead.run() fromHTMLLogFileName " 
+                    System.out.println("_|_|NULL|_|_ AppLoggerRunnableHtmlRead.run() fromHTMLLogFileName " 
                             + fileForReadInThisJob.toString() 
-                            + " _|_|_|_|_|_"
+                            + " _|_|NULL|_|_"
                             + " readedLines.size() is null");
                     this.managerForThis.setStringBusForLogRead(new ArrayBlockingQueue<String>(1));
                 }
