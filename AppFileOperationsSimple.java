@@ -331,6 +331,7 @@ public class AppFileOperationsSimple {
         }
         return listFilesForHtmlLog;
     }
+    
     protected static Path getNewLogHtmlTableFile(Path currentDirForLog){
         
         Path toReturn = Paths.get(currentDirForLog.toString(),

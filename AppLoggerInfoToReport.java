@@ -15,10 +15,27 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.nio.file.Path;
+import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+
 /**
  *
  * @author wladimirowichbiaran
  */
 public class AppLoggerInfoToReport {
-    
+    protected static AppLoggerStateReader initReaderNewJobLite(
+            Path fileNameForWrite
+    ){
+        String instanceStartTimeWithMS = 
+                AppFileOperationsSimple.getNowTimeStringWithMS();
+        
+        AppLoggerStateReader createNewReaderJob = AppLoggerRuleHelper.createNewReaderJob();
+        createNewReaderJob.setTrueInitStartRead();
+        createNewReaderJob.setThreadGroupName("grReader-" + instanceStartTimeWithMS + "-" + UUID.randomUUID().toString());
+        createNewReaderJob.setThreadName("runReader-" + instanceStartTimeWithMS + "-" + UUID.randomUUID().toString());
+        createNewReaderJob.setFromHTMLFileName(fileNameForWrite);
+        createNewReaderJob.setTrueInitEndRead();
+        return createNewReaderJob;
+    }
 }
