@@ -47,7 +47,7 @@ public class AppObjectsInfo {
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getLoggerBus().getCommandsOutPut(),loggerHtml.getLoggerBus().getListForRunnableLogStrs());
         
         loggerHtml.doWriteToLogHtmlCurrentFile();
-        loggerHtml.waitForPrevJobDoneForWriter();
+        /*loggerHtml.waitForPrevJobDoneForWriter();
         System.out.println("+|0000001|+|AppObjectsInfo||||||||+++++++++++|||||||||+++++++++++AppObjectsInfoHelperClasses.getThreadName(); ");
         AppObjectsInfoHelperClasses.getThreadClass(readedThread, loggerHtml.getLoggerBus().getCommandsOutPut());
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getLoggerBus().getCommandsOutPut(),loggerHtml.getLoggerBus().getListForRunnableLogStrs());
@@ -100,8 +100,17 @@ public class AppObjectsInfo {
         loggerHtml.doWriteToLogHtmlCurrentFile();
         loggerHtml.waitForPrevJobDoneForWriter();
         System.out.println("+|0000009|+|AppObjectsInfo||||||||+++++++++++|||||||||+++++++++++loggerHtml.doWriteToLogHtmlCurrentFile(); ");
-        loggerHtml.setFalseNeedForSaveIndexHtml();
+        loggerHtml.setFalseNeedForSaveIndexHtml();*/
         
+        for( Map.Entry<Thread, StackTraceElement[]> elStTr : Thread.getAllStackTraces().entrySet() ){
+            System.out.println("Thread.id " + elStTr.getKey().getId() + " Thread.name " + elStTr.getKey().getName());
+            for( StackTraceElement elementThreads : elStTr.getValue() ){
+                System.out.println("Stack element " + elementThreads.getFileName());
+            }
+        }
+        for( StackTraceElement elementThreads : Thread.currentThread().getStackTrace() ){
+            System.out.println("Stack element " + elementThreads.getFileName());
+        }
     }
 
     protected static void getThreadDebugInfoToHtmlOld(Thread readedThread){
