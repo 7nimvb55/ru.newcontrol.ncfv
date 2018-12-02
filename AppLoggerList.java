@@ -265,7 +265,7 @@ public class AppLoggerList {
             this.listForRunnableLogStrs.addAll(tableItems);
         }
     }
-    protected String getAncorStructure(Path fileForRead){
+    protected static String getAncorStructure(Path fileForRead){
         return "<p><a name=\"" + fileForRead.getFileName().toString().split("\\.")[0] + "\">"
                         + fileForRead.toString() + "</a></p>";
     }

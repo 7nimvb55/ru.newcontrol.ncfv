@@ -50,23 +50,73 @@ public class AppObjectsInfo {
         tableClassJob(logForHtmlCurrentLogSubDir, threadNameCommandsOut);
         ArrayBlockingQueue<String> classCommandsOut = AppObjectsInfoHelperClasses.getThreadClassCommandsOut(readedThread);
         tableCreateJobs(logForHtmlCurrentLogSubDir, classCommandsOut);
-        ArrayBlockingQueue<String> classGetDeclaredMethodsCommandsOut = AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethodsCommandsOut(readedThread);
+        ArrayBlockingQueue<String> classGetDeclaredMethodsCommandsOut = 
+                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethodsCommandsOut(readedThread);
         tableClassJob(logForHtmlCurrentLogSubDir, classGetDeclaredMethodsCommandsOut);
         
-        Path fileJsMenuPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX).getFileName();
+        Path fileJsMenuPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX);
         ArrayBlockingQueue<String> linesForSaveJsMenu = AppObjectsInfoHelperHtml.getLinesForSaveJsMenu();
         anyFileCreateJobs(fileJsMenuPrefix, linesForSaveJsMenu);
-        Path fileCssPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX).getFileName();
+        Path fileCssPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX);
         ArrayBlockingQueue<String> linesForSaveCss = AppObjectsInfoHelperHtml.getLinesForSaveCss();
         anyFileCreateJobs(fileCssPrefix, linesForSaveCss);
+        waitForWriterJobsDone();
+        Path fileIndexOfReport = listLogStorageFiles.get(AppFileNamesConstants.LOG_INDEX_PREFIX);
+        summaryReportJobs(logForHtmlCurrentLogSubDir, fileJsMenuPrefix.getFileName(), fileCssPrefix.getFileName(), fileIndexOfReport);
         
-
-        summaryReportJobs();
+    }
+    protected static void summaryReportJobs(Path currentLogSubDir, Path jsFile, Path cssFile, Path indexOfReport){
+        
         ArrayList<Path> filesByMaskFromDir = AppFileOperationsSimple.getFilesByMaskFromDir(
-            logForHtmlCurrentLogSubDir,
+            currentLogSubDir,
             "{" + AppFileNamesConstants.LOG_HTML_TABLE_PREFIX + "}*");
-        AppLoggerInfoToReport.initReaderNewJobLite(fileJsMenuPrefix);
         
+        ArrayBlockingQueue<ArrayBlockingQueue<String>> fromReadFile = new ArrayBlockingQueue<ArrayBlockingQueue<String>>(AppConstants.LOG_HTML_MESSAGES_QUEUE_SIZE);
+        ArrayList<AppLoggerController> listReadController = new ArrayList<AppLoggerController>();
+        for(Path tableElement : filesByMaskFromDir){
+            AppLoggerStateReader initReaderNewJobLite = AppLoggerInfoToReport.initReaderNewJobLite(tableElement);
+            initReaderNewJobLite.setAncorString(AppLoggerList.getAncorStructure(tableElement));
+            AppLoggerController appLoggerControllerForRead = new AppLoggerController(fromReadFile, initReaderNewJobLite);
+            listReadController.add(appLoggerControllerForRead);
+            AppLoggerRunnableRead readerRunnable = new AppLoggerRunnableRead(appLoggerControllerForRead);
+            ThreadGroup newJobThreadGroupReader = new ThreadGroup(initReaderNewJobLite.getThreadGroupName());
+            Thread readerThread = new Thread(newJobThreadGroupReader, 
+                readerRunnable, 
+                initReaderNewJobLite.getThreadName());
+            readerThread.start();
+        }
+        waitForReadJobsDone();
+        for(ArrayBlockingQueue<String> readedElement : fromReadFile){
+            System.out.println("-----------                          ----------------------Lines in readed Array " + readedElement.size());
+        }
+        ArrayBlockingQueue<String> createLinesForIndex = AppObjectsInfoHelperHtml.createLinesForIndex(fromReadFile, jsFile, cssFile, filesByMaskFromDir);
+        anyFileCreateJobs(indexOfReport, createLinesForIndex);
+        waitForWriterJobsDone();
+        
+    }
+    protected static void waitForReadJobsDone(){
+        Boolean writerInStack = Boolean.FALSE;
+        System.out.println("-----------                          ----------------------Start wait Reader time " + AppFileOperationsSimple.getNowTimeStringWithMS());
+        do{
+            writerInStack = Boolean.FALSE;
+            for( Map.Entry<Thread, StackTraceElement[]> elStTr : Thread.getAllStackTraces().entrySet() ){
+                System.out.println("Thread.id " + elStTr.getKey().getId() 
+                        + " Thread.name " + elStTr.getKey().getName() 
+                        + " Thread.state " + elStTr.getKey().getState()
+                );
+                if( elStTr.getKey().getName().contains("runReader")){
+                    elStTr.getKey().getState();
+                    writerInStack = Boolean.TRUE;
+                }
+                for( StackTraceElement elementThreads : elStTr.getValue() ){
+                    System.out.println("Stack element " + elementThreads.getFileName());
+                }
+            }
+            for( StackTraceElement elementThreads : Thread.currentThread().getStackTrace() ){
+                System.out.println("Stack element " + elementThreads.getFileName());
+            }
+        } while (writerInStack);
+        System.out.println("-----------                          ----------------------Stop wait Reader time " + AppFileOperationsSimple.getNowTimeStringWithMS());
     }
     protected static void tableClassJob(
             Path logForHtmlCurrentLogSubDir,
@@ -94,8 +144,6 @@ public class AppObjectsInfo {
             Path logForHtmlCurrentLogSubDir,
             ArrayBlockingQueue<String> outputForWrite
     ){
-        
-        
         Path pathTable = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
         AppLoggerStateWriter initWriterNewJob = AppLoggerInfoToTables.initWriterNewJobLite(outputForWrite, pathTable);
         AppLoggerController appLoggerController = new AppLoggerController(initWriterNewJob);
@@ -106,9 +154,9 @@ public class AppObjectsInfo {
                 initWriterNewJob.getThreadName());
         writeToHtmlByThread.start();
     }
-    protected static void summaryReportJobs(){
+    protected static void waitForWriterJobsDone(){
         Boolean writerInStack = Boolean.FALSE;
-        System.out.println("-----------                          ----------------------Start wait time " + AppFileOperationsSimple.getNowTimeStringWithMS());
+        System.out.println("-----------                          ----------------------Start wait Writer time " + AppFileOperationsSimple.getNowTimeStringWithMS());
         do{
             writerInStack = Boolean.FALSE;
             for( Map.Entry<Thread, StackTraceElement[]> elStTr : Thread.getAllStackTraces().entrySet() ){
@@ -128,7 +176,7 @@ public class AppObjectsInfo {
                 System.out.println("Stack element " + elementThreads.getFileName());
             }
         } while (writerInStack);
-        System.out.println("-----------                          ----------------------Stop wait time " + AppFileOperationsSimple.getNowTimeStringWithMS());
+        System.out.println("-----------                          ----------------------Stop wait Writer time " + AppFileOperationsSimple.getNowTimeStringWithMS());
     }
     protected static void getThreadDebugInfoToHtmlVpre(Thread readedThread){
         //@todo check sizes in add content for bus

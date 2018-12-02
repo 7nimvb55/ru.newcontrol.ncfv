@@ -16,6 +16,7 @@
 package ru.newcontrol.ncfv;
 
 import java.nio.file.Path;
+import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
@@ -23,21 +24,45 @@ import java.util.concurrent.ArrayBlockingQueue;
  * @author wladimirowichbiaran
  */
 public class AppLoggerController {
-    private AppLoggerStateWriter currentJob;
+    private AppLoggerStateWriter currentWriterJob;
+    private AppLoggerStateReader currentReaderJob;
+    private ArrayBlockingQueue<ArrayBlockingQueue<String>> readedArrayForLines;
+    public AppLoggerController(ArrayBlockingQueue<ArrayBlockingQueue<String>> outerReadBus,
+            AppLoggerStateReader newJob) {
+        this.readedArrayForLines = outerReadBus;
+        this.currentReaderJob = newJob;
+        this.currentWriterJob = new AppLoggerStateWriter("blankWriter-" + UUID.randomUUID().toString());
+        
+    }
     public AppLoggerController(AppLoggerStateWriter newJob) {
-        this.currentJob = newJob;
+        this.currentWriterJob = newJob;
+        this.currentReaderJob = new AppLoggerStateReader("blankReader-" + UUID.randomUUID().toString());
     }
     public AppLoggerController(Path logForHtmlCurrentLogSubDir,
             ArrayBlockingQueue<String> outputForWrite) {
         Path pathTable = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
-        this.currentJob = AppLoggerInfoToTables.initWriterNewJobLite(outputForWrite, pathTable);
-        ThreadGroup newJobThreadGroup = new ThreadGroup(currentJob.getThreadGroupName());
+        this.currentWriterJob = AppLoggerInfoToTables.initWriterNewJobLite(outputForWrite, pathTable);
+        ThreadGroup newJobThreadGroup = new ThreadGroup(currentWriterJob.getThreadGroupName());
         Thread writeToHtmlByThread = new Thread(newJobThreadGroup, 
                 new AppLoggerRunnableWrite(this), 
-                currentJob.getThreadName());
+                currentWriterJob.getThreadName());
         writeToHtmlByThread.start();
     }
     protected AppLoggerStateWriter currentWriterJob(){
-        return this.currentJob;
+        return this.currentWriterJob;
+    }
+    protected AppLoggerStateReader currentReaderJob(){
+        return this.currentReaderJob;
+    }
+    protected void setStringBusForLogRead(ArrayBlockingQueue<String> readedFormHtmlLines){
+        ArrayBlockingQueue<String> fromReadFile = new ArrayBlockingQueue<String>(readedFormHtmlLines.size());
+        String pollFirstForSave = "";
+        do{
+            pollFirstForSave = readedFormHtmlLines.poll();
+            if( pollFirstForSave != null ){
+                fromReadFile.add(new String(pollFirstForSave));
+            }
+        }while( !readedFormHtmlLines.isEmpty() );
+        this.readedArrayForLines.add(fromReadFile);
     }
 }

@@ -232,7 +232,87 @@ public class AppObjectsInfoHelperHtml {
             }
         }while( pollFirstEntryToLog != null );
     }
-    
+    protected static ArrayBlockingQueue<String> createLinesForIndex(
+            ArrayBlockingQueue<ArrayBlockingQueue<String>> readedStringFormFile,
+            Path fileJsMenuPrefix,
+            Path fileCssPrefix,
+            ArrayList<Path> filesByMaskFromDir
+    ){
+        ArrayList<String> linesForSave = new ArrayList<String>();
+        linesForSave.add("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+        linesForSave.add("<html lang=\"en-US\" xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en-US\">");
+        linesForSave.add("<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></meta>");
+        linesForSave.add("<title>Log report for created Thread Object</title>");
+        linesForSave.add("<script src=\"./js/" + fileJsMenuPrefix.toString() + "\" type=\"text/javascript\" defer=\"YES\"></script>");
+        linesForSave.add("<link rel=\"stylesheet\" href=\"./css/" + fileCssPrefix.toString() + "\" type=\"text/css\"></link>");
+        linesForSave.add("</head>");
+        linesForSave.add("<body class=\"body\" onload=\"allClose()\">");
+        linesForSave.add("        <div id=\"header-content\" class=\"content-header\">header page Report for threads state");
+        linesForSave.add("        </div>");
+        linesForSave.add("        <div id=\"menu-content\" class=\"content-menu-items\">");
+        linesForSave.add("        <ul id=\"menu\">");
+        
+        linesForSave.addAll(AppObjectsInfoHelperHtml.createMenuItems(filesByMaskFromDir));
+        
+        linesForSave.add("        </ul>");
+        linesForSave.add("        </div>");
+        linesForSave.add("        <div id=\"page-content\" class=\"content-imported-page\">");
+        
+        linesForSave.addAll(addReadedLinesFromFilesSortByArrayFromDir(readedStringFormFile, filesByMaskFromDir));
+        
+        linesForSave.add("        </div>");
+        linesForSave.add("        <div id=\"footer-content\" class=\"footer-page\">");
+        linesForSave.add("            footer of page report");
+        linesForSave.add("        </div>");
+        linesForSave.add("    </body>");
+        linesForSave.add("</html>");
+        
+        return AppObjectsBusHelper.cleanBusFromArray(linesForSave);
+    }
+    protected static ArrayList<String> addReadedLinesFromFilesSortByArrayFromDir(
+            ArrayBlockingQueue<ArrayBlockingQueue<String>> readedStringFormFile,
+            ArrayList<Path> filesByMaskFromDir
+        ){
+        ArrayList<String> linesForReturn = new ArrayList<String>();
+        TreeMap<Integer, ArrayBlockingQueue<String>> sortedArray = new TreeMap<Integer, ArrayBlockingQueue<String>>();
+        Integer indexOnPage = 0;
+        do{
+            ArrayBlockingQueue<String> pollReadedArray = readedStringFormFile.poll();
+            if( pollReadedArray != null ){
+                
+                for( Path fileElement : filesByMaskFromDir ){
+                    indexOnPage++;
+                    String forBotomOfTableAncor = "";
+                    if( fileElement.toString().compareTo(pollReadedArray.element()) == 0 ){
+                        String pollString = pollReadedArray.poll();
+                        if( pollString != null ){
+                            String strForAncor = fileElement.getFileName().toString().split("\\.")[0];
+                            forBotomOfTableAncor = "                  <li><a href=\"#" 
+                                + strForAncor 
+                                + "\">goto top of table</a></li>";
+                            pollReadedArray.add(forBotomOfTableAncor);
+                            if( sortedArray.containsKey(indexOnPage) ){
+                                indexOnPage++;
+                            }
+                            sortedArray.put(indexOnPage, pollReadedArray);
+                        }
+                        
+                    }
+                }
+            }
+        } while( !readedStringFormFile.isEmpty() );
+        
+        for( Map.Entry<Integer, ArrayBlockingQueue<String>> elementSortedArray : sortedArray.entrySet() ){
+            do{
+                String pollReadedString = elementSortedArray.getValue().poll();
+                if( pollReadedString != null ){
+                    linesForReturn.add(pollReadedString);
+                }
+            } while( !elementSortedArray.getValue().isEmpty() );
+        }
+        
+        return linesForReturn;
+    }
     protected static void getLinesForTopSaveIndex(
             ArrayBlockingQueue<String> listForRunnableLogStrs,
             Path fileJsMenuPrefix,
@@ -299,6 +379,29 @@ public class AppObjectsInfoHelperHtml {
         listForRunnableLogStrs.add("        </ul>");
         listForRunnableLogStrs.add("        </div>");
         listForRunnableLogStrs.add("        <div id=\"page-content\" class=\"content-imported-page\">");
+    }
+    protected static ArrayList<String> createMenuItems(
+            ArrayList<Path> filesByMaskFromDir){
+        ArrayList<String> listForReturn = new ArrayList<String>();
+        for( Path fileForRead : filesByMaskFromDir ){
+            String strForAncor = fileForRead.getFileName().toString().split("\\.")[0];
+            String strForMenuTitle = strForAncor.split("-")[1];
+            
+            listForReturn.add("            <li><a href=\"#\" onclick=\"openMenu(this);return false\">" + strForMenuTitle + "</a>");
+            listForReturn.add("                <ul>");
+            listForReturn.add("                  <li><a href=\"#" 
+                + strForAncor 
+                + "\">goto table</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 2</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 3</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 4</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 5</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 6</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 7</a></li>");
+            listForReturn.add("               </ul>");
+            listForReturn.add("            </li>");
+        }
+        return listForReturn;
     }
     protected static void getMenuItems(
             ArrayBlockingQueue<String> listForRunnableLogStrs, 
