@@ -16,6 +16,7 @@
 package ru.newcontrol.ncfv;
 
 import java.nio.file.Path;
+import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
@@ -32,8 +33,8 @@ public class AppLoggerInfoToTables {
         AppLoggerStateWriter createNewWriterJob = AppLoggerRuleHelper.createNewWriterJob();
         createNewWriterJob.setTrueInitStartWrite();
         createNewWriterJob.setPartLinesForWrite(partLinesForWrite);
-        createNewWriterJob.setThreadGroupName("grWriter-" + instanceStartTimeWithMS);
-        createNewWriterJob.setThreadName("runWriter-" + instanceStartTimeWithMS);
+        createNewWriterJob.setThreadGroupName("grWriter-" + instanceStartTimeWithMS + "-" + UUID.randomUUID().toString());
+        createNewWriterJob.setThreadName("runWriter-" + instanceStartTimeWithMS + "-" + UUID.randomUUID().toString());
         createNewWriterJob.setToHTMLFileName(fileNameForWrite);
         createNewWriterJob.setTrueInitEndWrite();
         return createNewWriterJob;
