@@ -36,7 +36,10 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * @author wladimirowichbiaran
  */
 public class AppObjectsInfo {
-    
+    /**
+     * @todo fix for abnormal finished for creation processes
+     * @param readedThread 
+     */
     protected static void getThreadDebugInfoToHtml(Thread readedThread){
         ArrayBlockingQueue<String> threadNameCommandsOut = AppObjectsInfoHelperClasses.getThreadNameCommandsOut(readedThread);
         String instanceStartTimeWithMS = 
