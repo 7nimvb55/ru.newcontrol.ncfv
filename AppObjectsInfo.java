@@ -49,9 +49,9 @@ public class AppObjectsInfo {
         listLogStorageFiles.put(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR, logForHtmlCurrentLogSubDir);
         tableClassJob(logForHtmlCurrentLogSubDir, threadNameCommandsOut);
         ArrayBlockingQueue<String> classCommandsOut = AppObjectsInfoHelperClasses.getThreadClassCommandsOut(readedThread);
-        //tableCreateJobs(logForHtmlCurrentLogSubDir, classCommandsOut);
+        tableCreateJobs(logForHtmlCurrentLogSubDir, classCommandsOut);
         ArrayBlockingQueue<String> classGetDeclaredMethodsCommandsOut = AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethodsCommandsOut(readedThread);
-        //tableCreateJobs(logForHtmlCurrentLogSubDir, classGetDeclaredMethodsCommandsOut);
+        tableClassJob(logForHtmlCurrentLogSubDir, classGetDeclaredMethodsCommandsOut);
         
         Path fileJsMenuPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX).getFileName();
         Path fileCssPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX).getFileName();
@@ -69,10 +69,9 @@ public class AppObjectsInfo {
     protected static void tableClassJob(
             Path logForHtmlCurrentLogSubDir,
             ArrayBlockingQueue<String> outputForWrite
-    ){new AppLoggerController(logForHtmlCurrentLogSubDir, outputForWrite);}
-    
-    
-    
+    ){
+        new AppLoggerController(logForHtmlCurrentLogSubDir, outputForWrite);
+    }
     
     protected static void tableCreateJobs(
             Path logForHtmlCurrentLogSubDir,
