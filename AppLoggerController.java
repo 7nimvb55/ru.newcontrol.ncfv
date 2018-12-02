@@ -15,14 +15,24 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.nio.file.Path;
+import java.util.concurrent.ArrayBlockingQueue;
+
 /**
  *
  * @author wladimirowichbiaran
  */
 public class AppLoggerController {
     private AppLoggerStateWriter currentJob;
-    public AppLoggerController(AppLoggerStateWriter initWriterNewJob) {
-        this.currentJob = initWriterNewJob;
+    public AppLoggerController(Path logForHtmlCurrentLogSubDir,
+            ArrayBlockingQueue<String> outputForWrite) {
+        Path pathTable = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
+        this.currentJob = AppLoggerInfoToTables.initWriterNewJobLite(outputForWrite, pathTable);
+        ThreadGroup newJobThreadGroup = new ThreadGroup(currentJob.getThreadGroupName());
+        Thread writeToHtmlByThread = new Thread(newJobThreadGroup, 
+                new AppLoggerRunnableWrite(this), 
+                currentJob.getThreadName());
+        writeToHtmlByThread.start();
     }
     protected AppLoggerStateWriter currentWriterJob(){
         return this.currentJob;

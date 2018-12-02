@@ -57,7 +57,9 @@ public class AppLoggerRunnableWrite implements Runnable {
                 ex.getMessage();
                 ex.printStackTrace();
             }
+            forRecord.clear();
         }
+        
         currentJob.setFalseToHTMLNewRunner();
         currentJob.setTrueToHTMLJobDone();
     }

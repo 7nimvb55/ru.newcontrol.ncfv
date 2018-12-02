@@ -70,19 +70,17 @@ public class AppObjectsInfo {
             Path logForHtmlCurrentLogSubDir,
             ArrayBlockingQueue<String> outputForWrite
     ){
-        Path pathTable = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
-        ThreadLocal<AppLoggerStateWriter> initWriterNewJob = new ThreadLocal<AppLoggerStateWriter>();
-        initWriterNewJob.set(AppLoggerInfoToTables.initWriterNewJobLite(outputForWrite, pathTable));
-        ThreadLocal<AppLoggerController> appLoggerController = new ThreadLocal<AppLoggerController>();
-        appLoggerController.set(new AppLoggerController(initWriterNewJob.get()));
         
-        ThreadLocal<AppLoggerRunnableWrite> writerRunnable = new ThreadLocal<AppLoggerRunnableWrite>();
-        writerRunnable.set(new AppLoggerRunnableWrite(appLoggerController.get()));
-        ThreadGroup newJobThreadGroup = new ThreadGroup(initWriterNewJob.get().getThreadGroupName());
+        new AppLoggerController(logForHtmlCurrentLogSubDir, outputForWrite);
+        /*Path pathTable = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
+        AppLoggerStateWriter initWriterNewJob = AppLoggerInfoToTables.initWriterNewJobLite(outputForWrite, pathTable);
+        AppLoggerController appLoggerController = new AppLoggerController(initWriterNewJob);
+        AppLoggerRunnableWrite writerRunnable = new AppLoggerRunnableWrite(appLoggerController);
+        ThreadGroup newJobThreadGroup = new ThreadGroup(initWriterNewJob.getThreadGroupName());
         Thread writeToHtmlByThread = new Thread(newJobThreadGroup, 
-                writerRunnable.get(), 
-                initWriterNewJob.get().getThreadName());
-        writeToHtmlByThread.start();
+                writerRunnable, 
+                initWriterNewJob.getThreadName());
+        writeToHtmlByThread.start();*/
     }
     protected static void summaryReportJobs(){
         
