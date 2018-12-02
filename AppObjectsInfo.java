@@ -43,33 +43,46 @@ public class AppObjectsInfo {
                 AppFileOperationsSimple.getNowTimeStringWithMS();
         Path logForHtmlCurrentLogSubDir = 
                     AppFileOperationsSimple.getLogForHtmlCurrentLogSubDir(instanceStartTimeWithMS);
-            ConcurrentSkipListMap<String, Path> listLogStorageFiles = 
-                    AppFileOperationsSimple.getNewHtmlLogStorageFileSystem(logForHtmlCurrentLogSubDir);
-            listLogStorageFiles.put(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR, logForHtmlCurrentLogSubDir);
-        Path getTableFile = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
-        AppLoggerStateWriter initWriterNewJob = AppLoggerInfoToTables.initWriterNewJob(threadNameCommandsOut, "groupWrite-" + instanceStartTimeWithMS, "writer-" + instanceStartTimeWithMS, getTableFile);
-        AppLoggerController appLoggerController = new AppLoggerController(initWriterNewJob);
-        AppLoggerRunnableWrite writerRunnable = new AppLoggerRunnableWrite(appLoggerController);
-        ThreadGroup newJobThreadGroup = new ThreadGroup(initWriterNewJob.getThreadGroupName());
-        Thread writeToHtmlByThread = new Thread(newJobThreadGroup, 
-                writerRunnable, 
-                initWriterNewJob.getThreadName());
-        writeToHtmlByThread.start();
-        /*try{
-            System.out.println("wait for prev done");
-            while( !initWriterNewJob.isToHTMLJobDone() ){
-                Thread curThr = Thread.currentThread();
-                curThr.sleep(50);
+        //for get for css, js and more info about dirs
+        ConcurrentSkipListMap<String, Path> listLogStorageFiles = 
+                AppFileOperationsSimple.getNewHtmlLogStorageFileSystem(logForHtmlCurrentLogSubDir);
+        listLogStorageFiles.put(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR, logForHtmlCurrentLogSubDir);
+        tableCreateJobs(logForHtmlCurrentLogSubDir, threadNameCommandsOut);
+        ArrayBlockingQueue<String> classCommandsOut = AppObjectsInfoHelperClasses.getThreadClassCommandsOut(readedThread);
+        tableCreateJobs(logForHtmlCurrentLogSubDir, classCommandsOut);
+        ArrayBlockingQueue<String> classGetDeclaredMethodsCommandsOut = AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethodsCommandsOut(readedThread);
+        tableCreateJobs(logForHtmlCurrentLogSubDir, classGetDeclaredMethodsCommandsOut);
+        
+        Path fileJsMenuPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX).getFileName();
+        Path fileCssPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX).getFileName();
+
+        /*for( Map.Entry<Thread, StackTraceElement[]> elStTr : Thread.getAllStackTraces().entrySet() ){
+            System.out.println("Thread.id " + elStTr.getKey().getId() + " Thread.name " + elStTr.getKey().getName());
+            for( StackTraceElement elementThreads : elStTr.getValue() ){
+                System.out.println("Stack element " + elementThreads.getFileName());
             }
-             System.out.println(" end wait for prev done");
-        } catch(InterruptedException ex){
-            ex.printStackTrace();
-        } catch(SecurityException ex){
-            ex.printStackTrace();
+        }
+        for( StackTraceElement elementThreads : Thread.currentThread().getStackTrace() ){
+            System.out.println("Stack element " + elementThreads.getFileName());
         }*/
     }
-    protected void tableCreateJobs(){
+    protected static void tableCreateJobs(
+            Path logForHtmlCurrentLogSubDir,
+            ArrayBlockingQueue<String> outputForWrite
+    ){
+        Path pathTable = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
+        ThreadLocal<AppLoggerStateWriter> initWriterNewJob = new ThreadLocal<AppLoggerStateWriter>();
+        initWriterNewJob.set(AppLoggerInfoToTables.initWriterNewJobLite(outputForWrite, pathTable));
+        ThreadLocal<AppLoggerController> appLoggerController = new ThreadLocal<AppLoggerController>();
+        appLoggerController.set(new AppLoggerController(initWriterNewJob.get()));
         
+        ThreadLocal<AppLoggerRunnableWrite> writerRunnable = new ThreadLocal<AppLoggerRunnableWrite>();
+        writerRunnable.set(new AppLoggerRunnableWrite(appLoggerController.get()));
+        ThreadGroup newJobThreadGroup = new ThreadGroup(initWriterNewJob.get().getThreadGroupName());
+        Thread writeToHtmlByThread = new Thread(newJobThreadGroup, 
+                writerRunnable.get(), 
+                initWriterNewJob.get().getThreadName());
+        writeToHtmlByThread.start();
     }
     protected static void summaryReportJobs(){
         

@@ -23,6 +23,21 @@ import java.util.concurrent.ArrayBlockingQueue;
  * @author wladimirowichbiaran
  */
 public class AppLoggerInfoToTables {
+    protected static AppLoggerStateWriter initWriterNewJobLite(
+            ArrayBlockingQueue<String> partLinesForWrite,
+            Path fileNameForWrite
+    ){
+        String instanceStartTimeWithMS = 
+                AppFileOperationsSimple.getNowTimeStringWithMS();
+        AppLoggerStateWriter createNewWriterJob = AppLoggerRuleHelper.createNewWriterJob();
+        createNewWriterJob.setTrueInitStartWrite();
+        createNewWriterJob.setPartLinesForWrite(partLinesForWrite);
+        createNewWriterJob.setThreadGroupName("grWriter-" + instanceStartTimeWithMS);
+        createNewWriterJob.setThreadName("runWriter-" + instanceStartTimeWithMS);
+        createNewWriterJob.setToHTMLFileName(fileNameForWrite);
+        createNewWriterJob.setTrueInitEndWrite();
+        return createNewWriterJob;
+    }
     protected static AppLoggerStateWriter initWriterNewJob(
             ArrayBlockingQueue<String> partLinesForWrite,
             String newJobThreadGroupName,

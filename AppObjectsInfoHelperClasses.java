@@ -77,12 +77,186 @@ public class AppObjectsInfoHelperClasses {
         strForOut.add(String.valueOf(detectedThread.isInterrupted()));
         return AppObjectsInfoHelperHtml.commandOutPutToHtmlBus(strForOut);
     }
+    
+    protected static ArrayBlockingQueue<String> getThreadClassCommandsOut(Thread detectedThread){
+        String nowTimeStringWithMS = 
+                AppFileOperationsSimple.getNowTimeStringWithMS();
+        ArrayList<String> strForOut = new ArrayList<String>();
+
+        strForOut.add(nowTimeStringWithMS);
+        strForOut.add("Thread.getClass().getName()");
+        strForOut.add(detectedThread.getClass().getName());
+        strForOut.add("Thread.getClass().getCanonicalName()");
+        strForOut.add(detectedThread.getClass().getCanonicalName());
+        strForOut.add("Thread.getClass().getModifiers()");
+        strForOut.add(String.valueOf(detectedThread.getClass().getModifiers()));
+        strForOut.add("Thread.getClass().getSimpleName()");
+        strForOut.add(detectedThread.getClass().getSimpleName());
+        strForOut.add("Thread.getClass().getTypeName()");
+        strForOut.add(detectedThread.getClass().getTypeName());
+        strForOut.add("Thread.getClass().toGenericString()");
+        strForOut.add(detectedThread.getClass().toGenericString());
+        strForOut.add("Thread.getClass().hashCode()");
+        strForOut.add(String.valueOf(detectedThread.getClass().hashCode()));
+        // get all methods returned resuts in array
+        strForOut.add("Thread.getClass().getAnnotatedInterfaces().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getAnnotatedInterfaces().length));
+        strForOut.add("Thread.getClass().getAnnotations().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getAnnotations().length));
+        strForOut.add("Thread.getClass().getClasses().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getClasses().length));
+        strForOut.add("Thread.getClass().getConstructors().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getConstructors().length));
+        strForOut.add("Thread.getClass().getDeclaredAnnotations().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getDeclaredAnnotations().length));
+        strForOut.add("Thread.getClass().getDeclaredClasses().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getDeclaredClasses().length));
+        strForOut.add("Thread.getClass().getDeclaredConstructors().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getDeclaredConstructors().length));
+        strForOut.add("Thread.getClass().getDeclaredFields().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getDeclaredFields().length));
+        strForOut.add("Thread.getClass().getDeclaredMethods().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getDeclaredMethods().length));
+//        strForOut.add("Thread.getClass().getEnumConstants().toString()");
+//        strForOut.add(String.valueOf(detectedThread.getClass().getEnumConstants().toString()));
+        strForOut.add("Thread.getClass().getEnumConstants().length");
+        Object resultGetEnumConstants[] = detectedThread.getClass().getEnumConstants();
+        if( resultGetEnumConstants != null ){
+            strForOut.add(String.valueOf(resultGetEnumConstants.length));
+        } else {
+            strForOut.add("null");
+        }
+        strForOut.add("Thread.getClass().getFields().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getFields().length));
+        strForOut.add("Thread.getClass().getGenericInterfaces().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getGenericInterfaces().length));
+        strForOut.add("Thread.getClass().getInterfaces().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getInterfaces().length));
+        strForOut.add("Thread.getClass().getMethods().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getMethods().length));
+//        strForOut.add("Thread.getClass().getSigners().length");
+//        strForOut.add(String.valueOf(detectedThread.getClass().getSigners().length));
+        strForOut.add("Thread.getClass().getSigners().length");
+        Object resultGetSigners[] = detectedThread.getClass().getSigners();
+        if( resultGetSigners != null ){
+            strForOut.add(String.valueOf(resultGetSigners.length));
+        } else {
+            strForOut.add("null");
+        }
+        strForOut.add("Thread.getClass().getTypeParameters().length");
+        strForOut.add(String.valueOf(detectedThread.getClass().getTypeParameters().length));
+        //get all methods and returned result in boolean
+        strForOut.add("Thread.getClass().desiredAssertionStatus()");
+        strForOut.add(String.valueOf(detectedThread.getClass().desiredAssertionStatus()));
+        strForOut.add("Thread.getClass().isAnnotation()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isAnnotation()));
+        strForOut.add("Thread.getClass().isAnonymousClass()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isAnonymousClass()));
+        strForOut.add("Thread.getClass().isArray()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isArray()));
+        strForOut.add("Thread.getClass().isEnum()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isEnum()));
+        strForOut.add("Thread.getClass().isInterface()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isInterface()));
+        strForOut.add("Thread.getClass().isLocalClass()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isLocalClass()));
+        strForOut.add("Thread.getClass().isMemberClass()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isMemberClass()));
+        strForOut.add("Thread.getClass().isPrimitive()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isPrimitive()));
+        strForOut.add("Thread.getClass().isSynthetic()");
+        strForOut.add(String.valueOf(detectedThread.getClass().isSynthetic()));
+        return AppObjectsInfoHelperHtml.commandOutPutToHtmlBus(strForOut);
+    }
+    protected static ArrayBlockingQueue<String>  getThreadClassGetDeclaredMethodsCommandsOut(
+            Thread detectedThread
+    ){
+        String nowTimeStringWithMS = 
+                AppFileOperationsSimple.getNowTimeStringWithMS();
+        ArrayList<String> strForOut = new ArrayList<String>();
+        strForOut.add(nowTimeStringWithMS);
+        strForOut.add("Thread.getClass().getDeclaredMethods().length");
+        Method resultGetDeclaredMethods[] = detectedThread.getClass().getDeclaredMethods();
+        if( resultGetDeclaredMethods != null ){
+            strForOut.add(String.valueOf(resultGetDeclaredMethods.length));
+            int idexOfMethod = 0;
+            for(Method elementOfMethods : resultGetDeclaredMethods){
+                //Strings results
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].getName()");
+                strForOut.add(elementOfMethods.getName());
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].toGenericString()");
+                strForOut.add(elementOfMethods.toGenericString());
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].toString()");
+                strForOut.add(elementOfMethods.toString());
+                //Booleans results
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].isAccessible()");
+                strForOut.add(String.valueOf(elementOfMethods.isAccessible()));
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].isBridge()");
+                strForOut.add(String.valueOf(elementOfMethods.isBridge()));
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].isDefault()");
+                strForOut.add(String.valueOf(elementOfMethods.isDefault()));
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].isSynthetic()");
+                strForOut.add(String.valueOf(elementOfMethods.isSynthetic()));
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].isVarArgs()");
+                strForOut.add(String.valueOf(elementOfMethods.isVarArgs()));
+                //Integer results
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].getModifiers()");
+                strForOut.add(String.valueOf(elementOfMethods.getModifiers()));
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].getParameterCount()");
+                strForOut.add(String.valueOf(elementOfMethods.getParameterCount()));
+                strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].hashCode()");
+                strForOut.add(String.valueOf(elementOfMethods.hashCode()));
+                
+                strForOut.add("Thread.getClass().getDeclaredMethods()[" + idexOfMethod + "].getParameters().length");
+                Parameter[] parameters = elementOfMethods.getParameters();
+                if( resultGetDeclaredMethods != null ){
+                    strForOut.add(String.valueOf(parameters.length));
+                    int indexOfParam = 0;
+                    for (Parameter parameter : parameters) {
+                        //String results
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].getName()");
+                        strForOut.add(parameter.getName());
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].toString()");
+                        strForOut.add(parameter.toString());
+                        //Integer results
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].getModifiers()");
+                        strForOut.add(String.valueOf(parameter.getModifiers()));
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].hashCode()");
+                        strForOut.add(String.valueOf(parameter.hashCode()));
+                        //Boolean results
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].isImplicit()");
+                        strForOut.add(String.valueOf(parameter.isImplicit()));
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].isNamePresent()");
+                        strForOut.add(String.valueOf(parameter.isNamePresent()));
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].isSynthetic()");
+                        strForOut.add(String.valueOf(parameter.isSynthetic()));
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].isVarArgs()");
+                        strForOut.add(String.valueOf(parameter.isVarArgs()));
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].getParameterizedType().getTypeName()");
+                        //String results
+                        strForOut.add(String.valueOf(parameter.getParameterizedType().getTypeName()));
+                        indexOfParam++;
+                    }
+                } else {
+                    strForOut.add("null");
+                }
+                idexOfMethod++;
+            }
+            
+            
+        } else {
+            strForOut.add("null");
+        }
+        return AppObjectsInfoHelperHtml.commandOutPutToHtmlBus(strForOut);
+    }
+    
     /**
      * @deprecated 
      * @param detectedThread
      * @param commandsOutPut 
      */
-    protected static void getThreadName(Thread detectedThread, ArrayBlockingQueue<ArrayBlockingQueue<String>> commandsOutPut){
+    protected static void getThreadName(Thread detectedThread, 
+            ArrayBlockingQueue<ArrayBlockingQueue<String>> commandsOutPut){
         String nowTimeStringWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
         ArrayBlockingQueue<String> strForOut = new ArrayBlockingQueue<String>(1000);
