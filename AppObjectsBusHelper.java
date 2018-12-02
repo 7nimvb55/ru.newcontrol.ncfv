@@ -49,4 +49,11 @@ public class AppObjectsBusHelper {
         System.out.println("--------size AppObjectsBusHelper.cleanBusForRunnables array for write " + forRecord.size());
         return forRecord;
     }
+    protected static ArrayBlockingQueue<String> cleanBusFromArray(ArrayList<String> listForLogStrs){
+        ArrayBlockingQueue<String> forRecord = new ArrayBlockingQueue<String>(listForLogStrs.size());
+        for(String elToReturn : listForLogStrs){
+            forRecord.add(new String(elToReturn));
+        }
+        return forRecord;
+    }
 }

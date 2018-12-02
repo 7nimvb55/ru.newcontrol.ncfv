@@ -30,6 +30,10 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class AppObjectsInfoHelperClasses {
     
+    /**
+     * @deprecated 
+     * @param commandsOutPut 
+     */
     protected static void getInitBusInfo(ArrayBlockingQueue<ArrayBlockingQueue<String>> commandsOutPut){
         String nowTimeStringWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
@@ -38,7 +42,46 @@ public class AppObjectsInfoHelperClasses {
         initRecTime.add(nowTimeStringWithMS);
         commandsOutPut.add(initRecTime);
     }
+    protected static ArrayBlockingQueue<String> getInitBusInfoCommandsOut(ArrayBlockingQueue<ArrayBlockingQueue<String>> commandsOutPut){
+        String nowTimeStringWithMS = 
+                AppFileOperationsSimple.getNowTimeStringWithMS();
+        ArrayList<String> initRecTime = new ArrayList<String>();
+        initRecTime.add(nowTimeStringWithMS);
+        return AppObjectsInfoHelperHtml.commandOutPutToHtmlBus(initRecTime);
+    }
     
+    protected static ArrayBlockingQueue<String> getThreadNameCommandsOut(Thread detectedThread){
+        String nowTimeStringWithMS = 
+                AppFileOperationsSimple.getNowTimeStringWithMS();
+        ArrayList<String> strForOut = new ArrayList<String>();
+        strForOut.add(nowTimeStringWithMS);
+        strForOut.add("Thread.toString()");
+        strForOut.add(detectedThread.toString());
+        strForOut.add("Thread.getName()");
+        strForOut.add(detectedThread.getName());
+        strForOut.add("Thread.getPriority()");
+        strForOut.add(String.valueOf(detectedThread.getPriority()));
+        strForOut.add("Thread.getId()");
+        strForOut.add(String.valueOf(detectedThread.getId()));
+        strForOut.add("Thread.getState().name()");
+        strForOut.add(detectedThread.getState().name());
+        strForOut.add("Thread.getState().ordinal()");
+        strForOut.add(String.valueOf(detectedThread.getState().ordinal()));
+        strForOut.add("Thread.hashCode()");
+        strForOut.add(String.valueOf(detectedThread.hashCode()));
+        strForOut.add("Thread.isAlive()");
+        strForOut.add(String.valueOf(detectedThread.isAlive()));
+        strForOut.add("Thread.isDaemon()");
+        strForOut.add(String.valueOf(detectedThread.isDaemon()));
+        strForOut.add("Thread.isInterrupted()");
+        strForOut.add(String.valueOf(detectedThread.isInterrupted()));
+        return AppObjectsInfoHelperHtml.commandOutPutToHtmlBus(strForOut);
+    }
+    /**
+     * @deprecated 
+     * @param detectedThread
+     * @param commandsOutPut 
+     */
     protected static void getThreadName(Thread detectedThread, ArrayBlockingQueue<ArrayBlockingQueue<String>> commandsOutPut){
         String nowTimeStringWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
@@ -235,9 +278,6 @@ public class AppObjectsInfoHelperClasses {
         } else {
             strForOut.add("null");
         }
-        
-        
-        
         commandsOutPut.add(strForOut);
     }
     protected static String getThreadInfoToString(Thread forStrBuild){

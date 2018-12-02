@@ -40,6 +40,9 @@ public class AppLoggerList {
     private Boolean isNeedForSaveJs;
     private Boolean isNeedForSaveIndexHtml;
     
+    private Integer countJobForReader;
+    private Integer countDoneJobForReader;
+    
     private AppLoggerBus loggerBus;
     private AppLoggerRule managerForOrder;
     private AppLoggerBusJob loggerJobBus;
@@ -52,20 +55,13 @@ public class AppLoggerList {
     //private ArrayBlockingQueue<String> readedLinesFromTablesWork;
     private ConcurrentSkipListMap<String, Path> listLogStorageFiles;
     
-    
     private ArrayBlockingQueue<Path> readedFilesListInLogHtmlByTableMask;
-    
-    
-    
-    
-    
     
     private Path fileForWrite;
     private Path fileForRead;
     
-    
-
     public AppLoggerList() {
+        this.countDoneJobForReader = 0;
         setTrueNewLoggerList();
         
         setFalseNeedForSaveCss();
@@ -97,7 +93,11 @@ public class AppLoggerList {
                 System.out.println("----------------------------------------AppLoggerBusJob.getCountJobForReader() " 
                         + this.loggerJobBus.getCountJobForReader()
                 );
-                System.out.println("+|+|+|+");
+                System.out.println("+|+|+|+ countJobForReader "
+                        + this.countJobForReader
+                        + " countDoneJobForReader "
+                        + this.countDoneJobForReader
+                );
                 System.out.println("+|+|+|+AppLoggerBus.countOfArrayBusForHtmlRead() "
                         + this.loggerBus.countOfArrayBusForHtmlRead()
                 );
@@ -119,7 +119,6 @@ public class AppLoggerList {
         makeWriteJob();
     }
     protected void makeWriteJob(){
-        
         //this.managerForOrder.setStringBusForLogWrite(AppObjectsBusHelper.cleanBusForRunnables(this.listForRunnableLogStrs));
         System.out.println("-------|||||||||-----------|||||||||------------AppLoggerList.makeWrite for " 
                 + this.managerForOrder.getStringBusForLogWrite().size());
@@ -179,23 +178,24 @@ public class AppLoggerList {
         System.out.println("-------|||||||||-----------|||||||||------------make write prev isjobdone " 
                 + currentWriterJob.isToHTMLJobDone());
         //if( !this.currentJob.isToHTMLNewRunner() ){
-            try{
-                System.out.println("wait for prev done");
-                while( !currentWriterJob.isToHTMLJobDone() ){
-                    Thread curThr = Thread.currentThread();
-                    curThr.sleep(50);
-                }
-                 System.out.println(" end wait for prev done");
-            } catch(InterruptedException ex){
-                ex.printStackTrace();
-            } catch(SecurityException ex){
-                ex.printStackTrace();
-            }
+        try{
+            System.out.println("wait for prev done");
+            while( !currentWriterJob.isToHTMLJobDone() ){
+                Thread curThr = Thread.currentThread();
+                curThr.sleep(50);
+        }
+             System.out.println(" end wait for prev done");
+        } catch(InterruptedException ex){
+            ex.printStackTrace();
+        } catch(SecurityException ex){
+            ex.printStackTrace();
+        }
         //}
     }
     protected void waitForPrevJobDoneForReader(){
         //if( !this.currentJob.isFromHTMLNewRunner() ){
         AppLoggerStateReader currentReaderJob = this.managerForOrder.currentReaderJob();
+        if( !currentReaderJob.isBlankObject() ){
             try{
                 while( !currentReaderJob.isFromHTMLJobDone() ){
                     Thread curThr = Thread.currentThread();
@@ -206,7 +206,8 @@ public class AppLoggerList {
             } catch(SecurityException ex){
                 ex.printStackTrace();
             }
-        //}
+            this.countDoneJobForReader++;
+        }
     }
     protected void setNewCssFileForLogHtml(){
         this.fileForWrite = this.listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX);
@@ -223,6 +224,7 @@ public class AppLoggerList {
     protected void doReadFromLogHtmlListOfTables(){
         
         ArrayBlockingQueue<Path> logHtmlListTableFiles = this.loggerBus.getLogHtmlListTableFiles();
+        this.countJobForReader = logHtmlListTableFiles.size();
         for(Path elementOfTables : logHtmlListTableFiles){
             //waitForPrevJobDoneForReader();
             //setNextReadedFileFromLogHtml(elementOfTables);
@@ -269,7 +271,7 @@ public class AppLoggerList {
     }
     protected void readListOfTables(){
         AppLoggerStateReader currentReaderJob = this.managerForOrder.currentReaderJob();
-        if( !currentReaderJob.isFromHTMLJobDone() ){
+        if( !currentReaderJob.isBlankObject() ){
             System.out.println(
                         " +|+|+|+|+|+   AppLoggerList.readListOfTables() this.managerForOrder.isAllReadedJobBegin() "
                         + this.managerForOrder.isAllReadedJobBegin()
@@ -335,7 +337,4 @@ public class AppLoggerList {
     protected Boolean isNewLoggerList(){
         return this.isNewLoggerList;
     }
-    
-    
-    
 }

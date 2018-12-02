@@ -152,6 +152,92 @@ public class AppFileOperationsSimple {
         }
         return toReturn;
     }
+    protected static ConcurrentSkipListMap<String, Path> getNewHtmlLogStorageFileSystem(Path currentDirForLog){
+        ConcurrentSkipListMap<String, Path> listFilesForHtmlLog = new ConcurrentSkipListMap<String, Path>();
+        Path logForHtmlCurrentLogAnySubDirCSS = getLogForHtmlCurrentLogAnySubDir(currentDirForLog, AppFileNamesConstants.LOG_HTML_CSS_SUB_DIR);
+        
+        listFilesForHtmlLog.put(AppFileNamesConstants.LOG_HTML_CSS_PREFIX, 
+                Paths.get(logForHtmlCurrentLogAnySubDirCSS.toString(),
+                AppFileNamesConstants.LOG_HTML_CSS_PREFIX
+                + getNowTimeStringWithMS()
+                + AppFileNamesConstants.LOG_HTML_CSS_EXT)
+        );
+        
+        Path logForHtmlCurrentLogAnySubDirJS = getLogForHtmlCurrentLogAnySubDir(currentDirForLog, AppFileNamesConstants.LOG_HTML_JS_SUB_DIR);
+        
+        listFilesForHtmlLog.put(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX, 
+                Paths.get(logForHtmlCurrentLogAnySubDirJS.toString(),
+                AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX
+                + getNowTimeStringWithMS()
+                + AppFileNamesConstants.LOG_HTML_JS_EXT)
+        );
+        
+        listFilesForHtmlLog.put(AppFileNamesConstants.LOG_HTML_HEADER_PREFIX, 
+                Paths.get(currentDirForLog.toString(),
+                AppFileNamesConstants.LOG_HTML_HEADER_PREFIX
+                + getNowTimeStringWithMS()
+                + AppFileNamesConstants.LOG_HTML_EXT)
+        );
+        
+        listFilesForHtmlLog.put(AppFileNamesConstants.LOG_HTML_FOOTER_PREFIX, 
+                Paths.get(currentDirForLog.toString(),
+                AppFileNamesConstants.LOG_HTML_FOOTER_PREFIX
+                + getNowTimeStringWithMS()
+                + AppFileNamesConstants.LOG_HTML_EXT)
+        );
+        
+        listFilesForHtmlLog.put(AppFileNamesConstants.LOG_HTML_MENU_PREFIX, 
+                Paths.get(currentDirForLog.toString(),
+                AppFileNamesConstants.LOG_HTML_MENU_PREFIX
+                + getNowTimeStringWithMS()
+                + AppFileNamesConstants.LOG_HTML_EXT)
+        );
+        
+        listFilesForHtmlLog.put(AppFileNamesConstants.LOG_INDEX_PREFIX, 
+                Paths.get(currentDirForLog.toString(),
+                AppFileNamesConstants.LOG_INDEX_PREFIX
+                + getNowTimeStringWithMS()
+                + AppFileNamesConstants.LOG_HTML_EXT)
+        );
+        
+        for( Map.Entry<String, Path> elementOfList : listFilesForHtmlLog.entrySet() ){
+            Path toReturn = elementOfList.getValue();
+            if( Files.exists(toReturn, LinkOption.NOFOLLOW_LINKS) ){
+                try {
+                    pathIsNotFile(toReturn);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    System.out.println("[ERROR] Not file " + toReturn.toString());
+                }
+                try {
+                    pathIsNotReadWriteLink(toReturn);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    System.out.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
+                }
+                
+            }
+            try {
+                Files.createFile(toReturn);
+                try {
+                    pathIsNotFile(toReturn);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    System.out.println("[ERROR] Not file " + toReturn.toString());
+                }
+                try {
+                    pathIsNotReadWriteLink(toReturn);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    System.out.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                System.out.println("[ERROR] Can`t createFile " + toReturn.toString());
+            }
+        }
+        return listFilesForHtmlLog;
+    }
     protected static ConcurrentSkipListMap<String, Path> getNewLogFileInLogHTML(Path currentDirForLog){
         ConcurrentSkipListMap<String, Path> listFilesForHtmlLog = new ConcurrentSkipListMap<String, Path>();
         Path logForHtmlCurrentLogAnySubDirCSS = getLogForHtmlCurrentLogAnySubDir(currentDirForLog, AppFileNamesConstants.LOG_HTML_CSS_SUB_DIR);

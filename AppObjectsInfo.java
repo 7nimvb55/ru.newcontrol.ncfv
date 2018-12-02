@@ -37,8 +37,44 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class AppObjectsInfo {
     
-    
     protected static void getThreadDebugInfoToHtml(Thread readedThread){
+        ArrayBlockingQueue<String> threadNameCommandsOut = AppObjectsInfoHelperClasses.getThreadNameCommandsOut(readedThread);
+        String instanceStartTimeWithMS = 
+                AppFileOperationsSimple.getNowTimeStringWithMS();
+        Path logForHtmlCurrentLogSubDir = 
+                    AppFileOperationsSimple.getLogForHtmlCurrentLogSubDir(instanceStartTimeWithMS);
+            ConcurrentSkipListMap<String, Path> listLogStorageFiles = 
+                    AppFileOperationsSimple.getNewHtmlLogStorageFileSystem(logForHtmlCurrentLogSubDir);
+            listLogStorageFiles.put(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR, logForHtmlCurrentLogSubDir);
+        Path getTableFile = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
+        AppLoggerStateWriter initWriterNewJob = AppLoggerInfoToTables.initWriterNewJob(threadNameCommandsOut, "groupWrite-" + instanceStartTimeWithMS, "writer-" + instanceStartTimeWithMS, getTableFile);
+        AppLoggerController appLoggerController = new AppLoggerController(initWriterNewJob);
+        AppLoggerRunnableWrite writerRunnable = new AppLoggerRunnableWrite(appLoggerController);
+        ThreadGroup newJobThreadGroup = new ThreadGroup(initWriterNewJob.getThreadGroupName());
+        Thread writeToHtmlByThread = new Thread(newJobThreadGroup, 
+                writerRunnable, 
+                initWriterNewJob.getThreadName());
+        writeToHtmlByThread.start();
+        /*try{
+            System.out.println("wait for prev done");
+            while( !initWriterNewJob.isToHTMLJobDone() ){
+                Thread curThr = Thread.currentThread();
+                curThr.sleep(50);
+            }
+             System.out.println(" end wait for prev done");
+        } catch(InterruptedException ex){
+            ex.printStackTrace();
+        } catch(SecurityException ex){
+            ex.printStackTrace();
+        }*/
+    }
+    protected void tableCreateJobs(){
+        
+    }
+    protected static void summaryReportJobs(){
+        
+    }
+    protected static void getThreadDebugInfoToHtmlVpre(Thread readedThread){
         //@todo check sizes in add content for bus
         //@todo into currentjob methods pull data in new busses
         AppLoggerList loggerHtml = new AppLoggerList();
@@ -47,7 +83,7 @@ public class AppObjectsInfo {
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getLoggerBus().getCommandsOutPut(),loggerHtml.getLoggerBus().getListForRunnableLogStrs());
         
         loggerHtml.doWriteToLogHtmlCurrentFile();
-        /*loggerHtml.waitForPrevJobDoneForWriter();
+        loggerHtml.waitForPrevJobDoneForWriter();
         System.out.println("+|0000001|+|AppObjectsInfo||||||||+++++++++++|||||||||+++++++++++AppObjectsInfoHelperClasses.getThreadName(); ");
         AppObjectsInfoHelperClasses.getThreadClass(readedThread, loggerHtml.getLoggerBus().getCommandsOutPut());
         AppObjectsInfoHelperHtml.commandOutPutBusToHtml(loggerHtml.getLoggerBus().getCommandsOutPut(),loggerHtml.getLoggerBus().getListForRunnableLogStrs());
@@ -100,7 +136,7 @@ public class AppObjectsInfo {
         loggerHtml.doWriteToLogHtmlCurrentFile();
         loggerHtml.waitForPrevJobDoneForWriter();
         System.out.println("+|0000009|+|AppObjectsInfo||||||||+++++++++++|||||||||+++++++++++loggerHtml.doWriteToLogHtmlCurrentFile(); ");
-        loggerHtml.setFalseNeedForSaveIndexHtml();*/
+        loggerHtml.setFalseNeedForSaveIndexHtml();
         
         for( Map.Entry<Thread, StackTraceElement[]> elStTr : Thread.getAllStackTraces().entrySet() ){
             System.out.println("Thread.id " + elStTr.getKey().getId() + " Thread.name " + elStTr.getKey().getName());

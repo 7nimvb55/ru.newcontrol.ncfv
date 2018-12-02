@@ -44,6 +44,7 @@ public class AppLoggerStateWriter {
     private Boolean isSetPartLinesForWrite;
     private String newJobThreadGroupName;
     private String newJobThreadName;
+    private Boolean fromHtmlBlankJob;
 
     public AppLoggerStateWriter() {
         setFalsePartLinesForWrite();
@@ -55,6 +56,7 @@ public class AppLoggerStateWriter {
         setFalseToHTMLNewRunner();
         setFalseInitStartWrite();
         setFalseInitEndWrite();
+        setFalseBlankObject();
     }
     public AppLoggerStateWriter(String strForEmptyWork) {
         setFalsePartLinesForWrite();
@@ -68,6 +70,7 @@ public class AppLoggerStateWriter {
         setFalseToHTMLNewRunner();
         setFalseInitStartWrite();
         setFalseInitEndWrite();
+        setTrueBlankObject();
     }
     protected Boolean isInitStartWrite(){
         if( this.toHTMLjobInitStart ){
@@ -97,6 +100,21 @@ public class AppLoggerStateWriter {
     protected void setFalseInitEndWrite(){
         this.toHTMLjobInitEnd = Boolean.FALSE;
     }
+    
+    protected Boolean isBlankObject(){
+        if( this.fromHtmlBlankJob){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    
+    protected void setTrueBlankObject(){
+        this.fromHtmlBlankJob = Boolean.TRUE;
+    }
+    protected void setFalseBlankObject(){
+        this.fromHtmlBlankJob = Boolean.FALSE;
+    }
+    
     protected void setPartLinesForWrite(ArrayBlockingQueue<String> outerPartLinesForWrite){
         this.partLinesForWrite = outerPartLinesForWrite;
         setTruePartLinesForWrite();
