@@ -47,11 +47,11 @@ public class AppObjectsInfo {
         ConcurrentSkipListMap<String, Path> listLogStorageFiles = 
                 AppFileOperationsSimple.getNewHtmlLogStorageFileSystem(logForHtmlCurrentLogSubDir);
         listLogStorageFiles.put(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR, logForHtmlCurrentLogSubDir);
-        tableCreateJobs(logForHtmlCurrentLogSubDir, threadNameCommandsOut);
+        tableClassJob(logForHtmlCurrentLogSubDir, threadNameCommandsOut);
         ArrayBlockingQueue<String> classCommandsOut = AppObjectsInfoHelperClasses.getThreadClassCommandsOut(readedThread);
-        tableCreateJobs(logForHtmlCurrentLogSubDir, classCommandsOut);
+        //tableCreateJobs(logForHtmlCurrentLogSubDir, classCommandsOut);
         ArrayBlockingQueue<String> classGetDeclaredMethodsCommandsOut = AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethodsCommandsOut(readedThread);
-        tableCreateJobs(logForHtmlCurrentLogSubDir, classGetDeclaredMethodsCommandsOut);
+        //tableCreateJobs(logForHtmlCurrentLogSubDir, classGetDeclaredMethodsCommandsOut);
         
         Path fileJsMenuPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX).getFileName();
         Path fileCssPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX).getFileName();
@@ -66,13 +66,21 @@ public class AppObjectsInfo {
             System.out.println("Stack element " + elementThreads.getFileName());
         }*/
     }
+    protected static void tableClassJob(
+            Path logForHtmlCurrentLogSubDir,
+            ArrayBlockingQueue<String> outputForWrite
+    ){new AppLoggerController(logForHtmlCurrentLogSubDir, outputForWrite);}
+    
+    
+    
+    
     protected static void tableCreateJobs(
             Path logForHtmlCurrentLogSubDir,
             ArrayBlockingQueue<String> outputForWrite
     ){
         
-        new AppLoggerController(logForHtmlCurrentLogSubDir, outputForWrite);
-        /*Path pathTable = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
+        
+        Path pathTable = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
         AppLoggerStateWriter initWriterNewJob = AppLoggerInfoToTables.initWriterNewJobLite(outputForWrite, pathTable);
         AppLoggerController appLoggerController = new AppLoggerController(initWriterNewJob);
         AppLoggerRunnableWrite writerRunnable = new AppLoggerRunnableWrite(appLoggerController);
@@ -80,7 +88,7 @@ public class AppObjectsInfo {
         Thread writeToHtmlByThread = new Thread(newJobThreadGroup, 
                 writerRunnable, 
                 initWriterNewJob.getThreadName());
-        writeToHtmlByThread.start();*/
+        writeToHtmlByThread.start();
     }
     protected static void summaryReportJobs(){
         

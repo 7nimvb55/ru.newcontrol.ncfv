@@ -24,6 +24,9 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class AppLoggerController {
     private AppLoggerStateWriter currentJob;
+    public AppLoggerController(AppLoggerStateWriter newJob) {
+        this.currentJob = newJob;
+    }
     public AppLoggerController(Path logForHtmlCurrentLogSubDir,
             ArrayBlockingQueue<String> outputForWrite) {
         Path pathTable = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
