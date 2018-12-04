@@ -63,6 +63,11 @@ public class AppObjectsInfo {
         tableClassJob(logForHtmlCurrentLogSubDir, classGetDeclaredMethodsCommandsOut);
         waitForWriterJobsDone();
         
+        ArrayBlockingQueue<String> classGetDeclaredFieldsCommandsOut = 
+                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredFieldsCommandsOut(readedThread);
+        tableClassJob(logForHtmlCurrentLogSubDir, classGetDeclaredFieldsCommandsOut);
+        waitForWriterJobsDone();
+        
         Path fileJsMenuPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX);
         ArrayBlockingQueue<String> linesForSaveJsMenu = AppObjectsInfoHelperHtml.getLinesForSaveJsMenu();
         anyFileCreateJobs(fileJsMenuPrefix, linesForSaveJsMenu);
