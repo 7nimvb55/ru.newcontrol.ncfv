@@ -249,7 +249,61 @@ public class AppObjectsInfoHelperClasses {
         }
         return AppObjectsInfoHelperHtml.commandOutPutToHtmlBus(strForOut);
     }
-    
+    protected static ArrayBlockingQueue<String>  getThreadClassGetDeclaredFieldsCommandsOut(
+            Thread detectedThread
+    ){
+        String nowTimeStringWithMS = 
+                AppFileOperationsSimple.getNowTimeStringWithMS();
+        ArrayList<String> strForOut = new ArrayList<String>();
+        strForOut.add(nowTimeStringWithMS);
+        strForOut.add("Thread.getClass().getDeclaredFields().length");
+        Field[] declaredFields = detectedThread.getClass().getDeclaredFields();
+        if( declaredFields != null ){
+            strForOut.add(String.valueOf(declaredFields.length));
+            int idexOfField = 0;
+            for(Field elementOfField : declaredFields){
+                
+                try {
+                    boolean boolAccValFlag = elementOfField.isAccessible();
+                    strForOut.add("...getDeclaredFields()[" + idexOfField + "].isAccessible()");
+                    strForOut.add(String.valueOf(boolAccValFlag));
+                    strForOut.add("...getDeclaredFields()[" + idexOfField + "].setAccessible(true)");
+                    strForOut.add("void");
+                    strForOut.add("...getDeclaredFields()[" + idexOfField + "].getType().getCanonicalName()");
+                    strForOut.add(elementOfField.getType().getCanonicalName());
+                    strForOut.add("...getDeclaredFields()[" + idexOfField + "].getName()");
+                    strForOut.add(elementOfField.getName());
+                    strForOut.add("...getDeclaredFields()[" + idexOfField + "].getClass()).toString()");
+                    strForOut.add(elementOfField.getClass().toString());
+                    strForOut.add("...getDeclaredFields()[" 
+                            + idexOfField 
+                            + "].setAccessible(" 
+                            + String.valueOf(boolAccValFlag) 
+                            + ")");
+                    elementOfField.setAccessible(boolAccValFlag);
+                    strForOut.add("void");
+                } catch (IllegalArgumentException ex){
+                    strForOut.add("IllegalArgumentException " + ex.getMessage());
+                } catch (SecurityException ex){
+                    strForOut.add("SecurityException " + ex.getMessage());
+                }
+                
+                //Strings results
+                strForOut.add("...getDeclaredFields()[" + idexOfField + "].getName()");
+                strForOut.add(elementOfField.getName());
+                strForOut.add("...getDeclaredFields()[" + idexOfField + "].toGenericString()");
+                strForOut.add(elementOfField.toGenericString());
+                strForOut.add("...getDeclaredFields()[" + idexOfField + "].toString()");
+                strForOut.add(elementOfField.toString());
+                strForOut.add("...getDeclaredFields()[" + idexOfField + "].getModifiers()");
+                strForOut.add(String.valueOf(elementOfField.getModifiers()));
+                idexOfField++;
+            }
+        } else {
+            strForOut.add("null");
+        }
+        return AppObjectsInfoHelperHtml.commandOutPutToHtmlBus(strForOut);
+    }
     /**
      * @deprecated 
      * @param detectedThread

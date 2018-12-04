@@ -46,24 +46,34 @@ public class AppObjectsInfo {
                 AppFileOperationsSimple.getNowTimeStringWithMS();
         Path logForHtmlCurrentLogSubDir = 
                     AppFileOperationsSimple.getLogForHtmlCurrentLogSubDir(instanceStartTimeWithMS);
+        
         //for get for css, js and more info about dirs
         ConcurrentSkipListMap<String, Path> listLogStorageFiles = 
                 AppFileOperationsSimple.getNewHtmlLogStorageFileSystem(logForHtmlCurrentLogSubDir);
         listLogStorageFiles.put(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR, logForHtmlCurrentLogSubDir);
         tableClassJob(logForHtmlCurrentLogSubDir, threadNameCommandsOut);
+        waitForWriterJobsDone();
+        
         ArrayBlockingQueue<String> classCommandsOut = AppObjectsInfoHelperClasses.getThreadClassCommandsOut(readedThread);
         tableCreateJobs(logForHtmlCurrentLogSubDir, classCommandsOut);
+        waitForWriterJobsDone();
+        
         ArrayBlockingQueue<String> classGetDeclaredMethodsCommandsOut = 
                 AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethodsCommandsOut(readedThread);
         tableClassJob(logForHtmlCurrentLogSubDir, classGetDeclaredMethodsCommandsOut);
+        waitForWriterJobsDone();
         
         Path fileJsMenuPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX);
         ArrayBlockingQueue<String> linesForSaveJsMenu = AppObjectsInfoHelperHtml.getLinesForSaveJsMenu();
         anyFileCreateJobs(fileJsMenuPrefix, linesForSaveJsMenu);
+        waitForWriterJobsDone();
+        
         Path fileCssPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX);
         ArrayBlockingQueue<String> linesForSaveCss = AppObjectsInfoHelperHtml.getLinesForSaveCss();
         anyFileCreateJobs(fileCssPrefix, linesForSaveCss);
         waitForWriterJobsDone();
+        
+        
         Path fileIndexOfReport = listLogStorageFiles.get(AppFileNamesConstants.LOG_INDEX_PREFIX);
         summaryReportJobs(logForHtmlCurrentLogSubDir, fileJsMenuPrefix.getFileName(), fileCssPrefix.getFileName(), fileIndexOfReport);
         

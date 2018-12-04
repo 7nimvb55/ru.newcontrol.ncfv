@@ -247,7 +247,15 @@ public class AppObjectsInfoHelperHtml {
         linesForSave.add("<link rel=\"stylesheet\" href=\"./css/" + fileCssPrefix.toString() + "\" type=\"text/css\"></link>");
         linesForSave.add("</head>");
         linesForSave.add("<body class=\"body\" onload=\"allClose()\">");
-        linesForSave.add("        <div id=\"header-content\" class=\"content-header\">header page Report for threads state");
+        linesForSave.add("        <div id=\"header-content\" class=\"content-header\">");
+        linesForSave.add("                <button id=\"buttonLime\" onclick=\"highlightLime()\">Lime</button>");
+        linesForSave.add("                <input type=\"text\" name=\"enter\" class=\"enter\" value=\"\" id=\"limeTextElement\"/>");
+        linesForSave.add("                <button id=\"buttonYellow\" onclick=\"highlightYellow()\">Yellow</button>");
+        linesForSave.add("                <input type=\"text\" name=\"enter\" class=\"enter\" value=\"\" id=\"yellowTextElement\"/>");
+        linesForSave.add("                <button id=\"buttonRed\" onclick=\"highlightRed()\">Red</button>");
+        linesForSave.add("                <input type=\"text\" name=\"enter\" class=\"enter\" value=\"\" id=\"redTextElement\"/>");
+        linesForSave.add("                <button id=\"buttonCyan\" onclick=\"highlightCyan()\">Cyan</button>");
+        linesForSave.add("                <input type=\"text\" name=\"enter\" class=\"enter\" value=\"\" id=\"cyanTextElement\"/>");
         linesForSave.add("        </div>");
         linesForSave.add("        <div id=\"menu-content\" class=\"content-menu-items\">");
         linesForSave.add("        <ul id=\"menu\">");
@@ -514,6 +522,7 @@ public class AppObjectsInfoHelperHtml {
     
     
     protected static ArrayBlockingQueue<String> getLinesForSaveCss(){
+        //@todo fix for queue size exception of full
         Integer messagesQueueSize = 1000;
         ArrayBlockingQueue<String> listForRunnableLogStrs = new ArrayBlockingQueue<String>(messagesQueueSize);
         listForRunnableLogStrs.add(".body{");
@@ -636,10 +645,23 @@ public class AppObjectsInfoHelperHtml {
         listForRunnableLogStrs.add("    padding: 11px;");
         listForRunnableLogStrs.add("    min-width: 355px;");
         listForRunnableLogStrs.add("}");
+        listForRunnableLogStrs.add(".highlightlime {");
+        listForRunnableLogStrs.add("  background-color: #00FF00;");
+        listForRunnableLogStrs.add("}");
+        listForRunnableLogStrs.add(".highlightyellow {");
+        listForRunnableLogStrs.add("  background-color: #FFFF00;");
+        listForRunnableLogStrs.add("}");
+        listForRunnableLogStrs.add(".highlightred {");
+        listForRunnableLogStrs.add("  background-color: #FF0000;");
+        listForRunnableLogStrs.add("}");
+        listForRunnableLogStrs.add(".highlightcyan {");
+        listForRunnableLogStrs.add("  background-color: #00FFFF;");
+        listForRunnableLogStrs.add("}");
         return listForRunnableLogStrs;
     }
     protected static ArrayBlockingQueue<String> getLinesForSaveJsMenu(){
-        Integer messagesQueueSize = 100;
+        //@todo fix for queue size exception of full
+        Integer messagesQueueSize = 1000;
         ArrayBlockingQueue<String> listForRunnableLogStrs = new ArrayBlockingQueue<String>(messagesQueueSize);
         listForRunnableLogStrs.add("function openMenu(node){");
         listForRunnableLogStrs.add("var subMenu = node.parentNode.getElementsByTagName(\"ul\")[0];");
@@ -651,6 +673,127 @@ public class AppObjectsInfoHelperHtml {
         listForRunnableLogStrs.add("	list[i].style.display = \"none\";");
         listForRunnableLogStrs.add("}");
         listForRunnableLogStrs.add("}");
+        //hightlight
+        listForRunnableLogStrs.add("function highlightLime() {");
+        listForRunnableLogStrs.add("    var inputLimeText = document.getElementById(\"limeTextElement\").value;");
+        listForRunnableLogStrs.add("    var contentPageHTML = document.getElementById(\"page-content\");");
+        listForRunnableLogStrs.add("    var elementsTable = contentPageHTML.getElementsByTagName('table');");
+        listForRunnableLogStrs.add("    for (var jTable = 0; jTable < elementsTable.length; jTable++) {");
+        listForRunnableLogStrs.add("        var elementsTableTbody = elementsTable[jTable].getElementsByTagName('tbody');");
+        listForRunnableLogStrs.add("        for (var jTbody = 0; jTbody < elementsTableTbody.length; jTbody++) {");
+        listForRunnableLogStrs.add("            var elementsTableTrow = elementsTableTbody[jTbody].getElementsByTagName('tr');");
+        listForRunnableLogStrs.add("            for (var jTrowIdx = 0; jTrowIdx < elementsTableTrow.length; jTrowIdx++) {");
+        listForRunnableLogStrs.add("                var elements = elementsTableTrow[jTrowIdx].getElementsByTagName('td');");
+        listForRunnableLogStrs.add("                for (var i = 0; i < elements.length; i++) {");
+        listForRunnableLogStrs.add("                    var inputText = elements[i];");
+        listForRunnableLogStrs.add("                    var innerHTML = elements[i].innerHTML;");
+        listForRunnableLogStrs.add("                    if( inputLimeText > '' ){");
+        listForRunnableLogStrs.add("                        var index = innerHTML.indexOf(inputLimeText);");
+        listForRunnableLogStrs.add("                        var text = inputLimeText;");
+        listForRunnableLogStrs.add("                        if (index >= 0) { ");
+        listForRunnableLogStrs.add("                            innerHTML = innerHTML.substring(0,index) + \"<span class='highlightlime'>\" + innerHTML.substring(index,index + text.length) + \"</span>\" + innerHTML.substring(index + text.length);");
+        listForRunnableLogStrs.add("                            inputText.innerHTML = innerHTML;");
+        listForRunnableLogStrs.add("                        }");
+        listForRunnableLogStrs.add("                    }");
+        listForRunnableLogStrs.add("                }");
+        listForRunnableLogStrs.add("            }");
+        listForRunnableLogStrs.add("        }");
+        listForRunnableLogStrs.add("    }");
+        listForRunnableLogStrs.add("}");
+        listForRunnableLogStrs.add("function highlightYellow() {");
+        listForRunnableLogStrs.add("    var inputYellowText = document.getElementById(\"yellowTextElement\").value;");
+        listForRunnableLogStrs.add("    var contentPageHTML = document.getElementById(\"page-content\");");
+        listForRunnableLogStrs.add("    var elementsTable = contentPageHTML.getElementsByTagName('table');");
+        listForRunnableLogStrs.add("    for (var jTable = 0; jTable < elementsTable.length; jTable++) {");
+        listForRunnableLogStrs.add("        var elementsTableTbody = elementsTable[jTable].getElementsByTagName('tbody');");
+        listForRunnableLogStrs.add("        for (var jTbody = 0; jTbody < elementsTableTbody.length; jTbody++) {");
+        listForRunnableLogStrs.add("            var elementsTableTrow = elementsTableTbody[jTbody].getElementsByTagName('tr');");
+        listForRunnableLogStrs.add("            for (var jTrowIdx = 0; jTrowIdx < elementsTableTrow.length; jTrowIdx++) {");
+        listForRunnableLogStrs.add("                var elements = elementsTableTrow[jTrowIdx].getElementsByTagName('td');");
+        listForRunnableLogStrs.add("                for (var i = 0; i < elements.length; i++) {");
+        listForRunnableLogStrs.add("                    var inputText = elements[i];");
+        listForRunnableLogStrs.add("                    var innerHTML = elements[i].innerHTML;");
+        listForRunnableLogStrs.add("                    if( inputYellowText > '' ){");
+        listForRunnableLogStrs.add("                        var index = innerHTML.indexOf(inputYellowText);");
+        listForRunnableLogStrs.add("                        var text = inputYellowText;");
+        listForRunnableLogStrs.add("                        if (index >= 0) {");
+        listForRunnableLogStrs.add("                            innerHTML = innerHTML.substring(0,index) + \"<span class='highlightyellow'>\" + innerHTML.substring(index,index + text.length) + \"</span>\" + innerHTML.substring(index + text.length);");
+        listForRunnableLogStrs.add("                            inputText.innerHTML = innerHTML;");
+        listForRunnableLogStrs.add("                        }");
+        listForRunnableLogStrs.add("                    }");
+        listForRunnableLogStrs.add("                }");
+        listForRunnableLogStrs.add("            }");
+        listForRunnableLogStrs.add("        }");
+        listForRunnableLogStrs.add("    }");
+        listForRunnableLogStrs.add("}");
+        listForRunnableLogStrs.add("function highlightRed() {");
+        listForRunnableLogStrs.add("    var inputRedText = document.getElementById(\"redTextElement\").value;");
+        listForRunnableLogStrs.add("    var contentPageHTML = document.getElementById(\"page-content\");");
+        listForRunnableLogStrs.add("    var elementsTable = contentPageHTML.getElementsByTagName('table');");
+        listForRunnableLogStrs.add("    for (var jTable = 0; jTable < elementsTable.length; jTable++) {");
+        listForRunnableLogStrs.add("        var elementsTableTbody = elementsTable[jTable].getElementsByTagName('tbody');");
+        listForRunnableLogStrs.add("        for (var jTbody = 0; jTbody < elementsTableTbody.length; jTbody++) {");
+        listForRunnableLogStrs.add("            var elementsTableTrow = elementsTableTbody[jTbody].getElementsByTagName('tr');");
+        listForRunnableLogStrs.add("            for (var jTrowIdx = 0; jTrowIdx < elementsTableTrow.length; jTrowIdx++) {");
+        listForRunnableLogStrs.add("                var elements = elementsTableTrow[jTrowIdx].getElementsByTagName('td');");
+        listForRunnableLogStrs.add("                for (var i = 0; i < elements.length; i++) {");
+        listForRunnableLogStrs.add("                    var inputText = elements[i];");
+        listForRunnableLogStrs.add("                    var innerHTML = elements[i].innerHTML;");
+        listForRunnableLogStrs.add("                    if( inputRedText > '' ){");
+        listForRunnableLogStrs.add("                        var index = innerHTML.indexOf(inputRedText);");
+        listForRunnableLogStrs.add("                        var text = inputRedText;");
+        listForRunnableLogStrs.add("                        if (index >= 0) {");
+        listForRunnableLogStrs.add("                            innerHTML = innerHTML.substring(0,index) + \"<span class='highlightred'>\" + innerHTML.substring(index,index + text.length) + \"</span>\" + innerHTML.substring(index + text.length);");
+        listForRunnableLogStrs.add("                            inputText.innerHTML = innerHTML;");
+        listForRunnableLogStrs.add("                        }");
+        listForRunnableLogStrs.add("                    }");
+        listForRunnableLogStrs.add("                }");
+        listForRunnableLogStrs.add("            }");
+        listForRunnableLogStrs.add("        }");
+        listForRunnableLogStrs.add("    }");
+        listForRunnableLogStrs.add("}");
+        listForRunnableLogStrs.add("function highlightCyan() {");
+        listForRunnableLogStrs.add("    var inputCyanText = document.getElementById(\"cyanTextElement\").value;");
+        listForRunnableLogStrs.add("    var contentPageHTML = document.getElementById(\"page-content\");");
+        listForRunnableLogStrs.add("    var elementsTable = contentPageHTML.getElementsByTagName('table');");
+        listForRunnableLogStrs.add("    for (var jTable = 0; jTable < elementsTable.length; jTable++) {");
+        listForRunnableLogStrs.add("        var elementsTableTbody = elementsTable[jTable].getElementsByTagName('tbody');");
+        listForRunnableLogStrs.add("        for (var jTbody = 0; jTbody < elementsTableTbody.length; jTbody++) {");
+        listForRunnableLogStrs.add("            var elementsTableTrow = elementsTableTbody[jTbody].getElementsByTagName('tr');");
+        listForRunnableLogStrs.add("            for (var jTrowIdx = 0; jTrowIdx < elementsTableTrow.length; jTrowIdx++) {");
+        listForRunnableLogStrs.add("                var elements = elementsTableTrow[jTrowIdx].getElementsByTagName('td');");
+        listForRunnableLogStrs.add("                for (var i = 0; i < elements.length; i++) {");
+        listForRunnableLogStrs.add("                    var inputText = elements[i];");
+        listForRunnableLogStrs.add("                    var innerHTML = elements[i].innerHTML;");
+        listForRunnableLogStrs.add("                    if( inputCyanText > '' ){");
+        listForRunnableLogStrs.add("                        var index = innerHTML.indexOf(inputCyanText);");
+        listForRunnableLogStrs.add("                        var text = inputCyanText;");
+        listForRunnableLogStrs.add("                        if (index >= 0) {");
+        listForRunnableLogStrs.add("                            innerHTML = innerHTML.substring(0,index) + \"<span class='highlightcyan'>\" + innerHTML.substring(index,index + text.length) + \"</span>\" + innerHTML.substring(index + text.length);");
+        listForRunnableLogStrs.add("                            inputText.innerHTML = innerHTML;");
+        listForRunnableLogStrs.add("                        }");
+        listForRunnableLogStrs.add("                    }");
+        listForRunnableLogStrs.add("                }");
+        listForRunnableLogStrs.add("            }");
+        listForRunnableLogStrs.add("        }");
+        listForRunnableLogStrs.add("    }");
+        listForRunnableLogStrs.add("}");
+        listForRunnableLogStrs.add("");
+        listForRunnableLogStrs.add("");
+        listForRunnableLogStrs.add("");
+        listForRunnableLogStrs.add("");
+        listForRunnableLogStrs.add("");
+        listForRunnableLogStrs.add("");
+        listForRunnableLogStrs.add("");
+        listForRunnableLogStrs.add("");
+        listForRunnableLogStrs.add("");
+        listForRunnableLogStrs.add("");
+        listForRunnableLogStrs.add("");
+
+        
+        
+
+        
         return listForRunnableLogStrs;
     }
     protected static ArrayBlockingQueue<String> getLinesForSaveJsLoadHtml(){
