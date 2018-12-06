@@ -41,7 +41,12 @@ public class AppObjectsInfo {
      * @param readedThread 
      */
     protected static void getThreadDebugInfoToHtml(Thread readedThread){
-        ArrayBlockingQueue<String> threadNameCommandsOut = AppObjectsInfoHelperClasses.getThreadNameCommandsOut(readedThread);
+        
+        StackTraceElement[] stackTrace = readedThread.getStackTrace();
+        ThreadGroup threadGroup = readedThread.getThreadGroup();
+        ClassLoader contextClassLoader = readedThread.getContextClassLoader();
+        Class<? extends Thread> aClass = readedThread.getClass();
+        
         String instanceStartTimeWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
         Path logForHtmlCurrentLogSubDir = 
@@ -51,20 +56,22 @@ public class AppObjectsInfo {
         ConcurrentSkipListMap<String, Path> listLogStorageFiles = 
                 AppFileOperationsSimple.getNewHtmlLogStorageFileSystem(logForHtmlCurrentLogSubDir);
         listLogStorageFiles.put(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR, logForHtmlCurrentLogSubDir);
+        
+        ArrayBlockingQueue<String> threadNameCommandsOut = AppObjectsInfoHelperClasses.getThreadNameCommandsOut(readedThread);
         tableClassJob(logForHtmlCurrentLogSubDir, threadNameCommandsOut);
         waitForWriterJobsDone();
         
-        ArrayBlockingQueue<String> classCommandsOut = AppObjectsInfoHelperClasses.getThreadClassCommandsOut(readedThread);
+        ArrayBlockingQueue<String> classCommandsOut = AppObjectsInfoHelperClasses.getThreadClassCommandsOut(aClass);
         tableCreateJobs(logForHtmlCurrentLogSubDir, classCommandsOut);
         waitForWriterJobsDone();
         
         ArrayBlockingQueue<String> classGetDeclaredMethodsCommandsOut = 
-                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethodsCommandsOut(readedThread);
+                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethodsCommandsOut(aClass);
         tableClassJob(logForHtmlCurrentLogSubDir, classGetDeclaredMethodsCommandsOut);
         waitForWriterJobsDone();
         
         ArrayBlockingQueue<String> classGetDeclaredFieldsCommandsOut = 
-                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredFieldsCommandsOut(readedThread);
+                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredFieldsCommandsOut(aClass);
         tableClassJob(logForHtmlCurrentLogSubDir, classGetDeclaredFieldsCommandsOut);
         waitForWriterJobsDone();
         
