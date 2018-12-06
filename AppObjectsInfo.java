@@ -36,6 +36,53 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * @author wladimirowichbiaran
  */
 public class AppObjectsInfo {
+    protected static void dumpAllStackToHtml(){
+        String instanceStartTimeWithMS = 
+                AppFileOperationsSimple.getNowTimeStringWithMS();
+        Path logForHtmlCurrentLogSubDir = 
+                    AppFileOperationsSimple.getLogForHtmlCurrentLogSubDir(instanceStartTimeWithMS);
+        
+        //for get for css, js and more info about dirs
+        ConcurrentSkipListMap<String, Path> listLogStorageFiles = 
+                AppFileOperationsSimple.getNewHtmlLogStorageFileSystem(logForHtmlCurrentLogSubDir);
+        listLogStorageFiles.put(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR, logForHtmlCurrentLogSubDir);
+        
+        
+        for( Map.Entry<Thread, StackTraceElement[]> elStTr : Thread.getAllStackTraces().entrySet() ){
+            Class<? extends Thread> aClass = elStTr.getKey().getClass();
+            ArrayBlockingQueue<String> threadNameCommandsOut = AppObjectsInfoHelperClasses.getThreadNameCommandsOut(elStTr.getKey());
+            tableClassJob(logForHtmlCurrentLogSubDir, threadNameCommandsOut);
+            ArrayBlockingQueue<String> classCommandsOut = AppObjectsInfoHelperClasses.getThreadClassCommandsOut(aClass);
+            tableCreateJobs(logForHtmlCurrentLogSubDir, classCommandsOut);
+            ArrayBlockingQueue<String> classGetDeclaredMethodsCommandsOut = 
+            AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethodsCommandsOut(aClass);
+            tableClassJob(logForHtmlCurrentLogSubDir, classGetDeclaredMethodsCommandsOut);
+            ArrayBlockingQueue<String> classGetDeclaredFieldsCommandsOut = 
+            AppObjectsInfoHelperClasses.getThreadClassGetDeclaredFieldsCommandsOut(aClass);
+            tableClassJob(logForHtmlCurrentLogSubDir, classGetDeclaredFieldsCommandsOut);
+            for( StackTraceElement elementThreads : elStTr.getValue() ){
+                elementThreads.getFileName();
+            }
+        }
+        waitForWriterJobsDone();
+        Path fileJsMenuPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX);
+        ArrayBlockingQueue<String> linesForSaveJsMenu = AppObjectsInfoHelperHtml.getLinesForSaveJsMenu();
+        anyFileCreateJobs(fileJsMenuPrefix, linesForSaveJsMenu);
+        waitForWriterJobsDone();
+        
+        Path fileCssPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX);
+        ArrayBlockingQueue<String> linesForSaveCss = AppObjectsInfoHelperHtml.getLinesForSaveCss();
+        anyFileCreateJobs(fileCssPrefix, linesForSaveCss);
+        waitForWriterJobsDone();
+        
+        
+        Path fileIndexOfReport = listLogStorageFiles.get(AppFileNamesConstants.LOG_INDEX_PREFIX);
+        summaryReportJobs(logForHtmlCurrentLogSubDir, fileJsMenuPrefix.getFileName(), fileCssPrefix.getFileName(), fileIndexOfReport);
+        
+    }
+    protected static void getThreadInfoToTable(){
+        
+    }
     /**
      * @todo fix for abnormal finished for creation processes
      * @param readedThread 
@@ -61,11 +108,11 @@ public class AppObjectsInfo {
         tableClassJob(logForHtmlCurrentLogSubDir, threadNameCommandsOut);
         waitForWriterJobsDone();
         
-        ArrayBlockingQueue<String> classCommandsOut = AppObjectsInfoHelperClasses.getThreadClassCommandsOut(aClass);
+        /*ArrayBlockingQueue<String> classCommandsOut = AppObjectsInfoHelperClasses.getThreadClassCommandsOut(aClass);
         tableCreateJobs(logForHtmlCurrentLogSubDir, classCommandsOut);
-        waitForWriterJobsDone();
+        waitForWriterJobsDone();*/
         
-        ArrayBlockingQueue<String> classGetDeclaredMethodsCommandsOut = 
+        /*ArrayBlockingQueue<String> classGetDeclaredMethodsCommandsOut = 
                 AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethodsCommandsOut(aClass);
         tableClassJob(logForHtmlCurrentLogSubDir, classGetDeclaredMethodsCommandsOut);
         waitForWriterJobsDone();
@@ -73,9 +120,9 @@ public class AppObjectsInfo {
         ArrayBlockingQueue<String> classGetDeclaredFieldsCommandsOut = 
                 AppObjectsInfoHelperClasses.getThreadClassGetDeclaredFieldsCommandsOut(aClass);
         tableClassJob(logForHtmlCurrentLogSubDir, classGetDeclaredFieldsCommandsOut);
-        waitForWriterJobsDone();
+        waitForWriterJobsDone();*/
         
-        Path fileJsMenuPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX);
+        /*Path fileJsMenuPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX);
         ArrayBlockingQueue<String> linesForSaveJsMenu = AppObjectsInfoHelperHtml.getLinesForSaveJsMenu();
         anyFileCreateJobs(fileJsMenuPrefix, linesForSaveJsMenu);
         waitForWriterJobsDone();
@@ -87,7 +134,7 @@ public class AppObjectsInfo {
         
         
         Path fileIndexOfReport = listLogStorageFiles.get(AppFileNamesConstants.LOG_INDEX_PREFIX);
-        summaryReportJobs(logForHtmlCurrentLogSubDir, fileJsMenuPrefix.getFileName(), fileCssPrefix.getFileName(), fileIndexOfReport);
+        summaryReportJobs(logForHtmlCurrentLogSubDir, fileJsMenuPrefix.getFileName(), fileCssPrefix.getFileName(), fileIndexOfReport);*/
         
     }
     protected static void summaryReportJobs(Path currentLogSubDir, Path jsFile, Path cssFile, Path indexOfReport){
@@ -120,10 +167,10 @@ public class AppObjectsInfo {
         
     }
     protected static void waitForReadJobsDone(){
-        Boolean writerInStack = Boolean.FALSE;
+        Boolean readerInStack = Boolean.FALSE;
         System.out.println("-----------                          ----------------------Start wait Reader time " + AppFileOperationsSimple.getNowTimeStringWithMS());
         do{
-            writerInStack = Boolean.FALSE;
+            readerInStack = Boolean.FALSE;
             for( Map.Entry<Thread, StackTraceElement[]> elStTr : Thread.getAllStackTraces().entrySet() ){
                 System.out.println("Thread.id " + elStTr.getKey().getId() 
                         + " Thread.name " + elStTr.getKey().getName() 
@@ -131,7 +178,7 @@ public class AppObjectsInfo {
                 );
                 if( elStTr.getKey().getName().contains("runReader")){
                     elStTr.getKey().getState();
-                    writerInStack = Boolean.TRUE;
+                    readerInStack = Boolean.TRUE;
                 }
                 for( StackTraceElement elementThreads : elStTr.getValue() ){
                     System.out.println("Stack element " + elementThreads.getFileName());
@@ -140,7 +187,7 @@ public class AppObjectsInfo {
             for( StackTraceElement elementThreads : Thread.currentThread().getStackTrace() ){
                 System.out.println("Stack element " + elementThreads.getFileName());
             }
-        } while (writerInStack);
+        } while (readerInStack);
         System.out.println("-----------                          ----------------------Stop wait Reader time " + AppFileOperationsSimple.getNowTimeStringWithMS());
     }
     protected static void tableClassJob(
