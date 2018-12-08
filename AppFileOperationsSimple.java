@@ -15,6 +15,10 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.DirectoryIteratorException;
 import java.nio.file.DirectoryStream;
@@ -501,4 +505,33 @@ public class AppFileOperationsSimple {
         }
         return toReturn;
     }
+    protected static void writeToFile(Path fileForWrite, ArrayList<String> strText){
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(fileForWrite.toString())))
+        {
+            for(String itemStr : strText){
+                String text = itemStr.toString();
+                bw.write(text);
+                bw.newLine();
+            }
+        }
+        catch(IOException ex){
+            ex.printStackTrace();
+        }
+    }
+    protected static ArrayList<String> readFromFile(Path fileForWrite){
+        ArrayList<String> strForReturn;
+        strForReturn = new ArrayList<String>();
+        try(BufferedReader br = new BufferedReader(new FileReader(fileForWrite.toString())))
+        {
+            String s;
+            while((s=br.readLine())!=null){
+                strForReturn.add(s.trim());
+            }
+        }
+         catch(IOException ex){
+            ex.printStackTrace();
+        }   
+        return strForReturn;
+    }
+    
 }

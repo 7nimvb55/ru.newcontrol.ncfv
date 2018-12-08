@@ -55,8 +55,9 @@ public class AppLoggerRunnableRead implements Runnable {
                 if( ancorString.length() > 17 ){
                     readedLines.add(ancorString);
                 }
-                try {
-                    readedLines.addAll(Files.readAllLines(fileForReadInThisJob, Charset.forName("UTF-8")));
+                //try {
+                    readedLines.addAll(AppFileOperationsSimple.readFromFile(fileForReadInThisJob));
+                    //readedLines.addAll(Files.readAllLines(fileForReadInThisJob, Charset.forName("UTF-8")));
                     if( readedLines != null){
                         System.out.println("_|_|_|_|_|_ AppLoggerRunnableHtmlRead.run() fromHTMLLogFileName " 
                                 + fileForReadInThisJob.toString() 
@@ -72,10 +73,10 @@ public class AppLoggerRunnableRead implements Runnable {
                     }
 
                     currentJob.setFalseFromHTMLLogFileNameChanged();
-                } catch (IOException ex) {
+                /*} catch (IOException ex) {
                     ex.getMessage();
                     ex.printStackTrace();
-                }
+                }*/
             }
         }
         currentJob.setTrueFromHTMLJobDone();

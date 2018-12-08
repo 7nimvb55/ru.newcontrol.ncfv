@@ -37,6 +37,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class AppObjectsInfo {
     protected static void dumpAllStackToHtml(){
+        AppLoggerBusData busForData = new AppLoggerBusData();
         String instanceStartTimeWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
         Path logForHtmlCurrentLogSubDir = 
@@ -51,15 +52,22 @@ public class AppObjectsInfo {
         for( Map.Entry<Thread, StackTraceElement[]> elStTr : Thread.getAllStackTraces().entrySet() ){
             Class<? extends Thread> aClass = elStTr.getKey().getClass();
             ArrayBlockingQueue<String> threadNameCommandsOut = AppObjectsInfoHelperClasses.getThreadNameCommandsOut(elStTr.getKey());
-            tableClassJob(logForHtmlCurrentLogSubDir, threadNameCommandsOut);
+            String addAndGetKey = busForData.addAndGetKey(threadNameCommandsOut);
+            tableCreateJobs(logForHtmlCurrentLogSubDir, busForData.getByKey(addAndGetKey));
+            
             ArrayBlockingQueue<String> classCommandsOut = AppObjectsInfoHelperClasses.getThreadClassCommandsOut(aClass);
-            tableCreateJobs(logForHtmlCurrentLogSubDir, classCommandsOut);
+            addAndGetKey = busForData.addAndGetKey(classCommandsOut);
+            tableCreateJobs(logForHtmlCurrentLogSubDir, busForData.getByKey(addAndGetKey));
+            
             ArrayBlockingQueue<String> classGetDeclaredMethodsCommandsOut = 
             AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethodsCommandsOut(aClass);
-            tableClassJob(logForHtmlCurrentLogSubDir, classGetDeclaredMethodsCommandsOut);
+            addAndGetKey = busForData.addAndGetKey(classGetDeclaredMethodsCommandsOut);
+            tableCreateJobs(logForHtmlCurrentLogSubDir, busForData.getByKey(addAndGetKey));
+            
             ArrayBlockingQueue<String> classGetDeclaredFieldsCommandsOut = 
             AppObjectsInfoHelperClasses.getThreadClassGetDeclaredFieldsCommandsOut(aClass);
-            tableClassJob(logForHtmlCurrentLogSubDir, classGetDeclaredFieldsCommandsOut);
+            addAndGetKey = busForData.addAndGetKey(classGetDeclaredFieldsCommandsOut);
+            tableCreateJobs(logForHtmlCurrentLogSubDir, busForData.getByKey(addAndGetKey));
             for( StackTraceElement elementThreads : elStTr.getValue() ){
                 elementThreads.getFileName();
             }
@@ -67,17 +75,19 @@ public class AppObjectsInfo {
         waitForWriterJobsDone();
         Path fileJsMenuPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX);
         ArrayBlockingQueue<String> linesForSaveJsMenu = AppObjectsInfoHelperHtml.getLinesForSaveJsMenu();
-        anyFileCreateJobs(fileJsMenuPrefix, linesForSaveJsMenu);
+        String addAndGetKeyJs = busForData.addAndGetKey(linesForSaveJsMenu);
+        anyFileCreateJobs(fileJsMenuPrefix, busForData.getByKey(addAndGetKeyJs));
         waitForWriterJobsDone();
         
         Path fileCssPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX);
         ArrayBlockingQueue<String> linesForSaveCss = AppObjectsInfoHelperHtml.getLinesForSaveCss();
-        anyFileCreateJobs(fileCssPrefix, linesForSaveCss);
+        String addAndGetKeyCss = busForData.addAndGetKey(linesForSaveCss);
+        anyFileCreateJobs(fileCssPrefix, busForData.getByKey(addAndGetKeyCss));
         waitForWriterJobsDone();
         
         
         Path fileIndexOfReport = listLogStorageFiles.get(AppFileNamesConstants.LOG_INDEX_PREFIX);
-        summaryReportJobs(logForHtmlCurrentLogSubDir, fileJsMenuPrefix.getFileName(), fileCssPrefix.getFileName(), fileIndexOfReport);
+        //summaryReportJobs(logForHtmlCurrentLogSubDir, fileJsMenuPrefix.getFileName(), fileCssPrefix.getFileName(), fileIndexOfReport, busForData);
         
     }
     protected static void getThreadInfoToTable(){
@@ -137,7 +147,11 @@ public class AppObjectsInfo {
         summaryReportJobs(logForHtmlCurrentLogSubDir, fileJsMenuPrefix.getFileName(), fileCssPrefix.getFileName(), fileIndexOfReport);*/
         
     }
-    protected static void summaryReportJobs(Path currentLogSubDir, Path jsFile, Path cssFile, Path indexOfReport){
+    protected static void summaryReportJobs(Path currentLogSubDir, 
+            Path jsFile, 
+            Path cssFile, 
+            Path indexOfReport,
+            AppLoggerBusData busForData){
         
         ArrayList<Path> filesByMaskFromDir = AppFileOperationsSimple.getFilesByMaskFromDir(
             currentLogSubDir,
@@ -162,7 +176,8 @@ public class AppObjectsInfo {
             System.out.println("-----------                          ----------------------Lines in readed Array " + readedElement.size());
         }
         ArrayBlockingQueue<String> createLinesForIndex = AppObjectsInfoHelperHtml.createLinesForIndex(fromReadFile, jsFile, cssFile, filesByMaskFromDir);
-        anyFileCreateJobs(indexOfReport, createLinesForIndex);
+        String forIndexKey = busForData.addAndGetKey(createLinesForIndex);
+        anyFileCreateJobs(indexOfReport, busForData.getByKey(forIndexKey));
         waitForWriterJobsDone();
         
     }

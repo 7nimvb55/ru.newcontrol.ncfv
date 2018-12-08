@@ -48,16 +48,18 @@ public class AppLoggerRunnableWrite implements Runnable {
                     + " write to "
                     + currentJob.getToHTMLLogFileName().toString()
             );
-            try {
+            
+            //try {
                 if( currentJob.isToHtmlFileNameSet() ){
-                    Files.write(currentJob.getToHTMLLogFileName(), forRecord, Charset.forName("UTF-8"));
+                    AppFileOperationsSimple.writeToFile(currentJob.getToHTMLLogFileName(), forRecord);
+                    //Files.write(currentJob.getToHTMLLogFileName(), forRecord, Charset.forName("UTF-8"));
                     currentJob.setFalseToHTMLLogFileNameChanged();
                 }
-            } catch (IOException ex) {
+            /*} catch (IOException ex) {
                 ex.getMessage();
                 ex.printStackTrace();
-            }
-            forRecord.clear();
+            }*/
+            //forRecord.clear();
         }
         
         currentJob.setFalseToHTMLNewRunner();
