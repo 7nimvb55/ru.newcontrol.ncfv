@@ -28,6 +28,69 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * @author wladimirowichbiaran
  */
 public class AppObjectsInfoHelperHtml {
+    protected static ArrayList<String> commandsOutPutToHtml(ArrayList<String> listCommandOutPut){
+        ArrayList<String> listStringsForLogInRunnable = new ArrayList<String>();
+        int indexedSwitch = 0;
+        if( (listCommandOutPut != null)
+                && (listCommandOutPut.size() > 0 ) ){
+                String forOutPutToLog = "";
+                if( listCommandOutPut.size() > 1 ){
+                    String forCmdResultOut = "<TBODY>";
+                    listStringsForLogInRunnable.add("<TABLE>");
+                    for( String element : listCommandOutPut ){
+                        if( indexedSwitch == 0 ){
+                            String forOutTimeStamp = "";
+                            try{
+                            forOutTimeStamp = listCommandOutPut.get(0).length() == 17 
+                                ? getFormatedTimeStamp(listCommandOutPut.get(0))
+                                : "";
+                            } catch (NoSuchElementException ex){
+                                ex.printStackTrace();
+                            }
+                            if( !forOutTimeStamp.isEmpty() ){
+                                listStringsForLogInRunnable.add("<THEAD>");
+                                forOutPutToLog = "<TR><TH>Time stamp</TH><TH>" + forOutTimeStamp + "</TH></TR>";
+                                listStringsForLogInRunnable.add(forOutPutToLog);
+                                forOutPutToLog = "<TR><TH>Command</TH><TH>Result</TH></TR>";
+                                listStringsForLogInRunnable.add(forOutPutToLog);
+                                listStringsForLogInRunnable.add("</THEAD>");
+                                forOutPutToLog = "";
+                            }
+                            indexedSwitch = 1;
+                            continue;
+                        }
+                        if( indexedSwitch == 2 ){
+                            listStringsForLogInRunnable.add(forCmdResultOut.concat("<TD>" + element + "</TD>") + "</TR>");
+                            forCmdResultOut = "";
+                            indexedSwitch = 1;
+                            continue;
+                        }
+                        if( indexedSwitch == 1 ){
+                            forCmdResultOut = forCmdResultOut.concat("<TR><TD>" + element + "</TD>");
+                            indexedSwitch = 2;
+                            continue;
+                        }
+                    }
+                    listStringsForLogInRunnable.add("</TBODY>");
+                    listStringsForLogInRunnable.add("</TABLE>");
+                }
+                if( listCommandOutPut.size() == 1 ){
+                    String forOutTimeStamp = "";
+                    try{
+                    forOutTimeStamp = listCommandOutPut.get(0).length() == 17 
+                        ? getFormatedTimeStamp(listCommandOutPut.get(0))
+                        : "";
+                    } catch (NoSuchElementException ex){
+                        ex.printStackTrace();
+                    }
+                    if( !forOutTimeStamp.isEmpty() ){
+                        forOutPutToLog = "<h1>Time stamp: " + forOutTimeStamp + "</h1>";
+                        listStringsForLogInRunnable.add(forOutPutToLog);
+                    }
+                }
+            }
+        return listStringsForLogInRunnable;
+    }
     protected static ArrayBlockingQueue<String> commandOutPutToHtmlBus(ArrayList<String> listCommandOutPut){
         ArrayList<String> listStringsForLogInRunnable = new ArrayList<String>();
         int indexedSwitch = 0;

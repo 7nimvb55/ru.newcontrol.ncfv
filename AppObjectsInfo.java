@@ -37,7 +37,6 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class AppObjectsInfo {
     protected static void dumpAllStackToHtml(){
-        AppLoggerBusData busForData = new AppLoggerBusData();
         String instanceStartTimeWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
         Path logForHtmlCurrentLogSubDir = 
@@ -52,22 +51,15 @@ public class AppObjectsInfo {
         for( Map.Entry<Thread, StackTraceElement[]> elStTr : Thread.getAllStackTraces().entrySet() ){
             Class<? extends Thread> aClass = elStTr.getKey().getClass();
             ArrayBlockingQueue<String> threadNameCommandsOut = AppObjectsInfoHelperClasses.getThreadNameCommandsOut(elStTr.getKey());
-            String addAndGetKey = busForData.addAndGetKey(threadNameCommandsOut);
-            tableCreateJobs(logForHtmlCurrentLogSubDir, busForData.getByKey(addAndGetKey));
-            
+            tableClassJob(logForHtmlCurrentLogSubDir, threadNameCommandsOut);
             ArrayBlockingQueue<String> classCommandsOut = AppObjectsInfoHelperClasses.getThreadClassCommandsOut(aClass);
-            addAndGetKey = busForData.addAndGetKey(classCommandsOut);
-            tableCreateJobs(logForHtmlCurrentLogSubDir, busForData.getByKey(addAndGetKey));
-            
+            tableCreateJobs(logForHtmlCurrentLogSubDir, classCommandsOut);
             ArrayBlockingQueue<String> classGetDeclaredMethodsCommandsOut = 
             AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethodsCommandsOut(aClass);
-            addAndGetKey = busForData.addAndGetKey(classGetDeclaredMethodsCommandsOut);
-            tableCreateJobs(logForHtmlCurrentLogSubDir, busForData.getByKey(addAndGetKey));
-            
+            tableClassJob(logForHtmlCurrentLogSubDir, classGetDeclaredMethodsCommandsOut);
             ArrayBlockingQueue<String> classGetDeclaredFieldsCommandsOut = 
             AppObjectsInfoHelperClasses.getThreadClassGetDeclaredFieldsCommandsOut(aClass);
-            addAndGetKey = busForData.addAndGetKey(classGetDeclaredFieldsCommandsOut);
-            tableCreateJobs(logForHtmlCurrentLogSubDir, busForData.getByKey(addAndGetKey));
+            tableClassJob(logForHtmlCurrentLogSubDir, classGetDeclaredFieldsCommandsOut);
             for( StackTraceElement elementThreads : elStTr.getValue() ){
                 elementThreads.getFileName();
             }
@@ -75,19 +67,17 @@ public class AppObjectsInfo {
         waitForWriterJobsDone();
         Path fileJsMenuPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_JS_MENU_PREFIX);
         ArrayBlockingQueue<String> linesForSaveJsMenu = AppObjectsInfoHelperHtml.getLinesForSaveJsMenu();
-        String addAndGetKeyJs = busForData.addAndGetKey(linesForSaveJsMenu);
-        anyFileCreateJobs(fileJsMenuPrefix, busForData.getByKey(addAndGetKeyJs));
+        anyFileCreateJobs(fileJsMenuPrefix, linesForSaveJsMenu);
         waitForWriterJobsDone();
         
         Path fileCssPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX);
         ArrayBlockingQueue<String> linesForSaveCss = AppObjectsInfoHelperHtml.getLinesForSaveCss();
-        String addAndGetKeyCss = busForData.addAndGetKey(linesForSaveCss);
-        anyFileCreateJobs(fileCssPrefix, busForData.getByKey(addAndGetKeyCss));
+        anyFileCreateJobs(fileCssPrefix, linesForSaveCss);
         waitForWriterJobsDone();
         
         
         Path fileIndexOfReport = listLogStorageFiles.get(AppFileNamesConstants.LOG_INDEX_PREFIX);
-        //summaryReportJobs(logForHtmlCurrentLogSubDir, fileJsMenuPrefix.getFileName(), fileCssPrefix.getFileName(), fileIndexOfReport, busForData);
+        summaryReportJobs(logForHtmlCurrentLogSubDir, fileJsMenuPrefix.getFileName(), fileCssPrefix.getFileName(), fileIndexOfReport);
         
     }
     protected static void getThreadInfoToTable(){
@@ -147,11 +137,7 @@ public class AppObjectsInfo {
         summaryReportJobs(logForHtmlCurrentLogSubDir, fileJsMenuPrefix.getFileName(), fileCssPrefix.getFileName(), fileIndexOfReport);*/
         
     }
-    protected static void summaryReportJobs(Path currentLogSubDir, 
-            Path jsFile, 
-            Path cssFile, 
-            Path indexOfReport,
-            AppLoggerBusData busForData){
+    protected static void summaryReportJobs(Path currentLogSubDir, Path jsFile, Path cssFile, Path indexOfReport){
         
         ArrayList<Path> filesByMaskFromDir = AppFileOperationsSimple.getFilesByMaskFromDir(
             currentLogSubDir,
@@ -176,8 +162,7 @@ public class AppObjectsInfo {
             System.out.println("-----------                          ----------------------Lines in readed Array " + readedElement.size());
         }
         ArrayBlockingQueue<String> createLinesForIndex = AppObjectsInfoHelperHtml.createLinesForIndex(fromReadFile, jsFile, cssFile, filesByMaskFromDir);
-        String forIndexKey = busForData.addAndGetKey(createLinesForIndex);
-        anyFileCreateJobs(indexOfReport, busForData.getByKey(forIndexKey));
+        anyFileCreateJobs(indexOfReport, createLinesForIndex);
         waitForWriterJobsDone();
         
     }
@@ -196,11 +181,31 @@ public class AppObjectsInfo {
                     readerInStack = Boolean.TRUE;
                 }
                 for( StackTraceElement elementThreads : elStTr.getValue() ){
-                    System.out.println("Stack element " + elementThreads.getFileName());
+                    System.out.println("Stack element " 
+                            + elementThreads.getFileName()
+                            + " ( "
+                            + elementThreads.getClassName()
+                            + "."
+                            + elementThreads.getMethodName() 
+                            + " ["
+                            + elementThreads.getLineNumber()
+                            + "] isNative" + String.valueOf(elementThreads.isNativeMethod())
+                            + " )"
+                    );
                 }
             }
             for( StackTraceElement elementThreads : Thread.currentThread().getStackTrace() ){
-                System.out.println("Stack element " + elementThreads.getFileName());
+                System.out.println("Stack element " 
+                            + elementThreads.getFileName()
+                            + " ( "
+                            + elementThreads.getClassName()
+                            + "."
+                            + elementThreads.getMethodName() 
+                            + " ["
+                            + elementThreads.getLineNumber()
+                            + "] isNative" + String.valueOf(elementThreads.isNativeMethod()) 
+                            + " )"
+                    );
             }
         } while (readerInStack);
         System.out.println("-----------                          ----------------------Stop wait Reader time " + AppFileOperationsSimple.getNowTimeStringWithMS());
@@ -256,11 +261,31 @@ public class AppObjectsInfo {
                     writerInStack = Boolean.TRUE;
                 }
                 for( StackTraceElement elementThreads : elStTr.getValue() ){
-                    System.out.println("Stack element " + elementThreads.getFileName());
+                    System.out.println("Stack element " 
+                            + elementThreads.getFileName()
+                            + " ( "
+                            + elementThreads.getClassName()
+                            + "."
+                            + elementThreads.getMethodName() 
+                            + " ["
+                            + elementThreads.getLineNumber()
+                            + "] isNative" + String.valueOf(elementThreads.isNativeMethod())
+                            + " )"
+                    );
                 }
             }
             for( StackTraceElement elementThreads : Thread.currentThread().getStackTrace() ){
-                System.out.println("Stack element " + elementThreads.getFileName());
+                System.out.println("Stack element " 
+                            + elementThreads.getFileName()
+                            + " ( "
+                            + elementThreads.getClassName()
+                            + "."
+                            + elementThreads.getMethodName() 
+                            + " ["
+                            + elementThreads.getLineNumber()
+                            + "] isNative" + String.valueOf(elementThreads.isNativeMethod())
+                            + " )"
+                    );
             }
         } while (writerInStack);
         System.out.println("-----------                          ----------------------Stop wait Writer time " + AppFileOperationsSimple.getNowTimeStringWithMS());

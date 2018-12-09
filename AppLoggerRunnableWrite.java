@@ -19,25 +19,29 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  *
  * @author wladimirowichbiaran
  */
 public class AppLoggerRunnableWrite implements Runnable {
-    private AppLoggerController managerForThis;
+    private ArrayBlockingQueue<AppLoggerController> busManager;
     public AppLoggerRunnableWrite(
             AppLoggerController outerManagerForThis
     ) {
         super();
-        this.managerForThis = outerManagerForThis;
-        this.managerForThis.currentWriterJob().setTrueToHTMLNewRunner();
+        this.busManager = new ArrayBlockingQueue<AppLoggerController>(100);
+        outerManagerForThis.currentWriterJob().setTrueToHTMLNewRunner();
+        busManager.add(outerManagerForThis);
+        
         System.out.println("*** ||| *** ||| *** create log writer *** ||| *** ||| ***");
     }
     
     @Override
     public void run() {
-        AppLoggerStateWriter currentJob = this.managerForThis.currentWriterJob();
+        AppLoggerController managerForThis = busManager.poll();
+        AppLoggerStateWriter currentJob = managerForThis.currentWriterJob();
         if( !currentJob.isToHTMLJobDone() ){
             ArrayList<String> forRecord = 
                     AppObjectsBusHelper.cleanBusArrayBlockingToArrayString(

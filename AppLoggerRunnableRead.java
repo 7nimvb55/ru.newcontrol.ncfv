@@ -27,11 +27,12 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class AppLoggerRunnableRead implements Runnable {
     
-    private AppLoggerController managerForThis;
+    private ArrayBlockingQueue<AppLoggerController> busManager;
     
     public AppLoggerRunnableRead(AppLoggerController outerManagerForThis){
         super();
-        this.managerForThis = outerManagerForThis;
+        this.busManager = new ArrayBlockingQueue<AppLoggerController>(100);
+        busManager.add(outerManagerForThis);
     //this.managerForThis..setTrueFromHTMLNewRunner();
         String threadInfoToString = NcAppHelper.getThreadInfoToString(Thread.currentThread());
         System.out.println("*** ||| *** ||| *** create log reader *** ||| *** ||| ***" + threadInfoToString);
@@ -39,8 +40,8 @@ public class AppLoggerRunnableRead implements Runnable {
     
     @Override
     public void run() {
-        
-        AppLoggerStateReader currentJob = this.managerForThis.currentReaderJob();
+        AppLoggerController managerForThis = busManager.poll();
+        AppLoggerStateReader currentJob = managerForThis.currentReaderJob();
         if( !currentJob.isBlankObject() ){
             if( !currentJob.isFromHTMLJobDone() ){
                 Path fileForReadInThisJob = currentJob.getFromHTMLLogFileName();
@@ -63,13 +64,13 @@ public class AppLoggerRunnableRead implements Runnable {
                                 + fileForReadInThisJob.toString() 
                                 + " _|_|_|_|_|_"
                                 + " readedLines.size() " + readedLines.size());
-                        this.managerForThis.setStringBusForLogRead(readedLines);
+                        managerForThis.setStringBusForLogRead(readedLines);
                     } else {
                         System.out.println("_|_|NULL|_|_ AppLoggerRunnableHtmlRead.run() fromHTMLLogFileName " 
                                 + fileForReadInThisJob.toString() 
                                 + " _|_|NULL|_|_"
                                 + " readedLines.size() is null");
-                        this.managerForThis.setStringBusForLogRead(new ArrayBlockingQueue<String>(1));
+                        managerForThis.setStringBusForLogRead(new ArrayBlockingQueue<String>(1));
                     }
 
                     currentJob.setFalseFromHTMLLogFileNameChanged();
