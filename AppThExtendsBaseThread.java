@@ -15,45 +15,69 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.ConcurrentSkipListMap;
-
 /**
  *
  * @author wladimirowichbiaran
  */
 public class AppThExtendsBaseThread implements Runnable {
     private static ThreadLocal<Integer> testValue;
-    private int secondTest;
+    private ThreadLocal<Integer> secondTest;
 
     public AppThExtendsBaseThread() {
         super();
-        secondTest = 5;
+        secondTest = new ThreadLocal<Integer>();
+        secondTest.set(5);
+    }
+    public AppThExtendsBaseThread(int outerInt) {
+        super();
+        secondTest = new ThreadLocal<Integer>();
+        secondTest.set(outerInt);
     }
     
     @Override
     public void run() {
-        
-        System.out.println(secondTest + "[second]" + this.toString());
-        
-        testValue = new ThreadLocal<Integer>();
-        testValue.set(15);
-        
-        secondTest++;
-        System.out.println(secondTest + "[second]" + this.toString());
-        
-        Integer get = testValue.get();
-        System.out.println(get + "[]" + this.toString());
-        
-        secondTest++;
-        System.out.println(secondTest + "[second]" + this.toString());
-        
-        get++;
-        testValue.set(get);
-        Integer get1 = testValue.get();
-        System.out.println(get1 + "[]" + this.toString());
-        
-        secondTest++;
-        System.out.println(secondTest + "[second]" + this.toString());
-        testValue.remove();
+        try{
+            System.out.println(secondTest.get() + "[second]" + this.toString());
+
+            testValue = new ThreadLocal<Integer>();
+            
+            testValue.set(15);
+            
+            if( secondTest == null ){
+                secondTest = new ThreadLocal<Integer>();
+                secondTest.set(-5);
+            }
+
+            Integer getSecondTest = secondTest.get();
+            if( getSecondTest == null ){
+                getSecondTest = -35;
+            }
+            getSecondTest++;
+            secondTest.set(getSecondTest);
+            System.out.println(secondTest.get() + "[second]" + this.toString());
+
+            Integer get = testValue.get();
+            System.out.println(get + "[]" + this.toString());
+
+            getSecondTest = secondTest.get();
+            getSecondTest++;
+            secondTest.set(getSecondTest);
+            System.out.println(secondTest.get() + "[second]" + this.toString());
+
+            get++;
+            testValue.set(get);
+            Integer get1 = testValue.get();
+            System.out.println(get1 + "[]" + this.toString());
+
+            getSecondTest = secondTest.get();
+            getSecondTest++;
+            secondTest.set(getSecondTest);
+
+            System.out.println(secondTest.get() + "[second]" + this.toString());
+        } finally {
+            testValue.remove();
+        }
     }
 }

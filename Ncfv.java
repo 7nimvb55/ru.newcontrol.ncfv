@@ -45,6 +45,7 @@ public class Ncfv {
      */
     
     public static void main(String[] args) {
+        
         AppObjectsList obectsForApp = new AppObjectsList();
         //@todo AppThManager, AppObjectsManagerState create one it two or... ?
         AppThManager loggerByThreadsMain = new AppThManager(obectsForApp);

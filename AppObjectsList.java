@@ -134,7 +134,7 @@ public class AppObjectsList {
             
             ThreadGroup testTG = new ThreadGroup("TestForLogger");
             
-            AppThExtendsBaseThread appThExtendsBaseThread = new AppThExtendsBaseThread();
+            AppThExtendsBaseThread appThExtendsBaseThread = new AppThExtendsBaseThread(3);
             System.out.println(" * * * First create Thread from Runnable and start");
             Thread forTest = new Thread(testTG,appThExtendsBaseThread,"testThread-" + AppFileOperationsSimple.getNowTimeStringWithMS());
             System.out.println("[NAME]" + forTest.getName() 

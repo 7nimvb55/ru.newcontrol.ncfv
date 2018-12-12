@@ -20,53 +20,85 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
  * @author wladimirowichbiaran
  */
 public class AppLoggerRunnableWrite implements Runnable {
-    private ArrayBlockingQueue<AppLoggerController> busManager;
+    private AppLoggerController busManager;
     public AppLoggerRunnableWrite(
             AppLoggerController outerManagerForThis
     ) {
         super();
-        this.busManager = new ArrayBlockingQueue<AppLoggerController>(100);
-        outerManagerForThis.currentWriterJob().setTrueToHTMLNewRunner();
-        busManager.add(outerManagerForThis);
+        
+        this.busManager = outerManagerForThis;
+        this.busManager.currentWriterJob().setTrueToHTMLNewRunner();
+        
         
         System.out.println("*** ||| *** ||| *** create log writer *** ||| *** ||| ***");
     }
     
     @Override
     public void run() {
-        AppLoggerController managerForThis = busManager.poll();
-        AppLoggerStateWriter currentJob = managerForThis.currentWriterJob();
-        if( !currentJob.isToHTMLJobDone() ){
-            ArrayList<String> forRecord = 
-                    AppObjectsBusHelper.cleanBusArrayBlockingToArrayString(
-                            currentJob.getPartLinesForWrite());
-
-            System.out.println("report writerRunnable size for " 
-                    + forRecord.size()
-                    + " write to "
-                    + currentJob.getToHTMLLogFileName().toString()
-            );
+        ReentrantLock forRunnerWriterJoblck = new ReentrantLock();
+        forRunnerWriterJoblck.lock();
+        try{
+            AppLoggerController managerForThis = busManager;
+            System.out.println(
+                    "managerForThis.getIdJob().toString() " + managerForThis.getIdJob().toString());
+            if( managerForThis != null ){
+                System.out.println(
+                    "managerForThis.getIdJob().toString() "
+                    + managerForThis.getIdJob().toString()
+                    + " managerForThis.isReaderJob() "
+                    + managerForThis.isReaderJob()
+                    + " managerForThis.currentWriterJob().getThreadName() "
+                    + managerForThis.currentWriterJob().getThreadName()
+                    + " managerForThis.currentWriterJob().getThreadGroupName() "
+                    + managerForThis.currentWriterJob().getThreadGroupName()
+                    + " managerForThis.currentWriterJob().getID().toString() "
+                    + managerForThis.currentWriterJob().getID().toString()
+                    + " managerForThis.currentWriterJob().getPartLinesForWrite().size() "        
+                    + managerForThis.currentWriterJob().getPartLinesForWrite().size()
+                    + " managerForThis.currentWriterJob().isToHTMLJobDone() "
+                    + managerForThis.currentWriterJob().isToHTMLJobDone()
+                    + " managerForThis.currentWriterJob().isBlankObject() "
+                    + managerForThis.currentWriterJob().isBlankObject()
+                );
             
-            //try {
-                if( currentJob.isToHtmlFileNameSet() ){
-                    AppFileOperationsSimple.writeToFile(currentJob.getToHTMLLogFileName(), forRecord);
-                    //Files.write(currentJob.getToHTMLLogFileName(), forRecord, Charset.forName("UTF-8"));
-                    currentJob.setFalseToHTMLLogFileNameChanged();
+                AppLoggerStateWriter currentJob = managerForThis.currentWriterJob();
+                if( !currentJob.isToHTMLJobDone() ){
+                    ArrayList<String> forRecord = 
+                            AppObjectsBusHelper.cleanBusArrayBlockingToArrayString(
+                                    currentJob.getPartLinesForWrite());
+
+                    System.out.println("report writerRunnable size for " 
+                            + forRecord.size()
+                            + " write to "
+                            + currentJob.getToHTMLLogFileName().toString()
+                    );
+
+                    //try {
+                        if( currentJob.isToHtmlFileNameSet() ){
+                            AppFileOperationsSimple.writeToFile(currentJob.getToHTMLLogFileName(), forRecord);
+                            //Files.write(currentJob.getToHTMLLogFileName(), forRecord, Charset.forName("UTF-8"));
+                            currentJob.setFalseToHTMLLogFileNameChanged();
+                        }
+                    /*} catch (IOException ex) {
+                        ex.getMessage();
+                        ex.printStackTrace();
+                    }*/
+                    //forRecord.clear();
                 }
-            /*} catch (IOException ex) {
-                ex.getMessage();
-                ex.printStackTrace();
-            }*/
-            //forRecord.clear();
+
+                currentJob.setFalseToHTMLNewRunner();
+                currentJob.setTrueToHTMLJobDone();
+            }
+        } finally {
+            forRunnerWriterJoblck.unlock();
+            
         }
-        
-        currentJob.setFalseToHTMLNewRunner();
-        currentJob.setTrueToHTMLJobDone();
     }
 }

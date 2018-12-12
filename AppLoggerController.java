@@ -18,6 +18,9 @@ package ru.newcontrol.ncfv;
 import java.nio.file.Path;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  *
@@ -26,23 +29,38 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class AppLoggerController {
     private AppLoggerStateWriter currentWriterJob;
     private AppLoggerStateReader currentReaderJob;
-    private ArrayBlockingQueue<ArrayBlockingQueue<String>> readedArrayForLines;
-    public AppLoggerController(ArrayBlockingQueue<ArrayBlockingQueue<String>> outerReadBus,
+    private Boolean readerJob;
+    private Boolean notExistJob;
+    private ConcurrentSkipListMap<UUID, ArrayBlockingQueue<String>> readedArrayForLines;
+    
+    
+    public AppLoggerController(){
+        this.notExistJob = Boolean.TRUE;
+    }
+    
+    public AppLoggerController(ConcurrentSkipListMap<UUID, ArrayBlockingQueue<String>> outerReadBus,
             AppLoggerStateReader newJob) {
+        this.notExistJob = Boolean.FALSE;
+        this.readerJob = Boolean.TRUE;
         this.readedArrayForLines = outerReadBus;
         this.currentReaderJob = newJob;
         this.currentWriterJob = new AppLoggerStateWriter("blankWriter-" + UUID.randomUUID().toString());
         
     }
     public AppLoggerController(AppLoggerStateWriter newJob) {
+        this.notExistJob = Boolean.FALSE;
+        this.readerJob = Boolean.FALSE;
         this.currentWriterJob = newJob;
         this.currentReaderJob = new AppLoggerStateReader("blankReader-" + UUID.randomUUID().toString());
     }
     public AppLoggerController(Path logForHtmlCurrentLogSubDir,
             ArrayBlockingQueue<String> outputForWrite) {
+        this.notExistJob = Boolean.FALSE;
+        this.readerJob = Boolean.FALSE;
         Path pathTable = AppFileOperationsSimple.getNewLogHtmlTableFile(logForHtmlCurrentLogSubDir);
         this.currentWriterJob = AppLoggerInfoToTables.initWriterNewJobLite(outputForWrite, pathTable);
         ThreadGroup newJobThreadGroup = new ThreadGroup(currentWriterJob.getThreadGroupName());
+        
         Thread writeToHtmlByThread = new Thread(newJobThreadGroup, 
                 new AppLoggerRunnableWrite(this), 
                 currentWriterJob.getThreadName());
@@ -54,7 +72,7 @@ public class AppLoggerController {
     protected AppLoggerStateReader currentReaderJob(){
         return this.currentReaderJob;
     }
-    protected void setStringBusForLogRead(ArrayBlockingQueue<String> readedFormHtmlLines){
+    protected void setStringBusForLogRead(UUID idResult, ArrayBlockingQueue<String> readedFormHtmlLines){
         ArrayBlockingQueue<String> fromReadFile = new ArrayBlockingQueue<String>(readedFormHtmlLines.size());
         String pollFirstForSave = "";
         do{
@@ -63,6 +81,18 @@ public class AppLoggerController {
                 fromReadFile.add(new String(pollFirstForSave));
             }
         }while( !readedFormHtmlLines.isEmpty() );
-        this.readedArrayForLines.add(fromReadFile);
+        this.readedArrayForLines.put(idResult, fromReadFile);
+    }
+    protected UUID getIdJob(){
+        if( this.readerJob ){
+            return this.currentReaderJob().getID();
+        } 
+        return this.currentWriterJob().getID();
+    }
+    protected Boolean isReaderJob(){
+        return this.readerJob;
+    }
+    protected Boolean notExistJob(){
+        return this.notExistJob;
     }
 }

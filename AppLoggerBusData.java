@@ -16,46 +16,79 @@
 package ru.newcontrol.ncfv;
 
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
  * @author wladimirowichbiaran
  */
 public class AppLoggerBusData {
-    private ConcurrentSkipListMap<String, ArrayBlockingQueue<String>> writerList;
-    private String lastKey;
+    private ConcurrentSkipListMap<UUID, ArrayBlockingQueue<String>> writerList;
+    private ConcurrentSkipListMap<UUID, ArrayBlockingQueue<String>> readerList;
+    
+    private UUID lastKey;
     AppLoggerBusData(){
-        this.writerList = new ConcurrentSkipListMap<String, ArrayBlockingQueue<String>>();
+        this.writerList = new ConcurrentSkipListMap<UUID, ArrayBlockingQueue<String>>();
+        this.readerList = new ConcurrentSkipListMap<UUID, ArrayBlockingQueue<String>>();
     }
     protected ArrayBlockingQueue<String> getByKey(String keyForGet){
         return writerList.get(keyForGet);
     }
-    protected String addArrayAndGetKey(ArrayList<String> elementForAdd){
+    protected UUID addArrayAndGetKey(ArrayList<String> elementForAdd){
         ArrayBlockingQueue<String> forRecord = new ArrayBlockingQueue<String>(elementForAdd.size());
         for(String elToReturn : elementForAdd){
             forRecord.add(new String(elToReturn));
         }
-        String strKey = AppFileOperationsSimple.getNowTimeStringWithMS() + "-" + String.valueOf(this.writerList.size());
+        UUID strKey = UUID.randomUUID();
         this.writerList.put(strKey, forRecord);
         this.lastKey = strKey;
         return strKey;
     }
-    protected String addAndGetKey(ArrayBlockingQueue<String> elementForAdd){
-        String strKey = AppFileOperationsSimple.getNowTimeStringWithMS() + "-" + String.valueOf(this.writerList.size());
+    //@todo create writer job and add to list by job uuid
+    protected void addWriterJobDataKey(UUID strKey, ArrayBlockingQueue<String> elementForAdd){
+        ReentrantLock forAddWriterJobDatalck = new ReentrantLock();
+        forAddWriterJobDatalck.lock();
+        try{
+            this.writerList.put(strKey, elementForAdd);
+            this.lastKey = strKey;
+        } finally {
+            forAddWriterJobDatalck.unlock();
+        }
+    }
+    //@todo release from reader job data add to readerlist bus
+    protected void addReaderJobDataKey(UUID strKey, ArrayBlockingQueue<String> elementForAdd){
+        ReentrantLock forAddReaderJobDatalck = new ReentrantLock();
+        forAddReaderJobDatalck.lock();
+        try{
+            this.readerList.put(strKey, elementForAdd);
+            this.lastKey = strKey;
+        } finally {
+            forAddReaderJobDatalck.unlock();
+        }
+    }
+    protected UUID addAndGetKey(ArrayBlockingQueue<String> elementForAdd){
+        UUID strKey = UUID.randomUUID();
         this.writerList.put(strKey, elementForAdd);
         this.lastKey = strKey;
         return strKey;
     }
-    protected String newAndGetKey(Integer queueSize){
-        String strKey = AppFileOperationsSimple.getNowTimeStringWithMS() + "-" + String.valueOf(this.writerList.size());
+    protected UUID newAndGetKey(Integer queueSize){
+        UUID strKey = UUID.randomUUID();
         ArrayBlockingQueue<String> queueElements = new ArrayBlockingQueue<String>(queueSize);
         this.writerList.put(strKey, queueElements);
         this.lastKey = strKey;
         return strKey;
     }
-    protected String getLastKey(){
+    protected UUID getLastKey(){
         return this.lastKey;
+    }
+    protected ConcurrentSkipListMap<UUID, ArrayBlockingQueue<String>> getReaderBus(){
+        return this.readerList;
+    }
+    protected ConcurrentSkipListMap<UUID, ArrayBlockingQueue<String>> getWritedBus(){
+        return this.writerList;
     }
 }

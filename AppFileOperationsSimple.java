@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -136,25 +137,33 @@ public class AppFileOperationsSimple {
         return toReturn;
     }
     protected static Path getLogForHtmlCurrentLogSubDir(String currentDateTimeStamp){
-        Path toReturn = Paths.get(getLogSubDir().toString(),
-        currentDateTimeStamp);
-        if( Files.notExists(toReturn, LinkOption.NOFOLLOW_LINKS) ){
+        ReentrantLock therelck = new ReentrantLock();
+        therelck.lock();
+        try{
+            Path toReturn = Paths.get(getLogSubDir().toString(),
+            currentDateTimeStamp);
+            if( Files.notExists(toReturn, LinkOption.NOFOLLOW_LINKS) ){
+                try {
+                    Files.createDirectories(toReturn);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    System.out.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
+                    System.exit(0);
+                }
+            }
             try {
-                Files.createDirectories(toReturn);
+                pathIsNotReadWriteLink(toReturn);
             } catch (IOException ex) {
                 ex.printStackTrace();
                 System.out.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
                 System.exit(0);
             }
-        }
-        try {
-            pathIsNotReadWriteLink(toReturn);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            System.out.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
-            System.exit(0);
-        }
-        return toReturn;
+
+            return toReturn;
+        } finally {
+
+            therelck.unlock();
+        }    
     }
     protected static ConcurrentSkipListMap<String, Path> getNewHtmlLogStorageFileSystem(Path currentDirForLog){
         ConcurrentSkipListMap<String, Path> listFilesForHtmlLog = new ConcurrentSkipListMap<String, Path>();
@@ -476,18 +485,24 @@ public class AppFileOperationsSimple {
        return df.format(currentDate);
     }
     protected static String getNowTimeString(){
-        long currentDateTime = System.currentTimeMillis();
-      
-       //creating Date from millisecond
-       Date currentDate = new Date(currentDateTime);
-      
-       //printing value of Date
-       //System.out.println("current Date: " + currentDate);
-      
-       DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-       
-       //formatted value of current Date
-       return df.format(currentDate);
+        ReentrantLock forGetTimelck = new ReentrantLock();
+        forGetTimelck.lock();
+        try{
+           long currentDateTime = System.currentTimeMillis();
+
+           //creating Date from millisecond
+           Date currentDate = new Date(currentDateTime);
+
+           //printing value of Date
+           //System.out.println("current Date: " + currentDate);
+
+           DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+
+           //formatted value of current Date
+           return df.format(currentDate);
+        } finally {
+            forGetTimelck.unlock();
+        }
     }
     protected static ArrayList<Path> getFilesByMaskFromDir(Path dirForRead, String maskForReturn){
         ArrayList<Path> toReturn = new ArrayList<Path>();
@@ -506,32 +521,44 @@ public class AppFileOperationsSimple {
         return toReturn;
     }
     protected static void writeToFile(Path fileForWrite, ArrayList<String> strText){
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(fileForWrite.toString())))
-        {
-            for(String itemStr : strText){
-                String text = itemStr.toString();
-                bw.write(text);
-                bw.newLine();
+        ReentrantLock forWriteToFilelck = new ReentrantLock();
+        forWriteToFilelck.lock();
+        try{
+            try(BufferedWriter bw = new BufferedWriter(new FileWriter(fileForWrite.toString())))
+            {
+                for(String itemStr : strText){
+                    String text = itemStr.toString();
+                    bw.write(text);
+                    bw.newLine();
+                }
             }
-        }
-        catch(IOException ex){
-            ex.printStackTrace();
-        }
+            catch(IOException ex){
+                ex.printStackTrace();
+            }
+        } finally {
+            forWriteToFilelck.unlock();
+        }    
     }
     protected static ArrayList<String> readFromFile(Path fileForWrite){
-        ArrayList<String> strForReturn;
-        strForReturn = new ArrayList<String>();
-        try(BufferedReader br = new BufferedReader(new FileReader(fileForWrite.toString())))
-        {
-            String s;
-            while((s=br.readLine())!=null){
-                strForReturn.add(s.trim());
+        ReentrantLock forReadFormFilelck = new ReentrantLock();
+        forReadFormFilelck.lock();
+        try{
+            ArrayList<String> strForReturn;
+            strForReturn = new ArrayList<String>();
+            try(BufferedReader br = new BufferedReader(new FileReader(fileForWrite.toString())))
+            {
+                String s;
+                while((s=br.readLine())!=null){
+                    strForReturn.add(s.trim());
+                }
             }
-        }
-         catch(IOException ex){
-            ex.printStackTrace();
-        }   
-        return strForReturn;
+             catch(IOException ex){
+                ex.printStackTrace();
+            }   
+            return strForReturn;
+        } finally {
+            forReadFormFilelck.unlock();
+        }    
     }
     
 }
