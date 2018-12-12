@@ -60,6 +60,14 @@ public class AppObjectsInfo {
             jobControl.createJobWriteTableFile(classGetDeclaredFieldsCommandsOut);
             //tableCreateJobs(logForHtmlCurrentLogSubDir, classGetDeclaredFieldsCommandsOut);
         }
+        
+        ArrayBlockingQueue<String> linesForSaveJsMenu = AppObjectsInfoHelperHtml.getLinesForSaveJsMenu();
+        Path jsFile = jobControl.getJsFile();
+        jobControl.createJobWriteAnyFile(jsFile, linesForSaveJsMenu);
+        ArrayBlockingQueue<String> linesForSaveCss = AppObjectsInfoHelperHtml.getLinesForSaveCss();
+        Path cssFile = jobControl.getCssFile();
+        jobControl.createJobWriteAnyFile(cssFile, linesForSaveCss);
+        
         AppLoggerController notFinishedWriterJob = jobControl.getNotFinishedWriterJob();
         do{
             System.out.println(
