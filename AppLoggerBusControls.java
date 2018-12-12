@@ -166,4 +166,11 @@ public class AppLoggerBusControls {
         Path fileCssPrefix = this.listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_CSS_PREFIX);
         return fileCssPrefix;
     }
+    protected Path getIndexFile(){
+        Path fileIndexPrefix = listLogStorageFiles.get(AppFileNamesConstants.LOG_INDEX_PREFIX);
+        return fileIndexPrefix;
+    }
+    protected Path getCurrentLogSubDir(){
+        return listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR);
+    }
 }

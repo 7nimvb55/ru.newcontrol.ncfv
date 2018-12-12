@@ -91,6 +91,9 @@ public class AppObjectsInfo {
             runWriterJob(jobControl);
             notFinishedWriterJob = jobControl.getNotFinishedWriterJob();
         }while( !notFinishedWriterJob.notExistJob() );
+        
+        Path indexFile = jobControl.getIndexFile();
+        summaryReportJobs(jobControl.getCurrentLogSubDir(), jsFile.getFileName(), cssFile.getFileName(), indexFile);
     }
     protected static void runWriterJob(AppLoggerBusControls jobControl){
         AppLoggerController notFinishedWriterJob = jobControl.getNotFinishedWriterJob();
