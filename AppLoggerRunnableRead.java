@@ -27,13 +27,13 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class AppLoggerRunnableRead implements Runnable {
     
-    private ThreadLocal<AppLoggerController> busManager;
+    private AppLoggerController busManager;
     
     public AppLoggerRunnableRead(AppLoggerController outerManagerForThis){
         super();
-        this.busManager = new ThreadLocal<AppLoggerController>();
-        this.busManager.set(outerManagerForThis);
-        this.busManager.get().currentReaderJob().setTrueFromHTMLNewRunner();
+        
+        this.busManager = outerManagerForThis;
+        this.busManager.currentReaderJob().setTrueFromHTMLNewRunner();
         //this.managerForThis..setTrueFromHTMLNewRunner();
         String threadInfoToString = NcAppHelper.getThreadInfoToString(Thread.currentThread());
         System.out.println("*** ||| *** ||| *** create log reader *** ||| *** ||| ***" + threadInfoToString);
@@ -42,7 +42,7 @@ public class AppLoggerRunnableRead implements Runnable {
     @Override
     public void run() {
         try{
-            AppLoggerController managerForThis = busManager.get();
+            AppLoggerController managerForThis = this.busManager;
             if( managerForThis != null ){
                 AppLoggerStateReader currentJob = managerForThis.currentReaderJob();
                 if( !currentJob.isBlankObject() ){
@@ -88,7 +88,7 @@ public class AppLoggerRunnableRead implements Runnable {
                 currentJob.setFalseFromHTMLNewRunner();
             }
         } finally {
-            busManager.remove();
+            
         }
     }
     
