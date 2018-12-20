@@ -40,8 +40,14 @@ import java.util.logging.Logger;
  * @author wladimirowichbiaran
  */
 public class AppObjectsInfo {
-    
     protected static void dumpAllStackToHtml(){
+        ThreadGroup threadGroup = Thread.currentThread().getThreadGroup();
+        AppLoggerCreationHtmlLog t = new AppLoggerCreationHtmlLog(threadGroup, UUID.randomUUID().toString() );
+        //t.setDaemon(true);
+        t.start();
+    }
+    
+    protected static void dumpAllStackToHtmlProcess(){
         AppLoggerBusControls jobControl = new AppLoggerBusControls();
         for( Map.Entry<Thread, StackTraceElement[]> elStTr : Thread.getAllStackTraces().entrySet() ){
             Class<? extends Thread> aClass = elStTr.getKey().getClass();
@@ -109,7 +115,7 @@ public class AppObjectsInfo {
                     Thread writeToHtmlByThread = new Thread(newJobThreadGroup, 
                             writerRunnable, 
                             currentWriterJob.getThreadName());
-                    writeToHtmlByThread.setDaemon(true);
+                    
                     writeToHtmlByThread.start();
                     waitForWriterJobsDone();
                 /*} finally {
@@ -234,11 +240,12 @@ public class AppObjectsInfo {
             AppLoggerController appLoggerControllerForRead = new AppLoggerController(readerList, initReaderNewJobLite);
             
             AppLoggerRunnableRead readerRunnable = new AppLoggerRunnableRead(appLoggerControllerForRead);
+            
             ThreadGroup newJobThreadGroupReader = new ThreadGroup(initReaderNewJobLite.getThreadGroupName());
             Thread readerThread = new Thread(newJobThreadGroupReader, 
                 readerRunnable, 
                 initReaderNewJobLite.getThreadName());
-            readerThread.setDaemon(true);
+            
             readerThread.start();
         }
         waitForReadJobsDone();
