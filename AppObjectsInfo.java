@@ -95,6 +95,7 @@ public class AppObjectsInfo {
         Path indexFile = jobControl.getIndexFile();
         summaryReportJobs(jobControl.getCurrentLogSubDir(), jsFile.getFileName(), cssFile.getFileName(), indexFile);
     }
+    
     protected static void runWriterJob(AppLoggerBusControls jobControl){
         AppLoggerController notFinishedWriterJob = jobControl.getNotFinishedWriterJob();
         if( !notFinishedWriterJob.notExistJob() ){
@@ -108,13 +109,13 @@ public class AppObjectsInfo {
                     Thread writeToHtmlByThread = new Thread(newJobThreadGroup, 
                             writerRunnable, 
                             currentWriterJob.getThreadName());
+                    writeToHtmlByThread.setDaemon(true);
                     writeToHtmlByThread.start();
                     waitForWriterJobsDone();
                 /*} finally {
                     forRunWriterJoblck.unlock();
                 }*/
             }
-            
         }    
     }
     
@@ -237,6 +238,7 @@ public class AppObjectsInfo {
             Thread readerThread = new Thread(newJobThreadGroupReader, 
                 readerRunnable, 
                 initReaderNewJobLite.getThreadName());
+            readerThread.setDaemon(true);
             readerThread.start();
         }
         waitForReadJobsDone();

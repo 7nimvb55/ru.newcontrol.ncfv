@@ -45,7 +45,7 @@ public class AppLoggerRunnableHtmlWrite implements Runnable {
             ArrayList<String> forRecord = 
                     AppObjectsBusHelper.cleanBusArrayBlockingToArrayString(
                             currentJob.getPartLinesForWrite());
-
+            
             System.out.println("report writerRunnable size for " 
                     + forRecord.size()
                     + " write to "

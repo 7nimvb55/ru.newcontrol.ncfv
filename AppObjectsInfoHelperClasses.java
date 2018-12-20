@@ -69,7 +69,8 @@ public class AppObjectsInfoHelperClasses {
         strForOut.add(threadtoString + ".getState().ordinal()");
         strForOut.add(String.valueOf(detectedThread.getState().ordinal()));
         strForOut.add(threadtoString + ".hashCode()");
-        strForOut.add(String.valueOf(detectedThread.hashCode()));
+        strForOut.add("(" + String.valueOf(detectedThread.hashCode()) + ") " 
+                + Integer.toHexString(detectedThread.hashCode()));
         strForOut.add(threadtoString + ".isAlive()");
         strForOut.add(String.valueOf(detectedThread.isAlive()));
         strForOut.add(threadtoString + ".isDaemon()");
@@ -102,7 +103,8 @@ public class AppObjectsInfoHelperClasses {
         strForOut.add(threadtoString + ".toGenericString()");
         strForOut.add(detectedThreadClass.toGenericString());
         strForOut.add(threadtoString + ".hashCode()");
-        strForOut.add(String.valueOf(detectedThreadClass.hashCode()));
+        strForOut.add("(" + String.valueOf(detectedThreadClass.hashCode()) + ") " 
+                + Integer.toHexString(detectedThreadClass.hashCode()));
         // get all methods returned resuts in array
         strForOut.add(threadtoString + ".getAnnotatedInterfaces().length");
         strForOut.add(String.valueOf(detectedThreadClass.getAnnotatedInterfaces().length));
@@ -211,34 +213,46 @@ public class AppObjectsInfoHelperClasses {
                 strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].getParameterCount()");
                 strForOut.add(String.valueOf(elementOfMethods.getParameterCount()));
                 strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].hashCode()");
-                strForOut.add(String.valueOf(elementOfMethods.hashCode()));
+                strForOut.add("(" + String.valueOf(elementOfMethods.hashCode()) + ") " 
+                + Integer.toHexString(elementOfMethods.hashCode()));
                 
-                strForOut.add(threadtoString + ".getClass().getDeclaredMethods()[" + idexOfMethod + "].getParameters().length");
+                strForOut.add(threadtoString + ".getClass().getDeclaredMethods()[" 
+                        + idexOfMethod + "].getParameters().length");
                 Parameter[] parameters = elementOfMethods.getParameters();
                 if( resultGetDeclaredMethods != null ){
                     strForOut.add(String.valueOf(parameters.length));
                     int indexOfParam = 0;
                     for (Parameter parameter : parameters) {
                         //String results
-                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].getName()");
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" 
+                                + indexOfParam + "].getName()");
                         strForOut.add(parameter.getName());
-                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].toString()");
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" 
+                                + indexOfParam + "].toString()");
                         strForOut.add(parameter.toString());
                         //Integer results
-                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].getModifiers()");
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" 
+                                + indexOfParam + "].getModifiers()");
                         strForOut.add(String.valueOf(parameter.getModifiers()));
-                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].hashCode()");
-                        strForOut.add(String.valueOf(parameter.hashCode()));
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" 
+                                + indexOfParam + "].hashCode()");
+                        strForOut.add("(" + String.valueOf(parameter.hashCode()) + ") " 
+                                + Integer.toHexString(parameter.hashCode()));
                         //Boolean results
-                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].isImplicit()");
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" 
+                                + indexOfParam + "].isImplicit()");
                         strForOut.add(String.valueOf(parameter.isImplicit()));
-                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].isNamePresent()");
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" 
+                                + indexOfParam + "].isNamePresent()");
                         strForOut.add(String.valueOf(parameter.isNamePresent()));
-                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].isSynthetic()");
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" 
+                                + indexOfParam + "].isSynthetic()");
                         strForOut.add(String.valueOf(parameter.isSynthetic()));
-                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].isVarArgs()");
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" 
+                                + indexOfParam + "].isVarArgs()");
                         strForOut.add(String.valueOf(parameter.isVarArgs()));
-                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].getParameterizedType().getTypeName()");
+                        strForOut.add("...[" + idexOfMethod + "].getParameters()[" 
+                                + indexOfParam + "].getParameterizedType().getTypeName()");
                         //String results
                         strForOut.add(String.valueOf(parameter.getParameterizedType().getTypeName()));
                         indexOfParam++;
@@ -278,8 +292,8 @@ public class AppObjectsInfoHelperClasses {
                     strForOut.add("void");
                     strForOut.add("...getDeclaredFields()[" + idexOfField + "].getType().getCanonicalName()");
                     strForOut.add(elementOfField.getType().getCanonicalName());
-                    strForOut.add("...getDeclaredFields()[" + idexOfField + "].getName()");
-                    strForOut.add(elementOfField.getName());
+                    strForOut.add("...getDeclaredFields()[" + idexOfField + "].getType().getName()");
+                    strForOut.add(elementOfField.getType().getName());
                     strForOut.add("...getDeclaredFields()[" + idexOfField + "].getClass()).toString()");
                     strForOut.add(elementOfField.getClass().toString());
                     strForOut.add("...getDeclaredFields()[" 
@@ -335,7 +349,8 @@ public class AppObjectsInfoHelperClasses {
         strForOut.add("Thread.getState().ordinal()");
         strForOut.add(String.valueOf(detectedThread.getState().ordinal()));
         strForOut.add("Thread.hashCode()");
-        strForOut.add(String.valueOf(detectedThread.hashCode()));
+        strForOut.add("(" + String.valueOf(detectedThread.hashCode()) + ") " 
+                + Integer.toHexString(detectedThread.hashCode()));
         strForOut.add("Thread.isAlive()");
         strForOut.add(String.valueOf(detectedThread.isAlive()));
         strForOut.add("Thread.isDaemon()");
@@ -363,7 +378,8 @@ public class AppObjectsInfoHelperClasses {
         strForOut.add("Thread.getClass().toGenericString()");
         strForOut.add(detectedThread.getClass().toGenericString());
         strForOut.add("Thread.getClass().hashCode()");
-        strForOut.add(String.valueOf(detectedThread.getClass().hashCode()));
+        strForOut.add("(" + String.valueOf(detectedThread.hashCode()) + ") " 
+                + Integer.toHexString(detectedThread.hashCode()));
         // get all methods returned resuts in array
         strForOut.add("Thread.getClass().getAnnotatedInterfaces().length");
         strForOut.add(String.valueOf(detectedThread.getClass().getAnnotatedInterfaces().length));
@@ -471,7 +487,8 @@ public class AppObjectsInfoHelperClasses {
                 strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].getParameterCount()");
                 strForOut.add(String.valueOf(elementOfMethods.getParameterCount()));
                 strForOut.add("...getDeclaredMethods()[" + idexOfMethod + "].hashCode()");
-                strForOut.add(String.valueOf(elementOfMethods.hashCode()));
+                strForOut.add("(" + String.valueOf(elementOfMethods.hashCode()) + ") " 
+                    + Integer.toHexString(elementOfMethods.hashCode()));
                 
                 strForOut.add("Thread.getClass().getDeclaredMethods()[" + idexOfMethod + "].getParameters().length");
                 Parameter[] parameters = elementOfMethods.getParameters();
@@ -488,7 +505,8 @@ public class AppObjectsInfoHelperClasses {
                         strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].getModifiers()");
                         strForOut.add(String.valueOf(parameter.getModifiers()));
                         strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].hashCode()");
-                        strForOut.add(String.valueOf(parameter.hashCode()));
+                        strForOut.add("(" + String.valueOf(parameter.hashCode()) + ") " 
+                            + Integer.toHexString(parameter.hashCode()));
                         //Boolean results
                         strForOut.add("...[" + idexOfMethod + "].getParameters()[" + indexOfParam + "].isImplicit()");
                         strForOut.add(String.valueOf(parameter.isImplicit()));
