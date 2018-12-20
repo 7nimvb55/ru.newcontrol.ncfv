@@ -42,8 +42,8 @@ import java.util.logging.Logger;
 public class AppObjectsInfo {
     protected static void dumpAllStackToHtml(){
         ThreadGroup threadGroup = Thread.currentThread().getThreadGroup();
-        AppLoggerCreationHtmlLog t = new AppLoggerCreationHtmlLog(threadGroup, UUID.randomUUID().toString() );
-        //t.setDaemon(true);
+        AppLoggerCreationHtmlLog t = new AppLoggerCreationHtmlLog( threadGroup, UUID.randomUUID().toString() );
+        
         t.start();
     }
     
