@@ -125,6 +125,13 @@ public class AppLoggerStateWriter {
         }
         return new ArrayBlockingQueue<String>(1);
     }
+    protected void addSortItemNumber(Integer sortItem){
+        this.partLinesForWrite.add("<p id=\"sortedField" 
+                + String.valueOf(sortItem) 
+                + "\" class=\"sortedDataClass\" ><a name=\"bySortedId-"
+                + String.valueOf(sortItem) + "\">" 
+                + String.valueOf(sortItem) + "</a></p>");
+    }
     protected void setThreadGroupName(String outerThreadGroupName){
         this.newJobThreadGroupName = outerThreadGroupName;
     }

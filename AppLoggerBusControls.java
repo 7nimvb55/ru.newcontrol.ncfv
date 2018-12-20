@@ -29,6 +29,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author wladimirowichbiaran
  */
 public class AppLoggerBusControls {
+    private Integer sortItems;
     private ConcurrentSkipListMap<UUID, AppLoggerController> writerList;
     private ConcurrentSkipListMap<UUID, AppLoggerController> readerList;
     private ConcurrentSkipListMap<String, Path> listLogStorageFiles;
@@ -36,7 +37,7 @@ public class AppLoggerBusControls {
     private UUID lastKey;
     AppLoggerBusControls(){
         createNewHtmlLogStorage();
-        
+        this.sortItems = 0;
         this.dataBus = new AppLoggerBusData();
         this.writerList = new ConcurrentSkipListMap<UUID, AppLoggerController>();
         this.readerList = new ConcurrentSkipListMap<UUID, AppLoggerController>();
@@ -74,11 +75,13 @@ public class AppLoggerBusControls {
         ReentrantLock forCreateJobWriteTableFilelck = new ReentrantLock();
         forCreateJobWriteTableFilelck.lock();
         try{
+            this.sortItems++;
             Path pathTable = AppFileOperationsSimple.getNewLogHtmlTableFile(
                     this.listLogStorageFiles.get(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR)
             );
             AppLoggerStateWriter initWriterNewJob = AppLoggerInfoToTables.initWriterNewJobLite(outputForWrite, pathTable);
             UUID writeTableId = initWriterNewJob.getID();
+            initWriterNewJob.addSortItemNumber(this.sortItems);
             AppLoggerController appLoggerControllerWriteTable = new AppLoggerController(initWriterNewJob);
             this.writerList.put(writeTableId, appLoggerControllerWriteTable);
             return writeTableId;

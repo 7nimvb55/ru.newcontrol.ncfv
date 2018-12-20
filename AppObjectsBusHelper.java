@@ -50,7 +50,8 @@ public class AppObjectsBusHelper {
         return forRecord;
     }
     protected static ArrayBlockingQueue<String> cleanBusFromArray(ArrayList<String> listForLogStrs){
-        ArrayBlockingQueue<String> forRecord = new ArrayBlockingQueue<String>(listForLogStrs.size());
+        ArrayBlockingQueue<String> forRecord = new ArrayBlockingQueue<String>(listForLogStrs.size() 
+                + AppConstants.LOG_HTML_CLEAN_FROM_BUS_ABOVE_QUEUE_SIZE);
         for(String elToReturn : listForLogStrs){
             forRecord.add(new String(elToReturn));
         }
