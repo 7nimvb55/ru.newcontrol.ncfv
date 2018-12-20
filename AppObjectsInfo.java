@@ -43,7 +43,6 @@ public class AppObjectsInfo {
     protected static void dumpAllStackToHtml(){
         ThreadGroup threadGroup = Thread.currentThread().getThreadGroup();
         AppLoggerCreationHtmlLog t = new AppLoggerCreationHtmlLog( threadGroup, UUID.randomUUID().toString() );
-        
         t.start();
     }
     
@@ -53,6 +52,12 @@ public class AppObjectsInfo {
             Class<? extends Thread> aClass = elStTr.getKey().getClass();
             ArrayBlockingQueue<String> threadNameCommandsOut = AppObjectsInfoHelperClasses.getThreadNameCommandsOut(elStTr.getKey());
             jobControl.createJobWriteTableFile(threadNameCommandsOut);
+            
+            for( StackTraceElement elStack : elStTr.getValue() ){
+                ArrayBlockingQueue<String> stackTraceCommandsOut = AppObjectsInfoHelperClasses.getThreadStackTraceCommandsOut(elStack);
+                jobControl.createJobWriteTableFile(stackTraceCommandsOut);
+            }
+            
             //tableCreateJobs(logForHtmlCurrentLogSubDir, threadNameCommandsOut);
             ArrayBlockingQueue<String> classCommandsOut = AppObjectsInfoHelperClasses.getThreadClassCommandsOut(aClass);
             jobControl.createJobWriteTableFile(classCommandsOut);

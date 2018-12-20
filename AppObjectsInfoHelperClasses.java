@@ -50,6 +50,32 @@ public class AppObjectsInfoHelperClasses {
         return AppObjectsInfoHelperHtml.commandOutPutToHtmlBus(initRecTime);
     }
     
+    protected static ArrayBlockingQueue<String> getThreadStackTraceCommandsOut(StackTraceElement elOuterStack){
+        String nowTimeStringWithMS = 
+                AppFileOperationsSimple.getNowTimeStringWithMS();
+        ArrayList<String> strForOut = new ArrayList<String>();
+        strForOut.add(nowTimeStringWithMS);
+        String elStackTraceToString = elOuterStack.toString();
+        
+        strForOut.add(elStackTraceToString + ".toString()");
+        strForOut.add(elOuterStack.toString());
+        strForOut.add(elStackTraceToString + ".getClassName()");
+        strForOut.add(elOuterStack.getClassName());
+        strForOut.add(elStackTraceToString + ".hashCode()");
+        strForOut.add("(" + String.valueOf(elOuterStack.hashCode()) + ") " 
+                + Integer.toHexString(elOuterStack.hashCode()));
+        strForOut.add(elStackTraceToString + ".getFileName()");
+        strForOut.add(elOuterStack.getFileName());
+        strForOut.add(elStackTraceToString + ".getLineNumber()");
+        strForOut.add(String.valueOf(elOuterStack.getLineNumber()));
+        strForOut.add(elStackTraceToString + ".getMethodName()");
+        strForOut.add(elOuterStack.getMethodName());
+        strForOut.add(elStackTraceToString + ".isNativeMethod()");
+        strForOut.add(String.valueOf(elOuterStack.isNativeMethod()));
+        
+        return AppObjectsInfoHelperHtml.commandOutPutToHtmlBus(strForOut);
+    }
+    
     protected static ArrayBlockingQueue<String> getThreadNameCommandsOut(Thread detectedThread){
         String nowTimeStringWithMS = 
                 AppFileOperationsSimple.getNowTimeStringWithMS();
@@ -57,7 +83,7 @@ public class AppObjectsInfoHelperClasses {
         strForOut.add(nowTimeStringWithMS);
         strForOut.add("Thread.toString()");
         String threadtoString = detectedThread.toString();
-        strForOut.add(detectedThread.toString());
+        strForOut.add(threadtoString);
         strForOut.add(threadtoString + ".getName()");
         strForOut.add(detectedThread.getName());
         strForOut.add(threadtoString + ".getPriority()");
