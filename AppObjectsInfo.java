@@ -88,6 +88,10 @@ public class AppObjectsInfo {
             ArrayBlockingQueue<String> classGetDeclaredAnnotationCommandsOut = 
             AppObjectsInfoHelperClasses.getThreadClassGetDeclaredAnnotationsCommandsOut(aClass);
             jobControl.createJobWriteTableFile(classGetDeclaredAnnotationCommandsOut);
+            
+            ArrayBlockingQueue<String> classGetDeclaredConstructorsCommandsOut = 
+            AppObjectsInfoHelperClasses.getThreadClassGetDeclaredConstructorsCommandsOut(aClass);
+            jobControl.createJobWriteTableFile(classGetDeclaredConstructorsCommandsOut);
         }
         
         ArrayBlockingQueue<String> linesForSaveJsMenu = AppObjectsInfoHelperHtml.getLinesForSaveJsMenu();

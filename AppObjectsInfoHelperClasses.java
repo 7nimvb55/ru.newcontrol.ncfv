@@ -16,6 +16,7 @@
 package ru.newcontrol.ncfv;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -360,7 +361,7 @@ public class AppObjectsInfoHelperClasses {
         String threadtoString = detectedThreadClass.toString();
         ArrayList<String> strForOut = new ArrayList<String>();
         strForOut.add(nowTimeStringWithMS);
-        strForOut.add(threadtoString + ".getClass().getDeclaredFields().length");
+        strForOut.add(threadtoString + ".getClass().declaredAnnotations().length");
         Annotation[] declaredAnnotations = detectedThreadClass.getDeclaredAnnotations();
         if( declaredAnnotations != null ){
             strForOut.add(String.valueOf(declaredAnnotations.length));
@@ -373,17 +374,47 @@ public class AppObjectsInfoHelperClasses {
                                 + Integer.toHexString(elementOfAnnotation.hashCode()));
                 
                 
-                Class<? extends Annotation> annotationType = elementOfAnnotation.annotationType();
-                String nameAnnotationType = annotationType.getClass().getName();
+                
+                String nameAnnotationType = elementOfAnnotation.getClass().getName();
                 strForOut.add("...declaredAnnotations()[" + idexOfField 
-                        + "].annotationType().getClass().getName()");
+                        + "].getClass().getName()");
                 strForOut.add(nameAnnotationType);
             }
         } else {
             strForOut.add("null");
         }
         return AppObjectsInfoHelperHtml.commandOutPutToHtmlBus(strForOut);
-    }    
+    }
+    protected static ArrayBlockingQueue<String>  getThreadClassGetDeclaredConstructorsCommandsOut(
+            Class<?> detectedThreadClass
+    ){
+        String nowTimeStringWithMS = 
+                AppFileOperationsSimple.getNowTimeStringWithMS();
+        String threadtoString = detectedThreadClass.toString();
+        ArrayList<String> strForOut = new ArrayList<String>();
+        strForOut.add(nowTimeStringWithMS);
+        strForOut.add(threadtoString + ".getClass().getDeclaredConstructors().length");
+        Constructor<?>[] declaredConstructors = detectedThreadClass.getDeclaredConstructors();
+        if( declaredConstructors != null ){
+            strForOut.add(String.valueOf(declaredConstructors.length));
+            int idexOfField = 0;
+            for(Constructor<?> elementOfConstructors : declaredConstructors){
+                strForOut.add("...getDeclaredConstructors()[" + idexOfField + "].toString()");
+                strForOut.add(elementOfConstructors.toString());
+                strForOut.add("...getDeclaredConstructors()[" + idexOfField + "].hashCode()");
+                strForOut.add("(" + String.valueOf(elementOfConstructors.hashCode()) + ") " 
+                                + Integer.toHexString(elementOfConstructors.hashCode()));
+                
+                String nameAnnotationType = elementOfConstructors.getClass().getName();
+                strForOut.add("...getDeclaredConstructors()[" + idexOfField 
+                        + "].getDeclaredConstructors().getClass().getName()");
+                strForOut.add(nameAnnotationType);
+            }
+        } else {
+            strForOut.add("null");
+        }
+        return AppObjectsInfoHelperHtml.commandOutPutToHtmlBus(strForOut);
+    }
     /**
      * @deprecated 
      * @param detectedThread
