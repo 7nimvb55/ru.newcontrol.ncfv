@@ -57,6 +57,19 @@ public class AppObjectsInfo {
             for( StackTraceElement elStack : elStTr.getValue() ){
                 ArrayBlockingQueue<String> stackTraceCommandsOut = AppObjectsInfoHelperClasses.getThreadStackTraceCommandsOut(elStack);
                 jobControl.createJobWriteTableFile(stackTraceCommandsOut);
+                Class<? extends StackTraceElement> stackClass = elStack.getClass();
+                
+                ArrayBlockingQueue<String> classStackCommandsOut = AppObjectsInfoHelperClasses.getThreadClassCommandsOut(stackClass);
+                jobControl.createJobWriteTableFile(classStackCommandsOut);
+                
+                /*ArrayBlockingQueue<String> classStackGetDeclaredMethodsCommandsOut = 
+                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethodsCommandsOut(stackClass);
+                jobControl.createJobWriteTableFile(classStackGetDeclaredMethodsCommandsOut);
+                
+                ArrayBlockingQueue<String> classStackGetDeclaredFieldsCommandsOut = 
+                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredFieldsCommandsOut(stackClass);
+                jobControl.createJobWriteTableFile(classStackGetDeclaredFieldsCommandsOut);*/
+                
             }
             
             //tableCreateJobs(logForHtmlCurrentLogSubDir, threadNameCommandsOut);
@@ -71,6 +84,10 @@ public class AppObjectsInfo {
             AppObjectsInfoHelperClasses.getThreadClassGetDeclaredFieldsCommandsOut(aClass);
             jobControl.createJobWriteTableFile(classGetDeclaredFieldsCommandsOut);
             //tableCreateJobs(logForHtmlCurrentLogSubDir, classGetDeclaredFieldsCommandsOut);
+            
+            ArrayBlockingQueue<String> classGetDeclaredAnnotationCommandsOut = 
+            AppObjectsInfoHelperClasses.getThreadClassGetDeclaredAnnotationsCommandsOut(aClass);
+            jobControl.createJobWriteTableFile(classGetDeclaredAnnotationCommandsOut);
         }
         
         ArrayBlockingQueue<String> linesForSaveJsMenu = AppObjectsInfoHelperHtml.getLinesForSaveJsMenu();

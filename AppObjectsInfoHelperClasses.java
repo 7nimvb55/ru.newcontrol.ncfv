@@ -15,6 +15,7 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -351,6 +352,38 @@ public class AppObjectsInfoHelperClasses {
         }
         return AppObjectsInfoHelperHtml.commandOutPutToHtmlBus(strForOut);
     }
+    protected static ArrayBlockingQueue<String>  getThreadClassGetDeclaredAnnotationsCommandsOut(
+            Class<?> detectedThreadClass
+    ){
+        String nowTimeStringWithMS = 
+                AppFileOperationsSimple.getNowTimeStringWithMS();
+        String threadtoString = detectedThreadClass.toString();
+        ArrayList<String> strForOut = new ArrayList<String>();
+        strForOut.add(nowTimeStringWithMS);
+        strForOut.add(threadtoString + ".getClass().getDeclaredFields().length");
+        Annotation[] declaredAnnotations = detectedThreadClass.getDeclaredAnnotations();
+        if( declaredAnnotations != null ){
+            strForOut.add(String.valueOf(declaredAnnotations.length));
+            int idexOfField = 0;
+            for(Annotation elementOfAnnotation : declaredAnnotations){
+                strForOut.add("...declaredAnnotations()[" + idexOfField + "].toString()");
+                strForOut.add(elementOfAnnotation.toString());
+                strForOut.add("...declaredAnnotations()[" + idexOfField + "].hashCode()");
+                strForOut.add("(" + String.valueOf(elementOfAnnotation.hashCode()) + ") " 
+                                + Integer.toHexString(elementOfAnnotation.hashCode()));
+                
+                
+                Class<? extends Annotation> annotationType = elementOfAnnotation.annotationType();
+                String nameAnnotationType = annotationType.getClass().getName();
+                strForOut.add("...declaredAnnotations()[" + idexOfField 
+                        + "].annotationType().getClass().getName()");
+                strForOut.add(nameAnnotationType);
+            }
+        } else {
+            strForOut.add("null");
+        }
+        return AppObjectsInfoHelperHtml.commandOutPutToHtmlBus(strForOut);
+    }    
     /**
      * @deprecated 
      * @param detectedThread
