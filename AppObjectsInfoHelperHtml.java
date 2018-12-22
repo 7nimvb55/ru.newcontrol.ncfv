@@ -539,24 +539,6 @@ public class AppObjectsInfoHelperHtml {
     ){
         TreeMap<Integer, UUID> sortItemList = new TreeMap<Integer, UUID>();
         ArrayList<String> listForReturn = new ArrayList<String>();
-        /*for( Path fileForRead : filesByMaskFromDir ){
-            String strForAncor = fileForRead.getFileName().toString().split("\\.")[0];
-            String strForMenuTitle = strForAncor.split("-")[1];
-            
-            listForReturn.add("            <li><a href=\"#\" onclick=\"openMenu(this);return false\">" + strForMenuTitle + "</a>");
-            listForReturn.add("                <ul>");
-            listForReturn.add("                  <li><a href=\"#" 
-                + strForAncor 
-                + "\">goto table</a></li>");
-            listForReturn.add("                  <li><a href=\"#\">sub menu 2</a></li>");
-            listForReturn.add("                  <li><a href=\"#\">sub menu 3</a></li>");
-            listForReturn.add("                  <li><a href=\"#\">sub menu 4</a></li>");
-            listForReturn.add("                  <li><a href=\"#\">sub menu 5</a></li>");
-            listForReturn.add("                  <li><a href=\"#\">sub menu 6</a></li>");
-            listForReturn.add("                  <li><a href=\"#\">sub menu 7</a></li>");
-            listForReturn.add("               </ul>");
-            listForReturn.add("            </li>");
-        }*/
         
         for( Map.Entry<UUID, AppLoggerStateReader> doneJobList : readerStateListJobDone.entrySet() ){
             ArrayBlockingQueue<String> fromOneJobLines = readedLinesFromReaderJobs.get(doneJobList.getKey());
@@ -586,7 +568,9 @@ public class AppObjectsInfoHelperHtml {
             listForReturn.add("                  <li><a href=\"#" 
                 + strForAncor 
                 + "\">goto table</a></li>");
-            listForReturn.add("                  <li><a href=\"#\">sub menu 2</a></li>");
+            listForReturn.add("                  <li><a href=\"#"
+                + "bySortedId-" + String.valueOf(parceSortNumber) + "\">"
+                + String.valueOf(parceSortNumber) + "</a></li>");
             listForReturn.add("                  <li><a href=\"#\">sub menu 3</a></li>");
             listForReturn.add("                  <li><a href=\"#\">sub menu 4</a></li>");
             listForReturn.add("                  <li><a href=\"#\">sub menu 5</a></li>");

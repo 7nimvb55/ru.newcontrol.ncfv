@@ -62,13 +62,13 @@ public class AppObjectsInfo {
                 ArrayBlockingQueue<String> classStackCommandsOut = AppObjectsInfoHelperClasses.getThreadClassCommandsOut(stackClass);
                 jobControl.createJobWriteTableFile(classStackCommandsOut);
                 
-                /*ArrayBlockingQueue<String> classStackGetDeclaredMethodsCommandsOut = 
-                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethodsCommandsOut(stackClass);
+                ArrayBlockingQueue<String> classStackGetDeclaredMethodsCommandsOut = 
+                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethodsCommandsOut(stackClass.getClass());
                 jobControl.createJobWriteTableFile(classStackGetDeclaredMethodsCommandsOut);
                 
                 ArrayBlockingQueue<String> classStackGetDeclaredFieldsCommandsOut = 
-                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredFieldsCommandsOut(stackClass);
-                jobControl.createJobWriteTableFile(classStackGetDeclaredFieldsCommandsOut);*/
+                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredFieldsCommandsOut(stackClass.getClass());
+                jobControl.createJobWriteTableFile(classStackGetDeclaredFieldsCommandsOut);
                 
             }
             

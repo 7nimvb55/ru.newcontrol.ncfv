@@ -54,7 +54,7 @@ public class AppLoggerRunnableRead implements Runnable {
                                         + " _|_|_|_|_|_"
                                         + " start for read file");
                         ArrayBlockingQueue<String> readedLines = new ArrayBlockingQueue<String>(AppConstants.LOG_HTML_MESSAGES_QUEUE_SIZE);
-                        readedLines.add(fileForReadInThisJob.toString());
+                        //readedLines.add(fileForReadInThisJob.toString());
                         String ancorString = currentJob.getAncorString();
                         if( ancorString.length() > 17 ){
                             readedLines.add(ancorString);
