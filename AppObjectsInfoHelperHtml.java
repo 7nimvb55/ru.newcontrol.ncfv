@@ -19,7 +19,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -295,6 +297,76 @@ public class AppObjectsInfoHelperHtml {
             }
         }while( pollFirstEntryToLog != null );
     }
+    
+    protected static ArrayBlockingQueue<String> buildLinesForIndex(
+            ConcurrentSkipListMap<UUID, ArrayBlockingQueue<String>> readedLinesFromJobs,
+            ArrayBlockingQueue<ArrayBlockingQueue<String>> readedStringFormFile,
+            Path fileJsMenuPrefix,
+            Path fileCssPrefix,
+            ArrayList<Path> filesByMaskFromDir,
+            ConcurrentSkipListMap<UUID, AppLoggerStateReader> stateReaderListJobDone
+    ){
+        ArrayList<String> linesForSave = new ArrayList<String>();
+        
+        linesForSave.addAll(AppObjectsInfoHelperHtml.beforeMenuItemsLines(fileJsMenuPrefix, fileCssPrefix));
+        linesForSave.addAll(
+                AppObjectsInfoHelperHtml.buildMenuItems(
+                readedLinesFromJobs,
+                readedStringFormFile, 
+                filesByMaskFromDir, 
+                stateReaderListJobDone)
+        );
+        
+        
+        
+        //linesForSave.addAll(AppObjectsInfoHelperHtml.addReadedLinesFromFilesSortByArrayFromDir(readedStringFormFile, filesByMaskFromDir));
+        // @todo add statistic info in this page block
+        linesForSave.add("        </div>");
+        linesForSave.add("        <div id=\"footer-content\" class=\"footer-page\">");
+        linesForSave.add("            footer of page report");
+        linesForSave.add("        </div>");
+        linesForSave.add("    </body>");
+        linesForSave.add("</html>");
+        
+        return AppObjectsBusHelper.cleanBusFromArray(linesForSave);
+    }
+    
+    protected static ArrayList<String> beforeMenuItemsLines(
+            Path fileJsMenuPrefix,
+            Path fileCssPrefix
+    ){
+        ArrayList<String> linesForSave = new ArrayList<String>();
+        linesForSave.add("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+        linesForSave.add("<html lang=\"en-US\" xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en-US\">");
+        linesForSave.add("<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></meta>");
+        linesForSave.add("<title>Log report for created Thread Object</title>");
+        linesForSave.add("<script src=\"./js/" + fileJsMenuPrefix.toString() + "\" type=\"text/javascript\" defer=\"YES\"></script>");
+        linesForSave.add("<link rel=\"stylesheet\" href=\"./css/" + fileCssPrefix.toString() + "\" type=\"text/css\"></link>");
+        linesForSave.add("</head>");
+        linesForSave.add("<body class=\"body\" onload=\"allClose()\">");
+        linesForSave.add("        <div id=\"header-content\" class=\"content-header\">");
+        linesForSave.add("                <button id=\"buttonLime\" onclick=\"highlightLime()\">Lime</button>");
+        linesForSave.add("                <input type=\"text\" name=\"enter\" class=\"enter\" value=\"\" id=\"limeTextElement\"/>");
+        linesForSave.add("                <button id=\"buttonYellow\" onclick=\"highlightYellow()\">Yellow</button>");
+        linesForSave.add("                <input type=\"text\" name=\"enter\" class=\"enter\" value=\"\" id=\"yellowTextElement\"/>");
+        linesForSave.add("                <button id=\"buttonRed\" onclick=\"highlightRed()\">Red</button>");
+        linesForSave.add("                <input type=\"text\" name=\"enter\" class=\"enter\" value=\"\" id=\"redTextElement\"/>");
+        linesForSave.add("                <button id=\"buttonCyan\" onclick=\"highlightCyan()\">Cyan</button>");
+        linesForSave.add("                <input type=\"text\" name=\"enter\" class=\"enter\" value=\"\" id=\"cyanTextElement\"/>");
+        linesForSave.add("        </div>");
+        linesForSave.add("        <div id=\"menu-content\" class=\"content-menu-items\">");
+        linesForSave.add("        <ul id=\"menu\">");
+        return linesForSave;
+    }
+    
+    /**
+     * @deprecated 
+     * @param readedStringFormFile
+     * @param fileJsMenuPrefix
+     * @param fileCssPrefix
+     * @param filesByMaskFromDir
+     * @return 
+     */
     protected static ArrayBlockingQueue<String> createLinesForIndex(
             ArrayBlockingQueue<ArrayBlockingQueue<String>> readedStringFormFile,
             Path fileJsMenuPrefix,
@@ -340,6 +412,13 @@ public class AppObjectsInfoHelperHtml {
         
         return AppObjectsBusHelper.cleanBusFromArray(linesForSave);
     }
+    /**
+     * @deprecated 
+     * @param readedStringFormFile
+     * @param filesByMaskFromDir
+     * @return 
+     */
+    
     protected static ArrayList<String> addReadedLinesFromFilesSortByArrayFromDir(
             ArrayBlockingQueue<ArrayBlockingQueue<String>> readedStringFormFile,
             ArrayList<Path> filesByMaskFromDir
@@ -451,6 +530,125 @@ public class AppObjectsInfoHelperHtml {
         listForRunnableLogStrs.add("        </div>");
         listForRunnableLogStrs.add("        <div id=\"page-content\" class=\"content-imported-page\">");
     }
+    
+    protected static ArrayList<String> buildMenuItems(
+            ConcurrentSkipListMap<UUID, ArrayBlockingQueue<String>> readedLinesFromReaderJobs,
+            ArrayBlockingQueue<ArrayBlockingQueue<String>> readedStringFormFile,
+            ArrayList<Path> filesByMaskFromDir,
+            ConcurrentSkipListMap<UUID, AppLoggerStateReader> readerStateListJobDone
+    ){
+        TreeMap<Integer, UUID> sortItemList = new TreeMap<Integer, UUID>();
+        ArrayList<String> listForReturn = new ArrayList<String>();
+        /*for( Path fileForRead : filesByMaskFromDir ){
+            String strForAncor = fileForRead.getFileName().toString().split("\\.")[0];
+            String strForMenuTitle = strForAncor.split("-")[1];
+            
+            listForReturn.add("            <li><a href=\"#\" onclick=\"openMenu(this);return false\">" + strForMenuTitle + "</a>");
+            listForReturn.add("                <ul>");
+            listForReturn.add("                  <li><a href=\"#" 
+                + strForAncor 
+                + "\">goto table</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 2</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 3</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 4</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 5</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 6</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 7</a></li>");
+            listForReturn.add("               </ul>");
+            listForReturn.add("            </li>");
+        }*/
+        
+        for( Map.Entry<UUID, AppLoggerStateReader> doneJobList : readerStateListJobDone.entrySet() ){
+            ArrayBlockingQueue<String> fromOneJobLines = readedLinesFromReaderJobs.get(doneJobList.getKey());
+            Integer parceSortNumber = AppObjectsInfoHelperHtml.parceAndReturnSortNumber(fromOneJobLines);
+            //@todo if return not founde integer not add UUID into list
+            if( (parceSortNumber > -3163) && (parceSortNumber > -1) ){
+                sortItemList.put(parceSortNumber, doneJobList.getKey());
+            }
+            String strForAncor = doneJobList.getValue().getFromHTMLLogFileName().getFileName().toString().split("\\.")[0];
+            String strForMenuTitle = strForAncor.split("-")[1];
+            
+            String forOutTimeStamp = "";
+            try{
+                forOutTimeStamp = strForMenuTitle.length() == 17 
+                ? getFormatedTimeStamp(strForMenuTitle)
+                : "";
+            } catch (NoSuchElementException ex){
+                ex.printStackTrace();
+            }
+            if( !forOutTimeStamp.isEmpty() ){
+                strForMenuTitle = forOutTimeStamp;
+            }
+            
+            
+            listForReturn.add("            <li><a href=\"#\" onclick=\"openMenu(this);return false\">" + strForMenuTitle + "</a>");
+            listForReturn.add("                <ul>");
+            listForReturn.add("                  <li><a href=\"#" 
+                + strForAncor 
+                + "\">goto table</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 2</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 3</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 4</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 5</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 6</a></li>");
+            listForReturn.add("                  <li><a href=\"#\">sub menu 7</a></li>");
+            listForReturn.add("               </ul>");
+            listForReturn.add("            </li>");
+        }
+        listForReturn.add("        </ul>");
+        listForReturn.add("        </div>");
+        listForReturn.add("        <div id=\"page-content\" class=\"content-imported-page\">");
+        
+        for( Map.Entry<Integer, UUID> sortedKeyItems : sortItemList.entrySet() ){
+            ArrayBlockingQueue<String> fromOneJobLines = readedLinesFromReaderJobs.remove(sortedKeyItems.getValue());
+            if( fromOneJobLines == null){
+                continue;
+            }
+            do{
+                String poll = fromOneJobLines.poll();
+                if( poll != null ){
+                    listForReturn.add(poll);
+                }
+            }while( !fromOneJobLines.isEmpty() );
+        }
+        listForReturn.add("<h1>Not sorted data</h1>");
+        if( readedLinesFromReaderJobs.size() > 0 ){
+            for( Map.Entry<UUID, ArrayBlockingQueue<String>> itemsNotSorted : readedLinesFromReaderJobs.entrySet() ){
+                ArrayBlockingQueue<String> valueNotSorted = itemsNotSorted.getValue();
+                do{
+                    String poll = valueNotSorted.poll();
+                if( poll != null ){
+                    listForReturn.add(poll);
+                }
+                }while( !valueNotSorted.isEmpty() );
+            }
+        }
+        return listForReturn;
+    }
+    
+    protected static Integer parceAndReturnSortNumber(ArrayBlockingQueue<String> detectedLines){
+        for( String linesItem : detectedLines ){
+            if( linesItem.contains("<p id=\"sortedField") ){
+                String numPartStr = linesItem.split("Field")[1];
+                String number = numPartStr.split("\" class")[0];
+                int forReturn = -3163;
+                try{
+                    forReturn = Integer.parseInt(number);
+                }catch(NumberFormatException ex){
+                    ex.printStackTrace();
+                }
+                return forReturn;
+            }
+        }
+        return -3163;
+    }
+    
+    /**
+     * @deprecated 
+     * @param filesByMaskFromDir
+     * @return 
+     */
+    
     protected static ArrayList<String> createMenuItems(
             ArrayList<Path> filesByMaskFromDir){
         ArrayList<String> listForReturn = new ArrayList<String>();

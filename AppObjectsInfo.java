@@ -283,11 +283,19 @@ public class AppObjectsInfo {
             if( (AppConstants.LOG_LEVEL_CURRENT > AppConstants.LOG_LEVEL_DEBUG) && AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_LOGGER_READ_FROM_FILE_SIZE ){
                 System.out.println("-----------           "
                         + readedElement.getKey() 
-                        + "               ----------------------Lines in readed Array " 
+                        + "               -----------"
+                        + stateReaderList.get(readedElement.getKey()).getFromHTMLLogFileName().toString()       + "-----------Lines in readed Array " 
                         + readedElement.getValue().size());
             }
         }
-        ArrayBlockingQueue<String> createLinesForIndex = AppObjectsInfoHelperHtml.createLinesForIndex(fromReadFile, jsFile, cssFile, filesByMaskFromDir);
+        ArrayBlockingQueue<String> createLinesForIndex = AppObjectsInfoHelperHtml.buildLinesForIndex(
+                readerList,
+                fromReadFile, 
+                jsFile, 
+                cssFile, 
+                filesByMaskFromDir,
+                stateReaderList
+        );
         anyFileCreateJobs(indexOfReport, createLinesForIndex);
         waitForWriterJobsDone();
         
