@@ -70,6 +70,14 @@ public class AppObjectsInfo {
                 AppObjectsInfoHelperClasses.getThreadClassGetDeclaredFieldsCommandsOut(stackClass.getClass());
                 jobControl.createJobWriteTableFile(classStackGetDeclaredFieldsCommandsOut);
                 
+                ArrayBlockingQueue<String> classGetDeclaredAnnotationCommandsOut = 
+                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredAnnotationsCommandsOut(aClass.getClass());
+                jobControl.createJobWriteTableFile(classGetDeclaredAnnotationCommandsOut);
+
+                ArrayBlockingQueue<String> classGetDeclaredConstructorsCommandsOut = 
+                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredConstructorsCommandsOut(aClass.getClass());
+                jobControl.createJobWriteTableFile(classGetDeclaredConstructorsCommandsOut);
+                
             }
             
             //tableCreateJobs(logForHtmlCurrentLogSubDir, threadNameCommandsOut);
