@@ -75,6 +75,7 @@ public class AppObjectsInfoHelperHtml {
                     }
                     listStringsForLogInRunnable.add("</TBODY>");
                     listStringsForLogInRunnable.add("</TABLE>");
+                    
                 }
                 if( listCommandOutPut.size() == 1 ){
                     String forOutTimeStamp = "";
@@ -92,6 +93,71 @@ public class AppObjectsInfoHelperHtml {
                 }
             }
         return listStringsForLogInRunnable;
+    }
+    protected static ArrayBlockingQueue<String> commandOutPutForThreadToHtmlBus(ArrayList<String> listCommandOutPut){
+        ArrayList<String> listStringsForLogInRunnable = new ArrayList<String>();
+        int indexedSwitch = 0;
+        if( (listCommandOutPut != null)
+                && (listCommandOutPut.size() > 0 ) ){
+                String forOutPutToLog = "";
+                if( listCommandOutPut.size() > 1 ){
+                    String forCmdResultOut = "<TBODY>";
+                    listStringsForLogInRunnable.add("<TABLE>");
+                    for( String element : listCommandOutPut ){
+                        if( indexedSwitch == 0 ){
+                            String forOutTimeStamp = "";
+                            try{
+                            forOutTimeStamp = listCommandOutPut.get(0).length() == 17 
+                                ? getFormatedTimeStamp(listCommandOutPut.get(0))
+                                : "";
+                            } catch (NoSuchElementException ex){
+                                ex.printStackTrace();
+                            }
+                            if( !forOutTimeStamp.isEmpty() ){
+                                listStringsForLogInRunnable.add("<THEAD>");
+                                forOutPutToLog = "<TR><TH>Time stamp</TH><TH>" + forOutTimeStamp + "</TH></TR>";
+                                listStringsForLogInRunnable.add(forOutPutToLog);
+                                forOutPutToLog = "<TR><TH>Command</TH><TH>Result</TH></TR>";
+                                listStringsForLogInRunnable.add(forOutPutToLog);
+                                listStringsForLogInRunnable.add("</THEAD>");
+                                forOutPutToLog = "";
+                                
+                                
+                            }
+                            indexedSwitch = 1;
+                            continue;
+                        }
+                        if( indexedSwitch == 2 ){
+                            listStringsForLogInRunnable.add(forCmdResultOut.concat("<TD>" + element + "</TD>") + "</TR>");
+                            forCmdResultOut = "";
+                            indexedSwitch = 1;
+                            continue;
+                        }
+                        if( indexedSwitch == 1 ){
+                            forCmdResultOut = forCmdResultOut.concat("<TR><TD>" + element + "</TD>");
+                            indexedSwitch = 2;
+                            continue;
+                        }
+                    }
+                    listStringsForLogInRunnable.add("</TBODY>");
+                    listStringsForLogInRunnable.add("</TABLE>");
+                }
+                if( listCommandOutPut.size() == 1 ){
+                    String forOutTimeStamp = "";
+                    try{
+                    forOutTimeStamp = listCommandOutPut.get(0).length() == 17 
+                        ? getFormatedTimeStamp(listCommandOutPut.get(0))
+                        : "";
+                    } catch (NoSuchElementException ex){
+                        ex.printStackTrace();
+                    }
+                    if( !forOutTimeStamp.isEmpty() ){
+                        forOutPutToLog = "<h1>Time stamp: " + forOutTimeStamp + "</h1>";
+                        listStringsForLogInRunnable.add(forOutPutToLog);
+                    }
+                }
+            }
+        return AppObjectsBusHelper.cleanBusFromArray(listStringsForLogInRunnable);
     }
     protected static ArrayBlockingQueue<String> commandOutPutToHtmlBus(ArrayList<String> listCommandOutPut){
         ArrayList<String> listStringsForLogInRunnable = new ArrayList<String>();
@@ -120,6 +186,31 @@ public class AppObjectsInfoHelperHtml {
                                 listStringsForLogInRunnable.add(forOutPutToLog);
                                 listStringsForLogInRunnable.add("</THEAD>");
                                 forOutPutToLog = "";
+                                listStringsForLogInRunnable.add("<TFOOT>");
+                                String buildStrTd = "";
+                                String buildClassTd = "";
+                                String buildFileTd = "";
+                                StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+                                int indexStEl = 0;
+                                for( StackTraceElement elStack : stackTrace ){
+                                    buildStrTd = elStack.toString();
+                                    buildClassTd = elStack.getClassName()
+                                        + "." + elStack.getMethodName();
+                                    buildFileTd = elStack.getFileName()
+                                        + "[" + elStack.getLineNumber() + "]";
+                                    listStringsForLogInRunnable.add("<TR>"
+                                        + "<TD>" + indexStEl
+                                        + " -|-|-|- StackTraceElement.toString()</TD>"
+                                        + "<TD>" + buildStrTd + "</TD></TR>");
+                                    listStringsForLogInRunnable.add("<TR>"
+                                        + "<TD>-//-.getClassName().getMethodName()</TD>"
+                                        + "<TD>" + buildClassTd + "</TD></TR>");
+                                    listStringsForLogInRunnable.add("<TR>"
+                                        + "<TD>-//-.getFileName()[-//-.getLineNumber()]</TD>"
+                                        + "<TD>" + buildFileTd + "</TD></TR>");
+                                    indexStEl++;
+                                }
+                                listStringsForLogInRunnable.add("</TFOOT>");
                             }
                             indexedSwitch = 1;
                             continue;
@@ -547,7 +638,9 @@ public class AppObjectsInfoHelperHtml {
             if( (parceSortNumber > -3163) && (parceSortNumber > -1) ){
                 sortItemList.put(parceSortNumber, doneJobList.getKey());
             }
-            String strForAncor = doneJobList.getValue().getFromHTMLLogFileName().getFileName().toString().split("\\.")[0];
+        }
+        for( Map.Entry<Integer, UUID> sortedKeyItems : sortItemList.entrySet() ){
+            String strForAncor = readerStateListJobDone.get(sortedKeyItems.getValue()).getFromHTMLLogFileName().getFileName().toString().split("\\.")[0];
             String strForMenuTitle = strForAncor.split("-")[1];
             
             String forOutTimeStamp = "";
@@ -569,8 +662,8 @@ public class AppObjectsInfoHelperHtml {
                 + strForAncor 
                 + "\">goto table</a></li>");
             listForReturn.add("                  <li><a href=\"#"
-                + "bySortedId-" + String.valueOf(parceSortNumber) + "\">"
-                + String.valueOf(parceSortNumber) + "</a></li>");
+                + "bySortedId-" + String.valueOf(sortedKeyItems.getKey()) + "\">"
+                + String.valueOf(sortedKeyItems.getKey()) + "</a></li>");
             listForReturn.add("                  <li><a href=\"#\">sub menu 3</a></li>");
             listForReturn.add("                  <li><a href=\"#\">sub menu 4</a></li>");
             listForReturn.add("                  <li><a href=\"#\">sub menu 5</a></li>");
@@ -819,8 +912,7 @@ public class AppObjectsInfoHelperHtml {
         listForRunnableLogStrs.add("    border-left: none;");
         listForRunnableLogStrs.add("}");
         listForRunnableLogStrs.add("table tfoot {");
-        listForRunnableLogStrs.add("    font-size: 14px;");
-        listForRunnableLogStrs.add("    font-weight: bold;");
+        listForRunnableLogStrs.add("    font-size: 13px;");
         listForRunnableLogStrs.add("    color: #333333;");
         listForRunnableLogStrs.add("    background: #555555;");
         listForRunnableLogStrs.add("    border-top: 3px solid #444444;");

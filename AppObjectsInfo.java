@@ -46,6 +46,10 @@ public class AppObjectsInfo {
         t.start();
     }
     
+    /**
+     * @todo from innercounter create class name structure for rows by types of functions
+     */
+    
     protected static void dumpAllStackToHtmlProcess(){
         AppLoggerBusControls jobControl = new AppLoggerBusControls();
         
@@ -208,7 +212,7 @@ public class AppObjectsInfo {
         
     }
     /**
-     * @todo fix for abnormal finished for creation processes
+     * @todo recode for get dumpinfo to html for one thread
      * @param readedThread 
      */
     protected static void getThreadDebugInfoToHtml(Thread readedThread){
@@ -288,13 +292,15 @@ public class AppObjectsInfo {
         waitForReadJobsDone();
         for( Map.Entry<UUID, ArrayBlockingQueue<String>> readedElement : readerList.entrySet() ){
             fromReadFile.add(readedElement.getValue());
-            if( (AppConstants.LOG_LEVEL_CURRENT > AppConstants.LOG_LEVEL_DEBUG) && AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_LOGGER_READ_FROM_FILE_SIZE ){
-                System.out.println("-----------           "
-                        + readedElement.getKey() 
-                        + "               -----------"
-                        + stateReaderList.get(readedElement.getKey()).getFromHTMLLogFileName().toString()       + "-----------Lines in readed Array " 
-                        + readedElement.getValue().size());
-            }
+            
+            String strForOutToConsole = "-----------           "
+                    + readedElement.getKey() 
+                    + "               -----------"
+                    + stateReaderList.get(readedElement.getKey()).getFromHTMLLogFileName().toString()       
+                    + "-----------Lines in readed Array " 
+                    + readedElement.getValue().size();
+            
+            NcAppHelper.outToConsoleIfDevAndParamTrue(strForOutToConsole, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_LOGGER_READ_FROM_FILE_SIZE);
         }
         ArrayBlockingQueue<String> createLinesForIndex = AppObjectsInfoHelperHtml.buildLinesForIndex(
                 readerList,

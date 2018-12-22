@@ -480,4 +480,14 @@ public class NcAppHelper {
                     + strMsg
                     + classInfoToString);
     }
+    /**
+     * 
+     * @param msgForOut
+     * @param appConstantsParam 
+     */
+    protected static void outToConsoleIfDevAndParamTrue(String msgForOut, Boolean appConstantsParam){
+        if( (AppConstants.LOG_LEVEL_CURRENT > AppConstants.LOG_LEVEL_DEBUG) && appConstantsParam ){
+                System.out.println(msgForOut);
+            }
+    }
 }

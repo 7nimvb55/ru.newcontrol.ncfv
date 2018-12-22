@@ -31,5 +31,5 @@ public class AppConstants {
     protected static final Integer LOG_LEVEL_SILENT = 1;
     protected static final Integer LOG_LEVEL_CURRENT = LOG_LEVEL_DEVELOPMENT;
     
-    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_LOGGER_READ_FROM_FILE_SIZE = Boolean.TRUE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_LOGGER_READ_FROM_FILE_SIZE = Boolean.FALSE;
 }
