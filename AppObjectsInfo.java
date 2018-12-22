@@ -261,10 +261,12 @@ public class AppObjectsInfo {
         
         ArrayBlockingQueue<ArrayBlockingQueue<String>> fromReadFile = new ArrayBlockingQueue<ArrayBlockingQueue<String>>(AppConstants.LOG_HTML_MESSAGES_QUEUE_SIZE);
         ConcurrentSkipListMap<UUID, ArrayBlockingQueue<String>> readerList = new ConcurrentSkipListMap<UUID, ArrayBlockingQueue<String>>();
+        ConcurrentSkipListMap<UUID, AppLoggerStateReader> stateReaderList = new ConcurrentSkipListMap<UUID, AppLoggerStateReader>();
         for(Path tableElement : filesByMaskFromDir){
             AppLoggerStateReader initReaderNewJobLite = AppLoggerInfoToReport.initReaderNewJobLite(tableElement);
             initReaderNewJobLite.setAncorString(AppLoggerList.getAncorStructure(tableElement));
             AppLoggerController appLoggerControllerForRead = new AppLoggerController(readerList, initReaderNewJobLite);
+            stateReaderList.put(initReaderNewJobLite.getID(), initReaderNewJobLite);
             
             AppLoggerRunnableRead readerRunnable = new AppLoggerRunnableRead(appLoggerControllerForRead);
             
@@ -278,7 +280,12 @@ public class AppObjectsInfo {
         waitForReadJobsDone();
         for( Map.Entry<UUID, ArrayBlockingQueue<String>> readedElement : readerList.entrySet() ){
             fromReadFile.add(readedElement.getValue());
-            System.out.println("-----------                          ----------------------Lines in readed Array " + readedElement.getValue().size());
+            if( (AppConstants.LOG_LEVEL_CURRENT > AppConstants.LOG_LEVEL_DEBUG) && AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_LOGGER_READ_FROM_FILE_SIZE ){
+                System.out.println("-----------           "
+                        + readedElement.getKey() 
+                        + "               ----------------------Lines in readed Array " 
+                        + readedElement.getValue().size());
+            }
         }
         ArrayBlockingQueue<String> createLinesForIndex = AppObjectsInfoHelperHtml.createLinesForIndex(fromReadFile, jsFile, cssFile, filesByMaskFromDir);
         anyFileCreateJobs(indexOfReport, createLinesForIndex);

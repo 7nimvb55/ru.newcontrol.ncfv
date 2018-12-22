@@ -329,7 +329,7 @@ public class AppObjectsInfoHelperHtml {
         linesForSave.add("        </div>");
         linesForSave.add("        <div id=\"page-content\" class=\"content-imported-page\">");
         
-        linesForSave.addAll(addReadedLinesFromFilesSortByArrayFromDir(readedStringFormFile, filesByMaskFromDir));
+        linesForSave.addAll(AppObjectsInfoHelperHtml.addReadedLinesFromFilesSortByArrayFromDir(readedStringFormFile, filesByMaskFromDir));
         
         linesForSave.add("        </div>");
         linesForSave.add("        <div id=\"footer-content\" class=\"footer-page\">");
