@@ -610,8 +610,13 @@ public class AppObjectsInfoHelperHtml {
                     listForReturn.add(poll);
                 }
             }while( !fromOneJobLines.isEmpty() );
+            String strForAncor = readerStateListJobDone.get(sortedKeyItems.getValue()).getFromHTMLLogFileName().getFileName().toString().split("\\.")[0];
+            String forBotomOfTableAncor = "                  <li><a href=\"#" 
+                                + strForAncor 
+                                + "\">goto top of table</a></li>";
+                            listForReturn.add(forBotomOfTableAncor);
         }
-        listForReturn.add("<h1>Not sorted data</h1>");
+        listForReturn.add("<h1>-+-+-+- Start for not sorted data -+-+-+-</h1>");
         if( readedLinesFromReaderJobs.size() > 0 ){
             for( Map.Entry<UUID, ArrayBlockingQueue<String>> itemsNotSorted : readedLinesFromReaderJobs.entrySet() ){
                 ArrayBlockingQueue<String> valueNotSorted = itemsNotSorted.getValue();
@@ -623,6 +628,7 @@ public class AppObjectsInfoHelperHtml {
                 }while( !valueNotSorted.isEmpty() );
             }
         }
+        listForReturn.add("<h1>-+-+-+- End for not sorted data -+-+-+-</h1>");
         return listForReturn;
     }
     
