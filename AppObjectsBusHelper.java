@@ -24,7 +24,9 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class AppObjectsBusHelper {
     protected static ArrayList<String> cleanBusArrayBlockingToArrayString(ArrayBlockingQueue<String> listForLogStrs){
-        System.out.println("--------size bus in AppObjectsBusHelper.cleanBusArrayBlockingToArrayString " + listForLogStrs.size());
+        String outSizeInputed = "--------size bus in AppObjectsBusHelper.cleanBusArrayBlockingToArrayString " 
+                + listForLogStrs.size();
+        NcAppHelper.outToConsoleIfDevAndParamTrue(outSizeInputed, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_BUS_HELPER_VIEW_SIZE_DATA_FOR_CLEAN_OUT);
         ArrayList<String> forRecord = new ArrayList<String>();
         String poll;
         do{
@@ -33,7 +35,8 @@ public class AppObjectsBusHelper {
                 forRecord.add(poll);
             }
         }while( !listForLogStrs.isEmpty() );
-        System.out.println("--------size AppObjectsBusHelper.cleanBusArrayBlockingToArrayString array for write " + forRecord.size());
+        String outSizeOutputed = "--------size AppObjectsBusHelper.cleanBusArrayBlockingToArrayString array for write " + forRecord.size();
+        NcAppHelper.outToConsoleIfDevAndParamTrue(outSizeOutputed, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_BUS_HELPER_VIEW_SIZE_DATA_FOR_CLEAN_OUTPUT);
         return forRecord;
     }
     protected static ArrayBlockingQueue<String> cleanBusForRunnables(ArrayBlockingQueue<String> listForLogStrs){

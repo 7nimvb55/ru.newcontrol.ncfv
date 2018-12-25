@@ -37,7 +37,8 @@ public class AppLoggerRunnableWrite implements Runnable {
         this.busManager.currentWriterJob().setTrueToHTMLNewRunner();
         
         
-        System.out.println("*** ||| *** ||| *** create log writer *** ||| *** ||| ***");
+        String outCreate = "*** ||| *** ||| *** create log writer *** ||| *** ||| ***";
+        NcAppHelper.outToConsoleIfDevAndParamTrue(outCreate, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_RUNNABLE_CREATE);
     }
     
     @Override
@@ -46,11 +47,13 @@ public class AppLoggerRunnableWrite implements Runnable {
         forRunnerWriterJoblck.lock();
         try{
             AppLoggerController managerForThis = busManager;
-            System.out.println(
-                    "managerForThis.getIdJob().toString() " + managerForThis.getIdJob().toString());
+            String outGetNewJob = "managerForThis.getIdJob().toString() " 
+                    + managerForThis.getIdJob().toString();
+            
+            NcAppHelper.outToConsoleIfDevAndParamTrue(outGetNewJob, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_RUNNABLE_GET_NEW_JOB);
+            
             if( managerForThis != null ){
-                System.out.println(
-                    "managerForThis.getIdJob().toString() "
+                String outGetNotNullNewJob = "managerForThis.getIdJob().toString() "
                     + managerForThis.getIdJob().toString()
                     + " managerForThis.isReaderJob() "
                     + managerForThis.isReaderJob()
@@ -65,20 +68,20 @@ public class AppLoggerRunnableWrite implements Runnable {
                     + " managerForThis.currentWriterJob().isToHTMLJobDone() "
                     + managerForThis.currentWriterJob().isToHTMLJobDone()
                     + " managerForThis.currentWriterJob().isBlankObject() "
-                    + managerForThis.currentWriterJob().isBlankObject()
-                );
-            
+                    + managerForThis.currentWriterJob().isBlankObject();
+                NcAppHelper.outToConsoleIfDevAndParamTrue(outGetNotNullNewJob, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_RUNNABLE_VIEW_NEW_JOB_PARAM);
+                
                 AppLoggerStateWriter currentJob = managerForThis.currentWriterJob();
                 if( !currentJob.isToHTMLJobDone() ){
                     ArrayList<String> forRecord = 
                             AppObjectsBusHelper.cleanBusArrayBlockingToArrayString(
                                     currentJob.getPartLinesForWrite());
 
-                    System.out.println("report writerRunnable size for " 
+                    String outViewSizeNewJob = "report writerRunnable size for " 
                             + forRecord.size()
                             + " write to "
-                            + currentJob.getToHTMLLogFileName().toString()
-                    );
+                            + currentJob.getToHTMLLogFileName().toString();
+                    NcAppHelper.outToConsoleIfDevAndParamTrue(outViewSizeNewJob, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_RUNNABLE_VIEW_SIZE_JOB_PARAM);
 
                     //try {
                         if( currentJob.isToHtmlFileNameSet() ){

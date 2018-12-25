@@ -32,4 +32,31 @@ public class AppConstants {
     protected static final Integer LOG_LEVEL_CURRENT = LOG_LEVEL_DEVELOPMENT;
     
     protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_LOGGER_READ_FROM_FILE_SIZE = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_VIEW_THREADS_PARAM = Boolean.FALSE;
+    
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_WAITER_START = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_WAITER_ALL_STACK = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_WAITER_ALL_PRINT_TRACE = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_WAITER_CURRENT_STACK = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_WAITER_STOP = Boolean.FALSE;
+    
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_RUNNABLE_CREATE = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_RUNNABLE_RUN_JOB = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_RUNNABLE_JOB_END_READ = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_RUNNABLE_JOB_READ_NULL = Boolean.FALSE;
+    
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_WAITER_START = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_WAITER_ALL_STACK = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_WAITER_FOUNDED_IN_STACK = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_WAITER_ALL_PRINT_TRACE = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_WAITER_CURRENT_STACK = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_WAITER_STOP = Boolean.FALSE;
+    
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_RUNNABLE_CREATE = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_RUNNABLE_GET_NEW_JOB = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_RUNNABLE_VIEW_NEW_JOB_PARAM = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_RUNNABLE_VIEW_SIZE_JOB_PARAM = Boolean.FALSE;
+    
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_BUS_HELPER_VIEW_SIZE_DATA_FOR_CLEAN_OUT = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_BUS_HELPER_VIEW_SIZE_DATA_FOR_CLEAN_OUTPUT = Boolean.FALSE;
 }

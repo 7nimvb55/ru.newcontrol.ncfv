@@ -115,7 +115,7 @@ public class AppObjectsInfo {
         
         AppLoggerController notFinishedWriterJob = jobControl.getNotFinishedWriterJob();
         do{
-            System.out.println(
+            String outForJobsReaderParam = 
                     "notFinishedWriterJob.getIdJob().toString() "
                     + notFinishedWriterJob.getIdJob().toString()
                     + " notFinishedWriterJob.isReaderJob() "
@@ -132,7 +132,8 @@ public class AppObjectsInfo {
                     + notFinishedWriterJob.currentWriterJob().isToHTMLJobDone()
                     + " notFinishedWriterJob.currentWriterJob().isBlankObject() "
                     + notFinishedWriterJob.currentWriterJob().isBlankObject()
-            );
+            ;
+            NcAppHelper.outToConsoleIfDevAndParamTrue(outForJobsReaderParam, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_VIEW_THREADS_PARAM);
             runWriterJob(jobControl);
             notFinishedWriterJob = jobControl.getNotFinishedWriterJob();
         }while( !notFinishedWriterJob.notExistJob() );
@@ -316,20 +317,22 @@ public class AppObjectsInfo {
     }
     protected static void waitForReadJobsDone(){
         Boolean readerInStack = Boolean.FALSE;
-        System.out.println("-----------                          ----------------------Start wait Reader time " + AppFileOperationsSimple.getNowTimeStringWithMS());
+        String outStart = "-----------                          ----------------------Start wait Reader time " 
+                + AppFileOperationsSimple.getNowTimeStringWithMS();
+        NcAppHelper.outToConsoleIfDevAndParamTrue(outStart, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_WAITER_START);
         do{
             readerInStack = Boolean.FALSE;
             for( Map.Entry<Thread, StackTraceElement[]> elStTr : Thread.getAllStackTraces().entrySet() ){
-                System.out.println("Thread.id " + elStTr.getKey().getId() 
+                String outAllStack = "Thread.id " + elStTr.getKey().getId() 
                         + " Thread.name " + elStTr.getKey().getName() 
-                        + " Thread.state " + elStTr.getKey().getState()
-                );
+                        + " Thread.state " + elStTr.getKey().getState();
+                NcAppHelper.outToConsoleIfDevAndParamTrue(outAllStack, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_WAITER_ALL_STACK);
                 if( elStTr.getKey().getName().contains("runReader")){
                     elStTr.getKey().getState();
                     readerInStack = Boolean.TRUE;
                 }
                 for( StackTraceElement elementThreads : elStTr.getValue() ){
-                    System.out.println("Stack element " 
+                    String outAllPrintStack = "Stack element " 
                             + elementThreads.getFileName()
                             + " ( "
                             + elementThreads.getClassName()
@@ -338,12 +341,12 @@ public class AppObjectsInfo {
                             + " ["
                             + elementThreads.getLineNumber()
                             + "] isNative [" + String.valueOf(elementThreads.isNativeMethod())
-                            + "] )"
-                    );
+                            + "] )";
+                    NcAppHelper.outToConsoleIfDevAndParamTrue(outAllPrintStack, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_WAITER_ALL_PRINT_TRACE);
                 }
             }
             for( StackTraceElement elementThreads : Thread.currentThread().getStackTrace() ){
-                System.out.println("Stack element " 
+                String outAllCurrentStack = "Stack element " 
                             + elementThreads.getFileName()
                             + " ( "
                             + elementThreads.getClassName()
@@ -352,11 +355,13 @@ public class AppObjectsInfo {
                             + " ["
                             + elementThreads.getLineNumber()
                             + "] isNative [" + String.valueOf(elementThreads.isNativeMethod()) 
-                            + "] )"
-                    );
+                            + "] )";
+                NcAppHelper.outToConsoleIfDevAndParamTrue(outAllCurrentStack, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_WAITER_CURRENT_STACK);
             }
         } while (readerInStack);
-        System.out.println("-----------                          ----------------------Stop wait Reader time " + AppFileOperationsSimple.getNowTimeStringWithMS());
+        String outStop = "-----------                          ----------------------Stop wait Reader time " 
+                + AppFileOperationsSimple.getNowTimeStringWithMS();
+        NcAppHelper.outToConsoleIfDevAndParamTrue(outStop, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_WAITER_STOP);
     }
     protected static void tableClassJob(
             Path logForHtmlCurrentLogSubDir,
@@ -398,17 +403,21 @@ public class AppObjectsInfo {
     }
     protected static void waitForWriterJobsDone(){
         Boolean writerInStack = Boolean.FALSE;
-        System.out.println("-----------                          ----------------------Start wait Writer time " + AppFileOperationsSimple.getNowTimeStringWithMS());
+        String outStart = "-----------                          ----------------------Start wait Writer time " 
+                + AppFileOperationsSimple.getNowTimeStringWithMS();
+        NcAppHelper.outToConsoleIfDevAndParamTrue(outStart, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_WAITER_START);
         do{
             writerInStack = Boolean.FALSE;
             for( Map.Entry<Thread, StackTraceElement[]> elStTr : Thread.getAllStackTraces().entrySet() ){
-                /*System.out.println("Thread.id " + elStTr.getKey().getId() 
+                String outAllStackThreadParam = "Thread.id " + elStTr.getKey().getId() 
                         + " Thread.name " + elStTr.getKey().getName() 
-                        + " Thread.state " + elStTr.getKey().getState()
-                );*/
+                        + " Thread.state " + elStTr.getKey().getState();
+                NcAppHelper.outToConsoleIfDevAndParamTrue(outAllStackThreadParam, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_WAITER_ALL_STACK);
                 if( elStTr.getKey().getName().contains("runWriter")){
                     elStTr.getKey().getState();
-                    System.out.println("-----------                          ----------------------found Writer at time " + AppFileOperationsSimple.getNowTimeStringWithMS());
+                    String outFoundInStack = "-----------                          ----------------------found Writer at time " 
+                            + AppFileOperationsSimple.getNowTimeStringWithMS();
+                    NcAppHelper.outToConsoleIfDevAndParamTrue(outFoundInStack, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_WAITER_FOUNDED_IN_STACK);
                     try {
                         Thread.currentThread().sleep(50);
                     } catch (InterruptedException ex) {
@@ -417,7 +426,7 @@ public class AppObjectsInfo {
                     writerInStack = Boolean.TRUE;
                 }
                 for( StackTraceElement elementThreads : elStTr.getValue() ){
-                    /*System.out.println("Stack element " 
+                    String outPrintTraceStack = "Stack element " 
                             + elementThreads.getFileName()
                             + " ( "
                             + elementThreads.getClassName()
@@ -426,12 +435,12 @@ public class AppObjectsInfo {
                             + " ["
                             + elementThreads.getLineNumber()
                             + "] isNative [" + String.valueOf(elementThreads.isNativeMethod())
-                            + "] )"
-                    );*/
+                            + "] )";
+                    NcAppHelper.outToConsoleIfDevAndParamTrue(outPrintTraceStack, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_WAITER_ALL_PRINT_TRACE);
                 }
             }
             for( StackTraceElement elementThreads : Thread.currentThread().getStackTrace() ){
-                /*System.out.println("Stack element " 
+                String outCurrentStack = "Stack element " 
                             + elementThreads.getFileName()
                             + " ( "
                             + elementThreads.getClassName()
@@ -440,11 +449,13 @@ public class AppObjectsInfo {
                             + " ["
                             + elementThreads.getLineNumber()
                             + "] isNative [" + String.valueOf(elementThreads.isNativeMethod())
-                            + "] )"
-                    );*/
+                            + "] )";
+                NcAppHelper.outToConsoleIfDevAndParamTrue(outCurrentStack, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_WAITER_CURRENT_STACK);
             }
         } while (writerInStack);
-        System.out.println("-----------                          ----------------------Stop wait Writer time " + AppFileOperationsSimple.getNowTimeStringWithMS());
+        String outStop = "-----------                          ----------------------Stop wait Writer time " 
+                + AppFileOperationsSimple.getNowTimeStringWithMS();
+        NcAppHelper.outToConsoleIfDevAndParamTrue(outStop, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_WRITER_WAITER_STOP);
     }
     protected static void getThreadDebugInfoToHtmlVpre(Thread readedThread){
         //@todo check sizes in add content for bus

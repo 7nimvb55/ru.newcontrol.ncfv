@@ -36,7 +36,9 @@ public class AppLoggerRunnableRead implements Runnable {
         this.busManager.currentReaderJob().setTrueFromHTMLNewRunner();
         //this.managerForThis..setTrueFromHTMLNewRunner();
         String threadInfoToString = NcAppHelper.getThreadInfoToString(Thread.currentThread());
-        System.out.println("*** ||| *** ||| *** create log reader *** ||| *** ||| ***" + threadInfoToString);
+        String outCreate = "*** ||| *** ||| *** create log reader *** ||| *** ||| ***" + threadInfoToString;
+        NcAppHelper.outToConsoleIfDevAndParamTrue(outCreate, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_RUNNABLE_CREATE);
+        
     }
     
     @Override
@@ -49,10 +51,11 @@ public class AppLoggerRunnableRead implements Runnable {
                     if( !currentJob.isFromHTMLJobDone() ){
                         Path fileForReadInThisJob = currentJob.getFromHTMLLogFileName();
                         //currentJob.setFalseFromHTMLJobDone();
-                        System.out.println("_|_|_|_|_|_ AppLoggerRunnableHtmlRead.run() fromHTMLLogFileName " 
+                        String outRunJob = "_|_|_|_|_|_ AppLoggerRunnableHtmlRead.run() fromHTMLLogFileName " 
                                         + fileForReadInThisJob.toString() 
                                         + " _|_|_|_|_|_"
-                                        + " start for read file");
+                                        + " start for read file";
+                        NcAppHelper.outToConsoleIfDevAndParamTrue(outRunJob, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_RUNNABLE_RUN_JOB);
                         ArrayBlockingQueue<String> readedLines = new ArrayBlockingQueue<String>(AppConstants.LOG_HTML_MESSAGES_QUEUE_SIZE);
                         //readedLines.add(fileForReadInThisJob.toString());
                         String ancorString = currentJob.getAncorString();
@@ -63,16 +66,18 @@ public class AppLoggerRunnableRead implements Runnable {
                             readedLines.addAll(AppFileOperationsSimple.readFromFile(fileForReadInThisJob));
                             //readedLines.addAll(Files.readAllLines(fileForReadInThisJob, Charset.forName("UTF-8")));
                             if( readedLines != null){
-                                System.out.println("_|_|_|_|_|_ AppLoggerRunnableHtmlRead.run() fromHTMLLogFileName " 
+                                String outJobReadEnd = "_|_|_|_|_|_ AppLoggerRunnableHtmlRead.run() fromHTMLLogFileName " 
                                         + fileForReadInThisJob.toString() 
                                         + " _|_|_|_|_|_"
-                                        + " readedLines.size() " + readedLines.size());
+                                        + " readedLines.size() " + readedLines.size();
+                                NcAppHelper.outToConsoleIfDevAndParamTrue(outJobReadEnd, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_RUNNABLE_JOB_END_READ);
                                 managerForThis.setStringBusForLogRead(currentJob.getID(), readedLines);
                             } else {
-                                System.out.println("_|_|NULL|_|_ AppLoggerRunnableHtmlRead.run() fromHTMLLogFileName " 
+                                String outJobReadNull = "_|_|NULL|_|_ AppLoggerRunnableHtmlRead.run() fromHTMLLogFileName " 
                                         + fileForReadInThisJob.toString() 
                                         + " _|_|NULL|_|_"
-                                        + " readedLines.size() is null");
+                                        + " readedLines.size() is null";
+                                NcAppHelper.outToConsoleIfDevAndParamTrue(outJobReadNull, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_RUNNABLE_JOB_READ_NULL);
                                 managerForThis.setStringBusForLogRead(currentJob.getID(), new ArrayBlockingQueue<String>(1));
                             }
 
