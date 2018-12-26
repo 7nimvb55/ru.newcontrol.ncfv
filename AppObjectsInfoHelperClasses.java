@@ -60,6 +60,18 @@ public class AppObjectsInfoHelperClasses {
         ArrayList<String> strForOut = new ArrayList<String>();
         strForOut.add(nowTimeStringWithMS);
         
+        SecurityManager securityManager = System.getSecurityManager();
+        if( securityManager == null ){
+            strForOut.add("System.getSecurityManager()");
+            strForOut.add("NULL");
+        }
+        else{
+            strForOut.add("System.getSecurityManager().hashCode()");
+            strForOut.add("(" + String.valueOf(securityManager.hashCode()) + ") " 
+                + Integer.toHexString(securityManager.hashCode()));
+        }
+        
+        
         Map<String, String> envNowSystem = System.getenv();
         
         strForOut.add("System.getenv().hashCode()");
@@ -86,6 +98,8 @@ public class AppObjectsInfoHelperClasses {
                     + itemPropertyName + " )");
             strForOut.add(sysPropertyValue);
         }
+        
+        
         
         return AppObjectsInfoHelperHtml.commandOutPutToHtmlBus(strForOut);
     }    
