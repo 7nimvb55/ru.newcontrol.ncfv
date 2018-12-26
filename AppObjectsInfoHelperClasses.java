@@ -62,6 +62,10 @@ public class AppObjectsInfoHelperClasses {
         
         Map<String, String> envNowSystem = System.getenv();
         
+        strForOut.add("System.getenv().hashCode()");
+        strForOut.add("(" + String.valueOf(envNowSystem.hashCode()) + ") " 
+                + Integer.toHexString(envNowSystem.hashCode()));
+        
         for( Map.Entry<String, String> itemEnv : envNowSystem.entrySet() ){
             String sysEnvValue = System.getenv(itemEnv.getKey());
             strForOut.add("System.getenv( "
@@ -71,6 +75,10 @@ public class AppObjectsInfoHelperClasses {
         
         Properties propNowSystem = System.getProperties();
         Set<String> stringPropertyNames = propNowSystem.stringPropertyNames();
+        
+        strForOut.add("System.getProperties().hashCode()");
+        strForOut.add("(" + String.valueOf(propNowSystem.hashCode()) + ") " 
+                + Integer.toHexString(propNowSystem.hashCode()));
         
         for( String itemPropertyName : stringPropertyNames ){
             String sysPropertyValue = System.getProperty(itemPropertyName);
