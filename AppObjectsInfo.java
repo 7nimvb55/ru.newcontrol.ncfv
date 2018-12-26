@@ -53,6 +53,9 @@ public class AppObjectsInfo {
     protected static void dumpAllStackToHtmlProcess(){
         AppLoggerBusControls jobControl = new AppLoggerBusControls();
         
+        ArrayBlockingQueue<String> systemEnvironmentCommandsOut = AppObjectsInfoHelperClasses.getSystemEnvironmentCommandsOut();
+        jobControl.createJobWriteTableFile(systemEnvironmentCommandsOut);
+            
         for( Map.Entry<Thread, StackTraceElement[]> elStTr : Thread.getAllStackTraces().entrySet() ){
             Class<? extends Thread> aClass = elStTr.getKey().getClass();
             ArrayBlockingQueue<String> threadNameCommandsOut = AppObjectsInfoHelperClasses.getThreadNameCommandsOut(elStTr.getKey());

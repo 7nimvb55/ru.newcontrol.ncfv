@@ -22,6 +22,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -51,6 +53,34 @@ public class AppObjectsInfoHelperClasses {
         initRecTime.add(nowTimeStringWithMS);
         return AppObjectsInfoHelperHtml.commandOutPutToHtmlBus(initRecTime);
     }
+    
+    protected static ArrayBlockingQueue<String> getSystemEnvironmentCommandsOut(){
+        String nowTimeStringWithMS = 
+                AppFileOperationsSimple.getNowTimeStringWithMS();
+        ArrayList<String> strForOut = new ArrayList<String>();
+        strForOut.add(nowTimeStringWithMS);
+        
+        Map<String, String> envNowSystem = System.getenv();
+        
+        for( Map.Entry<String, String> itemEnv : envNowSystem.entrySet() ){
+            String sysEnvValue = System.getenv(itemEnv.getKey());
+            strForOut.add("System.getenv( "
+                    + itemEnv.getKey() + " )");
+            strForOut.add(sysEnvValue);
+        }
+        
+        Properties propNowSystem = System.getProperties();
+        Set<String> stringPropertyNames = propNowSystem.stringPropertyNames();
+        
+        for( String itemPropertyName : stringPropertyNames ){
+            String sysPropertyValue = System.getProperty(itemPropertyName);
+            strForOut.add("System.getProperty( "
+                    + itemPropertyName + " )");
+            strForOut.add(sysPropertyValue);
+        }
+        
+        return AppObjectsInfoHelperHtml.commandOutPutToHtmlBus(strForOut);
+    }    
     
     protected static ArrayBlockingQueue<String> getThreadStackTraceCommandsOut(StackTraceElement elOuterStack){
         String nowTimeStringWithMS = 
