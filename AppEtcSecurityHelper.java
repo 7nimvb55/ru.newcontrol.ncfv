@@ -17,11 +17,14 @@ package ru.newcontrol.ncfv;
 
 import java.io.FilePermission;
 import java.lang.reflect.ReflectPermission;
+import java.net.NetPermission;
+import java.net.SocketPermission;
 import java.nio.file.Path;
 import java.security.Permissions;
 import java.security.AllPermission;
 import java.security.Policy;
 import java.util.PropertyPermission;
+import javax.management.MBeanPermission;
 import sun.security.util.SecurityConstants;
 
 /**
@@ -43,6 +46,12 @@ public class AppEtcSecurityHelper {
         Permissions permissions = new Permissions();
         
         Path appPath = AppFileOperationsSimple.getAppRWEDCheckedPath();
+        
+        permissions.add(new MBeanPermission("*", "unregisterMBean"));
+        
+        permissions.add(new SocketPermission("localhost:0-65535", "listen"));
+        
+        permissions.add(new NetPermission("*", "decline"));
         
         permissions.add(new FilePermission(appPath.toString(), SecurityConstants.PROPERTY_RW_ACTION));
         permissions.add(new FilePermission(appPath.toString() + "/-", SecurityConstants.PROPERTY_RW_ACTION));
