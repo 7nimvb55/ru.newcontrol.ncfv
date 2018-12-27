@@ -19,8 +19,10 @@ import java.io.FilePermission;
 import java.lang.reflect.ReflectPermission;
 import java.nio.file.Path;
 import java.security.Permissions;
+import java.security.AllPermission;
 import java.security.Policy;
 import java.util.PropertyPermission;
+import sun.security.util.SecurityConstants;
 
 /**
  *
@@ -42,25 +44,25 @@ public class AppEtcSecurityHelper {
         
         Path appPath = AppFileOperationsSimple.getAppRWEDCheckedPath();
         
-        permissions.add(new FilePermission(appPath.toString(), "read, write"));
-        permissions.add(new FilePermission(appPath.toString() + "/-", "read, write"));
+        permissions.add(new FilePermission(appPath.toString(), SecurityConstants.PROPERTY_RW_ACTION));
+        permissions.add(new FilePermission(appPath.toString() + "/-", SecurityConstants.PROPERTY_RW_ACTION));
         
         Path userHomePath = AppFileOperationsSimple.getUserHomeRWEDCheckedPath();
         
-        permissions.add(new FilePermission(userHomePath.toString(), "read, write"));
-        permissions.add(new FilePermission(userHomePath.toString() + "/-", "read, write"));
+        permissions.add(new FilePermission(userHomePath.toString(), SecurityConstants.PROPERTY_RW_ACTION));
+        permissions.add(new FilePermission(userHomePath.toString() + "/-", SecurityConstants.PROPERTY_RW_ACTION));
         
         permissions.add(new ReflectPermission("suppressAccessChecks", "read"));
         
-        for (String namesKey : System.getProperties().stringPropertyNames()) {
+        /*for (String namesKey : System.getProperties().stringPropertyNames()) {
             if( namesKey.isEmpty() ){
                 continue;
             }
-            permissions.add(new PropertyPermission(namesKey, "read"));
-        }
+            permissions.add(new PropertyPermission(namesKey, SecurityConstants.PROPERTY_RW_ACTION));
+        }*/
         
-        /*permissions.add(new PropertyPermission("*", "read"));
-        permissions.add(new PropertyPermission("line.separator", "read"));
+        permissions.add(new PropertyPermission("*", SecurityConstants.PROPERTY_RW_ACTION));
+        /*permissions.add(new PropertyPermission("line.separator", "read"));
         permissions.add(new PropertyPermission("java.class.path", "read"));*/
         
         permissions.add(new RuntimePermission("getenv.*", "read"));
