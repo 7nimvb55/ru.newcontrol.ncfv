@@ -18,9 +18,12 @@
 package ru.newcontrol.ncfv;
 
 import java.io.File;
+import java.security.AccessControlException;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
+import javax.security.auth.Policy;
 
 
 /**
@@ -45,7 +48,7 @@ public class Ncfv {
      */
     
     public static void main(String[] args) {
-        
+        AppEtcSecurityHelper.createNewSecurity();
         AppObjectsList obectsForApp = new AppObjectsList();
         //@todo AppThManager, AppObjectsManagerState create one it two or... ?
         AppThManager loggerByThreadsMain = new AppThManager(obectsForApp);
@@ -67,9 +70,17 @@ public class Ncfv {
             objectsForApp.putLogMessageInfo("[KEY]" + key + "[VALUE]" + value);
         }
         objectsForApp.putLogMessageInfo("[RUN]System.getProperties().stringPropertyNames()[FOR]System.getProperty(namesKey)");
-        for (String namesKey : System.getProperties().stringPropertyNames()) {
-            String value = System.getProperty(namesKey);
-            objectsForApp.putLogMessageInfo("[KEY]" + namesKey + "[VALUE]" + value);
+        try{
+            Properties properties = System.getProperties();
+        } catch(AccessControlException exAC){
+            exAC.printStackTrace();
+        }
+        Properties properties = new Properties();
+        
+        for (Object namesKey : properties.keySet()) {
+            String strKeys = new String((String) namesKey.toString());
+            String value = System.getProperty(strKeys);
+            objectsForApp.putLogMessageInfo("[KEY]" + strKeys + "[VALUE]" + value);
         }
         SecurityManager securityManager = System.getSecurityManager();
         if( securityManager == null ){

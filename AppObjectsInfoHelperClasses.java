@@ -20,6 +20,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.security.AccessControlException;
+import java.security.PermissionCollection;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
@@ -60,6 +62,8 @@ public class AppObjectsInfoHelperClasses {
         ArrayList<String> strForOut = new ArrayList<String>();
         strForOut.add(nowTimeStringWithMS);
         
+        
+        
         SecurityManager securityManager = System.getSecurityManager();
         if( securityManager == null ){
             strForOut.add("System.getSecurityManager()");
@@ -85,7 +89,20 @@ public class AppObjectsInfoHelperClasses {
             strForOut.add(sysEnvValue);
         }
         
-        Properties propNowSystem = System.getProperties();
+        
+        Properties propNowSystem;
+        String strExceptionMessage = "";
+        try{
+            propNowSystem = System.getProperties();
+        } catch(AccessControlException exAC){
+            exAC.printStackTrace();
+            strExceptionMessage = "AccessControlException " + exAC.getMessage();
+            propNowSystem = new Properties();
+        }
+        if( !strExceptionMessage.isEmpty() ){
+            strForOut.add("[ERROR]System.getProperties()");
+            strForOut.add(strExceptionMessage);
+        }
         Set<String> stringPropertyNames = propNowSystem.stringPropertyNames();
         
         strForOut.add("System.getProperties().hashCode()");
@@ -93,7 +110,7 @@ public class AppObjectsInfoHelperClasses {
                 + Integer.toHexString(propNowSystem.hashCode()));
         
         for( String itemPropertyName : stringPropertyNames ){
-            String sysPropertyValue = System.getProperty(itemPropertyName);
+            String sysPropertyValue = System.getProperty((String) itemPropertyName.toString());
             strForOut.add("System.getProperty( "
                     + itemPropertyName + " )");
             strForOut.add(sysPropertyValue);

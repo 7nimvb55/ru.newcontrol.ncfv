@@ -47,6 +47,33 @@ public class AppFileOperationsSimple {
         parentForFS = parentForFS.toRealPath(LinkOption.NOFOLLOW_LINKS);
         return parentForFS;
     }
+    protected static Path getUserHomeRWEDCheckedPath(){
+        Path toReturn = Paths.get(System.getProperty("user.home"));
+        try {
+            toReturn = AppFileOperationsSimple.getUserHomePath();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            System.out.println("[ERROR] App Path " + toReturn.toString() + ", is not have a real directory " + ex.getMessage());
+            System.exit(0);
+        }
+        
+        try {
+            pathIsNotDirectory(toReturn);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            System.out.println("[ERROR] Not directory " + toReturn.toString());
+            System.exit(0);
+        }
+        try {
+            pathIsNotReadWriteLink(toReturn);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            System.out.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
+            System.exit(0);
+        }
+        return toReturn;
+    }
+    
     protected static Path getAppRWEDCheckedPath(){
         Path toReturn = Paths.get(System.getProperty("java.class.path"));
         try {
