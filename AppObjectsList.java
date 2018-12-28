@@ -27,7 +27,7 @@ public class AppObjectsList {
     private ConcurrentSkipListMap<String, Runnable> currentWorkerList;
     private ArrayBlockingQueue<String> messagesQueueForLogging;
     
-    private final Integer messagesQueueSize = 1000;
+    private final Integer messagesQueueSize = AppConstants.LOG_LINES_COUNT;
 
     public AppObjectsList() {
         this.currentWorkerList = new ConcurrentSkipListMap<>();
@@ -131,91 +131,15 @@ public class AppObjectsList {
         Boolean existThread = Boolean.TRUE;
         try{
             foundedThread = new Thread(this.getLogger());
-            
-            ThreadGroup testTG = new ThreadGroup("TestForLogger");
-            
-            AppThExtendsBaseThread appThExtendsBaseThread = new AppThExtendsBaseThread(3);
-            System.out.println(" * * * First create Thread from Runnable and start");
-            Thread forTest = new Thread(testTG,appThExtendsBaseThread,"testThread-" + AppFileOperationsSimple.getNowTimeStringWithMS());
-            System.out.println("[NAME]" + forTest.getName() 
-                    + "[toString]" + forTest.toString()
-                    + "[getId]" + String.valueOf(forTest.getId())
-                    + "[getPriority]" + String.valueOf(forTest.getPriority())
-                    + "[getState][name]" + String.valueOf(forTest.getState().name())
-                    + "[getState][ordinal]" + String.valueOf(forTest.getState().ordinal())
-                    + "[isDaemon]" + String.valueOf(forTest.isDaemon())
-                    + "[isAlive]" + String.valueOf(forTest.isAlive())
-                    + "[isInterrupted]" + String.valueOf(forTest.isInterrupted())
-            );
-            System.out.println("[NcAppHelper.getThreadInfoToString]" + NcAppHelper.getThreadInfoToString(forTest));
-            forTest.start();
-            try{
-                forTest.join();
-            } catch(InterruptedException ex){
-                ex.printStackTrace();
-            }
-            System.out.println(" * * * Second create Thread from Runnable and start");
-            
-            forTest = new Thread(testTG,appThExtendsBaseThread,"testThread" + AppFileOperationsSimple.getNowTimeStringWithMS());
-            System.out.println("" + forTest.getName());
-            forTest.start();
-            try{
-                forTest.join();
-            } catch(InterruptedException ex){
-                ex.printStackTrace();
-            }
-            System.out.println(" * * * Thrid create Thread from Runnable and start");
-            forTest = new Thread(testTG,appThExtendsBaseThread,"testThread" + AppFileOperationsSimple.getNowTimeStringWithMS());
-            System.out.println("" + forTest.getName());
-            forTest.start();
-            try{
-                forTest.join();
-            } catch(InterruptedException ex){
-                ex.printStackTrace();
-            }
-            //For use object first time whith his State.NEW = 0 used Thread.start();
-            /*System.out.println("[ThreadGrpupName]" + foundedThread.getThreadGroup().getName()
-                    + "[ThreadGrpupActiveCount]" + foundedThread.getThreadGroup().activeCount()
-                    + "[ThreadGrpupActiveGroupCount]" + foundedThread.getThreadGroup().activeGroupCount()
-                    + "[State]" + foundedThread.getState().name()
-                    + "[ORDINAL]" + foundedThread.getState().ordinal() 
-                    + "[ThreadName]" + foundedThread.getName()
-                    + "[ThreadToString]" + foundedThread.toString()
-                    + "[ThreadID]" + foundedThread.getId()
-                    + "[ThreadHash]" + foundedThread.hashCode()
-                    );
-            if( foundedThread.getState().ordinal() != 0 ){
-                foundedThread = new Thread(foundedThread);
-            }
-            System.out.println("[ThreadGrpupName]" + foundedThread.getThreadGroup().getName()
-                    + "[ThreadGrpupActiveCount]" + foundedThread.getThreadGroup().activeCount()
-                    + "[ThreadGrpupActiveGroupCount]" + foundedThread.getThreadGroup().activeGroupCount()
-                    + "[State]" + foundedThread.getState().name()
-                    + "[ORDINAL]" + foundedThread.getState().ordinal() 
-                    + "[ThreadName]" + foundedThread.getName()
-                    + "[ThreadToString]" + foundedThread.toString()
-                    + "[ThreadID]" + foundedThread.getId()
-                    + "[ThreadHash]" + foundedThread.hashCode()
-                    );*/
-            //System.out.println("[State]" + foundedThread.getState().name() + "[ThreadName]" + foundedThread.getName());
-            //foundedThread.setName("Logger" + AppFileOperationsSimple.getNowTimeStringWithMS());
-            //System.out.println("[State]" + foundedThread.getState().name() + "[ThreadName]" + foundedThread.getName());
-            //ThreadGroup nowLogGroup = new ThreadGroup("Logger" + AppFileOperationsSimple.getNowTimeStringWithMS());
-            
-            //try{
-                //foundedThread.start();
-            //} catch (IllegalStateException ex){
-            //    System.out.println("[State]" + foundedThread.getState().name() + " [ERRORMESSAGE] " + ex.getMessage());
-            //    ex.printStackTrace();
-            //}
-            
-            //@todo create method restart thread...
-            foundedThread.start();
+
             try{
                 foundedThread.join();
             } catch(InterruptedException ex){
                 ex.printStackTrace();
             }
+            
+            foundedThread.start();
+            
         } catch(NullPointerException ex){
             System.out.println("[CRITICALERROR]NullPointerException for init logger " + ex.getMessage());
             ex.printStackTrace();

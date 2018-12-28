@@ -47,8 +47,8 @@ public class AppLoggerToTextRunnable implements Runnable {
         messagesQueueForLogging = messagesQueueOuter;
         linesCount = AppConstants.LOG_LINES_COUNT;
         newLogFile = AppFileOperationsSimple.getNewLogFile();
-        String threadInfoToString = NcAppHelper.getThreadInfoToString(Thread.currentThread());
-        System.out.println("create logger" + threadInfoToString);
+        String threadInfoToString = "Create logger" + NcAppHelper.getThreadInfoToString(Thread.currentThread());
+        NcAppHelper.outToConsoleIfDevAndParamTrue(threadInfoToString, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_CREATE_TEXT_LOGGER);
     }
     
     @Override

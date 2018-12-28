@@ -42,6 +42,34 @@ public class AppEtcSecurityHelper {
         //java.awt.AWTPermission
         //java.lang.reflect.ReflectPermission
         //java.io.SerializablePermission
+        //AllPermission
+        //BasicPermission
+        //FilePermission
+        //MBeanPermission
+        //PrivateCredentialPermission
+        //ServicePermission
+        //SocketPermission
+        //UnresolvedPermission
+        //AudioPermission
+        //AuthPermission
+        //AWTPermission
+        //DelegationPermission
+        //JAXBPermission
+        //LinkPermission
+        //LoggingPermission
+        //ManagementPermission
+        //MBeanServerPermission
+        //MBeanTrustPermission
+        //NetPermission
+        //PropertyPermission
+        //ReflectPermission
+        //RuntimePermission
+        //SecurityPermission
+        //SerializablePermission
+        //SQLPermission
+        //SSLPermission
+        //SubjectDelegationPermission
+        //WebServicePermission
         
         Permissions permissions = new Permissions();
         
