@@ -34,7 +34,7 @@ public class AppThWorkDirListWrite implements Runnable {
         Boolean needFinishStateDirListWriter = innerRuleForDirListWorkers.getNeedFinishStateDirListWriter();
         FileSystem fsZipIndexStorage = innerRuleForDirListWorkers.getFsZipIndexStorage();
         NcParamFs dataStorage = NcFsIdxStorageInit.initStorageStructure(fsZipIndexStorage);
-        
+        AppObjectsInfo.dumpAllStackToHtml();
     }
     
 }

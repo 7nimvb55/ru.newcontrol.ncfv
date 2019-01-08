@@ -88,7 +88,8 @@ public class AppEtcSecurityHelper {
         
         permissions.add(new FilePermission(userHomePath.toString(), SecurityConstants.PROPERTY_RW_ACTION));
         permissions.add(new FilePermission(userHomePath.toString() + "/-", SecurityConstants.PROPERTY_RW_ACTION));
-        
+        permissions.add(new FilePermission(userHomePath.toString() + "/ncidxfv.zip", SecurityConstants.FILE_DELETE_ACTION));
+        //permissions.add(new FilePermission(userHomePath.toString() + "/zipfstmp*", SecurityConstants.FILE_DELETE_ACTION));
         permissions.add(new ReflectPermission("suppressAccessChecks", "read"));
         
         /*for (String namesKey : System.getProperties().stringPropertyNames()) {
@@ -111,7 +112,12 @@ public class AppEtcSecurityHelper {
         permissions.add(new RuntimePermission("fileSystemProvider", "read"));
         permissions.add(new RuntimePermission("fileSystemProvider", "write"));
         
+        permissions.setReadOnly();
+        
         Policy.setPolicy(new AppEtcSecurityPolicy(permissions));
         System.setSecurityManager(new AppEtcSecurityManager());
+        
+        
+        
     }
 }

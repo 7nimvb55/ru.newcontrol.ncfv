@@ -26,5 +26,6 @@ public class AppLoggerCreationHtmlLog extends Thread{
     @Override
     public void run(){
         AppObjectsInfo.dumpAllStackToHtmlProcess();
+        //AppObjectsInfo.dumpAllStackToHtmlProcessForManyRun();
     }
 }

@@ -180,6 +180,7 @@ public class NcFsIdxStorageInit {
         Map<String, String> zipfsPropeties = new HashMap<>();
         zipfsPropeties.put("create","true");
         zipfsPropeties.put("encoding","UTF-8");
+        
         return zipfsPropeties;
     }
     protected static Map<String, String> getFsPropExist(){

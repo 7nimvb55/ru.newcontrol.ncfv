@@ -49,16 +49,14 @@ public class Ncfv {
     
     public static void main(String[] args) {
         AppEtcSecurityHelper.createNewSecurity();
-        AppObjectsList obectsForApp = new AppObjectsList();
-        //@todo AppThManager, AppObjectsManagerState create one it two or... ?
-        AppThManager loggerByThreadsMain = new AppThManager(obectsForApp);
-        logInitState(loggerByThreadsMain);
-        AppObjectsManagerState withOutLogger = new AppObjectsManagerState(loggerByThreadsMain);
-        withOutLogger.runWorkMakeDirList();
-        loggerByThreadsMain.getListOfObjects().getWorkerList().clear();
-        //runVersionOfAppBeforeThreadsInUse(args);
+        //AppObjectsListLab.runnablesInThreadsTest();
+        runIntoZipByThreads();
     }
-    private static void logInitState(AppThManager outerAppThManager){
+    private static void runIntoZipByThreads(){
+        ThIndexMaker thIndexMaker = new ThIndexMaker();
+        thIndexMaker.start();
+    }
+    protected static void logInitState(AppThManager outerAppThManager){
         AppObjectsList objectsForApp = outerAppThManager.getListOfObjects();
         
         String strForPut = new String("start Application");

@@ -24,8 +24,13 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.locks.ReentrantLock;
 
+
 /**
- *
+ * @todo reRelease of this class for use in more instace of run,
+ * fields of class need release in ThreadLocal variables
+ * integrate for reader job process in class, logics for
+ * do in write and read process need release into classes of write
+ * and read job helpers
  * @author wladimirowichbiaran
  */
 public class AppLoggerBusControls {

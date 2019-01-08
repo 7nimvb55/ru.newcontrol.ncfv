@@ -130,7 +130,7 @@ public class AppThWorkDirListRule {
     
     protected void setDirlistReader(Thread outerDirlistReader){
         //for run threads full dump to html uncomment this or call it
-        AppObjectsInfo.dumpAllStackToHtml();
+        //AppObjectsInfo.dumpAllStackToHtml();
         this.runDirlistReader = outerDirlistReader;
         this.dirlistReaderSetted = Boolean.TRUE;
     }

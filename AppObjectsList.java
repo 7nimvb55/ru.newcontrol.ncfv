@@ -131,7 +131,8 @@ public class AppObjectsList {
         Boolean existThread = Boolean.TRUE;
         try{
             foundedThread = new Thread(this.getLogger());
-
+            //here test for many dump creator
+            //AppObjectsInfo.dumpAllStackToHtml();
             try{
                 foundedThread.join();
             } catch(InterruptedException ex){

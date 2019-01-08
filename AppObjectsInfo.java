@@ -45,13 +45,123 @@ public class AppObjectsInfo {
         AppLoggerCreationHtmlLog t = new AppLoggerCreationHtmlLog( threadGroup, UUID.randomUUID().toString() );
         t.start();
     }
+    /**
+     * For many run need reader code integrated to AppLoggerBusControls class
+     * ru.newcontrol.ncfv.AppFileOperationsSimple.getNewLogHtmlTableFile line 398 generate exception about file exist
+     * need current storage for log use in ThreadLocal variables, while this is field of class curent storage can not 
+     * remove in finally block
+     * 
+     * @todo next realisations need
+     */
+    protected static void dumpAllStackToHtmlProcessForManyRun(){
+        ThreadLocal<AppLoggerBusControls> jobCtrlThLoc = new ThreadLocal<AppLoggerBusControls>();
+        
+        jobCtrlThLoc.set(new AppLoggerBusControls());
+        try{
+            ArrayBlockingQueue<String> systemEnvironmentCommandsOut = AppObjectsInfoHelperClasses.getSystemEnvironmentCommandsOut();
+            jobCtrlThLoc.get().createJobWriteTableFile(systemEnvironmentCommandsOut);
+
+            for( Map.Entry<Thread, StackTraceElement[]> elStTr : Thread.getAllStackTraces().entrySet() ){
+                Class<? extends Thread> aClass = elStTr.getKey().getClass();
+                ArrayBlockingQueue<String> threadNameCommandsOut = AppObjectsInfoHelperClasses.getThreadNameCommandsOut(elStTr.getKey());
+                jobCtrlThLoc.get().createJobWriteTableFile(threadNameCommandsOut);
+
+                for( StackTraceElement elStack : elStTr.getValue() ){
+                    ArrayBlockingQueue<String> stackTraceCommandsOut = AppObjectsInfoHelperClasses.getThreadStackTraceCommandsOut(elStack);
+                    jobCtrlThLoc.get().createJobWriteTableFile(stackTraceCommandsOut);
+                    Class<? extends StackTraceElement> stackClass = elStack.getClass();
+
+                    ArrayBlockingQueue<String> classStackCommandsOut = AppObjectsInfoHelperClasses.getThreadClassCommandsOut(stackClass);
+                    jobCtrlThLoc.get().createJobWriteTableFile(classStackCommandsOut);
+
+                    ArrayBlockingQueue<String> classStackGetDeclaredMethodsCommandsOut = 
+                    AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethodsCommandsOut(stackClass.getClass());
+                    jobCtrlThLoc.get().createJobWriteTableFile(classStackGetDeclaredMethodsCommandsOut);
+
+                    ArrayBlockingQueue<String> classStackGetDeclaredFieldsCommandsOut = 
+                    AppObjectsInfoHelperClasses.getThreadClassGetDeclaredFieldsCommandsOut(stackClass.getClass());
+                    jobCtrlThLoc.get().createJobWriteTableFile(classStackGetDeclaredFieldsCommandsOut);
+
+                    ArrayBlockingQueue<String> classGetDeclaredAnnotationCommandsOut = 
+                    AppObjectsInfoHelperClasses.getThreadClassGetDeclaredAnnotationsCommandsOut(aClass.getClass());
+                    jobCtrlThLoc.get().createJobWriteTableFile(classGetDeclaredAnnotationCommandsOut);
+
+                    ArrayBlockingQueue<String> classGetDeclaredConstructorsCommandsOut = 
+                    AppObjectsInfoHelperClasses.getThreadClassGetDeclaredConstructorsCommandsOut(aClass.getClass());
+                    jobCtrlThLoc.get().createJobWriteTableFile(classGetDeclaredConstructorsCommandsOut);
+
+                }
+
+                //tableCreateJobs(logForHtmlCurrentLogSubDir, threadNameCommandsOut);
+                ArrayBlockingQueue<String> classCommandsOut = AppObjectsInfoHelperClasses.getThreadClassCommandsOut(aClass);
+                jobCtrlThLoc.get().createJobWriteTableFile(classCommandsOut);
+                //tableCreateJobs(logForHtmlCurrentLogSubDir, classCommandsOut);
+                ArrayBlockingQueue<String> classGetDeclaredMethodsCommandsOut = 
+                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredMethodsCommandsOut(aClass);
+                jobCtrlThLoc.get().createJobWriteTableFile(classGetDeclaredMethodsCommandsOut);
+                //tableCreateJobs(logForHtmlCurrentLogSubDir, classGetDeclaredMethodsCommandsOut);
+                ArrayBlockingQueue<String> classGetDeclaredFieldsCommandsOut = 
+                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredFieldsCommandsOut(aClass);
+                jobCtrlThLoc.get().createJobWriteTableFile(classGetDeclaredFieldsCommandsOut);
+                //tableCreateJobs(logForHtmlCurrentLogSubDir, classGetDeclaredFieldsCommandsOut);
+
+                ArrayBlockingQueue<String> classGetDeclaredAnnotationCommandsOut = 
+                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredAnnotationsCommandsOut(aClass);
+                jobCtrlThLoc.get().createJobWriteTableFile(classGetDeclaredAnnotationCommandsOut);
+
+                ArrayBlockingQueue<String> classGetDeclaredConstructorsCommandsOut = 
+                AppObjectsInfoHelperClasses.getThreadClassGetDeclaredConstructorsCommandsOut(aClass);
+                jobCtrlThLoc.get().createJobWriteTableFile(classGetDeclaredConstructorsCommandsOut);
+            }
+
+            ArrayBlockingQueue<String> linesForSaveJsMenu = AppObjectsInfoHelperHtml.getLinesForSaveJsMenu();
+            Path jsFile = jobCtrlThLoc.get().getJsFile();
+            jobCtrlThLoc.get().createJobWriteAnyFile(jsFile, linesForSaveJsMenu);
+            ArrayBlockingQueue<String> linesForSaveCss = AppObjectsInfoHelperHtml.getLinesForSaveCss();
+            Path cssFile = jobCtrlThLoc.get().getCssFile();
+            jobCtrlThLoc.get().createJobWriteAnyFile(cssFile, linesForSaveCss);
+
+            AppLoggerController notFinishedWriterJob = jobCtrlThLoc.get().getNotFinishedWriterJob();
+            do{
+                String outForJobsReaderParam = 
+                        "notFinishedWriterJob.getIdJob().toString() "
+                        + notFinishedWriterJob.getIdJob().toString()
+                        + " notFinishedWriterJob.isReaderJob() "
+                        + notFinishedWriterJob.isReaderJob()
+                        + " notFinishedWriterJob.currentWriterJob().getThreadName() "
+                        + notFinishedWriterJob.currentWriterJob().getThreadName()
+                        + " notFinishedWriterJob.currentWriterJob().getThreadGroupName() "
+                        + notFinishedWriterJob.currentWriterJob().getThreadGroupName()
+                        + " notFinishedWriterJob.currentWriterJob().getID().toString() "
+                        + notFinishedWriterJob.currentWriterJob().getID().toString()
+                        + " notFinishedWriterJob.currentWriterJob().getPartLinesForWrite().size() "        
+                        + notFinishedWriterJob.currentWriterJob().getPartLinesForWrite().size()
+                        + " notFinishedWriterJob.currentWriterJob().isToHTMLJobDone() "
+                        + notFinishedWriterJob.currentWriterJob().isToHTMLJobDone()
+                        + " notFinishedWriterJob.currentWriterJob().isBlankObject() "
+                        + notFinishedWriterJob.currentWriterJob().isBlankObject()
+                ;
+                NcAppHelper.outToConsoleIfDevAndParamTrue(outForJobsReaderParam, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_HTML_JOB_READER_VIEW_THREADS_PARAM);
+                runWriterJob(jobCtrlThLoc.get());
+                notFinishedWriterJob = jobCtrlThLoc.get().getNotFinishedWriterJob();
+            }while( !notFinishedWriterJob.notExistJob() );
+
+            Path indexFile = jobCtrlThLoc.get().getIndexFile();
+            summaryReportJobs(jobCtrlThLoc.get().getCurrentLogSubDir(), jsFile.getFileName(), cssFile.getFileName(), indexFile);
+        } finally {
+            //jobCtrlThLoc.get().getHtmlLogStorage().remove();
+            jobCtrlThLoc.remove();
+        }
+    }
     
     /**
      * @todo from innercounter create class name structure for rows by types of functions
      */
     
     protected static void dumpAllStackToHtmlProcess(){
+        
         AppLoggerBusControls jobControl = new AppLoggerBusControls();
+        
         
         ArrayBlockingQueue<String> systemEnvironmentCommandsOut = AppObjectsInfoHelperClasses.getSystemEnvironmentCommandsOut();
         jobControl.createJobWriteTableFile(systemEnvironmentCommandsOut);
