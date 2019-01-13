@@ -34,23 +34,34 @@ public class AppThWorkDirListTake implements Runnable {
     @Override
     public void run() {
         Boolean needFinishStateDirlistTacker = innerRuleForDirListWorkers.getNeedFinishStateDirlistTacker();
-        
-        ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> pipeReaderToTacker = this.innerRuleForDirListWorkers.getWorkDirListState().getPipeReaderToTacker();
-        if( pipeReaderToTacker != null){
+        this.innerRuleForDirListWorkers.startDirListPacker();
+        System.out.println("Tacker run");
+        do{
+            System.out.println("Tacker wait for reader finished");
+            //@todo all code to class
             do{
-                ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> poll = pipeReaderToTacker.poll();
-                if( poll != null ){
-                    System.out.println(poll.toString() + " size " + poll.size());
+                try{
+                    Thread.currentThread().sleep(5);
+                } catch(InterruptedException ex){
+                    System.out.println("Tacker sleep InterruptedException" + ex.getMessage());
                 }
-            } while( !pipeReaderToTacker.isEmpty() );
-            
-            this.innerRuleForDirListWorkers.startDirListPacker();
-        } else {
-            String strNullPipe = "pipeReaderToTacker is null";
-            NcAppHelper.outToConsoleIfDevAndParamTrue(strNullPipe, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_TACKER_RUN);
-        }
-        
-        
+            }while( !this.innerRuleForDirListWorkers.isDirListReaderLogicRunned() );
+            ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> pipeReaderToTacker = this.innerRuleForDirListWorkers.getWorkDirListState().getPipeReaderToTacker();
+            System.out.println(pipeReaderToTacker.toString() + " size " + pipeReaderToTacker.size());
+            if( pipeReaderToTacker != null){
+                do{
+                    ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> poll = pipeReaderToTacker.poll();
+                    if( poll != null ){
+                        System.out.println(poll.toString() + " size " + poll.size());
+                    }
+                } while( !pipeReaderToTacker.isEmpty() );
+
+                
+            } else {
+                String strNullPipe = "pipeReaderToTacker is null";
+                NcAppHelper.outToConsoleIfDevAndParamTrue(strNullPipe, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_TACKER_RUN);
+            }
+        }while( !this.innerRuleForDirListWorkers.isDirListReaderLogicFinished() );
     }
     
 }

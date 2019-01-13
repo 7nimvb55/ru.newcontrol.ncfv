@@ -83,10 +83,10 @@ public class AppEtcSecurityHelper {
         
         permissions.add(new FilePermission(appPath.toString(), SecurityConstants.PROPERTY_RW_ACTION));
         permissions.add(new FilePermission(appPath.toString() + "/-", SecurityConstants.PROPERTY_RW_ACTION));
-        permissions.add(new FilePermission("/", SecurityConstants.FILE_READ_ACTION));
-        permissions.add(new FilePermission("/", SecurityConstants.FILE_READLINK_ACTION));
-        permissions.add(new FilePermission("/", SecurityConstants.FILE_WRITE_ACTION));
-        permissions.add(new FilePermission("/", SecurityConstants.FILE_EXECUTE_ACTION));
+        permissions.add(new FilePermission("/-", SecurityConstants.FILE_READ_ACTION));
+        permissions.add(new FilePermission("/-", SecurityConstants.FILE_READLINK_ACTION));
+        permissions.add(new FilePermission("/-", SecurityConstants.FILE_WRITE_ACTION));
+        permissions.add(new FilePermission("/-", SecurityConstants.FILE_EXECUTE_ACTION));
         Path userHomePath = AppFileOperationsSimple.getUserHomeRWEDCheckedPath();
         
         permissions.add(new FilePermission(userHomePath.toString(), SecurityConstants.PROPERTY_RW_ACTION));

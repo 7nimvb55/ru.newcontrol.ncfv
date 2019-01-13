@@ -129,6 +129,12 @@ public class ThLogicDirListWalker {
         }
     }
     protected void doReadFsToPipe(){
+        do{
+            this.objectDirListRule.get().setDirListReaderLogicRunned();
+        }while( !this.objectDirListRule.get().isDirListReaderLogicRunned() );
+        NcAppHelper.outToConsoleIfDevAndParamTrue(this.objectDirListRule.get().getNameDirlistReader() 
+                + ".setDirListReaderLogicRunned", 
+                AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WALKER_DO_READ_FS_TO_PIPE_SET_STARTED);
         try {
             Files.walkFileTree(this.currentPathForMakeIndex.get(), this.fileVisitor.get());
         } catch (IOException ex) {
@@ -159,12 +165,11 @@ public class ThLogicDirListWalker {
                 ex
             );
         }
-        String strToCon = " currentDir " + this.currentPathForMakeIndex.get().toString()
-                + " pipeObject "
-                + this.fileVisitor.get().getBuffDirList().toString() 
-                + " size in " 
-                + this.fileVisitor.get().getBuffDirList().size();
-        NcAppHelper.outToConsoleIfDevAndParamTrue(strToCon, 
-                AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WALKER_DO_READ_FS_TO_PIPE);
+        do{
+            this.objectDirListRule.get().setDirListReaderLogicFinished();
+        }while( !this.objectDirListRule.get().isDirListReaderLogicRunned() );
+        NcAppHelper.outToConsoleIfDevAndParamTrue(this.objectDirListRule.get().getNameDirlistReader() 
+                + ".setDirListReaderLogicFinished", 
+                AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WALKER_DO_READ_FS_TO_PIPE_SET_STARTED);
     }
 }

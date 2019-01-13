@@ -86,6 +86,8 @@ public class ThFsFileVisitor implements FileVisitor {
         
         this.sleepTimeDownScanSpeed = 100L;
         
+        System.out.println("----   visitor create");
+        
     }
     protected ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> getBuffDirList(){
         return buffDirList;
@@ -238,6 +240,7 @@ public class ThFsFileVisitor implements FileVisitor {
         toPipe.put(UUID.randomUUID(), attrEntity);
         
         this.indexOfProcessIteration++;
+        System.out.println("num " + this.indexOfProcessIteration);
         
         /*
          * @todo get queue max length for compare with queue.size()      
@@ -304,7 +307,7 @@ public class ThFsFileVisitor implements FileVisitor {
     @Override
     public FileVisitResult preVisitDirectory(Object dir, BasicFileAttributes attrs) throws IOException {
         //needSleep(this.sleepInPreVisitDir.get());
-        
+        System.out.println("----   visitor preVisitDirectory");
         BasicFileAttributes rAttr = Files.readAttributes((Path) dir, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
         long localCount = this.countPreVisitDir;
         localCount++;
@@ -315,6 +318,7 @@ public class ThFsFileVisitor implements FileVisitor {
     @Override
     public FileVisitResult visitFile(Object file, BasicFileAttributes attrs) throws IOException {
         //needSleep(this.sleepInVisitFile.get());
+        System.out.println("----   visitor visitFile");
         BasicFileAttributes rAttr = Files.readAttributes((Path) file, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
         makeListAttrForStorage(file, rAttr);
         long localCount = this.countVisitFile;
@@ -326,6 +330,7 @@ public class ThFsFileVisitor implements FileVisitor {
     @Override
     public FileVisitResult visitFileFailed(Object file, IOException exc) throws IOException {
         //needSleep(this.sleepInVisitFileFailed.get());
+        System.out.println("----   visitor visitFileFailed");
         long localCount = this.countVisitFileFailed;
         localCount++;
         this.countVisitFileFailed = localCount;
@@ -334,6 +339,7 @@ public class ThFsFileVisitor implements FileVisitor {
 
     @Override
     public FileVisitResult postVisitDirectory(Object dir, IOException exc) throws IOException {
+        System.out.println("----   visitor postVisitDirectory");
         //needSleep(this.sleepInPostVisitDir.get());
         BasicFileAttributes rAttr = Files.readAttributes((Path) dir, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
         makeListAttrForStorage(dir, rAttr);

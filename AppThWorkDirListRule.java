@@ -52,6 +52,16 @@ public class AppThWorkDirListRule {
     private Boolean dirListPackerSetted;
     private Boolean dirListWriterSetted;
     
+    private Boolean dirlistReaderLogicRunned;
+    private Boolean dirlistTackerLogicRunned;
+    private Boolean dirListPackerLogicRunned;
+    private Boolean dirListWriterLogicRunned;
+    
+    private Boolean dirlistReaderLogicFinished;
+    private Boolean dirlistTackerLogicFinished;
+    private Boolean dirListPackerLogicFinished;
+    private Boolean dirListWriterLogicFinished;
+    
     private Thread runDirlistReader;
     private Thread runDirlistTacker;
     private Thread runDirListPacker;
@@ -66,6 +76,17 @@ public class AppThWorkDirListRule {
         this.dirlistTackerSetted = Boolean.FALSE;
         this.dirListPackerSetted = Boolean.FALSE;
         this.dirListWriterSetted = Boolean.FALSE;
+        
+        this.dirlistReaderLogicRunned = Boolean.FALSE;
+        this.dirlistTackerLogicRunned = Boolean.FALSE;
+        this.dirListPackerLogicRunned = Boolean.FALSE;
+        this.dirListWriterLogicRunned = Boolean.FALSE;
+        
+        this.dirlistReaderLogicFinished = Boolean.FALSE;
+        this.dirlistTackerLogicFinished = Boolean.FALSE;
+        this.dirListPackerLogicFinished = Boolean.FALSE;
+        this.dirListWriterLogicFinished = Boolean.FALSE;
+        
         this.nameIndexStorage = "IndexStorage";
         this.nameDirlistReader = "DirlistReader";
         this.nameDirlistTacker = "DirlistTacker";
@@ -99,6 +120,83 @@ public class AppThWorkDirListRule {
     protected Boolean isDirListWriterSetted(){
         return this.dirListWriterSetted;
     }
+    
+    protected Boolean isDirListReaderLogicRunned(){
+        if( this.dirlistReaderLogicRunned ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    protected Boolean isDirListTackerLogicRunned(){
+        if( this.dirlistTackerLogicRunned ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    protected Boolean isDirListPackerLogicRunned(){
+        if( this.dirListPackerLogicRunned ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    protected Boolean isDirListWriterLogicRunned(){
+        if( this.dirListWriterLogicRunned ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    
+    protected Boolean isDirListReaderLogicFinished(){
+        if( this.dirlistReaderLogicFinished ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    protected Boolean isDirListTackerLogicFinished(){
+        if( this.dirlistTackerLogicFinished ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    protected Boolean isDirListPackerLogicFinished(){
+        if( this.dirListPackerLogicFinished ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    protected Boolean isDirListWriterLogicFinished(){
+        if( this.dirListWriterLogicFinished ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    
+    protected void setDirListReaderLogicRunned(){
+        this.dirlistReaderLogicRunned = Boolean.TRUE;
+    }
+    protected void setDirListTackerLogicRunned(){
+        this.dirlistTackerLogicRunned = Boolean.TRUE;
+    }
+    protected void setDirListPackerLogicRunned(){
+        this.dirListPackerLogicRunned = Boolean.TRUE;
+    }
+    protected void setDirListWriterLogicRunned(){
+        this.dirListWriterLogicRunned = Boolean.TRUE;
+    }
+    
+    protected void setDirListReaderLogicFinished(){
+        this.dirlistReaderLogicFinished = Boolean.TRUE;
+    }
+    protected void setDirListTackerLogicFinished(){
+        this.dirlistTackerLogicFinished = Boolean.TRUE;
+    }
+    protected void setDirListPackerLogicFinished(){
+        this.dirListPackerLogicFinished = Boolean.TRUE;
+    }
+    protected void setDirListWriterLogicFinished(){
+        this.dirListWriterLogicFinished = Boolean.TRUE;
+    }
+    
     protected AppThWorkDirListState getWorkDirListState(){
         return this.workDirListState;
     }
