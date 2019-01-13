@@ -35,37 +35,12 @@ public class AppThWorkDirListTake implements Runnable {
     public void run() {
         Boolean needFinishStateDirlistTacker = innerRuleForDirListWorkers.getNeedFinishStateDirlistTacker();
         this.innerRuleForDirListWorkers.startDirListPacker();
-        outStatesOfWorkLogic(" Tacker start run part");
         
-        do{
-            outStatesOfWorkLogic(" Tacker start part wait for reader finished");
-            //@todo all code to class
-            do{
-                try{
-                    Thread.currentThread().sleep(5);
-                } catch(InterruptedException ex){
-                    outStatesOfWorkLogic(" sleep is interrupted with message" + ex.getMessage());
-                }
-            }while( !this.innerRuleForDirListWorkers.isDirListReaderLogicRunned() );
-            ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> pipeReaderToTacker = this.innerRuleForDirListWorkers.getWorkDirListState().getPipeReaderToTacker();
-            outStatesOfWorkLogic(pipeReaderToTacker.toString() + " size " + pipeReaderToTacker.size());
-            if( pipeReaderToTacker != null){
-                do{
-                    ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> poll = pipeReaderToTacker.poll();
-                    if( poll != null ){
-                        outStatesOfWorkLogic(" polled from pipeReaderToTacker size is " + poll.size());
-                    }
-                } while( !pipeReaderToTacker.isEmpty() );
-            } else {
-                outStatesOfWorkLogic(" pipeReaderToTacker is null");
-            }
-        }while( !this.innerRuleForDirListWorkers.isDirListReaderLogicFinished() );
+        ThreadLocal<ThLogicDirListTacker> logicTacker = new ThreadLocal<ThLogicDirListTacker>();
+        logicTacker.set(new ThLogicDirListTacker(this.innerRuleForDirListWorkers));
+        logicTacker.get().doTacker();
+        
     }
-    private void outStatesOfWorkLogic(String strForOutPut){
-        String strRunLogicLabel = AppThWorkDirListTake.class.getCanonicalName() 
-                            + "[THREADNAME]" + Thread.currentThread().getName()
-                            + strForOutPut;
-        NcAppHelper.outToConsoleIfDevAndParamTrue(strRunLogicLabel, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_TACKER_RUN);
-    }
+
     
 }

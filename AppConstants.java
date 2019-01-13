@@ -62,10 +62,10 @@ public class AppConstants {
     protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_BUS_HELPER_VIEW_SIZE_DATA_FOR_CLEAN_OUT = Boolean.FALSE;
     protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_BUS_HELPER_VIEW_SIZE_DATA_FOR_CLEAN_OUTPUT = Boolean.FALSE;
     
-    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WALKER_DO_READ_FS_FILE_VISITOR = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WALKER_DO_READ_FS_FILE_VISITOR = Boolean.TRUE;
     protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WALKER_DO_READ_FS_TO_PIPE_SET_STARTED = Boolean.TRUE;
     protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WALKER_DO_READ_FS_TO_PIPE = Boolean.TRUE;
-    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_TACKER_RUN = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_TACKER_RUN = Boolean.TRUE;
     
     
     protected static final Integer PIPE_READ_FS_TO_TACKER_WORKER_QUEUE_SIZE = 100000;
