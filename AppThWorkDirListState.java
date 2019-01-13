@@ -18,6 +18,9 @@ package ru.newcontrol.ncfv;
 import java.lang.Thread.State;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
+import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  *
@@ -26,6 +29,8 @@ import java.nio.file.Path;
 public class AppThWorkDirListState {
     private AppObjectsList currentListOfObject;
     private AppThWorkDirListRule ruleForDirListWorkers;
+    
+    private final ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> pipeFromRunnerToTacker;
     
     private Thread indexStorageManager;
     
@@ -40,7 +45,8 @@ public class AppThWorkDirListState {
         this.currentListOfObject = outerListOfObject;
         this.ruleForDirListWorkers = new AppThWorkDirListRule(makeIndex);
         
-        
+        this.pipeFromRunnerToTacker = 
+                new ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>>(AppConstants.PIPE_READ_FS_TO_TACKER_WORKER_QUEUE_SIZE);
         
         //threads init
         
@@ -181,4 +187,7 @@ public class AppThWorkDirListState {
         return this.currentListOfObject;
     }
     
+    protected ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> getPipeReaderToTacker(){
+        return this.pipeFromRunnerToTacker;
+    }
 }

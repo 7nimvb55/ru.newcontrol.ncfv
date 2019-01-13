@@ -48,7 +48,7 @@ public class ThFsFileVisitor implements FileVisitor {
     private Long sleepInPreVisitDir;
     private Long sleepInPostVisitDir;
     private Long sleepTimeDownScanSpeed;
-    private ThreadLocal<AppObjectsList> objectListAndLogger;
+    private AppObjectsList objectListAndLogger;
     private Boolean isNotHaveLoggerThread;
     
     private ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> buffDirList;
@@ -60,8 +60,7 @@ public class ThFsFileVisitor implements FileVisitor {
         
         if( objectListAndLogger != null ){
             isNotHaveLoggerThread = Boolean.FALSE;
-            this.objectListAndLogger = new ThreadLocal<AppObjectsList>();
-            this.objectListAndLogger.set(objectListAndLogger);
+            this.objectListAndLogger = objectListAndLogger;
         } else {
             isNotHaveLoggerThread = Boolean.TRUE;
         }
@@ -368,7 +367,7 @@ public class ThFsFileVisitor implements FileVisitor {
                     + AppMsgEnFiledForLog.F_EX_MSG
                     + exOuter.getMessage();
             String toLoggerMsg = NcAppHelper.exceptionToString(exClass, ThFsFileVisitor.class, strErrorInApp);
-            this.objectListAndLogger.get().putLogMessageError(toLoggerMsg);
+            this.objectListAndLogger.putLogMessageError(toLoggerMsg);
         }
     }
     

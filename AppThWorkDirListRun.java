@@ -25,7 +25,7 @@ import java.nio.file.Path;
 public class AppThWorkDirListRun implements Runnable {
     private AppThWorkDirListRule innerRuleForDirListWorkers;
 
-    public AppThWorkDirListRun(AppThWorkDirListRule ruleForDirListWorkers) {
+    public AppThWorkDirListRun(final AppThWorkDirListRule ruleForDirListWorkers) {
         super();
         this.innerRuleForDirListWorkers = ruleForDirListWorkers;
     }

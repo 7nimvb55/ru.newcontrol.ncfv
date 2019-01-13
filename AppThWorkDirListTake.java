@@ -15,6 +15,10 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentSkipListMap;
+
 /**
  *
  * @author wladimirowichbiaran
@@ -30,7 +34,23 @@ public class AppThWorkDirListTake implements Runnable {
     @Override
     public void run() {
         Boolean needFinishStateDirlistTacker = innerRuleForDirListWorkers.getNeedFinishStateDirlistTacker();
-        this.innerRuleForDirListWorkers.startDirListPacker();
+        
+        ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> pipeReaderToTacker = this.innerRuleForDirListWorkers.getWorkDirListState().getPipeReaderToTacker();
+        if( pipeReaderToTacker != null){
+            do{
+                ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> poll = pipeReaderToTacker.poll();
+                if( poll != null ){
+                    System.out.println(poll.toString() + " size " + poll.size());
+                }
+            } while( !pipeReaderToTacker.isEmpty() );
+            
+            this.innerRuleForDirListWorkers.startDirListPacker();
+        } else {
+            String strNullPipe = "pipeReaderToTacker is null";
+            NcAppHelper.outToConsoleIfDevAndParamTrue(strNullPipe, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_TACKER_RUN);
+        }
+        
+        
     }
     
 }

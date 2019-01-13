@@ -47,7 +47,7 @@ public class ThLogicDirListWalker {
     private final ThreadLocal<ThFsFileVisitor> fileVisitor;
     private final ThreadLocal<ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>>> pipeVisitorToTacker;
     
-    public ThLogicDirListWalker(final AppThWorkDirListRule objectDirListRule) throws IOException {
+    public ThLogicDirListWalker( final AppThWorkDirListRule objectDirListRule ) throws IOException {
         this.isNotHaveLoggerThread = new ThreadLocal<Boolean>();
         
         if( objectDirListRule == null ){
@@ -75,9 +75,8 @@ public class ThLogicDirListWalker {
         
         
         this.pipeVisitorToTacker = new ThreadLocal<ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>>>();
-        ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> pTT = 
-                new ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>>(100000);
-        this.pipeVisitorToTacker.set(pTT);
+        
+        this.pipeVisitorToTacker.set(this.objectDirListRule.get().getWorkDirListState().getPipeReaderToTacker());
         this.fileVisitor = new ThreadLocal<ThFsFileVisitor>();
         ThFsFileVisitor fv = null;
         try{
