@@ -15,6 +15,7 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 /**
@@ -33,7 +34,11 @@ public class AppThWorkDirListRun implements Runnable {
     public void run() {
         Boolean needFinishStateDirlistReader = innerRuleForDirListWorkers.getNeedFinishStateDirlistReader();
         Path currentPathForMakeIndex = this.innerRuleForDirListWorkers.getCurrentPathForMakeIndex();
-        ThLogicDirListWalker logicWalker = new ThLogicDirListWalker(this.innerRuleForDirListWorkers.getWorkDirListState().getListOfObjectAndLogger());
+        try{
+            ThLogicDirListWalker logicWalker = new ThLogicDirListWalker(this.innerRuleForDirListWorkers.getWorkDirListState().getListOfObjectAndLogger());
+        } catch(IOException ex){
+            ex.printStackTrace();
+        }
         
         this.innerRuleForDirListWorkers.startDirlistTacker();
         
