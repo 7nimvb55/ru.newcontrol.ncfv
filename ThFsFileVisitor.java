@@ -86,7 +86,7 @@ public class ThFsFileVisitor implements FileVisitor {
         
         this.sleepTimeDownScanSpeed = 100L;
         
-        System.out.println("----   visitor create");
+        outStatesOfWorkLogic("----   visitor create");
         
     }
     protected ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> getBuffDirList(){
@@ -240,7 +240,7 @@ public class ThFsFileVisitor implements FileVisitor {
         toPipe.put(UUID.randomUUID(), attrEntity);
         
         this.indexOfProcessIteration++;
-        System.out.println("num " + this.indexOfProcessIteration);
+        outStatesOfWorkLogic("indexOfProcessIteration " + this.indexOfProcessIteration);
         
         /*
          * @todo get queue max length for compare with queue.size()      
@@ -307,7 +307,7 @@ public class ThFsFileVisitor implements FileVisitor {
     @Override
     public FileVisitResult preVisitDirectory(Object dir, BasicFileAttributes attrs) throws IOException {
         //needSleep(this.sleepInPreVisitDir.get());
-        System.out.println("----   visitor preVisitDirectory");
+        outStatesOfWorkLogic("----   visitor preVisitDirectory");
         BasicFileAttributes rAttr = Files.readAttributes((Path) dir, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
         long localCount = this.countPreVisitDir;
         localCount++;
@@ -318,7 +318,7 @@ public class ThFsFileVisitor implements FileVisitor {
     @Override
     public FileVisitResult visitFile(Object file, BasicFileAttributes attrs) throws IOException {
         //needSleep(this.sleepInVisitFile.get());
-        System.out.println("----   visitor visitFile");
+        outStatesOfWorkLogic("----   visitor visitFile");
         BasicFileAttributes rAttr = Files.readAttributes((Path) file, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
         makeListAttrForStorage(file, rAttr);
         long localCount = this.countVisitFile;
@@ -330,7 +330,7 @@ public class ThFsFileVisitor implements FileVisitor {
     @Override
     public FileVisitResult visitFileFailed(Object file, IOException exc) throws IOException {
         //needSleep(this.sleepInVisitFileFailed.get());
-        System.out.println("----   visitor visitFileFailed");
+        outStatesOfWorkLogic("----   visitor visitFileFailed");
         long localCount = this.countVisitFileFailed;
         localCount++;
         this.countVisitFileFailed = localCount;
@@ -339,7 +339,7 @@ public class ThFsFileVisitor implements FileVisitor {
 
     @Override
     public FileVisitResult postVisitDirectory(Object dir, IOException exc) throws IOException {
-        System.out.println("----   visitor postVisitDirectory");
+        outStatesOfWorkLogic("----   visitor postVisitDirectory");
         //needSleep(this.sleepInPostVisitDir.get());
         BasicFileAttributes rAttr = Files.readAttributes((Path) dir, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
         makeListAttrForStorage(dir, rAttr);
@@ -375,6 +375,13 @@ public class ThFsFileVisitor implements FileVisitor {
             String toLoggerMsg = NcAppHelper.exceptionToString(exClass, ThFsFileVisitor.class, strErrorInApp);
             this.objectListAndLogger.putLogMessageError(toLoggerMsg);
         }
+    }
+    private void outStatesOfWorkLogic(String strForOutPut){
+        String strRunLogicLabel = AppThWorkDirListTake.class.getCanonicalName() 
+                            + "[THREADNAME]" + Thread.currentThread().getName()
+                            + strForOutPut;
+        NcAppHelper.outToConsoleIfDevAndParamTrue(strRunLogicLabel, 
+                AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WALKER_DO_READ_FS_FILE_VISITOR);
     }
     
 }

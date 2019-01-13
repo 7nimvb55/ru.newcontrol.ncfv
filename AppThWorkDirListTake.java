@@ -35,33 +35,37 @@ public class AppThWorkDirListTake implements Runnable {
     public void run() {
         Boolean needFinishStateDirlistTacker = innerRuleForDirListWorkers.getNeedFinishStateDirlistTacker();
         this.innerRuleForDirListWorkers.startDirListPacker();
-        System.out.println("Tacker run");
+        outStatesOfWorkLogic(" Tacker start run part");
+        
         do{
-            System.out.println("Tacker wait for reader finished");
+            outStatesOfWorkLogic(" Tacker start part wait for reader finished");
             //@todo all code to class
             do{
                 try{
                     Thread.currentThread().sleep(5);
                 } catch(InterruptedException ex){
-                    System.out.println("Tacker sleep InterruptedException" + ex.getMessage());
+                    outStatesOfWorkLogic(" sleep is interrupted with message" + ex.getMessage());
                 }
             }while( !this.innerRuleForDirListWorkers.isDirListReaderLogicRunned() );
             ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> pipeReaderToTacker = this.innerRuleForDirListWorkers.getWorkDirListState().getPipeReaderToTacker();
-            System.out.println(pipeReaderToTacker.toString() + " size " + pipeReaderToTacker.size());
+            outStatesOfWorkLogic(pipeReaderToTacker.toString() + " size " + pipeReaderToTacker.size());
             if( pipeReaderToTacker != null){
                 do{
                     ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> poll = pipeReaderToTacker.poll();
                     if( poll != null ){
-                        System.out.println(poll.toString() + " size " + poll.size());
+                        outStatesOfWorkLogic(" polled from pipeReaderToTacker size is " + poll.size());
                     }
                 } while( !pipeReaderToTacker.isEmpty() );
-
-                
             } else {
-                String strNullPipe = "pipeReaderToTacker is null";
-                NcAppHelper.outToConsoleIfDevAndParamTrue(strNullPipe, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_TACKER_RUN);
+                outStatesOfWorkLogic(" pipeReaderToTacker is null");
             }
         }while( !this.innerRuleForDirListWorkers.isDirListReaderLogicFinished() );
+    }
+    private void outStatesOfWorkLogic(String strForOutPut){
+        String strRunLogicLabel = AppThWorkDirListTake.class.getCanonicalName() 
+                            + "[THREADNAME]" + Thread.currentThread().getName()
+                            + strForOutPut;
+        NcAppHelper.outToConsoleIfDevAndParamTrue(strRunLogicLabel, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_TACKER_RUN);
     }
     
 }
