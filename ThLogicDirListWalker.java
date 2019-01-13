@@ -16,6 +16,11 @@
 package ru.newcontrol.ncfv;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.spi.FileSystemProvider;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -34,14 +39,18 @@ public class ThLogicDirListWalker {
     
     private final ThreadLocal<Boolean> isNotHaveLoggerThread;
     
-    private final ThreadLocal<AppObjectsList> objectListAndLogger;
+    private final ThreadLocal<AppThWorkDirListRule> objectDirListRule;
+    private final ThreadLocal<AppThWorkDirListState> objectListAndLogger;
+    
+    private final ThreadLocal<Path> currentPathForMakeIndex;
+    
     private final ThreadLocal<ThFsFileVisitor> fileVisitor;
     private final ThreadLocal<ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>>> pipeVisitorToTacker;
     
-    public ThLogicDirListWalker(final AppObjectsList objectListAndLogger) throws IOException {
+    public ThLogicDirListWalker(final AppThWorkDirListRule objectDirListRule) throws IOException {
         this.isNotHaveLoggerThread = new ThreadLocal<Boolean>();
         
-        if( objectListAndLogger == null ){
+        if( objectDirListRule == null ){
             this.isNotHaveLoggerThread.set(Boolean.TRUE);
             throw new NullPointerException(AppMsgEnFiledForLog.CREATE
                     + "Logic in DirListWalker work not init "
@@ -54,21 +63,28 @@ public class ThLogicDirListWalker {
                     + AppMsgEnFiledForLog.F_VALUE
                     + "null ");
         }
+        this.objectDirListRule = new ThreadLocal<AppThWorkDirListRule>();
+        this.objectDirListRule.set(objectDirListRule);
+        
+        this.currentPathForMakeIndex = new ThreadLocal<Path>();
+        this.currentPathForMakeIndex.set(this.objectDirListRule.get().getCurrentPathForMakeIndex());
+        
         this.isNotHaveLoggerThread.set(Boolean.FALSE);
-            this.objectListAndLogger = new ThreadLocal<AppObjectsList>();
-            this.objectListAndLogger.set(objectListAndLogger);
+        this.objectListAndLogger = new ThreadLocal<AppThWorkDirListState>();
+        this.objectListAndLogger.set(this.objectDirListRule.get().getWorkDirListState());
         
         
         this.pipeVisitorToTacker = new ThreadLocal<ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>>>();
-        ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> pTT = new ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>>(1000);
+        ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> pTT = 
+                new ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>>(100000);
         this.pipeVisitorToTacker.set(pTT);
         this.fileVisitor = new ThreadLocal<ThFsFileVisitor>();
         ThFsFileVisitor fv = null;
         try{
             fv = new ThFsFileVisitor(this.pipeVisitorToTacker.get(),
-                this.objectListAndLogger.get());
+                this.objectListAndLogger.get().getListOfObjectAndLogger());
         } catch (IOException ex){
-            objectListAndLogger.putLogMessageState(
+            this.objectListAndLogger.get().getListOfObjectAndLogger().putLogMessageState(
                     AppMsgEnFiledForLog.CREATE
                     + "Pipe in DirListWalker work not init "
                     + AppMsgEnFiledForLog.CONSTRUCTOR 
@@ -76,7 +92,7 @@ public class ThLogicDirListWalker {
                     + AppMsgEnFiledForLog.EX_DESCR
                     + ex.getMessage()
             );
-            objectListAndLogger.doLogger();
+            this.objectListAndLogger.get().getListOfObjectAndLogger().doLogger();
         }
         if( fv != null){
             this.fileVisitor.set(fv);
@@ -94,8 +110,9 @@ public class ThLogicDirListWalker {
                     
             );
         }
-        objectListAndLogger.putLogMessageState(AppMsgEnFiledForLog.CREATE + ThLogicDirListWalker.class.getCanonicalName());
-        objectListAndLogger.doLogger();
+        objectListAndLogger.get().getListOfObjectAndLogger().putLogMessageState(AppMsgEnFiledForLog.CREATE 
+                + ThLogicDirListWalker.class.getCanonicalName());
+        objectListAndLogger.get().getListOfObjectAndLogger().doLogger();
     }
     private void errorInFunctionsProcess(Class<?> exClass, String functionText, 
             String valueFile, 
@@ -109,8 +126,46 @@ public class ThLogicDirListWalker {
                     + AppMsgEnFiledForLog.F_EX_MSG
                     + exOuter.getMessage();
             String toLoggerMsg = NcAppHelper.exceptionToString(exClass, ThFsFileVisitor.class, strErrorInApp);
-            this.objectListAndLogger.get().putLogMessageError(toLoggerMsg);
+            this.objectListAndLogger.get().getListOfObjectAndLogger().putLogMessageError(toLoggerMsg);
         }
     }
-    
+    protected void doReadFsToPipe(){
+        try {
+            Files.walkFileTree(this.currentPathForMakeIndex.get(), this.fileVisitor.get());
+        } catch (IOException ex) {
+            this.errorInFunctionsProcess(
+                IOException.class,
+                "Files.walkFileTree",
+                this.currentPathForMakeIndex.get().toString()
+                + ", "
+                + this.fileVisitor.get().toString(),
+                ex
+            );
+        } catch (IllegalStateException ex) {
+            this.errorInFunctionsProcess(
+                IllegalStateException.class,
+                "Files.walkFileTree",
+                this.currentPathForMakeIndex.get().toString()
+                + ", "
+                + this.fileVisitor.get().toString(),
+                ex
+            );
+        } catch (SecurityException ex) {
+            this.errorInFunctionsProcess(
+                SecurityException.class,
+                "Files.walkFileTree",
+                this.currentPathForMakeIndex.get().toString()
+                + ", "
+                + this.fileVisitor.get().toString(),
+                ex
+            );
+        }
+        String strToCon = " currentDir " + this.currentPathForMakeIndex.get().toString()
+                + " pipeObject "
+                + this.fileVisitor.get().getBuffDirList().toString() 
+                + " size in " 
+                + this.fileVisitor.get().getBuffDirList().size();
+        NcAppHelper.outToConsoleIfDevAndParamTrue(strToCon, 
+                AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WALKER_DO_READ_FS_TO_PIPE);
+    }
 }

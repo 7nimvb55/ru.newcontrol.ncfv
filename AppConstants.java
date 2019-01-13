@@ -23,8 +23,8 @@ public class AppConstants {
     protected static final Integer LOG_HTML_CLEAN_FROM_BUS_ABOVE_QUEUE_SIZE = 1;
     protected static final Integer LOG_HTML_JOB_QUEUE_SIZE = 100;
     protected static final Integer LOG_HTML_MESSAGES_QUEUE_SIZE = 10000;
-    protected static final Integer LOG_LINES_COUNT = 5;
-    protected static final Integer LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT = 1;
+    protected static final Integer LOG_LINES_COUNT = 100;
+    protected static final Integer LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT = 100;
     protected static final Integer LOG_LEVEL_DEVELOPMENT = 7;
     protected static final Integer LOG_LEVEL_DEBUG = 5;
     protected static final Integer LOG_LEVEL_USE = 3;
@@ -61,4 +61,6 @@ public class AppConstants {
     
     protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_BUS_HELPER_VIEW_SIZE_DATA_FOR_CLEAN_OUT = Boolean.FALSE;
     protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_HTML_BUS_HELPER_VIEW_SIZE_DATA_FOR_CLEAN_OUTPUT = Boolean.FALSE;
+    
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WALKER_DO_READ_FS_TO_PIPE = Boolean.TRUE;
 }

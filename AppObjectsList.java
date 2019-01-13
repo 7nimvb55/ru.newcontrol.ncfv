@@ -85,7 +85,8 @@ public class AppObjectsList {
             this.messagesQueueForLogging.add(prefixStr);
         }
         if( !this.messagesQueueForLogging.isEmpty()){
-            if( this.messagesQueueForLogging.size() > AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT ){
+            if( this.messagesQueueForLogging.size() > (AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT 
+                - (AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT % 10)) ){
                 this.doLogger();
             }
         }
@@ -97,7 +98,8 @@ public class AppObjectsList {
             this.messagesQueueForLogging.add(prefixStr);
         }
         if( !this.messagesQueueForLogging.isEmpty()){
-            if( messagesQueueForLogging.size() > AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT ){
+            if( messagesQueueForLogging.size() > (AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT 
+                - (AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT % 10)) ){
                 this.doLogger();
             }
         }
@@ -109,7 +111,8 @@ public class AppObjectsList {
             this.messagesQueueForLogging.add(prefixStr);
         }
         if( !this.messagesQueueForLogging.isEmpty()){
-            if( this.messagesQueueForLogging.size() > AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT ){
+            if( this.messagesQueueForLogging.size() > (AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT 
+                - (AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT % 10)) ){
                 this.doLogger();
             }
         }
@@ -121,7 +124,8 @@ public class AppObjectsList {
             this.messagesQueueForLogging.add(prefixStr);
         }
         if( !this.messagesQueueForLogging.isEmpty()){
-            if( this.messagesQueueForLogging.size() > AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT ){
+            if( this.messagesQueueForLogging.size() > (AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT 
+                - (AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT % 10)) ){
                 this.doLogger();
             }
         }

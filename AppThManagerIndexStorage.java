@@ -77,6 +77,8 @@ public class AppThManagerIndexStorage implements Runnable {
             workDirListState.joinDirlistTacker();
             workDirListState.joinDirlistPacker();
             workDirListState.joinDirlistWriter();
+            
+            
 
         } catch (IOException ex) {
             ex.printStackTrace();
