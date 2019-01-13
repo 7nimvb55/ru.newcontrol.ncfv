@@ -260,7 +260,18 @@ public class NcAppHelper {
                 + NcStrLogMsgField.EXCEPTION_MSG.getStr()
                 + ex.getMessage());
     }
-
+    protected static String exceptionToString(Class<?> exceptionClass,
+            Class<?> srcClass,
+            String descrStr){
+        String strForReturn = "";
+        strForReturn = AppMsgEnFiledForLog.EX_CLASS
+                + exceptionClass.getCanonicalName()
+                + AppMsgEnFiledForLog.EX_SRC_CLASS
+                + srcClass.getCanonicalName()
+                + AppMsgEnFiledForLog.EX_DESCR
+                + descrStr;
+        return strForReturn;
+    }
     /**
      *
      * @param strMessage

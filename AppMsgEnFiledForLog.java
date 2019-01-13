@@ -26,6 +26,14 @@ public class AppMsgEnFiledForLog {
     protected static String WARINING = "[WARINING]";
     protected static String INFO = "[INFO]";
     protected static String STATE = "[STATE]";
+    protected static String CREATE = "[CREATE]";
+    protected static String CONSTRUCTOR = "[CONSTRUCTOR]";
+    protected static String EX_CLASS = "[EXCLASS]";
+    protected static String EX_SRC_CLASS = "[EXSRCCLASS]";
+    protected static String EX_DESCR = "[EXDESCR]";
+    protected static String F_FIELD_NAME = "[FIELDNAME]";
+    protected static String F_VALUE = "[VALUE]";
+    protected static String F_EX_MSG = "[EXMSG]";
     protected static String MSG_EXIST_THREAD_KEY = "Thread exist, found and use it with key: ";
     
 }

@@ -124,7 +124,6 @@ public class AppThWorkDirListState {
     protected State getStateDirlistWriter(){
         return this.runDirListWriter.getState();
     }
-    
     protected void startDirlistReader(){
         this.runDirlistReader.start();
     }
@@ -150,7 +149,6 @@ public class AppThWorkDirListState {
     protected void stopDirlistWriter(){
         this.ruleForDirListWorkers.sayNeedFinishDirListWriter();
     }
-    
     protected void joinDirlistReader(){
         try{
             this.runDirlistReader.join();
@@ -178,7 +176,9 @@ public class AppThWorkDirListState {
         } catch(InterruptedException ex){
             ex.printStackTrace();
         }
-        
+    }
+    protected AppObjectsList getListOfObjectAndLogger(){
+        return this.currentListOfObject;
     }
     
 }

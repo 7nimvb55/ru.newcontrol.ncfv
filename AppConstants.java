@@ -23,7 +23,7 @@ public class AppConstants {
     protected static final Integer LOG_HTML_CLEAN_FROM_BUS_ABOVE_QUEUE_SIZE = 1;
     protected static final Integer LOG_HTML_JOB_QUEUE_SIZE = 100;
     protected static final Integer LOG_HTML_MESSAGES_QUEUE_SIZE = 10000;
-    protected static final Integer LOG_LINES_COUNT = 1000;
+    protected static final Integer LOG_LINES_COUNT = 5;
     protected static final Integer LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT = 1;
     protected static final Integer LOG_LEVEL_DEVELOPMENT = 7;
     protected static final Integer LOG_LEVEL_DEBUG = 5;

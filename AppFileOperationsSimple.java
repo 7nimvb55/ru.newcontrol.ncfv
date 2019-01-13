@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -418,6 +419,7 @@ public class AppFileOperationsSimple {
         
         Path toReturn = Paths.get(getLogSubDir().toString(), 
                 getNowTimeStringWithMS()
+                + "-" + UUID.randomUUID().toString()
                 + AppFileNamesConstants.LOG_EXT);
         
         if( Files.exists(toReturn, LinkOption.NOFOLLOW_LINKS) ){

@@ -33,6 +33,7 @@ public class AppThWorkDirListRun implements Runnable {
     public void run() {
         Boolean needFinishStateDirlistReader = innerRuleForDirListWorkers.getNeedFinishStateDirlistReader();
         Path currentPathForMakeIndex = this.innerRuleForDirListWorkers.getCurrentPathForMakeIndex();
+        ThLogicDirListWalker logicWalker = new ThLogicDirListWalker(this.innerRuleForDirListWorkers.getWorkDirListState().getListOfObjectAndLogger());
         
         this.innerRuleForDirListWorkers.startDirlistTacker();
         

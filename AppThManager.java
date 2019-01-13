@@ -31,10 +31,10 @@ public class AppThManager {
     private ArrayBlockingQueue<String> messagesQueueForLogging;
     private AppObjectsList outerObectsForApp;
 
-    public AppThManager(AppObjectsList obectsForApp) {
-        this.outerObectsForApp = obectsForApp;
-        this.currentWorkerList = obectsForApp.getWorkerList();
-        this.messagesQueueForLogging = obectsForApp.getLoggingQueue();
+    public AppThManager(AppObjectsList objectsForApp) {
+        this.outerObectsForApp = objectsForApp;
+        this.currentWorkerList = objectsForApp.getWorkerList();
+        this.messagesQueueForLogging = objectsForApp.getLoggingQueue();
         
     }
     protected AppObjectsList getListOfObjects(){

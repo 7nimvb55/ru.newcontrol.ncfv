@@ -82,11 +82,11 @@ public class AppObjectsList {
         if( !strToLog.isEmpty() ){
             String prefixStr = getPrefixInfo()
                 + strToLog;
-            messagesQueueForLogging.add(prefixStr);
+            this.messagesQueueForLogging.add(prefixStr);
         }
-        if( !messagesQueueForLogging.isEmpty()){
-            if( messagesQueueForLogging.size() > AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT ){
-                doLogger();
+        if( !this.messagesQueueForLogging.isEmpty()){
+            if( this.messagesQueueForLogging.size() > AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT ){
+                this.doLogger();
             }
         }
     }
@@ -94,11 +94,11 @@ public class AppObjectsList {
         if( !strToLog.isEmpty() ){
             String prefixStr = getPrefixState()
                 + strToLog;
-            messagesQueueForLogging.add(prefixStr);
+            this.messagesQueueForLogging.add(prefixStr);
         }
-        if( !messagesQueueForLogging.isEmpty()){
+        if( !this.messagesQueueForLogging.isEmpty()){
             if( messagesQueueForLogging.size() > AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT ){
-                doLogger();
+                this.doLogger();
             }
         }
     }
@@ -106,11 +106,11 @@ public class AppObjectsList {
         if( !strToLog.isEmpty() ){
             String prefixStr = getPrefixWarning()
                 + strToLog;
-            messagesQueueForLogging.add(prefixStr);
+            this.messagesQueueForLogging.add(prefixStr);
         }
-        if( !messagesQueueForLogging.isEmpty()){
-            if( messagesQueueForLogging.size() > AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT ){
-                doLogger();
+        if( !this.messagesQueueForLogging.isEmpty()){
+            if( this.messagesQueueForLogging.size() > AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT ){
+                this.doLogger();
             }
         }
     }
@@ -118,11 +118,11 @@ public class AppObjectsList {
         if( !strToLog.isEmpty() ){
             String prefixStr = getPrefixError()
                 + strToLog;
-            messagesQueueForLogging.add(prefixStr);
+            this.messagesQueueForLogging.add(prefixStr);
         }
-        if( !messagesQueueForLogging.isEmpty()){
-            if( messagesQueueForLogging.size() > AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT ){
-                doLogger();
+        if( !this.messagesQueueForLogging.isEmpty()){
+            if( this.messagesQueueForLogging.size() > AppConstants.LIMIT_MESSAGES_FOR_LOG_IN_QUEUE_COUNT ){
+                this.doLogger();
             }
         }
     }
