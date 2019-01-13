@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 public class AppThWorkDirListTake implements Runnable {
     private AppThWorkDirListRule innerRuleForDirListWorkers;
 
-    public AppThWorkDirListTake(AppThWorkDirListRule ruleForDirListWorkers) {
+    public AppThWorkDirListTake(final AppThWorkDirListRule ruleForDirListWorkers) {
         super();
         this.innerRuleForDirListWorkers = ruleForDirListWorkers;
     }
