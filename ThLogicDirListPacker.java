@@ -68,12 +68,13 @@ public class ThLogicDirListPacker {
                             Long tmpSum = this.counterReadedData.get() + (long) pollFromTacker.size();
                             this.counterReadedData.set( tmpSum );
                             pipeTackerToPacker.add(pollFromTacker);
-                            outStatesOfWorkLogic(" _*_*_*_*_*_ polled from pipeReaderToTacker size is " 
+                            outStatesOfWorkLogic(" Packer side _*_*_*_*_*_ polled from pipeTackerToPacker size is " 
                                     + pipeTackerToPacker.size() 
                                     + " _+_+_+_+_+_+_+_+_+_ all transfered size "
                                     + this.counterReadedData.get());
                             do{
-                                outStatesOfWorkLogic(" +++++ polled from pipeTackerToPacker size is " + pollFromTacker.size());
+                                outStatesOfWorkLogic(" +P+A+C+K+++S+I+D+E+ polled from pipeTackerToPacker size is "
+                                        + "-|||-" + pollFromTacker.size());
                                 if( (pollFromTacker.size() + packetForOut.size()) < 101 ){
                                     packetForOut.putAll(pollFromTacker);
                                     pollFromTacker.clear();
@@ -89,6 +90,8 @@ public class ThLogicDirListPacker {
 
                                 if( packetForOut.size() == 100 ){
                                     pipePackerToWriter.add(packetForOut);
+                                    outStatesOfWorkLogic(" +P+A+C+K+++S+I+D+E+ TRANSFERED "
+                                        + "-|******|******|******|-" + packetForOut.size());
                                     packetForOut.clear();
                                 }
                             } while( !pollFromTacker.isEmpty() );    
