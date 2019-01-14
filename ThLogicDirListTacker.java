@@ -69,6 +69,7 @@ public class ThLogicDirListTacker {
                                 + pipeTackerToPacker.size() 
                                 + " _|_|_|_ all transfered TO PACKER size "
                                 + this.counterReadedData.get());
+                        outDataProcessedOfWorkLogic(this.counterReadedData.get(), (long) pipeTackerToPacker.size());
                     }
                 } while( !pipeReaderToTacker.isEmpty() );
             } else {
@@ -85,5 +86,14 @@ public class ThLogicDirListTacker {
                             + "[THREADNAME]" + Thread.currentThread().getName()
                             + strForOutPut;
         NcAppHelper.outToConsoleIfDevAndParamTrue(strRunLogicLabel, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_TACKER_RUN);
+    }
+    private void outDataProcessedOfWorkLogic(Long reciveIn, Long sendOut){
+        String strRunLogicLabel = ThLogicDirListPacker.class.getCanonicalName() 
+                            + "[THREADNAME]" + Thread.currentThread().getName()
+                            + "  in    " 
+                            + String.valueOf(reciveIn) 
+                            + "  out   "
+                            + String.valueOf(sendOut);
+        NcAppHelper.outToConsoleIfDevAndParamTrue(strRunLogicLabel, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_TACKER_DATA_COUNT);
     }
 }

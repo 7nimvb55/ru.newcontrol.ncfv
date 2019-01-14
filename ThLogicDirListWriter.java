@@ -25,11 +25,20 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class ThLogicDirListWriter {
     private AppThWorkDirListRule innerRuleForDirListWorkers;
+    
+    private ThreadLocal<Long> counterPackCount;
+    private ThreadLocal<Long> counterDataSize;
 
     public ThLogicDirListWriter(AppThWorkDirListRule ruleForDirListWorkers) {
         this.innerRuleForDirListWorkers = ruleForDirListWorkers;
     }
     protected void doWriter(){
+        this.counterPackCount = new ThreadLocal<Long>();
+        this.counterPackCount.set(0L);
+        
+        this.counterDataSize = new ThreadLocal<Long>();
+        this.counterDataSize.set(0L);
+        
         do{
             this.innerRuleForDirListWorkers.setDirListWriterLogicRunned();
         } while( !this.innerRuleForDirListWorkers.isDirListWriterLogicRunned() );
@@ -55,7 +64,15 @@ public class ThLogicDirListWriter {
                     ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> poll = pipePackerToWriter.poll();
                     if( poll != null ){
                         outStatesOfWorkLogic(" polled from pipePackerToWriter size is " + poll.size());
+                        if( poll.size() == 100 ){
+                            Long tmpSumPack = this.counterPackCount.get() + 1L;
+                            this.counterPackCount.set( tmpSumPack );
+                        }
+                        Long tmpSumData = this.counterDataSize.get() + (long) poll.size();
+                        this.counterDataSize.set( tmpSumData );
+                        
                     }
+                    outDataProcessedOfWorkLogic(this.counterPackCount.get(), this.counterDataSize.get());
                 } while( !pipePackerToWriter.isEmpty() );
             } else {
                 outStatesOfWorkLogic(" pipePackerToWriter is null");
@@ -71,5 +88,14 @@ public class ThLogicDirListWriter {
                             + "[THREADNAME]" + Thread.currentThread().getName()
                             + strForOutPut;
         NcAppHelper.outToConsoleIfDevAndParamTrue(strRunLogicLabel, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WRITER_RUN);
+    }
+    private void outDataProcessedOfWorkLogic(Long packIn, Long dataIn){
+        String strRunLogicLabel = ThLogicDirListPacker.class.getCanonicalName() 
+                            + "[THREADNAME]" + Thread.currentThread().getName()
+                            + "                                                   pack in    " 
+                            + String.valueOf(packIn) 
+                            + "  data in   "
+                            + String.valueOf(dataIn);
+        NcAppHelper.outToConsoleIfDevAndParamTrue(strRunLogicLabel, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WRITER_DATA_COUNT);
     }
 }

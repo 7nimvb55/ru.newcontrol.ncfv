@@ -181,4 +181,13 @@ public class ThLogicDirListWalker {
             this.pipeVisitorToTacker.remove();
         }
     }
+    private void outDataProcessedOfWorkLogic(Long reciveIn, Long sendOut){
+        String strRunLogicLabel = ThLogicDirListPacker.class.getCanonicalName() 
+                            + "[THREADNAME]" + Thread.currentThread().getName()
+                            + "  in    " 
+                            + String.valueOf(reciveIn) 
+                            + "  out   "
+                            + String.valueOf(sendOut);
+        NcAppHelper.outToConsoleIfDevAndParamTrue(strRunLogicLabel, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WALKER_DATA_COUNT);
+    }
 }

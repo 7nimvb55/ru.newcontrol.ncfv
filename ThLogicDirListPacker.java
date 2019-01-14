@@ -28,6 +28,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ThLogicDirListPacker {
     private AppThWorkDirListRule innerRuleForDirListWorkers;
     private ThreadLocal<Long> counterReadedData;
+    private ThreadLocal<Long> counterWritedData;
 
     public ThLogicDirListPacker(AppThWorkDirListRule ruleForDirListWorkers) {
         this.innerRuleForDirListWorkers = ruleForDirListWorkers;
@@ -35,6 +36,10 @@ public class ThLogicDirListPacker {
     protected void doPacker(){
         this.counterReadedData = new ThreadLocal<Long>();
         this.counterReadedData.set(0L);
+        
+        this.counterWritedData = new ThreadLocal<Long>();
+        this.counterWritedData.set(0L);
+        
         do{
             this.innerRuleForDirListWorkers.setDirListPackerLogicRunned();
         } while( !this.innerRuleForDirListWorkers.isDirListPackerLogicRunned() );
@@ -65,6 +70,7 @@ public class ThLogicDirListPacker {
                 // @todo need fix
                 if( !pipeTackerToPacker.isEmpty() ){
                     do{
+                        
                         ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> pollFromTacker = null;
                         
                         //ReentrantLock forGetDataFromPipeTackerToPacker = new ReentrantLock();
@@ -85,11 +91,16 @@ public class ThLogicDirListPacker {
                                     + this.counterReadedData.get()
                                     + " from TACKER"
                             );
+                            
                             do{
                                 outStatesOfWorkLogic(" +P+A+C+K+++S+I+D+E+ polled from pipeTackerToPacker size is "
                                         + "-|||-      " + pollFromTacker.size());
                                 if( (pollFromTacker.size() + packetForOut.size()) < 101 ){
                                     packetForOut.putAll(pollFromTacker);
+                                    
+                                    Long tmpSumWrite = this.counterWritedData.get() + (long) pollFromTacker.size();
+                                    this.counterWritedData.set( tmpSumWrite );
+                                    
                                     pollFromTacker.clear();
                                 }
                                 if( (pollFromTacker.size() + packetForOut.size()) > 100 ){
@@ -97,6 +108,10 @@ public class ThLogicDirListPacker {
                                         Map.Entry<UUID, TdataDirListFsObjAttr> pollFirstEntry = pollFromTacker.pollFirstEntry();
                                         if( pollFirstEntry != null ){
                                             packetForOut.put(pollFirstEntry.getKey(), pollFirstEntry.getValue());
+                                            
+                                            Long tmpSumWrite = this.counterWritedData.get() + 1L;
+                                            this.counterWritedData.set( tmpSumWrite );
+                                            
                                         }
                                     } while ( packetForOut.size() != 100 );
                                 }
@@ -108,7 +123,11 @@ public class ThLogicDirListPacker {
                                     packetForOut.clear();
                                 }
                             } while( !pollFromTacker.isEmpty() );    
-                        }    
+                        }
+                        outDataProcessedOfWorkLogic(this.counterReadedData.get(), 
+                                this.counterWritedData.get(), 
+                                (long) packetForOut.size());
+                        
                     } while( !pipeTackerToPacker.isEmpty() );
                 } else {
                     try{
@@ -132,5 +151,16 @@ public class ThLogicDirListPacker {
                             + "[THREADNAME]" + Thread.currentThread().getName()
                             + strForOutPut;
         NcAppHelper.outToConsoleIfDevAndParamTrue(strRunLogicLabel, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_PACKER_RUN);
+    }
+    private void outDataProcessedOfWorkLogic(Long reciveIn, Long sendOut, Long packetsOut ){
+        String strRunLogicLabel = ThLogicDirListPacker.class.getCanonicalName() 
+                            + "[THREADNAME]" + Thread.currentThread().getName()
+                            + "                          in    " 
+                            + String.valueOf(reciveIn) 
+                            + "  out   "
+                            + String.valueOf(sendOut)
+                            + "  pack   "
+                            + String.valueOf(packetsOut);
+        NcAppHelper.outToConsoleIfDevAndParamTrue(strRunLogicLabel, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_PACKER_DATA_COUNT);
     }
 }
