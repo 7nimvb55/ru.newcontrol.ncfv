@@ -25,11 +25,23 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class ThLogicDirListTacker {
     private AppThWorkDirListRule innerRuleForDirListWorkers;
+    private ThreadLocal<Long> counterReadedData;
 
     public ThLogicDirListTacker(AppThWorkDirListRule ruleForDirListWorkers) {
         this.innerRuleForDirListWorkers = ruleForDirListWorkers;
     }
     protected void doTacker(){
+        this.counterReadedData = new ThreadLocal<Long>();
+        this.counterReadedData.set(0L);
+        do{
+            this.innerRuleForDirListWorkers.setDirListTackerLogicRunned();
+        }while( !this.innerRuleForDirListWorkers.isDirListTackerLogicRunned() );
+        final ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> pipeReaderToTacker = 
+                    this.innerRuleForDirListWorkers.getWorkDirListState().getPipeReaderToTacker();
+        
+        final ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> pipeTackerToPacker = 
+                                this.innerRuleForDirListWorkers.getWorkDirListState().getPipeTackerToPacker();
+        
         outStatesOfWorkLogic(" Tacker start run part");
         do{
             outStatesOfWorkLogic(" Tacker start part wait for reader finished");
@@ -41,19 +53,31 @@ public class ThLogicDirListTacker {
                     outStatesOfWorkLogic(" sleep is interrupted with message" + ex.getMessage());
                 }
             }while( !this.innerRuleForDirListWorkers.isDirListReaderLogicRunned() );
-            ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> pipeReaderToTacker = this.innerRuleForDirListWorkers.getWorkDirListState().getPipeReaderToTacker();
+            
             outStatesOfWorkLogic(pipeReaderToTacker.toString() + " size " + pipeReaderToTacker.size());
+            
             if( pipeReaderToTacker != null){
                 do{
                     ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> poll = pipeReaderToTacker.poll();
                     if( poll != null ){
-                        outStatesOfWorkLogic(" polled from pipeReaderToTacker size is " + poll.size());
+                        
+                        Long tmpSum = this.counterReadedData.get() + (long) poll.size();
+                        this.counterReadedData.set( tmpSum );
+                        pipeTackerToPacker.add(poll);
+                        outStatesOfWorkLogic(" ________________ polled from pipeReaderToTacker size is " 
+                                + pipeTackerToPacker.size() 
+                                + " _|_|_|_ all transfered size "
+                                + this.counterReadedData.get());
                     }
                 } while( !pipeReaderToTacker.isEmpty() );
             } else {
                 outStatesOfWorkLogic(" pipeReaderToTacker is null");
             }
         }while( !this.innerRuleForDirListWorkers.isDirListReaderLogicFinished() );
+        do{
+            this.innerRuleForDirListWorkers.setDirListTackerLogicFinished();
+        }while( !this.innerRuleForDirListWorkers.isDirListTackerLogicFinished() );
+        outStatesOfWorkLogic(" Tacker end run part");
     }
     private void outStatesOfWorkLogic(String strForOutPut){
         String strRunLogicLabel = AppThWorkDirListTake.class.getCanonicalName() 

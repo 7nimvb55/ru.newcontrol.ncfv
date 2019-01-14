@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -31,6 +32,8 @@ public class AppThWorkDirListState {
     private AppThWorkDirListRule ruleForDirListWorkers;
     
     private final ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> pipeFromRunnerToTacker;
+    private final ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> pipeFromTackerToPacker;
+    private final ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> pipeFromPackerToWriter;
     
     private Thread indexStorageManager;
     
@@ -47,8 +50,11 @@ public class AppThWorkDirListState {
         
         this.pipeFromRunnerToTacker = 
                 new ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>>(AppConstants.PIPE_READ_FS_TO_TACKER_WORKER_QUEUE_SIZE);
-        
-        //threads init
+        this.pipeFromTackerToPacker = 
+                new ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>>(AppConstants.PIPE_READ_FS_TO_TACKER_WORKER_QUEUE_SIZE);
+        this.pipeFromPackerToWriter = 
+                new ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>>(AppConstants.PIPE_READ_FS_TO_TACKER_WORKER_QUEUE_SIZE);
+//threads init
         
         this.indexStorageManager = new Thread(
                 this.ruleForDirListWorkers.getThreadGroupWorkerDirList(),
@@ -188,6 +194,30 @@ public class AppThWorkDirListState {
     }
     
     protected ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> getPipeReaderToTacker(){
-        return this.pipeFromRunnerToTacker;
+        ReentrantLock forGetPipeReaderToTacker = new ReentrantLock();
+        forGetPipeReaderToTacker.lock();
+        try{
+            return this.pipeFromRunnerToTacker;
+        } finally {
+            forGetPipeReaderToTacker.unlock();
+        }
+    }
+    protected ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> getPipeTackerToPacker(){
+        ReentrantLock forGetPipeTackerToPacker = new ReentrantLock();
+        forGetPipeTackerToPacker.lock();
+        try{
+            return this.pipeFromRunnerToTacker;
+        } finally {
+            forGetPipeTackerToPacker.unlock();
+        }
+    }
+    protected ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> getPipePackerToWriter(){
+        ReentrantLock forGetPipePackerToWriter = new ReentrantLock();
+        forGetPipePackerToWriter.lock();
+        try{
+            return this.pipeFromRunnerToTacker;
+        } finally {
+            forGetPipePackerToWriter.unlock();
+        }
     }
 }

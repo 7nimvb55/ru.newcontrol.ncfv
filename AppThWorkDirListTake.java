@@ -34,7 +34,7 @@ public class AppThWorkDirListTake implements Runnable {
     @Override
     public void run() {
         Boolean needFinishStateDirlistTacker = innerRuleForDirListWorkers.getNeedFinishStateDirlistTacker();
-        this.innerRuleForDirListWorkers.startDirListPacker();
+        //this.innerRuleForDirListWorkers.startDirListPacker();
         
         ThreadLocal<ThLogicDirListTacker> logicTacker = new ThreadLocal<ThLogicDirListTacker>();
         logicTacker.set(new ThLogicDirListTacker(this.innerRuleForDirListWorkers));

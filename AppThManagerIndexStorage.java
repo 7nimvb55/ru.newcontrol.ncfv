@@ -72,6 +72,9 @@ public class AppThManagerIndexStorage implements Runnable {
             }
             
             workDirListState.startDirlistReader();
+            workDirListState.startDirlistTacker();
+            workDirListState.startDirlistPacker();
+            workDirListState.startDirlistWriter();
             
             workDirListState.joinDirlistReader();
             workDirListState.joinDirlistTacker();

@@ -30,7 +30,10 @@ public class AppThWorkDirListPack implements Runnable {
     @Override
     public void run() {
         Boolean needFinishStateDirListPacker = innerRuleForDirListWorkers.getNeedFinishStateDirListPacker();
-        this.innerRuleForDirListWorkers.startDirListWriter();
+        //this.innerRuleForDirListWorkers.startDirListWriter();
+        ThreadLocal<ThLogicDirListPacker> logicPacker = new ThreadLocal<ThLogicDirListPacker>();
+        logicPacker.set(new ThLogicDirListPacker(this.innerRuleForDirListWorkers));
+        logicPacker.get().doPacker();
     }
     
 }

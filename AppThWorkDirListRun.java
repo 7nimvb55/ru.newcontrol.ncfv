@@ -32,7 +32,7 @@ public class AppThWorkDirListRun implements Runnable {
     
     @Override
     public void run() {
-        this.innerRuleForDirListWorkers.startDirlistTacker();
+        //this.innerRuleForDirListWorkers.startDirlistTacker();
         Boolean needFinishStateDirlistReader = innerRuleForDirListWorkers.getNeedFinishStateDirlistReader();
         Path currentPathForMakeIndex = this.innerRuleForDirListWorkers.getCurrentPathForMakeIndex();
         try{
