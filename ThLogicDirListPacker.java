@@ -127,13 +127,7 @@ public class ThLogicDirListPacker {
             
             ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> pollFromTacker = pipeTackerToPacker.poll();
             if( pollFromTacker == null ){
-                while ( !pipeTackerToPacker.isEmpty() ){
-                    pollFromTacker = pipeTackerToPacker.poll();
-                    if( pollFromTacker != null ){
-                        break;
-                    }
-                }
-
+                continue;
             }
             do{
                 Map.Entry<UUID, TdataDirListFsObjAttr> pollFirstEntry = pollFromTacker.pollFirstEntry();
