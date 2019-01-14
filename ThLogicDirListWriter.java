@@ -78,9 +78,11 @@ public class ThLogicDirListWriter {
                 outStatesOfWorkLogic(" pipePackerToWriter is null");
             }
         }while( !this.innerRuleForDirListWorkers.isDirListPackerLogicFinished() );
+        
         do{
             this.innerRuleForDirListWorkers.setDirListWriterLogicFinished();
         } while( !this.innerRuleForDirListWorkers.isDirListWriterLogicFinished() );
+        
         outStatesOfWorkLogic(" Writer end run part");
     }
     private void outStatesOfWorkLogic(String strForOutPut){

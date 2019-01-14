@@ -29,6 +29,7 @@ public class ThLogicDirListPacker {
     private AppThWorkDirListRule innerRuleForDirListWorkers;
     private ThreadLocal<Long> counterReadedData;
     private ThreadLocal<Long> counterWritedData;
+    private ThreadLocal<Long> counterPackData;
 
     public ThLogicDirListPacker(AppThWorkDirListRule ruleForDirListWorkers) {
         this.innerRuleForDirListWorkers = ruleForDirListWorkers;
@@ -39,6 +40,9 @@ public class ThLogicDirListPacker {
         
         this.counterWritedData = new ThreadLocal<Long>();
         this.counterWritedData.set(0L);
+        
+        this.counterPackData = new ThreadLocal<Long>();
+        this.counterPackData.set(0L);
         
         do{
             this.innerRuleForDirListWorkers.setDirListPackerLogicRunned();
@@ -118,6 +122,10 @@ public class ThLogicDirListPacker {
 
                                 if( packetForOut.size() == 100 ){
                                     pipePackerToWriter.add(packetForOut);
+                                    
+                                    Long tmpSumPack = this.counterPackData.get() + 1L;
+                                    this.counterPackData.set( tmpSumPack );
+                                    
                                     outStatesOfWorkLogic(" +P+A+C+K+++S+I+D+E+ TRANSFERED "
                                         + "-|******|******|******|-" + packetForOut.size());
                                     packetForOut.clear();
@@ -126,7 +134,7 @@ public class ThLogicDirListPacker {
                         }
                         outDataProcessedOfWorkLogic(this.counterReadedData.get(), 
                                 this.counterWritedData.get(), 
-                                (long) packetForOut.size());
+                                this.counterPackData.get());
                         
                     } while( !pipeTackerToPacker.isEmpty() );
                 } else {
