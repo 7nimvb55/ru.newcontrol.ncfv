@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -57,21 +58,33 @@ public class ThLogicDirListPacker {
                 }
             }while( !this.innerRuleForDirListWorkers.isDirListTackerLogicRunned() );
             
-            
-            outStatesOfWorkLogic(pipeTackerToPacker.toString() + " +++++ size " + pipeTackerToPacker.size());
+            if( AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_PACKER_PIPE_TO_STRING ){
+                outStatesOfWorkLogic(pipeTackerToPacker.toString() + " +++++ size " + pipeTackerToPacker.size());
+            }
             if( pipeTackerToPacker != null){
                 // @todo need fix
                 if( !pipeTackerToPacker.isEmpty() ){
                     do{
-                        ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> pollFromTacker = pipeTackerToPacker.poll();
+                        ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> pollFromTacker = null;
+                        
+                        ReentrantLock forGetDataFromPipeTackerToPacker = new ReentrantLock();
+                        forGetDataFromPipeTackerToPacker.lock();
+                        try{
+                            pollFromTacker = pipeTackerToPacker.poll();
+                        } finally {
+                            forGetDataFromPipeTackerToPacker.unlock();
+                        }
+                        
                         if( pollFromTacker != null ){
                             Long tmpSum = this.counterReadedData.get() + (long) pollFromTacker.size();
                             this.counterReadedData.set( tmpSum );
                             pipeTackerToPacker.add(pollFromTacker);
                             outStatesOfWorkLogic(" Packer side _*_*_*_*_*_ polled from pipeTackerToPacker size is " 
                                     + pipeTackerToPacker.size() 
-                                    + " _+_+_+_+_+_+_+_+_+_ all transfered size "
-                                    + this.counterReadedData.get());
+                                    + " _+_+_+_+_+_+_+_+_+_ all recivied size "
+                                    + this.counterReadedData.get()
+                                    + " from TACKER"
+                            );
                             do{
                                 outStatesOfWorkLogic(" +P+A+C+K+++S+I+D+E+ polled from pipeTackerToPacker size is "
                                         + "-|||-" + pollFromTacker.size());

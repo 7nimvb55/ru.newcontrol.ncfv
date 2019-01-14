@@ -35,8 +35,12 @@ public class AppThWorkDirListWrite implements Runnable {
         FileSystem fsZipIndexStorage = innerRuleForDirListWorkers.getFsZipIndexStorage();
         NcParamFs dataStorage = NcFsIdxStorageInit.initStorageStructure(fsZipIndexStorage);
         ThreadLocal<ThLogicDirListWriter> logicWriter = new ThreadLocal<ThLogicDirListWriter>();
-        logicWriter.set(new ThLogicDirListWriter(this.innerRuleForDirListWorkers));
-        logicWriter.get().doWriter();
+        try{
+            logicWriter.set(new ThLogicDirListWriter(this.innerRuleForDirListWorkers));
+            logicWriter.get().doWriter();
+        } finally {
+            logicWriter.remove();
+        }
         AppObjectsInfo.dumpAllStackToHtml();
     }
     

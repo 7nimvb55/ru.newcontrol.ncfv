@@ -54,8 +54,9 @@ public class ThLogicDirListTacker {
                 }
             }while( !this.innerRuleForDirListWorkers.isDirListReaderLogicRunned() );
             
-            outStatesOfWorkLogic(pipeReaderToTacker.toString() + " size " + pipeReaderToTacker.size());
-            
+            if( AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_TACKER_PIPE_TO_STRING ){
+                outStatesOfWorkLogic(pipeReaderToTacker.toString() + " size " + pipeReaderToTacker.size());
+            }
             if( pipeReaderToTacker != null){
                 do{
                     ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> poll = pipeReaderToTacker.poll();
@@ -64,9 +65,9 @@ public class ThLogicDirListTacker {
                         Long tmpSum = this.counterReadedData.get() + (long) poll.size();
                         this.counterReadedData.set( tmpSum );
                         pipeTackerToPacker.add(poll);
-                        outStatesOfWorkLogic(" ________________ polled from pipeReaderToTacker size is " 
+                        outStatesOfWorkLogic(" _T_A_C_K_E_R_____S_I_D_E__ polled from pipeTackerToPacker size is " 
                                 + pipeTackerToPacker.size() 
-                                + " _|_|_|_ all transfered size "
+                                + " _|_|_|_ all transfered TO PACKER size "
                                 + this.counterReadedData.get());
                     }
                 } while( !pipeReaderToTacker.isEmpty() );

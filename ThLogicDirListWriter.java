@@ -47,8 +47,9 @@ public class ThLogicDirListWriter {
                 }
             }while( !this.innerRuleForDirListWorkers.isDirListPackerLogicRunned() );
             
-            
-            outStatesOfWorkLogic(pipePackerToWriter.toString() + " size " + pipePackerToWriter.size());
+            if( AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WRITER_PIPE_TO_STRING ){
+                outStatesOfWorkLogic(pipePackerToWriter.toString() + " size " + pipePackerToWriter.size());
+            }
             if( pipePackerToWriter != null){
                 do{
                     ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> poll = pipePackerToWriter.poll();

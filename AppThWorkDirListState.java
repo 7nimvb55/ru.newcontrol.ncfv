@@ -206,7 +206,7 @@ public class AppThWorkDirListState {
         ReentrantLock forGetPipeTackerToPacker = new ReentrantLock();
         forGetPipeTackerToPacker.lock();
         try{
-            return this.pipeFromRunnerToTacker;
+            return this.pipeFromTackerToPacker;
         } finally {
             forGetPipeTackerToPacker.unlock();
         }
@@ -215,7 +215,7 @@ public class AppThWorkDirListState {
         ReentrantLock forGetPipePackerToWriter = new ReentrantLock();
         forGetPipePackerToWriter.lock();
         try{
-            return this.pipeFromRunnerToTacker;
+            return this.pipeFromPackerToWriter;
         } finally {
             forGetPipePackerToWriter.unlock();
         }

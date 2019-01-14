@@ -69,5 +69,10 @@ public class AppConstants {
     protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_PACKER_RUN = Boolean.TRUE;
     protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WRITER_RUN = Boolean.FALSE;
     
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WALKER_PIPE_TO_STRING = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_TACKER_PIPE_TO_STRING = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_PACKER_PIPE_TO_STRING = Boolean.FALSE;
+    protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WRITER_PIPE_TO_STRING = Boolean.FALSE;
+    
     protected static final Integer PIPE_READ_FS_TO_TACKER_WORKER_QUEUE_SIZE = 100000;
 }
