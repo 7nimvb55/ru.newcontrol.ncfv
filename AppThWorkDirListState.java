@@ -194,30 +194,30 @@ public class AppThWorkDirListState {
     }
     
     protected ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> getPipeReaderToTacker(){
-        ReentrantLock forGetPipeReaderToTacker = new ReentrantLock();
-        forGetPipeReaderToTacker.lock();
-        try{
+        //ReentrantLock forGetPipeReaderToTacker = new ReentrantLock();
+        //forGetPipeReaderToTacker.lock();
+        //try{
             return this.pipeFromRunnerToTacker;
-        } finally {
-            forGetPipeReaderToTacker.unlock();
-        }
+        //} finally {
+        //    forGetPipeReaderToTacker.unlock();
+        //}
     }
     protected ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> getPipeTackerToPacker(){
-        ReentrantLock forGetPipeTackerToPacker = new ReentrantLock();
-        forGetPipeTackerToPacker.lock();
-        try{
+        //ReentrantLock forGetPipeTackerToPacker = new ReentrantLock();
+        //forGetPipeTackerToPacker.lock();
+        //try{
             return this.pipeFromTackerToPacker;
-        } finally {
-            forGetPipeTackerToPacker.unlock();
-        }
+        //} finally {
+        //    forGetPipeTackerToPacker.unlock();
+        //}
     }
     protected ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> getPipePackerToWriter(){
-        ReentrantLock forGetPipePackerToWriter = new ReentrantLock();
-        forGetPipePackerToWriter.lock();
-        try{
+        //ReentrantLock forGetPipePackerToWriter = new ReentrantLock();
+        //forGetPipePackerToWriter.lock();
+        //try{
             return this.pipeFromPackerToWriter;
-        } finally {
-            forGetPipePackerToWriter.unlock();
-        }
+        //} finally {
+        //    forGetPipePackerToWriter.unlock();
+        //}
     }
 }
