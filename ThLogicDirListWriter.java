@@ -72,7 +72,9 @@ public class ThLogicDirListWriter {
                         this.counterDataSize.set( tmpSumData );
                         
                     }
-                    outDataProcessedOfWorkLogic(this.counterPackCount.get(), this.counterDataSize.get());
+                    outDataProcessedOfWorkLogic(this.counterPackCount.get(), 
+                            this.counterDataSize.get(),
+                            pipePackerToWriter.size());
                 } while( !pipePackerToWriter.isEmpty() );
             } else {
                 outStatesOfWorkLogic(" pipePackerToWriter is null");
@@ -91,13 +93,15 @@ public class ThLogicDirListWriter {
                             + strForOutPut;
         NcAppHelper.outToConsoleIfDevAndParamTrue(strRunLogicLabel, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WRITER_RUN);
     }
-    private void outDataProcessedOfWorkLogic(Long packIn, Long dataIn){
+    private void outDataProcessedOfWorkLogic(Long packIn, Long dataIn, Integer pipeSize){
         String strRunLogicLabel = ThLogicDirListPacker.class.getCanonicalName() 
                             + "[THREADNAME]" + Thread.currentThread().getName()
                             + "                                                   pack in    " 
                             + String.valueOf(packIn) 
                             + "  data in   "
-                            + String.valueOf(dataIn);
+                            + String.valueOf(dataIn) 
+                            + "  ptwPs     "
+                            + String.valueOf(pipeSize);
         NcAppHelper.outToConsoleIfDevAndParamTrue(strRunLogicLabel, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WRITER_DATA_COUNT);
     }
 }
