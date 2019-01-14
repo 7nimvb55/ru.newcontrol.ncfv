@@ -129,47 +129,56 @@ public class ThLogicDirListWalker {
         }
     }
     protected void doReadFsToPipe(){
-        do{
-            this.objectDirListRule.get().setDirListReaderLogicRunned();
-        }while( !this.objectDirListRule.get().isDirListReaderLogicRunned() );
-        NcAppHelper.outToConsoleIfDevAndParamTrue(this.objectDirListRule.get().getNameDirlistReader() 
-                + ".setDirListReaderLogicRunned", 
-                AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WALKER_DO_READ_FS_TO_PIPE_SET_STARTED);
-        try {
-            Files.walkFileTree(this.currentPathForMakeIndex.get(), this.fileVisitor.get());
-        } catch (IOException ex) {
-            this.errorInFunctionsProcess(
-                IOException.class,
-                "Files.walkFileTree",
-                this.currentPathForMakeIndex.get().toString()
-                + ", "
-                + this.fileVisitor.get().toString(),
-                ex
-            );
-        } catch (IllegalStateException ex) {
-            this.errorInFunctionsProcess(
-                IllegalStateException.class,
-                "Files.walkFileTree",
-                this.currentPathForMakeIndex.get().toString()
-                + ", "
-                + this.fileVisitor.get().toString(),
-                ex
-            );
-        } catch (SecurityException ex) {
-            this.errorInFunctionsProcess(
-                SecurityException.class,
-                "Files.walkFileTree",
-                this.currentPathForMakeIndex.get().toString()
-                + ", "
-                + this.fileVisitor.get().toString(),
-                ex
-            );
+        try{
+            do{
+                this.objectDirListRule.get().setDirListReaderLogicRunned();
+            }while( !this.objectDirListRule.get().isDirListReaderLogicRunned() );
+            NcAppHelper.outToConsoleIfDevAndParamTrue(this.objectDirListRule.get().getNameDirlistReader() 
+                    + ".setDirListReaderLogicRunned", 
+                    AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WALKER_DO_READ_FS_TO_PIPE_SET_STARTED);
+            try {
+                Files.walkFileTree(this.currentPathForMakeIndex.get(), this.fileVisitor.get());
+            } catch (IOException ex) {
+                this.errorInFunctionsProcess(
+                    IOException.class,
+                    "Files.walkFileTree",
+                    this.currentPathForMakeIndex.get().toString()
+                    + ", "
+                    + this.fileVisitor.get().toString(),
+                    ex
+                );
+            } catch (IllegalStateException ex) {
+                this.errorInFunctionsProcess(
+                    IllegalStateException.class,
+                    "Files.walkFileTree",
+                    this.currentPathForMakeIndex.get().toString()
+                    + ", "
+                    + this.fileVisitor.get().toString(),
+                    ex
+                );
+            } catch (SecurityException ex) {
+                this.errorInFunctionsProcess(
+                    SecurityException.class,
+                    "Files.walkFileTree",
+                    this.currentPathForMakeIndex.get().toString()
+                    + ", "
+                    + this.fileVisitor.get().toString(),
+                    ex
+                );
+            }
+            do{
+                this.objectDirListRule.get().setDirListReaderLogicFinished();
+            }while( !this.objectDirListRule.get().isDirListReaderLogicRunned() );
+            NcAppHelper.outToConsoleIfDevAndParamTrue(this.objectDirListRule.get().getNameDirlistReader() 
+                    + ".setDirListReaderLogicFinished", 
+                    AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WALKER_DO_READ_FS_TO_PIPE_SET_STARTED);
+        } finally {
+            this.isNotHaveLoggerThread.remove();
+            this.objectDirListRule.remove();
+            this.objectListAndLogger.remove();
+            this.currentPathForMakeIndex.remove();
+            this.fileVisitor.remove();
+            this.pipeVisitorToTacker.remove();
         }
-        do{
-            this.objectDirListRule.get().setDirListReaderLogicFinished();
-        }while( !this.objectDirListRule.get().isDirListReaderLogicRunned() );
-        NcAppHelper.outToConsoleIfDevAndParamTrue(this.objectDirListRule.get().getNameDirlistReader() 
-                + ".setDirListReaderLogicFinished", 
-                AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WALKER_DO_READ_FS_TO_PIPE_SET_STARTED);
     }
 }

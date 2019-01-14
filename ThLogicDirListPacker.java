@@ -67,13 +67,13 @@ public class ThLogicDirListPacker {
                     do{
                         ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> pollFromTacker = null;
                         
-                        ReentrantLock forGetDataFromPipeTackerToPacker = new ReentrantLock();
-                        forGetDataFromPipeTackerToPacker.lock();
-                        try{
+                        //ReentrantLock forGetDataFromPipeTackerToPacker = new ReentrantLock();
+                        //forGetDataFromPipeTackerToPacker.lock();
+                        //try{
                             pollFromTacker = pipeTackerToPacker.poll();
-                        } finally {
-                            forGetDataFromPipeTackerToPacker.unlock();
-                        }
+                        //} finally {
+                        //    forGetDataFromPipeTackerToPacker.unlock();
+                        //}
                         
                         if( pollFromTacker != null ){
                             Long tmpSum = this.counterReadedData.get() + (long) pollFromTacker.size();
@@ -87,7 +87,7 @@ public class ThLogicDirListPacker {
                             );
                             do{
                                 outStatesOfWorkLogic(" +P+A+C+K+++S+I+D+E+ polled from pipeTackerToPacker size is "
-                                        + "-|||-" + pollFromTacker.size());
+                                        + "-|||-      " + pollFromTacker.size());
                                 if( (pollFromTacker.size() + packetForOut.size()) < 101 ){
                                     packetForOut.putAll(pollFromTacker);
                                     pollFromTacker.clear();
