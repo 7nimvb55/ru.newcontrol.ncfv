@@ -95,13 +95,7 @@ public class ThLogicDirListWriter {
                 outStatesOfWorkLogic(" pipePackerToWriter is null");
             }
         }while( !this.innerRuleForDirListWorkers.isDirListPackerLogicFinished() );
-        /*} catch (IOException ex) {
-            ex.printStackTrace();
-            
-        } catch (Exception ex){
-            ex.printStackTrace();
-            
-        }*/
+
         do{
             this.innerRuleForDirListWorkers.setDirListWriterLogicFinished();
         } while( !this.innerRuleForDirListWorkers.isDirListWriterLogicFinished() );
@@ -127,18 +121,6 @@ public class ThLogicDirListWriter {
     }
     private void writeDataToStorage(final ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> forWriteData,
             NcParamFs indexStorage){
-        //FileSystem fsZipIndexStorage = this.innerRuleForDirListWorkers.getFsZipIndexStorage();
-        //FileSystem idxFs = this.currentWriterFs.getIdxFs();
-        //URI dirDirList = this.currentWriterFs;
-        /*URI dirDirList = fsZipIndexStorage.getPath("/").toUri();
-        Path newDirListFile = null;
-        try{
-            newDirListFile = ThFsFileIndexStorage.getNewDirListFile(dirDirList);
-            //OutputStream newOutputStream = fsZipIndexStorage.provider().newOutputStream(newDirListFile);
-        } catch(IOException ex){
-                ex.printStackTrace();
-        }*/
-        
         ThFsFileIndexStorage.writeData(forWriteData, indexStorage);
     }
 }

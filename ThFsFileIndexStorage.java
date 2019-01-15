@@ -46,21 +46,9 @@ public class ThFsFileIndexStorage {
         Boolean fileWriteException = Boolean.FALSE;
         Path newDirListFile = ThFsFileIndexStorage.getNewDirListFile(indexStorage);
 
-        /*try{
-            
-            Files.createFile(newDirListFile);
-        } catch(IOException ex){
-            ex.printStackTrace();
-            fileWriteException = Boolean.TRUE;
-        }*/
-        //newDirListFile.toString()
-        
         if( pollDataToDirListFile != null ){
             try(ObjectOutputStream oos = 
-                new ObjectOutputStream(//new ZipOutputStream(
-                        Files.newOutputStream(newDirListFile)
-                //)
-                ))
+                new ObjectOutputStream(Files.newOutputStream(newDirListFile)))
             {
                 oos.writeObject(pollDataToDirListFile);
             } catch(Exception ex){
