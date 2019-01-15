@@ -76,7 +76,7 @@ public class AppObjectsManagerState {
     public AppObjectsManagerState(AppThManager appThManager) {
         this.thManager = appThManager;
         this.currentListOfObjects = appThManager.getListOfObjects();
-        this.currentSelectedPathForMakeIndex = Paths.get("/usr/home/wladimirowichbiaran");
+        this.currentSelectedPathForMakeIndex = Paths.get("/");
         
         this.currentWorkState = new AppThWorkDirListState(this.currentListOfObjects, this.currentSelectedPathForMakeIndex);
         
