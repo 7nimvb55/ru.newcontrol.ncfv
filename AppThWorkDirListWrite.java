@@ -39,7 +39,7 @@ public class AppThWorkDirListWrite implements Runnable {
         ThreadLocal<ThLogicDirListWriter> logicWriter = new ThreadLocal<ThLogicDirListWriter>();
         try{
             logicWriter.set(new ThLogicDirListWriter(this.innerRuleForDirListWorkers,
-                dataStorage.getDirDirList().toUri()));
+                dataStorage));
             logicWriter.get().doWriter();
         } finally {
             logicWriter.remove();

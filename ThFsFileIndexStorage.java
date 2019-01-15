@@ -29,36 +29,26 @@ import java.nio.file.Paths;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.zip.ZipOutputStream;
 
 /**
  *
  * @author wladimirowichbiaran
  */
 public class ThFsFileIndexStorage {
-    protected static Path getNewDirListFile(URI dirForCreate) throws IOException{
-        Path getPathFromUri = Paths.get(dirForCreate);
-        
-        //pathIsNotDirectory(getPathFromUri);
-        //pathIsNotReadWriteLink(getPathFromUri);
+    protected static Path getNewDirListFile(NcParamFs indexStorage) {
         String newTmpFileName = AppFileNamesConstants.SZFS_DIR_LIST_PREFIX + UUID.randomUUID().toString();
-        Path getNewName = Paths.get(dirForCreate.toString(), "di", newTmpFileName);
+        Path getNewName = indexStorage.getIdxFs().getPath(indexStorage.getDirDirList().toString(), newTmpFileName);
         return getNewName;
     }
     protected static void writeData(ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> pollDataToDirListFile, 
-            FileSystem fsZipIndexStorage, Path fnOut){
+            NcParamFs indexStorage){
         Boolean fileWriteException = Boolean.FALSE;
-        /*Path newDirListFile = null;
-        try{
-            newDirListFile = ThFsFileIndexStorage.getNewDirListFile(dirForCreate);
-        } catch(IOException ex){
-                ex.printStackTrace();
-                fileWriteException = Boolean.TRUE;
-        }*/
-        
-        
+        Path newDirListFile = ThFsFileIndexStorage.getNewDirListFile(indexStorage);
+
         /*try{
             
-            //Files.createFile(newDirListFile);
+            Files.createFile(newDirListFile);
         } catch(IOException ex){
             ex.printStackTrace();
             fileWriteException = Boolean.TRUE;
@@ -67,9 +57,10 @@ public class ThFsFileIndexStorage {
         
         if( pollDataToDirListFile != null ){
             try(ObjectOutputStream oos = 
-                new ObjectOutputStream(fsZipIndexStorage.provider().newOutputStream(fnOut)
-                //new FileOutputStream(newOutputStream)
-                        ))
+                new ObjectOutputStream(//new ZipOutputStream(
+                        Files.newOutputStream(newDirListFile)
+                //)
+                ))
             {
                 oos.writeObject(pollDataToDirListFile);
             } catch(Exception ex){
@@ -79,7 +70,8 @@ public class ThFsFileIndexStorage {
         }
         if( fileWriteException ){
             try{
-                Files.createFile(Paths.get(fnOut.toString() + ".lck"));
+                Files.createFile(indexStorage.getIdxFs().getPath(indexStorage.getDirDirList().toString(), 
+                        newDirListFile.getFileName().toString() + ".lck"));
             } catch(IOException ex){
                 ex.printStackTrace();
                 fileWriteException = Boolean.TRUE;

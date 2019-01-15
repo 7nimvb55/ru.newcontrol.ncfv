@@ -38,16 +38,16 @@ public class TdataDirListFsObjAttr implements Serializable  {
     
     private final UUID randomUUID;
         
-    private final Path file;
-    private final Path fileName;
-    private final Path fileRealPath;
+    private final String file;
+    private final String fileName;
+    private final String fileRealPath;
     private final int hashCode;
         
-    private final Set<PosixFilePermission> posixFilePermissions;
+    //private final Set<PosixFilePermission> posixFilePermissions;
         
-    private final FileTime creationTime;
-    private final FileTime lastAccessTime;
-    private final FileTime lastModifiedTime;
+    private final long creationTime;
+    private final long lastAccessTime;
+    private final long lastModifiedTime;
     private final long sizeFromAttr;
     private final long sizeFromFiles;
         
@@ -118,14 +118,14 @@ public class TdataDirListFsObjAttr implements Serializable  {
         this.hightNumber = 0;
         this.lowNumber = lowNumber;
         this.randomUUID = UUID.randomUUID();
-        this.file = file;
-        this.fileName = fileName;
-        this.fileRealPath = fileRealPath;
+        this.file = file.toString();
+        this.fileName = fileName.toString();
+        this.fileRealPath = fileRealPath.toString();
         this.hashCode = hashCode;
-        this.posixFilePermissions = posixFilePermissions;
-        this.creationTime = creationTime;
-        this.lastAccessTime = lastAccessTime;
-        this.lastModifiedTime = lastModifiedTime;
+        //this.posixFilePermissions = posixFilePermissions;
+        this.creationTime = creationTime.toMillis();
+        this.lastAccessTime = lastAccessTime.toMillis();
+        this.lastModifiedTime = lastModifiedTime.toMillis();
         this.sizeFromAttr = sizeFromAttr;
         this.sizeFromFiles = sizeFromFiles;
         this.directory = directory;
