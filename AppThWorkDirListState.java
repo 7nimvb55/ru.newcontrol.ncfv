@@ -194,30 +194,12 @@ public class AppThWorkDirListState {
     }
     
     protected ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> getPipeReaderToTacker(){
-        //ReentrantLock forGetPipeReaderToTacker = new ReentrantLock();
-        //forGetPipeReaderToTacker.lock();
-        //try{
-            return this.pipeFromRunnerToTacker;
-        //} finally {
-        //    forGetPipeReaderToTacker.unlock();
-        //}
+        return this.pipeFromRunnerToTacker;
     }
     protected ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> getPipeTackerToPacker(){
-        //ReentrantLock forGetPipeTackerToPacker = new ReentrantLock();
-        //forGetPipeTackerToPacker.lock();
-        //try{
-            return this.pipeFromTackerToPacker;
-        //} finally {
-        //    forGetPipeTackerToPacker.unlock();
-        //}
+        return this.pipeFromTackerToPacker;
     }
     protected ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> getPipePackerToWriter(){
-        //ReentrantLock forGetPipePackerToWriter = new ReentrantLock();
-        //forGetPipePackerToWriter.lock();
-        //try{
-            return this.pipeFromPackerToWriter;
-        //} finally {
-        //    forGetPipePackerToWriter.unlock();
-        //}
+        return this.pipeFromPackerToWriter;
     }
 }

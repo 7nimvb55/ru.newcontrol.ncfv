@@ -22,6 +22,9 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  *
@@ -80,6 +83,14 @@ public class AppThManagerIndexStorage implements Runnable {
             workDirListState.joinDirlistTacker();
             workDirListState.joinDirlistPacker();
             workDirListState.joinDirlistWriter();
+            /*ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> pipePackerToWriter = innerRuleForDirListWorkers.getWorkDirListState().getPipePackerToWriter();
+            do{
+                ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> poll = pipePackerToWriter.poll();
+                if( poll != null ){
+                    Path dirDirList = this.currentWriterFs.getDirDirList();
+                    ThFsFileIndexStorage.writeData(forWriteData, dirDirList);
+                }
+            } while( !pipePackerToWriter.isEmpty() );*/
             
             
 

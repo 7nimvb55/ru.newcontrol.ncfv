@@ -15,6 +15,13 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URI;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -25,12 +32,15 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class ThLogicDirListWriter {
     private AppThWorkDirListRule innerRuleForDirListWorkers;
+    private URI currentWriterFs;
     
     private ThreadLocal<Long> counterPackCount;
     private ThreadLocal<Long> counterDataSize;
 
-    public ThLogicDirListWriter(AppThWorkDirListRule ruleForDirListWorkers) {
+    public ThLogicDirListWriter(AppThWorkDirListRule ruleForDirListWorkers,
+            URI currentStorageFs) {
         this.innerRuleForDirListWorkers = ruleForDirListWorkers;
+        this.currentWriterFs = currentStorageFs;
     }
     protected void doWriter(){
         this.counterPackCount = new ThreadLocal<Long>();
@@ -42,9 +52,13 @@ public class ThLogicDirListWriter {
         do{
             this.innerRuleForDirListWorkers.setDirListWriterLogicRunned();
         } while( !this.innerRuleForDirListWorkers.isDirListWriterLogicRunned() );
+        
         final ArrayBlockingQueue<ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>> pipePackerToWriter = 
                 this.innerRuleForDirListWorkers.getWorkDirListState().getPipePackerToWriter();
         outStatesOfWorkLogic(" Writer start run part");
+        Map<String, String> fsProperties = NcFsIdxStorageInit.getFsPropCreate();
+        try(FileSystem fsZipIndexStorage = 
+            FileSystems.getFileSystem(this.currentWriterFs)){
         do{
             outStatesOfWorkLogic(" Writer start part wait for Packer finished");
             //@todo all code to class
@@ -71,6 +85,7 @@ public class ThLogicDirListWriter {
                         Long tmpSumData = this.counterDataSize.get() + (long) poll.size();
                         this.counterDataSize.set( tmpSumData );
                         
+                        this.writeDataToStorage(poll,fsZipIndexStorage);
                     }
                     outDataProcessedOfWorkLogic(this.counterPackCount.get(), 
                             this.counterDataSize.get(),
@@ -80,7 +95,13 @@ public class ThLogicDirListWriter {
                 outStatesOfWorkLogic(" pipePackerToWriter is null");
             }
         }while( !this.innerRuleForDirListWorkers.isDirListPackerLogicFinished() );
-        
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            
+        } catch (Exception ex){
+            ex.printStackTrace();
+            
+        }
         do{
             this.innerRuleForDirListWorkers.setDirListWriterLogicFinished();
         } while( !this.innerRuleForDirListWorkers.isDirListWriterLogicFinished() );
@@ -103,5 +124,21 @@ public class ThLogicDirListWriter {
                             + "  ptwPs     "
                             + String.valueOf(pipeSize);
         NcAppHelper.outToConsoleIfDevAndParamTrue(strRunLogicLabel, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WRITER_DATA_COUNT);
+    }
+    private void writeDataToStorage(final ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> forWriteData,
+            FileSystem fsZipIndexStorage){
+        //FileSystem fsZipIndexStorage = this.innerRuleForDirListWorkers.getFsZipIndexStorage();
+        //FileSystem idxFs = this.currentWriterFs.getIdxFs();
+        //URI dirDirList = this.currentWriterFs;
+        URI dirDirList = fsZipIndexStorage.getPath("/").toUri();
+        Path newDirListFile = null;
+        try{
+            newDirListFile = ThFsFileIndexStorage.getNewDirListFile(dirDirList);
+            //OutputStream newOutputStream = fsZipIndexStorage.provider().newOutputStream(newDirListFile);
+        } catch(IOException ex){
+                ex.printStackTrace();
+        }
+        
+        ThFsFileIndexStorage.writeData(forWriteData, fsZipIndexStorage, newDirListFile);
     }
 }
