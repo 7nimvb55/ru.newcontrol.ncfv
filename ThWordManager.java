@@ -16,7 +16,7 @@
 package ru.newcontrol.ncfv;
 
 /**
- *
+ * Manager for index word 
  * @author wladimirowichbiaran
  */
 public class ThWordManager {
