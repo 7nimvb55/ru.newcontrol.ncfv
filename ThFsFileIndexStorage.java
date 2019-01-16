@@ -38,9 +38,9 @@ import java.util.zip.ZipOutputStream;
  */
 public class ThFsFileIndexStorage {
     protected static Path getNewDirListFile(NcParamFs indexStorage, Boolean notFull) {
-        String newTmpFileName = AppFileNamesConstants.SZFS_DIR_LIST_FILE_NOT_FULL;
+        String newTmpFileName = AppFileNamesConstants.SZFS_DIR_LIST_FILE_PREFIX;
         if( notFull ){
-            newTmpFileName = newTmpFileName + AppFileNamesConstants.SZFS_DIR_LIST_FILE_NOT_FULL;
+            newTmpFileName = newTmpFileName + AppFileNamesConstants.SZFS_DIR_LIST_FILE_NOT_LIMITED;
         }
         newTmpFileName = newTmpFileName + UUID.randomUUID().toString();
         

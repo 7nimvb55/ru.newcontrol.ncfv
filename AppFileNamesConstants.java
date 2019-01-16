@@ -42,6 +42,6 @@ public class AppFileNamesConstants {
     protected static String LOG_HTML_KEY_FOR_CURRENT_SUB_DIR = "currentHtmlSubDir";
     
     protected static String SZFS_DIR_LIST_FILE_PREFIX = "dl-";
-    protected static String SZFS_DIR_LIST_FILE_NOT_FULL = "notfull-";
+    protected static String SZFS_DIR_LIST_FILE_NOT_LIMITED = "notlimited-";
     
 }
