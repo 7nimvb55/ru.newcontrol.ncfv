@@ -97,6 +97,24 @@ public class ThLogicDirListWriter {
         }while( !this.innerRuleForDirListWorkers.isDirListPackerLogicFinished() );
 
         do{
+            ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> poll = pipePackerToWriter.poll();
+            if( poll != null ){
+                outStatesOfWorkLogic(" polled from pipePackerToWriter size is " + poll.size());
+                if( poll.size() == 100 ){
+                    Long tmpSumPack = this.counterPackCount.get() + 1L;
+                    this.counterPackCount.set( tmpSumPack );
+                }
+                Long tmpSumData = this.counterDataSize.get() + (long) poll.size();
+                this.counterDataSize.set( tmpSumData );
+
+                this.writeDataToStorage(poll, this.currentWriterFs);
+            }
+            outDataProcessedOfWorkLogic(this.counterPackCount.get(), 
+                    this.counterDataSize.get(),
+                    pipePackerToWriter.size());
+        } while( !pipePackerToWriter.isEmpty() );
+        
+        do{
             this.innerRuleForDirListWorkers.setDirListWriterLogicFinished();
         } while( !this.innerRuleForDirListWorkers.isDirListWriterLogicFinished() );
         

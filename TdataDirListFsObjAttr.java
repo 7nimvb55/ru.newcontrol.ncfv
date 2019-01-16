@@ -123,6 +123,7 @@ public class TdataDirListFsObjAttr implements Serializable  {
         this.fileRealPath = fileRealPath.toString();
         this.hashCode = hashCode;
         //this.posixFilePermissions = posixFilePermissions;
+        
         this.creationTime = creationTime.toMillis();
         this.lastAccessTime = lastAccessTime.toMillis();
         this.lastModifiedTime = lastModifiedTime.toMillis();

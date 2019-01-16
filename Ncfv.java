@@ -50,9 +50,16 @@ public class Ncfv {
     public static void main(String[] args) {
         AppEtcSecurityHelper.createNewSecurity();
         //AppObjectsListLab.runnablesInThreadsTest();
-        runIntoZipByThreads();
+        
+        
+        runIndexMakeIntoZipByThreads();
+        //runIndexMakeWordIntoZipByThreads();
     }
-    private static void runIntoZipByThreads(){
+    private static void runIndexMakeWordIntoZipByThreads(){
+        ThIndexWord thIndexWord = new ThIndexWord();
+        thIndexWord.start();
+    }
+    private static void runIndexMakeIntoZipByThreads(){
         ThIndexMaker thIndexMaker = new ThIndexMaker();
         thIndexMaker.start();
     }
