@@ -37,15 +37,26 @@ import java.util.zip.ZipOutputStream;
  * @author wladimirowichbiaran
  */
 public class ThFsFileIndexStorage {
-    protected static Path getNewDirListFile(NcParamFs indexStorage) {
-        String newTmpFileName = AppFileNamesConstants.SZFS_DIR_LIST_PREFIX + UUID.randomUUID().toString();
+    protected static Path getNewDirListFile(NcParamFs indexStorage, Boolean notFull) {
+        String newTmpFileName = AppFileNamesConstants.SZFS_DIR_LIST_FILE_NOT_FULL;
+        if( notFull ){
+            newTmpFileName = newTmpFileName + AppFileNamesConstants.SZFS_DIR_LIST_FILE_NOT_FULL;
+        }
+        newTmpFileName = newTmpFileName + UUID.randomUUID().toString();
+        
         Path getNewName = indexStorage.getIdxFs().getPath(indexStorage.getDirDirList().toString(), newTmpFileName);
         return getNewName;
     }
     protected static void writeData(ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> pollDataToDirListFile, 
             NcParamFs indexStorage){
         Boolean fileWriteException = Boolean.FALSE;
-        Path newDirListFile = ThFsFileIndexStorage.getNewDirListFile(indexStorage);
+        Path newDirListFile;
+        if( pollDataToDirListFile.size() != AppConstants.DIR_LIST_RECORDS_COUNT_LIMIT ){
+            newDirListFile = ThFsFileIndexStorage.getNewDirListFile(indexStorage, Boolean.TRUE);
+        } else {
+            newDirListFile = ThFsFileIndexStorage.getNewDirListFile(indexStorage, Boolean.FALSE);
+        }
+         
 
         if( pollDataToDirListFile != null ){
             try(ObjectOutputStream oos = 
