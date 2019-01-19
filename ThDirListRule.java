@@ -31,7 +31,7 @@ public class ThDirListRule{
     private String nameDirListPacker;
     private String nameDirListWriter;
     
-    private Path currentPathForMakeIndex;
+    private String currentPathForMakeIndex;
     private Boolean needFinishDirlistReader;
     private Boolean needFinishDirlistTacker;
     private Boolean needFinishDirListPacker;
@@ -62,7 +62,7 @@ public class ThDirListRule{
     
     private AppThWorkDirListState workDirListState;
 
-    public ThDirListRule (Path pathForMakeIndex) {
+    public ThDirListRule () {
         this.storageSetted = Boolean.FALSE;
         this.dirlistReaderSetted = Boolean.FALSE;
         this.dirlistTackerSetted = Boolean.FALSE;
@@ -87,7 +87,7 @@ public class ThDirListRule{
         
         this.workerDirList = new ThreadGroup("workerDirListGroup");
         
-        this.currentPathForMakeIndex = pathForMakeIndex;
+        this.currentPathForMakeIndex = "";
         this.needFinishDirlistReader = Boolean.FALSE;
         this.needFinishDirlistTacker = Boolean.FALSE;
         this.needFinishDirListPacker = Boolean.FALSE;
@@ -249,7 +249,7 @@ public class ThDirListRule{
         this.runDirListWriter.start();
     }
     
-    protected Path getCurrentPathForMakeIndex(){
+    protected String getCurrentPathForMakeIndex(){
         return this.currentPathForMakeIndex;
     }
     protected Boolean getNeedFinishStateDirlistReader(){

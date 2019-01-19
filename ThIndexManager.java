@@ -15,10 +15,20 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.UUID;
+
 /**
  *
  * @author wladimirowichbiaran
  */
-public class ThIndexManager {
+public class ThIndexManager extends Thread{
     
+    ThIndexManager(){
+        Thread.currentThread().setName(UUID.randomUUID().toString());
+    }
+    
+    @Override
+    public void run(){
+        
+    }
 }

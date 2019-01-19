@@ -41,7 +41,7 @@ public class AppLoggerStateReader {
     private Boolean fromHTMLjobIsDone;
     private Boolean fromHTMLisNewRunner;
     private final UUID randomUUID;
-    private final long CreationNanoTime;
+    private final long creationNanoTime;
     private String newJobThreadGroupName;
     private String newJobThreadName;
     
@@ -52,7 +52,7 @@ public class AppLoggerStateReader {
     public AppLoggerStateReader() {
         
         randomUUID = UUID.randomUUID();
-        CreationNanoTime = System.nanoTime();
+        creationNanoTime = System.nanoTime();
         setFalseFromHTMLLogFileNameChanged();
         setFalseFromHtmlFileNameSet();
         setFalseFromHTMLJobDone();
@@ -64,7 +64,7 @@ public class AppLoggerStateReader {
     }
     public AppLoggerStateReader(String strForEmptyWork) {
         randomUUID = UUID.randomUUID();
-        CreationNanoTime = System.nanoTime();
+        creationNanoTime = System.nanoTime();
         setFalseFromHTMLLogFileNameChanged();
         setFalseFromHtmlFileNameSet();
         setThreadName(strForEmptyWork);
@@ -159,7 +159,7 @@ public class AppLoggerStateReader {
         return this.randomUUID;
     }
     protected long getCreationTime(){
-        return this.CreationNanoTime;
+        return this.creationNanoTime;
     }
     
     protected Boolean isFromHtmlFileNameSet(){

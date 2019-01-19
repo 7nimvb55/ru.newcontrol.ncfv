@@ -51,11 +51,17 @@ public class Ncfv {
         AppEtcSecurityHelper.createNewSecurity();
         //AppObjectsListLab.runnablesInThreadsTest();
         
-        
+        //that make 
         runIndexMakeIntoZipByThreads();
-        //runIndexMakeWordIntoZipByThreads();
+        runIndexMakeWordIntoZipByThreads();
     }
     private static void runIndexMakeWordIntoZipByThreads(){
+        ThIndexManager thIndexManager = new ThIndexManager();
+        thIndexManager.start();
+        
+        ThIndexDirList thIndexDirList = new ThIndexDirList();
+        thIndexDirList.start();
+        
         ThIndexWord thIndexWord = new ThIndexWord();
         thIndexWord.start();
     }

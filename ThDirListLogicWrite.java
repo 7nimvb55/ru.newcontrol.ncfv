@@ -19,6 +19,6 @@ package ru.newcontrol.ncfv;
  *
  * @author wladimirowichbiaran
  */
-public class ThDirListFileSystemHelper {
-    //static function for release logic for do in DirList dl
+public class ThDirListLogicWrite {
+    
 }

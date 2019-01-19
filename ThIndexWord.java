@@ -21,14 +21,14 @@ import java.util.UUID;
  *
  * @author wladimirowichbiaran
  */
-public class ThIndexWord  extends Thread{
+public class ThIndexWord extends Thread{
     ThIndexWord(){
         Thread.currentThread().setName(UUID.randomUUID().toString());
     }
     
     @Override
     public void run(){
-        
+        ThWordManager thWordManager = new ThWordManager();
     }
     
 }
