@@ -20,5 +20,68 @@ package ru.newcontrol.ncfv;
  * @author wladimirowichbiaran
  */
 public class ThDirListState {
+    private ThDirListBusReaded busReadedJob;
+    private Boolean isSetReadedJob;
     
+    private ThDirListBusWrited busWritedJob;
+    private Boolean isSetWritedJob;
+    
+    ThDirListState(){
+        setFalseReadedJob();
+        setFalseWritedJob();
+    }
+    /**
+     * 
+     * @return
+     * @throws #java.lang.IllegalArgumentException
+     */
+    protected ThDirListBusReaded getBusJobForRead(){
+        if( !this.isReadedJob() ){
+            throw new IllegalArgumentException("Bus jobs for read not set in " + ThDirListState.class.getCanonicalName());
+        }
+        return this.busReadedJob;
+    }
+    protected void setBusJobForRead(final ThDirListBusReaded busReadOuter){
+        this.busReadedJob = busReadOuter;
+        setTrueReadedJob();
+    }
+    protected void setTrueReadedJob(){
+        this.isSetReadedJob = Boolean.TRUE;
+    }
+    protected void setFalseReadedJob(){
+        this.isSetReadedJob = Boolean.FALSE;
+    }
+    protected Boolean isReadedJob(){
+        if( this.isSetReadedJob ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * 
+     * @return 
+     * @throws #java.lang.IllegalArgumentException
+     */
+    protected ThDirListBusWrited getBusJobForWrite(){
+        if( !this.isReadedJob() ){
+            throw new IllegalArgumentException("Bus jobs for write not set in " + ThDirListState.class.getCanonicalName());
+        }
+        return this.busWritedJob;
+    }
+    protected void setBusJobForWrite(final ThDirListBusWrited busWriteOuter){
+        this.busWritedJob = busWriteOuter;
+        setTrueWritedJob();
+    }
+    protected void setTrueWritedJob(){
+        this.isSetWritedJob = Boolean.TRUE;
+    }
+    protected void setFalseWritedJob(){
+        this.isSetWritedJob = Boolean.FALSE;
+    }
+    protected Boolean isWritedJob(){
+        if( this.isSetWritedJob ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
 }

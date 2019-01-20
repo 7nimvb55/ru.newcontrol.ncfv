@@ -15,10 +15,100 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.nio.file.FileSystem;
+import java.nio.file.Path;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentSkipListMap;
+
 /**
  *
  * @author wladimirowichbiaran
  */
 public class ThDirListStateJobWriter {
+    private final UUID randomUUID;
+    private final long creationNanoTime;
     
+    private Boolean writerBlankJob;
+    private Boolean jobWriterIsDone;
+    private FileSystem readFromFs;
+    private Path forWritePath;
+    private int writerSize;
+    private Boolean isWriterDataEmpty;
+    
+    private ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> writerData;
+    
+    protected ThDirListStateJobWriter(){
+        this.randomUUID = UUID.randomUUID();
+        this.creationNanoTime = System.nanoTime();
+        setTrueBlankObject();
+        setTrueWriterJobDone();
+        
+        this.writerData = new ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>();
+    }
+    protected ThDirListStateJobWriter(Path pathForJob, FileSystem fromFs){
+        this.forWritePath = pathForJob;
+        this.readFromFs = fromFs;
+        this.randomUUID = UUID.randomUUID();
+        this.creationNanoTime = System.nanoTime();
+        setFalseBlankObject();
+        setFalseWriterJobDone();
+        
+        this.writerData = new ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>();
+    }
+
+    protected void setTrueBlankObject(){
+        this.writerBlankJob = Boolean.TRUE;
+    }
+    protected void setFalseBlankObject(){
+        this.writerBlankJob = Boolean.FALSE;
+    }
+    protected Boolean isBlankObject(){
+        if( this.writerBlankJob ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    protected UUID getID(){
+        return this.randomUUID;
+    }
+    protected long getCreationTime(){
+        return this.creationNanoTime;
+    }
+    protected void setTrueWriterJobDone(){
+        this.jobWriterIsDone = Boolean.TRUE;
+    }
+    protected void setFalseWriterJobDone(){
+        this.jobWriterIsDone = Boolean.FALSE;
+    }
+    protected Boolean isWriterJobDone(){
+        if( this.jobWriterIsDone ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    protected void putReadedData(final ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> inputedData){
+        this.writerSize = (int) inputedData.size();
+        this.writerData.putAll(inputedData);
+    }
+    protected ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> getWriterData(){
+        return this.writerData;
+    }
+    protected Boolean isReadedDataEmpty(){
+        if( this.writerData.isEmpty() ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    protected void cleanWriterData(){
+        this.writerData = new ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>();
+    }
+    protected Integer getWriterDataSize(){
+        return (int) this.writerSize;
+    }
+    protected FileSystem getReadedFileSystem(){
+        return this.readFromFs;
+    }
+    protected Path getWriterPath(){
+        return this.forWritePath;
+    }
 }

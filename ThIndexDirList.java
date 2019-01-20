@@ -38,16 +38,44 @@ public class ThIndexDirList extends Thread{
             //State create
             ThreadLocal<ThDirListManager> thDirListManager = new ThreadLocal<ThDirListManager>();
         try{    
-            thDirListBusDataReaded.set(new ThDirListBusReaded());
-            thDirListBusDataWrited.set(new ThDirListBusWrited());
-            thDirListRule.set(new ThDirListRule());
-            thDirListState.set(new ThDirListState());
-            thDirListStatistic.set(new ThDirListStatistic());
+            ThDirListBusReaded thDirListBusReaded = new ThDirListBusReaded();
+            thDirListBusDataReaded.set(thDirListBusReaded);
+            ThDirListBusWrited thDirListBusWrited = new ThDirListBusWrited();
+            thDirListBusDataWrited.set(thDirListBusWrited);
+            
+            ThDirListRule thDirListRuleObject = new ThDirListRule();
+            thDirListRule.set(thDirListRuleObject);
+            
+            ThDirListState thDirListStateObject = new ThDirListState();
+            thDirListState.set(thDirListStateObject);
+            
+            thDirListState.get().setBusJobForRead(thDirListBusDataReaded.get());
+            thDirListState.get().setBusJobForWrite(thDirListBusDataWrited.get());
+            thDirListRule.get().setDirListState(thDirListState.get());
+            
+            
+            
+            ThDirListStatistic thDirListStatisticObject = new ThDirListStatistic();
+            thDirListStatistic.set(thDirListStatisticObject);
+            
+            /**
+             * @todo
+             * ThDirListBusReaded Queue create in ThDirListState
+             * ThDirListManager implements from Runnable
+             * ThDirListManager.doIndexStorage() release in ThDirListLogicManager
+             * insert from ThDirListLogicManager queue into ThDirListBusReaded
+             * release in ThDirListWorkRead and ThDirListLogicRead job execution
+             * from ThDirListBusReaded Queue provided by ThDirListRule
+             */
             thDirListManager.set(new ThDirListManager());
             thDirListManager.get().doIndexStorage();
+            
         } finally {
             thDirListBusDataReaded.remove();
             thDirListBusDataWrited.remove();
+            thDirListRule.remove();
+            thDirListState.remove();
+            thDirListStatistic.remove();
             thDirListManager.remove();  
         }
     }

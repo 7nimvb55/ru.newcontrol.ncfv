@@ -23,6 +23,15 @@ import java.nio.file.Path;
  * @author wladimirowichbiaran
  */
 public class ThDirListRule{
+    //Released version
+    private ThreadGroup workerThDirList;
+    private ThDirListState currentDirListState;
+    private Boolean isSetDirListState;
+    
+    private ThDirListStatistic currentDirListCounter;
+    private Boolean isSetDirListCounter;
+    
+    //Old version
     private ThreadGroup workerDirList;
     
     private String nameIndexStorage;
@@ -63,6 +72,10 @@ public class ThDirListRule{
     private AppThWorkDirListState workDirListState;
 
     public ThDirListRule () {
+        //Released version
+        setFalseDirListState();
+        setFalseDirListCounter();
+        //Old version
         this.storageSetted = Boolean.FALSE;
         this.dirlistReaderSetted = Boolean.FALSE;
         this.dirlistTackerSetted = Boolean.FALSE;
@@ -93,6 +106,56 @@ public class ThDirListRule{
         this.needFinishDirListPacker = Boolean.FALSE;
         this.needFinishDirListWriter = Boolean.FALSE;
     }
+    //Released version
+    protected ThDirListState getDirListState(){
+        if( !this.isDirListState() ){
+            throw new IllegalArgumentException(ThDirListState.class.getCanonicalName() + " object not set in " + ThDirListRule.class.getCanonicalName());
+        }
+        return this.currentDirListState;
+    }
+    protected void setDirListState(final ThDirListState stateDirListOuter){
+        this.currentDirListState = stateDirListOuter;
+        setTrueDirListState();
+    }
+    protected void setTrueDirListState(){
+        this.isSetDirListState = Boolean.TRUE;
+    }
+    protected void setFalseDirListState(){
+        this.isSetDirListState = Boolean.FALSE;
+    }
+    protected Boolean isDirListState(){
+        if( this.isSetDirListState ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * ThDirListStatistic
+     * @return 
+     */
+    protected ThDirListStatistic getDirListCounter(){
+        if( !this.isDirListCounter() ){
+            throw new IllegalArgumentException(ThDirListStatistic.class.getCanonicalName() + " object not set in " + ThDirListRule.class.getCanonicalName());
+        }
+        return this.currentDirListCounter;
+    }
+    protected void setBusJobForWrite(final ThDirListStatistic counterDirListOuter){
+        this.currentDirListCounter = counterDirListOuter;
+        setTrueDirListCounter();
+    }
+    protected void setTrueDirListCounter(){
+        this.isSetDirListCounter = Boolean.TRUE;
+    }
+    protected void setFalseDirListCounter(){
+        this.isSetDirListCounter = Boolean.FALSE;
+    }
+    protected Boolean isDirListCounter(){
+        if( this.isSetDirListCounter ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    //Old version
     protected void setWorkDirListState(AppThWorkDirListState outerWorkDirListState){
         this.workDirListState = outerWorkDirListState;
         this.storageSetted = Boolean.TRUE;

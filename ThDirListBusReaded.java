@@ -17,6 +17,7 @@ package ru.newcontrol.ncfv;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
@@ -53,6 +54,40 @@ public class ThDirListBusReaded {
     }
     protected void cleanQueue(){
         this.forReadQueue = new ConcurrentSkipListMap<UUID, ThDirListStateJobReader>();
+    }
+    
+    protected void shrinkJobDoneItems(){
+        
+        ThreadLocal<ArrayBlockingQueue<UUID>> thListJobDone = new ThreadLocal<ArrayBlockingQueue<UUID>>();
+        try{
+            ArrayBlockingQueue<UUID> listOfDoneJob = new ArrayBlockingQueue<UUID>((int) this.forReadQueue.size());
+            thListJobDone.set(listOfDoneJob);
+            for( Map.Entry<UUID, ThDirListStateJobReader> itemJob : this.forReadQueue.entrySet() ){
+                if( itemJob.getValue().isReaderJobDone() ){
+                    thListJobDone.get().add(itemJob.getKey());
+                }
+            }
+            try{
+                if( !thListJobDone.get().isEmpty() ){
+                    do{
+                        UUID poll = thListJobDone.get().poll();
+                        if( poll != null){
+                            this.forReadQueue.remove(poll);
+                            UUID ceilingKey = this.forReadQueue.ceilingKey(poll);
+                            if( ceilingKey == null ){
+                                thListJobDone.get().add(poll);
+                            }
+                        }
+                    }while( !thListJobDone.get().isEmpty() );
+                }
+            } catch ( ClassCastException ex ){
+                ex.printStackTrace();
+            } catch ( NullPointerException ex ){
+                ex.printStackTrace();
+            }
+        } finally {
+            thListJobDone.remove();
+        }
     }
     
 }
