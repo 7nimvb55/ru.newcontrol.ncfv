@@ -19,6 +19,16 @@ package ru.newcontrol.ncfv;
  *
  * @author wladimirowichbiaran
  */
-public class ThDirListWorkWrite {
+public class ThDirListWorkWrite implements Runnable{
+    private ThreadLocal<ThDirListRule> ruleDirListWriteWork;
     
+    ThDirListWorkWrite(final ThDirListRule outerRuleWriter){
+        this.ruleDirListWriteWork = new ThreadLocal<ThDirListRule>();
+        this.ruleDirListWriteWork.set(outerRuleWriter);
+    }
+    
+    @Override
+    public void run(){
+        this.ruleDirListWriteWork.get();
+    }
 }

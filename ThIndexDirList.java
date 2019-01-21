@@ -51,13 +51,14 @@ public class ThIndexDirList extends Thread{
             
             thDirListState.get().setBusJobForRead(thDirListBusDataReaded.get());
             thDirListState.get().setBusJobForWrite(thDirListBusDataWrited.get());
+            
             thDirListRule.get().setDirListState(thDirListState.get());
-            
-            
+            //Statistic into State
+            //
             
             ThDirListStatistic thDirListStatisticObject = new ThDirListStatistic();
             thDirListStatistic.set(thDirListStatisticObject);
-            
+            thDirListRule.get().setDirListCounter(thDirListStatistic.get());
             /**
              * @todo
              * ThDirListBusReaded Queue create in ThDirListState

@@ -31,6 +31,9 @@ public class ThDirListRule{
     private ThDirListStatistic currentDirListCounter;
     private Boolean isSetDirListCounter;
     
+    
+    private ThDirListWorkRead runnableWorkerDirListRead;
+    private ThDirListWorkWrite runnableWorkerDirListWrite;
     //Old version
     private ThreadGroup workerDirList;
     
@@ -139,7 +142,7 @@ public class ThDirListRule{
         }
         return this.currentDirListCounter;
     }
-    protected void setBusJobForWrite(final ThDirListStatistic counterDirListOuter){
+    protected void setDirListCounter(final ThDirListStatistic counterDirListOuter){
         this.currentDirListCounter = counterDirListOuter;
         setTrueDirListCounter();
     }

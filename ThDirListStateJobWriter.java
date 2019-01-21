@@ -30,7 +30,7 @@ public class ThDirListStateJobWriter {
     
     private Boolean writerBlankJob;
     private Boolean jobWriterIsDone;
-    private FileSystem readFromFs;
+    private FileSystem writeToFs;
     private Path forWritePath;
     private int writerSize;
     private Boolean isWriterDataEmpty;
@@ -47,7 +47,7 @@ public class ThDirListStateJobWriter {
     }
     protected ThDirListStateJobWriter(Path pathForJob, FileSystem fromFs){
         this.forWritePath = pathForJob;
-        this.readFromFs = fromFs;
+        this.writeToFs = fromFs;
         this.randomUUID = UUID.randomUUID();
         this.creationNanoTime = System.nanoTime();
         setFalseBlankObject();
@@ -106,7 +106,7 @@ public class ThDirListStateJobWriter {
         return (int) this.writerSize;
     }
     protected FileSystem getReadedFileSystem(){
-        return this.readFromFs;
+        return this.writeToFs;
     }
     protected Path getWriterPath(){
         return this.forWritePath;

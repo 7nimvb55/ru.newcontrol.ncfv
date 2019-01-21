@@ -58,10 +58,10 @@ public class Ncfv {
     private static void runIndexMakeWordIntoZipByThreads(){
         ThIndexManager thIndexManager = new ThIndexManager();
         thIndexManager.start();
-        
+        //read data from dir list, after make word index write data to index storages
         ThIndexDirList thIndexDirList = new ThIndexDirList();
         thIndexDirList.start();
-        
+        //make word index
         ThIndexWord thIndexWord = new ThIndexWord();
         thIndexWord.start();
     }
