@@ -83,6 +83,7 @@ public class ThDirListRule{
         setFalseDirListState();
         setFalseDirListCounter();
         setFalseDirListWorkReader();
+        setFalseDirListWorkWriter();
         //Old version
         this.storageSetted = Boolean.FALSE;
         this.dirlistReaderSetted = Boolean.FALSE;
@@ -205,7 +206,7 @@ public class ThDirListRule{
     }
     protected void setDirListWorkWriter(final ThDirListWorkWrite runnableWorkerDirListWriteOuter){
         this.runnableWorkerDirListWrite = runnableWorkerDirListWriteOuter;
-        setTrueDirListWorkReader();
+        setTrueDirListWorkWriter();
     }
     protected void setTrueDirListWorkWriter(){
         this.isSetDirListWorkWriter = Boolean.TRUE;
