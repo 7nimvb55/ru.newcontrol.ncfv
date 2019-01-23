@@ -20,16 +20,18 @@ package ru.newcontrol.ncfv;
  * @author wladimirowichbiaran
  */
 public class ThDirListWorkRead implements Runnable{
-    private ThreadLocal<ThDirListRule> ruleDirListReadWork;
+    //private ThreadLocal<ThDirListRule> ruleDirListReadWork;
+    private ThDirListRule ruleDirListReadWork;
     
     ThDirListWorkRead(final ThDirListRule outerRuleReader){
-        this.ruleDirListReadWork = new ThreadLocal<ThDirListRule>();
-        this.ruleDirListReadWork.set(outerRuleReader);
+        //this.ruleDirListReadWork = new ThreadLocal<ThDirListRule>();
+        //this.ruleDirListReadWork.set(outerRuleReader);
+        this.ruleDirListReadWork = outerRuleReader;
     }
     
     @Override
     public void run(){
-        this.ruleDirListReadWork.get();
+        System.out.println(ThDirListWorkRead.class.getCanonicalName() + " run and say " + this.ruleDirListReadWork.toString());
         ThreadLocal<ThDirListLogicRead> logicReader = new ThreadLocal<ThDirListLogicRead>();
         try{
             

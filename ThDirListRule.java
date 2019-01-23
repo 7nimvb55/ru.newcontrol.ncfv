@@ -17,6 +17,7 @@ package ru.newcontrol.ncfv;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
+import java.util.UUID;
 
 /**
  *
@@ -33,7 +34,9 @@ public class ThDirListRule{
     
     
     private ThDirListWorkRead runnableWorkerDirListRead;
+    private Boolean isSetDirListWorkReader;
     private ThDirListWorkWrite runnableWorkerDirListWrite;
+    private Boolean isSetDirListWorkWriter;
     //Old version
     private ThreadGroup workerDirList;
     
@@ -76,8 +79,10 @@ public class ThDirListRule{
 
     public ThDirListRule () {
         //Released version
+        this.workerThDirList = new ThreadGroup(UUID.randomUUID().toString());
         setFalseDirListState();
         setFalseDirListCounter();
+        setFalseDirListWorkReader();
         //Old version
         this.storageSetted = Boolean.FALSE;
         this.dirlistReaderSetted = Boolean.FALSE;
@@ -110,6 +115,10 @@ public class ThDirListRule{
         this.needFinishDirListWriter = Boolean.FALSE;
     }
     //Released version
+    /**
+     * ThDirListState
+     * @return 
+     */
     protected ThDirListState getDirListState(){
         if( !this.isDirListState() ){
             throw new IllegalArgumentException(ThDirListState.class.getCanonicalName() + " object not set in " + ThDirListRule.class.getCanonicalName());
@@ -158,6 +167,82 @@ public class ThDirListRule{
         }
         return Boolean.FALSE;
     }
+    /**
+     * ThDirListWorkRead
+     * @return 
+     */
+    protected ThDirListWorkRead getDirListWorkReader(){
+        if( !this.isDirListWorkReader() ){
+            throw new IllegalArgumentException(ThDirListWorkRead.class.getCanonicalName() + " object not set in " + ThDirListRule.class.getCanonicalName());
+        }
+        return this.runnableWorkerDirListRead;
+    }
+    protected void setDirListWorkReader(final ThDirListWorkRead runnableWorkerDirListReadOuter){
+        this.runnableWorkerDirListRead = runnableWorkerDirListReadOuter;
+        setTrueDirListWorkReader();
+    }
+    protected void setTrueDirListWorkReader(){
+        this.isSetDirListWorkReader = Boolean.TRUE;
+    }
+    protected void setFalseDirListWorkReader(){
+        this.isSetDirListWorkReader = Boolean.FALSE;
+    }
+    protected Boolean isDirListWorkReader(){
+        if( this.isSetDirListWorkReader ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * ThDirListWorkWrite
+     * @return 
+     */
+    protected ThDirListWorkWrite getDirListWorkWriter(){
+        if( !this.isDirListWorkReader() ){
+            throw new IllegalArgumentException(ThDirListWorkWrite.class.getCanonicalName() + " object not set in " + ThDirListRule.class.getCanonicalName());
+        }
+        return this.runnableWorkerDirListWrite;
+    }
+    protected void setDirListWorkWriter(final ThDirListWorkWrite runnableWorkerDirListWriteOuter){
+        this.runnableWorkerDirListWrite = runnableWorkerDirListWriteOuter;
+        setTrueDirListWorkReader();
+    }
+    protected void setTrueDirListWorkWriter(){
+        this.isSetDirListWorkWriter = Boolean.TRUE;
+    }
+    protected void setFalseDirListWorkWriter(){
+        this.isSetDirListWorkWriter = Boolean.FALSE;
+    }
+    protected Boolean isDirListWorkWriter(){
+        if( this.isSetDirListWorkWriter ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    //Check for ready and Run workers in threads
+    protected void runReadFromDirList(){
+        if( isDirListWorkReader() ){
+            /**
+             * @todo release workReader Bus names for runned threads names threads
+             * for release wait him finish functions
+             */
+            String toStringWorkReader = UUID.randomUUID().toString();
+            Thread thForWorkRead = new Thread(this.workerThDirList, this.runnableWorkerDirListRead, toStringWorkReader);
+            thForWorkRead.start();
+        }
+    }
+    protected void runWriteToDirList(){
+        if( isDirListWorkWriter() ){
+            /**
+             * @todo release workWriter Bus names for runned threads names threads
+             * for release wait him finish functions
+             */
+            String toStringWorkWriter = UUID.randomUUID().toString();
+            Thread thForWorkWrite = new Thread(this.workerThDirList, this.runnableWorkerDirListWrite, toStringWorkWriter);
+            thForWorkWrite.start();
+        }
+    }
+    
     //Old version
     protected void setWorkDirListState(AppThWorkDirListState outerWorkDirListState){
         this.workDirListState = outerWorkDirListState;

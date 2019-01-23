@@ -34,14 +34,16 @@ public class ThIndexDirList extends Thread{
             ThreadLocal<ThDirListRule> thDirListRule = new ThreadLocal<ThDirListRule>();
             ThreadLocal<ThDirListState> thDirListState = new ThreadLocal<ThDirListState>();
             ThreadLocal<ThDirListStatistic> thDirListStatistic = new ThreadLocal<ThDirListStatistic>();
-            //Rule create
-            //State create
-            /**
-             * ThDirListWorkRead implements Runnable
-             * ThDirListWorkWrite implements Runnable
-             * create and set in ThDirListRule
-             * also send ThDirListRule into ThDirListManager constructor
-             */
+        //Rule create
+        //State create
+        /**
+         * ThDirListWorkRead implements Runnable
+         * ThDirListWorkWrite implements Runnable
+         * create and set in ThDirListRule
+         * also send ThDirListRule into ThDirListManager constructor
+         */
+            ThreadLocal<ThDirListWorkRead> thDirListWorkRead = new ThreadLocal<ThDirListWorkRead>();
+            ThreadLocal<ThDirListWorkWrite> thDirListWorkWrite = new ThreadLocal<ThDirListWorkWrite>();
             ThreadLocal<ThDirListLogicManager> thDirListManager = new ThreadLocal<ThDirListLogicManager>();
         try{    
             ThDirListBusReaded thDirListBusReaded = new ThDirListBusReaded();
@@ -78,6 +80,17 @@ public class ThIndexDirList extends Thread{
              * release in ThDirListWorkRead and ThDirListLogicRead job execution
              * from ThDirListBusReaded Queue provided by ThDirListRule
              */
+            
+            thDirListWorkRead.set(new ThDirListWorkRead(thDirListRuleObject));
+            thDirListRule.get().setDirListWorkReader(thDirListWorkRead.get());
+            thDirListWorkWrite.set(new ThDirListWorkWrite(thDirListRuleObject));
+            thDirListRule.get().setDirListWorkWriter(thDirListWorkWrite.get());
+            
+            thDirListRule.get().runReadFromDirList();
+            
+            thDirListRule.get().runWriteToDirList();
+            
+            //need run into ThDirListWorkerManager
             thDirListManager.set(new ThDirListLogicManager());
             thDirListManager.get().doIndexStorage();
             
@@ -87,6 +100,8 @@ public class ThIndexDirList extends Thread{
             thDirListRule.remove();
             thDirListState.remove();
             thDirListStatistic.remove();
+            thDirListWorkRead.remove();
+            thDirListWorkWrite.remove();
             thDirListManager.remove();  
         }
     }
