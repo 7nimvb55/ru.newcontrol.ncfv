@@ -32,11 +32,13 @@ public class ThDirListWorkWrite implements Runnable{
     @Override
     public void run(){
         System.out.println(ThDirListWorkWrite.class.getCanonicalName() + " run and say " + this.ruleDirListWriteWork.toString());
+        this.ruleDirListWriteWork.setTrueRunnedDirListWorkWriter();
         ThreadLocal<ThDirListLogicWrite> logicWriter = new ThreadLocal<ThDirListLogicWrite>();
         try{
             
         } finally {
             logicWriter.remove();
+            this.ruleDirListWriteWork.setFalseRunnedDirListWorkWriter();
         }
     }
 }

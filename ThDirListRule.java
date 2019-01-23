@@ -35,8 +35,11 @@ public class ThDirListRule{
     
     private ThDirListWorkRead runnableWorkerDirListRead;
     private Boolean isSetDirListWorkReader;
+    private Boolean isRunDirListWorkReader;
+    
     private ThDirListWorkWrite runnableWorkerDirListWrite;
     private Boolean isSetDirListWorkWriter;
+    private Boolean isRunDirListWorkWriter;
     //Old version
     private ThreadGroup workerDirList;
     
@@ -84,6 +87,8 @@ public class ThDirListRule{
         setFalseDirListCounter();
         setFalseDirListWorkReader();
         setFalseDirListWorkWriter();
+        setFalseRunnedDirListWorkReader();
+        setFalseRunnedDirListWorkWriter();
         //Old version
         this.storageSetted = Boolean.FALSE;
         this.dirlistReaderSetted = Boolean.FALSE;
@@ -194,6 +199,18 @@ public class ThDirListRule{
         }
         return Boolean.FALSE;
     }
+    protected void setTrueRunnedDirListWorkReader(){
+        this.isRunDirListWorkReader = Boolean.TRUE;
+    }
+    protected void setFalseRunnedDirListWorkReader(){
+        this.isRunDirListWorkReader = Boolean.FALSE;
+    }
+    protected Boolean isRunnedDirListWorkReader(){
+        if( this.isRunDirListWorkReader ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
     /**
      * ThDirListWorkWrite
      * @return 
@@ -220,9 +237,21 @@ public class ThDirListRule{
         }
         return Boolean.FALSE;
     }
+    protected void setTrueRunnedDirListWorkWriter(){
+        this.isRunDirListWorkWriter = Boolean.TRUE;
+    }
+    protected void setFalseRunnedDirListWorkWriter(){
+        this.isRunDirListWorkWriter = Boolean.FALSE;
+    }
+    protected Boolean isRunnedDirListWorkWriter(){
+        if( this.isRunDirListWorkWriter ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
     //Check for ready and Run workers in threads
     protected void runReadFromDirList(){
-        if( isDirListWorkReader() ){
+        if( isDirListWorkReader() && !isRunnedDirListWorkReader() ){
             /**
              * @todo release workReader Bus names for runned threads names threads
              * for release wait him finish functions
@@ -233,7 +262,7 @@ public class ThDirListRule{
         }
     }
     protected void runWriteToDirList(){
-        if( isDirListWorkWriter() ){
+        if( isDirListWorkWriter() && !isRunnedDirListWorkWriter() ){
             /**
              * @todo release workWriter Bus names for runned threads names threads
              * for release wait him finish functions
