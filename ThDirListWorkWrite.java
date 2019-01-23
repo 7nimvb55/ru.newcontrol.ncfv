@@ -30,5 +30,11 @@ public class ThDirListWorkWrite implements Runnable{
     @Override
     public void run(){
         this.ruleDirListWriteWork.get();
+        ThreadLocal<ThDirListLogicWrite> logicWriter = new ThreadLocal<ThDirListLogicWrite>();
+        try{
+            
+        } finally {
+            logicWriter.remove();
+        }
     }
 }

@@ -31,7 +31,7 @@ import java.util.Map;
  *
  * @author wladimirowichbiaran
  */
-public class ThDirListManager {
+public class ThDirListLogicManager {
     
     
     protected void doIndexStorage(){

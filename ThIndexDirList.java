@@ -36,7 +36,13 @@ public class ThIndexDirList extends Thread{
             ThreadLocal<ThDirListStatistic> thDirListStatistic = new ThreadLocal<ThDirListStatistic>();
             //Rule create
             //State create
-            ThreadLocal<ThDirListManager> thDirListManager = new ThreadLocal<ThDirListManager>();
+            /**
+             * ThDirListWorkRead implements Runnable
+             * ThDirListWorkWrite implements Runnable
+             * create and set in ThDirListRule
+             * also send ThDirListRule into ThDirListManager constructor
+             */
+            ThreadLocal<ThDirListLogicManager> thDirListManager = new ThreadLocal<ThDirListLogicManager>();
         try{    
             ThDirListBusReaded thDirListBusReaded = new ThDirListBusReaded();
             thDirListBusDataReaded.set(thDirListBusReaded);
@@ -44,6 +50,7 @@ public class ThIndexDirList extends Thread{
             thDirListBusDataWrited.set(thDirListBusWrited);
             
             ThDirListRule thDirListRuleObject = new ThDirListRule();
+            System.out.println(thDirListRuleObject.toString());
             thDirListRule.set(thDirListRuleObject);
             
             ThDirListState thDirListStateObject = new ThDirListState();
@@ -61,14 +68,17 @@ public class ThIndexDirList extends Thread{
             thDirListRule.get().setDirListCounter(thDirListStatistic.get());
             /**
              * @todo
-             * ThDirListBusReaded Queue create in ThDirListState
+             * ThDirListBusReaded Queue set into ThDirListState
+             * ThDirListBusWrited Queue set into ThDirListState
+             * ThDirListRule insert into all Runnable workers by his constructor
+             * after create Runnable workers set him in ThDirListRule class fields
              * ThDirListManager implements from Runnable
              * ThDirListManager.doIndexStorage() release in ThDirListLogicManager
              * insert from ThDirListLogicManager queue into ThDirListBusReaded
              * release in ThDirListWorkRead and ThDirListLogicRead job execution
              * from ThDirListBusReaded Queue provided by ThDirListRule
              */
-            thDirListManager.set(new ThDirListManager());
+            thDirListManager.set(new ThDirListLogicManager());
             thDirListManager.get().doIndexStorage();
             
         } finally {
