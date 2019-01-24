@@ -50,7 +50,13 @@ public class Ncfv {
     public static void main(String[] args) {
         AppEtcSecurityHelper.createNewSecurity();
         //AppObjectsListLab.runnablesInThreadsTest();
-        
+        /**
+         * @todo
+         * 
+         * in runIndexMakeIntoZipByThreads need fix for start create zip storage
+         * in runIndexMakeWordIntoZipByThreads need start after creation part of
+         * index in runIndexMakeIntoZipByThreads
+         */
         //that make 
         runIndexMakeIntoZipByThreads();
         runIndexMakeWordIntoZipByThreads();

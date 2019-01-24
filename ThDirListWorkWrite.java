@@ -20,12 +20,9 @@ package ru.newcontrol.ncfv;
  * @author wladimirowichbiaran
  */
 public class ThDirListWorkWrite implements Runnable{
-    //private ThreadLocal<ThDirListRule> ruleDirListWriteWork;
     private ThDirListRule ruleDirListWriteWork;
     
     ThDirListWorkWrite(final ThDirListRule outerRuleWriter){
-        //this.ruleDirListWriteWork = new ThreadLocal<ThDirListRule>();
-        //this.ruleDirListWriteWork.set(outerRuleWriter);
         this.ruleDirListWriteWork = outerRuleWriter;
     }
     
