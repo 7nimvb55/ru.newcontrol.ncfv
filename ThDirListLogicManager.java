@@ -34,7 +34,7 @@ import java.util.Map;
 public class ThDirListLogicManager {
     
     
-    protected void doIndexStorage(){
+    protected void doIndexStorage(ThDirListBusReaded busReadedJob){
         Path pathIndexFile = NcFsIdxStorageInit.buildPathToFileOfIdxStorage();
         Map<String, String> fsProperties = NcFsIdxStorageInit.getFsPropExist();
         
@@ -54,7 +54,7 @@ public class ThDirListLogicManager {
             //Insert thread code for do in Zip here
             
             System.out.println("Storage is " + fsZipIndexStorage.toString());
-            ThDirListBusReaded thDirListBusReaded = new ThDirListBusReaded();
+            
             Path lookPath = fsZipIndexStorage.getPath(dataStorage.getDirDirList().toString());
             int count = 0;
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(lookPath,"{" + AppFileNamesConstants.SZFS_DIR_LIST_FILE_PREFIX + "}*")) {
@@ -62,7 +62,7 @@ public class ThDirListLogicManager {
                     pathIsNotReadWriteLink(entry);
                     pathIsNotFile(entry);
                     ThDirListStateJobReader thDirListStateJobReader = new ThDirListStateJobReader(entry, fsZipIndexStorage);
-                    thDirListBusReaded.addReaderJob(thDirListStateJobReader);
+                    busReadedJob.addReaderJob(thDirListStateJobReader);
                     //String replacedPath = entry.toString().replace(FILE_EXTENTION, FILE_FULL_EXTENTION);
                     //Path lockedFilePath = Paths.get(replacedPath);
                     //if( Files.notExists(lockedFilePath) ){

@@ -86,7 +86,7 @@ public class ThIndexDirList extends Thread{
             thDirListWorkWrite.set(new ThDirListWorkWrite(thDirListRuleObject));
             thDirListRule.get().setDirListWorkWriter(thDirListWorkWrite.get());
             
-            thDirListRule.get().runReadFromDirList();
+            //thDirListRule.get().runReadFromDirList();
             
             thDirListRule.get().runWriteToDirList();
             

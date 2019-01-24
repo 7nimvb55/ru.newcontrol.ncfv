@@ -35,7 +35,8 @@ public class ThDirListWorkRead implements Runnable{
         this.ruleDirListReadWork.setTrueRunnedDirListWorkReader();
         ThreadLocal<ThDirListLogicRead> logicReader = new ThreadLocal<ThDirListLogicRead>();
         try{
-            
+            logicReader.set(new ThDirListLogicRead());
+            logicReader.get().doIndexStorage(this.ruleDirListReadWork.getDirListState().getBusJobForRead());
         } finally {
             logicReader.remove();
             this.ruleDirListReadWork.setFalseRunnedDirListWorkReader();

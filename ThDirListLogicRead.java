@@ -15,10 +15,22 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.Map;
+import java.util.UUID;
+
 /**
  *
  * @author wladimirowichbiaran
  */
 public class ThDirListLogicRead {
-    
+    protected void doIndexStorage(ThDirListBusReaded busReadedJob){
+        int countJobs = 0;
+        while( !busReadedJob.isJobQueueEmpty() ){
+            ThDirListStateJobReader jobForRead = busReadedJob.getJobForRead();
+            if( !jobForRead.isBlankObject() ){
+                System.out.println("idx: " + countJobs + " file " + jobForRead.getReadedPath().toString());
+                countJobs++;
+            }
+        }
+    }
 }

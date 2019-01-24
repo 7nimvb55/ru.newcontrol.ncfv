@@ -32,7 +32,10 @@ public class ThDirListWorkManager implements Runnable{
         this.ruleDirListManagerWork.setTrueRunnedDirListWorkManager();
         ThreadLocal<ThDirListLogicManager> logicManager = new ThreadLocal<ThDirListLogicManager>();
         try{
-            
+            logicManager.set(new ThDirListLogicManager());
+            logicManager.get().doIndexStorage(this.ruleDirListManagerWork.getDirListState().getBusJobForRead());
+            //this.ruleDirListManagerWork.getDirListState().getBusJobForRead().outToConsoleBusContent();
+            this.ruleDirListManagerWork.runReadFromDirList();
         } finally {
             logicManager.remove();
             this.ruleDirListManagerWork.setFalseRunnedDirListWorkManager();

@@ -89,5 +89,16 @@ public class ThDirListBusReaded {
             thListJobDone.remove();
         }
     }
+    protected void outToConsoleBusContent(){
+        for(Map.Entry<UUID, ThDirListStateJobReader> itemBus : this.forReadQueue.entrySet() ){
+            System.out.println("Key: " 
+                    + itemBus.getKey().toString()
+                    + " Value: "
+                    + itemBus.getValue().getReadedPath().toString()
+                    + " isDoneJob: "
+                    + String.valueOf(itemBus.getValue().isReaderJobDone())
+            );
+        }
+    }
     
 }
