@@ -250,14 +250,14 @@ public class ThDirListRule{
             thForWorkWrite.start();
         }
     }
-    protected void runManagerToDirList(){
+    protected void runManagerDirListWorkers(){
         if( isDirListWorkManager() && !isRunnedDirListWorkManager() ){
             /**
              * @todo release workWriter Bus names for runned threads names threads
              * for release wait him finish functions
              */
             String toStringWorkManager = UUID.randomUUID().toString();
-            Thread thForWorkManager = new Thread(this.workerThDirList, this.runnableWorkerDirListWrite, toStringWorkManager);
+            Thread thForWorkManager = new Thread(this.workerThDirList, this.runnableWorkerDirListManager, toStringWorkManager);
             thForWorkManager.start();
         }
     }

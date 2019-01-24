@@ -58,7 +58,7 @@ public class Ncfv {
          * index in runIndexMakeIntoZipByThreads
          */
         //that make 
-        runIndexMakeIntoZipByThreads();
+        //runIndexMakeIntoZipByThreads();
         runIndexMakeWordIntoZipByThreads();
     }
     private static void runIndexMakeWordIntoZipByThreads(){

@@ -28,6 +28,7 @@ public class ThDirListWorkManager implements Runnable{
     
     @Override
     public void run(){
+        System.out.println(ThDirListWorkManager.class.getCanonicalName() + " run and say " + this.ruleDirListManagerWork.toString());
         this.ruleDirListManagerWork.setTrueRunnedDirListWorkManager();
         ThreadLocal<ThDirListLogicManager> logicManager = new ThreadLocal<ThDirListLogicManager>();
         try{

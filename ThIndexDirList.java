@@ -44,7 +44,7 @@ public class ThIndexDirList extends Thread{
          */
             ThreadLocal<ThDirListWorkRead> thDirListWorkRead = new ThreadLocal<ThDirListWorkRead>();
             ThreadLocal<ThDirListWorkWrite> thDirListWorkWrite = new ThreadLocal<ThDirListWorkWrite>();
-            ThreadLocal<ThDirListLogicManager> thDirListManager = new ThreadLocal<ThDirListLogicManager>();
+            ThreadLocal<ThDirListWorkManager> thDirListManager = new ThreadLocal<ThDirListWorkManager>();
         try{    
             ThDirListBusReaded thDirListBusReaded = new ThDirListBusReaded();
             thDirListBusDataReaded.set(thDirListBusReaded);
@@ -91,8 +91,9 @@ public class ThIndexDirList extends Thread{
             thDirListRule.get().runWriteToDirList();
             
             //need run into ThDirListWorkerManager
-            thDirListManager.set(new ThDirListLogicManager());
-            thDirListManager.get().doIndexStorage();
+            thDirListManager.set(new ThDirListWorkManager(thDirListRuleObject));
+            thDirListRule.get().setDirListWorkManager(thDirListManager.get());
+            thDirListRule.get().runManagerDirListWorkers();
             
         } finally {
             thDirListBusDataReaded.remove();
