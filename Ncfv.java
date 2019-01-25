@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
 import javax.security.auth.Policy;
 
 
@@ -59,30 +60,12 @@ public class Ncfv {
          */
         //that make
         String runIndexMakeIntoZipByThreads = runIndexMakeIntoZipByThreads();
-        runIndexMakeWordIntoZipByThreads(runIndexMakeIntoZipByThreads);
+        System.out.println("Waited name " + runIndexMakeIntoZipByThreads);
+        
+        runIndexMakeWordIntoZipByThreads();
     }
-    private static void runIndexMakeWordIntoZipByThreads(String waitForName){
-        Thread currentThread = Thread.currentThread();
-                
-        Boolean eqNames = Boolean.FALSE;
-        try{
-            currentThread.sleep(50000);
-            do{
-                eqNames = Boolean.FALSE;
-                Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
-                for(Entry<Thread, StackTraceElement[]> stackItem : allStackTraces.entrySet()){
-                    if( stackItem.getKey().getName().equalsIgnoreCase(waitForName) ){
-                        eqNames = Boolean.TRUE;
-                    }
-                }
-                currentThread.sleep(1000);
-
-                System.out.println(" _|_|_|_|_ wait for index process finished _|_|_|_|_-+-+-+-+|+-+|+-");
-            } while (eqNames);
-        } catch (InterruptedException ex){
-                ex.printStackTrace();
-                System.out.println(ex.getMessage());
-        }
+    private static void runIndexMakeWordIntoZipByThreads(){
+        
         ThIndexManager thIndexManager = new ThIndexManager();
         thIndexManager.start();
         //read data from dir list, after make word index write data to index storages
@@ -97,8 +80,36 @@ public class Ncfv {
         ThIndexWord thIndexWord = new ThIndexWord();
         thIndexWord.start();
     }
+    private static void waitForFinishedThread(String waitForName){
+        Thread currentThread = Thread.currentThread();
+                
+        Boolean eqNames = Boolean.FALSE;
+        try{
+            currentThread.sleep(50000);
+            do{
+                eqNames = Boolean.FALSE;
+                
+                Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
+                for( Entry<Thread, StackTraceElement[]> stackItem : allStackTraces.entrySet() ){
+                    //for( StackTraceElement itemTrace : stackItem.getValue() ){
+                        
+                        if( stackItem.getKey().getName().equalsIgnoreCase(waitForName) ){
+                            eqNames = Boolean.TRUE;
+                        }
+                    //}
+                }
+                currentThread.sleep(1000);
+
+                System.out.println(" _|_|_|_|_ wait for index process finished _|_|_|_|_-+-+-+-+|+-+|+-");
+            } while (eqNames);
+        } catch (InterruptedException ex){
+                ex.printStackTrace();
+                System.out.println(ex.getMessage());
+        }
+    }
     private static String runIndexMakeIntoZipByThreads(){
         ThIndexMaker thIndexMaker = new ThIndexMaker();
+        thIndexMaker.setName(UUID.randomUUID().toString());
         thIndexMaker.start();
         String nameThreadIndex = thIndexMaker.getName();
         return nameThreadIndex;
