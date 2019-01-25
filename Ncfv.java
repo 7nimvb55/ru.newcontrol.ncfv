@@ -58,7 +58,7 @@ public class Ncfv {
          * index in runIndexMakeIntoZipByThreads
          */
         //that make 
-        //runIndexMakeIntoZipByThreads();
+        runIndexMakeIntoZipByThreads();
         runIndexMakeWordIntoZipByThreads();
     }
     private static void runIndexMakeWordIntoZipByThreads(){
@@ -67,6 +67,11 @@ public class Ncfv {
         //read data from dir list, after make word index write data to index storages
         ThIndexDirList thIndexDirList = new ThIndexDirList();
         thIndexDirList.start();
+        try{
+            thIndexDirList.join();
+        } catch(InterruptedException ex){
+            ex.printStackTrace();
+        }
         //make word index
         ThIndexWord thIndexWord = new ThIndexWord();
         thIndexWord.start();
@@ -74,6 +79,11 @@ public class Ncfv {
     private static void runIndexMakeIntoZipByThreads(){
         ThIndexMaker thIndexMaker = new ThIndexMaker();
         thIndexMaker.start();
+        try{
+            thIndexMaker.join();
+        } catch(InterruptedException ex){
+            ex.printStackTrace();
+        }
     }
     protected static void logInitState(AppThManager outerAppThManager){
         AppObjectsList objectsForApp = outerAppThManager.getListOfObjects();
