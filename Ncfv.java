@@ -57,11 +57,32 @@ public class Ncfv {
          * in runIndexMakeWordIntoZipByThreads need start after creation part of
          * index in runIndexMakeIntoZipByThreads
          */
-        //that make 
-        runIndexMakeIntoZipByThreads();
-        runIndexMakeWordIntoZipByThreads();
+        //that make
+        String runIndexMakeIntoZipByThreads = runIndexMakeIntoZipByThreads();
+        runIndexMakeWordIntoZipByThreads(runIndexMakeIntoZipByThreads);
     }
-    private static void runIndexMakeWordIntoZipByThreads(){
+    private static void runIndexMakeWordIntoZipByThreads(String waitForName){
+        Thread currentThread = Thread.currentThread();
+                
+        Boolean eqNames = Boolean.FALSE;
+        try{
+            currentThread.sleep(50000);
+            do{
+                eqNames = Boolean.FALSE;
+                Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
+                for(Entry<Thread, StackTraceElement[]> stackItem : allStackTraces.entrySet()){
+                    if( stackItem.getKey().getName().equalsIgnoreCase(waitForName) ){
+                        eqNames = Boolean.TRUE;
+                    }
+                }
+                currentThread.sleep(1000);
+
+                System.out.println(" _|_|_|_|_ wait for index process finished _|_|_|_|_-+-+-+-+|+-+|+-");
+            } while (eqNames);
+        } catch (InterruptedException ex){
+                ex.printStackTrace();
+                System.out.println(ex.getMessage());
+        }
         ThIndexManager thIndexManager = new ThIndexManager();
         thIndexManager.start();
         //read data from dir list, after make word index write data to index storages
@@ -76,14 +97,11 @@ public class Ncfv {
         ThIndexWord thIndexWord = new ThIndexWord();
         thIndexWord.start();
     }
-    private static void runIndexMakeIntoZipByThreads(){
+    private static String runIndexMakeIntoZipByThreads(){
         ThIndexMaker thIndexMaker = new ThIndexMaker();
         thIndexMaker.start();
-        try{
-            thIndexMaker.join();
-        } catch(InterruptedException ex){
-            ex.printStackTrace();
-        }
+        String nameThreadIndex = thIndexMaker.getName();
+        return nameThreadIndex;
     }
     protected static void logInitState(AppThManager outerAppThManager){
         AppObjectsList objectsForApp = outerAppThManager.getListOfObjects();

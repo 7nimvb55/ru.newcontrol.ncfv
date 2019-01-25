@@ -16,6 +16,7 @@
 package ru.newcontrol.ncfv;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -29,12 +30,13 @@ public class ThIndexDirList extends Thread{
     
     @Override
     public void run(){
-            try{
+            /*try{
                 Thread currentThread = Thread.currentThread();
+                
                 currentThread.sleep(1000*60*8);
             } catch(InterruptedException ex){
                 ex.printStackTrace();
-            }
+            }*/
             ThreadLocal<ThDirListBusReaded> thDirListBusDataReaded = new ThreadLocal<ThDirListBusReaded>();
             ThreadLocal<ThDirListBusWrited> thDirListBusDataWrited = new ThreadLocal<ThDirListBusWrited>();
             ThreadLocal<ThDirListRule> thDirListRule = new ThreadLocal<ThDirListRule>();
