@@ -15,8 +15,18 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.ProviderNotFoundException;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -24,13 +34,62 @@ import java.util.UUID;
  */
 public class ThDirListLogicRead {
     protected void doIndexStorage(ThDirListBusReaded busReadedJob){
-        int countJobs = 0;
-        while( !busReadedJob.isJobQueueEmpty() ){
-            ThDirListStateJobReader jobForRead = busReadedJob.getJobForRead();
-            if( !jobForRead.isBlankObject() ){
-                System.out.println("idx: " + countJobs + " file " + jobForRead.getReadedPath().toString());
-                countJobs++;
+        /**
+         * @todo need optimized that part of code, if have a jobForReadList, then
+         * index storage exist, check for exist and open it
+         * exceptions to logger append records need too
+         */
+        ThDirListStateJobReader jobForRead = busReadedJob.getJobForRead();
+        if( !jobForRead.isBlankObject() ){
+            Path pathIndexFile = NcFsIdxStorageInit.buildPathToFileOfIdxStorage();
+            Map<String, String> fsProperties = NcFsIdxStorageInit.getFsPropExist();
+
+            Boolean existFSfile = NcFsIdxOperationFiles.existAndHasAccessRWNotLink(pathIndexFile);
+
+            if( !existFSfile ){
+                fsProperties = NcFsIdxStorageInit.getFsPropCreate();
             }
+
+            Boolean ifException = Boolean.FALSE;
+
+            URI uriZipIndexStorage = URI.create("jar:file:" + pathIndexFile.toUri().getPath());
+            URI readedFileSystem = jobForRead.getReadedFileSystem();
+            try( FileSystem fsForReadData = FileSystems.newFileSystem(uriZipIndexStorage, fsProperties) ){
+                
+            
+                int countJobs = 0;
+                while( !busReadedJob.isJobQueueEmpty() ){
+
+                    if( !jobForRead.isBlankObject() ){
+
+                        Path filePath = ThDirListFileSystemHelper.getFilePath(fsForReadData, jobForRead.getReadedPath());
+                        ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> readDataFromFile = ThDirListFileSystemHelper.readDataFromFile(filePath);
+                        jobForRead.putReadedData(readDataFromFile);
+                        jobForRead.setTrueReaderJobDone();
+                        System.out.println("idx: " 
+                                + countJobs 
+                                + " file " 
+                                + jobForRead.getReadedPath().toString() 
+                                + " read records count " 
+                                + jobForRead.getReadedDataSize().toString()
+                                + " jobDone " + jobForRead.isReaderJobDone().toString()
+                        );
+                        countJobs++;
+                    }
+                    jobForRead = busReadedJob.getJobForRead();
+                }
+            } catch(FileSystemNotFoundException ex){
+                ex.printStackTrace();
+            } catch(ProviderNotFoundException ex){
+                ex.printStackTrace();
+            } catch(IllegalArgumentException ex){
+                ex.printStackTrace();
+            } catch(SecurityException ex){
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } 
         }
     }
+    
 }

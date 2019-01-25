@@ -15,6 +15,7 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -30,7 +31,8 @@ public class ThDirListStateJobReader {
     
     private Boolean readerBlankJob;
     private Boolean jobReaderIsDone;
-    private FileSystem readFromFs;
+    private URI readFromFs;
+    
     private Path forReadPath;
     private int readedSize;
     private Boolean isReadedDataEmpty;
@@ -45,7 +47,7 @@ public class ThDirListStateJobReader {
         
         this.readedData = new ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>();
     }
-    protected ThDirListStateJobReader(Path pathForJob, FileSystem fromFs){
+    protected ThDirListStateJobReader(Path pathForJob, URI fromFs){
         this.forReadPath = pathForJob;
         this.readFromFs = fromFs;
         this.randomUUID = UUID.randomUUID();
@@ -105,7 +107,7 @@ public class ThDirListStateJobReader {
     protected Integer getReadedDataSize(){
         return (int) this.readedSize;
     }
-    protected FileSystem getReadedFileSystem(){
+    protected URI getReadedFileSystem(){
         return this.readFromFs;
     }
     protected Path getReadedPath(){

@@ -61,7 +61,7 @@ public class ThDirListLogicManager {
                 for (Path entry : stream) {
                     pathIsNotReadWriteLink(entry);
                     pathIsNotFile(entry);
-                    ThDirListStateJobReader thDirListStateJobReader = new ThDirListStateJobReader(entry, fsZipIndexStorage);
+                    ThDirListStateJobReader thDirListStateJobReader = new ThDirListStateJobReader(entry, uriZipIndexStorage);
                     busReadedJob.addReaderJob(thDirListStateJobReader);
                     //String replacedPath = entry.toString().replace(FILE_EXTENTION, FILE_FULL_EXTENTION);
                     //Path lockedFilePath = Paths.get(replacedPath);
