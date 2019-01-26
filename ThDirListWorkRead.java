@@ -36,6 +36,12 @@ public class ThDirListWorkRead implements Runnable{
         ThreadLocal<ThDirListLogicRead> logicReader = new ThreadLocal<ThDirListLogicRead>();
         try{
             logicReader.set(new ThDirListLogicRead());
+            /**
+             * send to constructor state object, increment statistic, in manager thread look for count readed
+             * records and call need sleep method in rule, logic in state object get and read this flag
+             * in the if part and go to sleep
+             * also for need stop
+             */
             logicReader.get().doIndexStorage(this.ruleDirListReadWork.getDirListState().getBusJobForRead());
         } finally {
             logicReader.remove();

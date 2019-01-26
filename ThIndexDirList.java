@@ -23,26 +23,31 @@ import java.util.concurrent.TimeUnit;
  * @author wladimirowichbiaran
  */
 public class ThIndexDirList extends Thread{
+    private ThIndexRule ruleThIndex;
     
-    ThIndexDirList(){
-        Thread.currentThread().setName(UUID.randomUUID().toString());
+    ThIndexDirList(final ThIndexRule outerRule){
+        super(UUID.randomUUID().toString());
+        this.ruleThIndex = outerRule;
     }
     
     
     @Override
     public void run(){
+        this.ruleThIndex.setTrueRunnedThreadIndexDirList();
+        while( this.ruleThIndex.isRunnedThreadIndexMaker() ){
             try{
-                Thread currentThread = Thread.currentThread();
-                
-                currentThread.sleep(1000*60*8);
+                System.out.println(" sleep sleep sleep sleep sleep sleep sleep sleep sleep sleep      indexDirList");
+                this.sleep(1000*5);
             } catch(InterruptedException ex){
                 ex.printStackTrace();
             }
-            ThreadLocal<ThDirListBusReaded> thDirListBusDataReaded = new ThreadLocal<ThDirListBusReaded>();
-            ThreadLocal<ThDirListBusWrited> thDirListBusDataWrited = new ThreadLocal<ThDirListBusWrited>();
-            ThreadLocal<ThDirListRule> thDirListRule = new ThreadLocal<ThDirListRule>();
-            ThreadLocal<ThDirListState> thDirListState = new ThreadLocal<ThDirListState>();
-            ThreadLocal<ThDirListStatistic> thDirListStatistic = new ThreadLocal<ThDirListStatistic>();
+        }
+        ThreadLocal<ThDirListBusReaded> thDirListBusDataReaded = new ThreadLocal<ThDirListBusReaded>();
+        ThreadLocal<ThDirListBusWrited> thDirListBusDataWrited = new ThreadLocal<ThDirListBusWrited>();
+        ThreadLocal<ThDirListRule> thDirListRule = new ThreadLocal<ThDirListRule>();
+        ThreadLocal<ThDirListState> thDirListState = new ThreadLocal<ThDirListState>();
+        ThreadLocal<ThDirListStatistic> thDirListStatistic = new ThreadLocal<ThDirListStatistic>();
+        System.out.println("                                                                                    indexDirList");
         //Rule create
         //State create
         /**
@@ -51,9 +56,9 @@ public class ThIndexDirList extends Thread{
          * create and set in ThDirListRule
          * also send ThDirListRule into ThDirListManager constructor
          */
-            ThreadLocal<ThDirListWorkRead> thDirListWorkRead = new ThreadLocal<ThDirListWorkRead>();
-            ThreadLocal<ThDirListWorkWrite> thDirListWorkWrite = new ThreadLocal<ThDirListWorkWrite>();
-            ThreadLocal<ThDirListWorkManager> thDirListManager = new ThreadLocal<ThDirListWorkManager>();
+        ThreadLocal<ThDirListWorkRead> thDirListWorkRead = new ThreadLocal<ThDirListWorkRead>();
+        ThreadLocal<ThDirListWorkWrite> thDirListWorkWrite = new ThreadLocal<ThDirListWorkWrite>();
+        ThreadLocal<ThDirListWorkManager> thDirListManager = new ThreadLocal<ThDirListWorkManager>();
         try{    
             ThDirListBusReaded thDirListBusReaded = new ThDirListBusReaded();
             thDirListBusDataReaded.set(thDirListBusReaded);
@@ -103,7 +108,7 @@ public class ThIndexDirList extends Thread{
             thDirListManager.set(new ThDirListWorkManager(thDirListRuleObject));
             thDirListRule.get().setDirListWorkManager(thDirListManager.get());
             thDirListRule.get().runManagerDirListWorkers();
-            
+            this.ruleThIndex.setFalseRunnedThreadIndexDirList();
         } finally {
             thDirListBusDataReaded.remove();
             thDirListBusDataWrited.remove();

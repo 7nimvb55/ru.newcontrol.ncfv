@@ -59,15 +59,29 @@ public class Ncfv {
          * index in runIndexMakeIntoZipByThreads
          */
         //that make
-        String runIndexMakeIntoZipByThreads = runIndexMakeIntoZipByThreads();
-        System.out.println("Waited name " + runIndexMakeIntoZipByThreads);
+        //String runIndexMakeIntoZipByThreads = runIndexMakeIntoZipByThreads();
+        //System.out.println("Waited name " + runIndexMakeIntoZipByThreads);
         
-        runIndexMakeWordIntoZipByThreads();
+        //runIndexMakeWordIntoZipByThreads();
+        runIndexMakeAndDirList();
     }
-    private static void runIndexMakeWordIntoZipByThreads(){
+    private static void runIndexMakeAndDirList(){
+        ThIndexRule thIndexRule = new ThIndexRule();
+        ThIndexMaker thIndexMaker = new ThIndexMaker(thIndexRule);
+        ThIndexDirList thIndexDirList = new ThIndexDirList(thIndexRule);
         
-        ThIndexManager thIndexManager = new ThIndexManager();
-        thIndexManager.start();
+        thIndexRule.setThreadIndexMaker(thIndexMaker);
+        thIndexRule.setThreadIndexDirList(thIndexDirList);
+        thIndexMaker.start();
+        waitForFinishedThread();
+        thIndexDirList.start();
+        
+    }
+    /*private static void runIndexMakeWordIntoZipByThreads(){
+        
+        //ThIndexManager thIndexManager = new ThIndexManager();
+        
+        //thIndexManager.start();
         //read data from dir list, after make word index write data to index storages
         ThIndexDirList thIndexDirList = new ThIndexDirList();
         thIndexDirList.start();
@@ -79,26 +93,42 @@ public class Ncfv {
         //make word index
         ThIndexWord thIndexWord = new ThIndexWord();
         thIndexWord.start();
-    }
-    private static void waitForFinishedThread(String waitForName){
+    }*/
+    private static void waitForFinishedThread(){
         Thread currentThread = Thread.currentThread();
                 
         Boolean eqNames = Boolean.FALSE;
         try{
-            currentThread.sleep(50000);
+            currentThread.sleep(60*1000);
             do{
                 eqNames = Boolean.FALSE;
                 
                 Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
                 for( Entry<Thread, StackTraceElement[]> stackItem : allStackTraces.entrySet() ){
                     //for( StackTraceElement itemTrace : stackItem.getValue() ){
-                        
-                        if( stackItem.getKey().getName().equalsIgnoreCase(waitForName) ){
-                            eqNames = Boolean.TRUE;
-                        }
+                        //this.nameIndexStorage = "IndexStorage";
+        //this.nameDirlistReader = "DirlistReader";
+        //this.nameDirlistTacker = "DirlistTacker";
+        //this.nameDirListPacker = "DirListPacker";
+        //this.nameDirListWriter = "DirListWriter";
+                    if( stackItem.getKey().getName().toLowerCase().contains("IndexStorage".toLowerCase())){
+                        eqNames = Boolean.TRUE;
+                    }
+                    if( stackItem.getKey().getName().toLowerCase().contains("DirlistReader".toLowerCase())){
+                        eqNames = Boolean.TRUE;
+                    }
+                    if( stackItem.getKey().getName().toLowerCase().contains("DirlistTacker".toLowerCase())){
+                        eqNames = Boolean.TRUE;
+                    }
+                    if( stackItem.getKey().getName().toLowerCase().contains("DirListPacker".toLowerCase())){
+                        eqNames = Boolean.TRUE;
+                    }
+                    if( stackItem.getKey().getName().toLowerCase().contains("DirListWriter".toLowerCase())){
+                        eqNames = Boolean.TRUE;
+                    }
                     //}
                 }
-                currentThread.sleep(1000);
+                currentThread.sleep(30*1000);
 
                 System.out.println(" _|_|_|_|_ wait for index process finished _|_|_|_|_-+-+-+-+|+-+|+-");
             } while (eqNames);
@@ -107,13 +137,13 @@ public class Ncfv {
                 System.out.println(ex.getMessage());
         }
     }
-    private static String runIndexMakeIntoZipByThreads(){
+    /*private static String runIndexMakeIntoZipByThreads(){
         ThIndexMaker thIndexMaker = new ThIndexMaker();
         thIndexMaker.setName(UUID.randomUUID().toString());
         thIndexMaker.start();
         String nameThreadIndex = thIndexMaker.getName();
         return nameThreadIndex;
-    }
+    }*/
     protected static void logInitState(AppThManager outerAppThManager){
         AppObjectsList objectsForApp = outerAppThManager.getListOfObjects();
         

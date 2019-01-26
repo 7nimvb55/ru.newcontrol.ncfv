@@ -22,11 +22,15 @@ import java.util.UUID;
  * @author wladimirowichbiaran
  */
 public class ThIndexMaker extends Thread{
-    ThIndexMaker(){
-        Thread.currentThread().setName(UUID.randomUUID().toString());
+    private ThIndexRule ruleThIndex;
+    
+    ThIndexMaker(final ThIndexRule outerRule){
+        super(UUID.randomUUID().toString());
+        this.ruleThIndex = outerRule;
     }
     @Override
     public void run(){
+        this.ruleThIndex.setTrueRunnedThreadIndexMaker();
         AppObjectsList objectsForApp = new AppObjectsList();
         //@todo AppThManager, AppObjectsManagerState create one it two or... ?
         AppThManager loggerByThreadsMain = new AppThManager(objectsForApp);
@@ -35,5 +39,6 @@ public class ThIndexMaker extends Thread{
         withOutLogger.runWorkMakeDirList();
         loggerByThreadsMain.getListOfObjects().getWorkerList().clear();
         //runVersionOfAppBeforeThreadsInUse(args);
+        this.ruleThIndex.setFalseRunnedThreadIndexMaker();
     }
 }

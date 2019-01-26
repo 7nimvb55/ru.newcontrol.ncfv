@@ -14,11 +14,22 @@
  * limitations under the License.
  */
 package ru.newcontrol.ncfv;
-
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.atomic.AtomicLong;
 /**
  *
  * @author wladimirowichbiaran
  */
 public class ThDirListStatistic {
+
+    private AtomicLong readedCount;
+
+    public ThDirListStatistic() {
+        this.readedCount = new AtomicLong();
+        this.readedCount.set(0L);
+    }
+    protected Long incrementReadedRecordsCount(){
+        return readedCount.incrementAndGet();
+    }
     
 }

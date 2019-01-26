@@ -24,11 +24,26 @@ import java.util.UUID;
 public class ThIndexManager extends Thread{
     
     ThIndexManager(){
-        Thread.currentThread().setName(UUID.randomUUID().toString());
+        super(UUID.randomUUID().toString());
+        //Thread.currentThread().setName(UUID.randomUUID().toString());
     }
     
     @Override
     public void run(){
+        System.out.println("                                                                                    indexManager");
+        ThIndexRule thIndexRule = new ThIndexRule();
         
+        ThIndexDirList thIndexDirList = new ThIndexDirList(thIndexRule);
+        thIndexRule.setThreadIndexDirList(thIndexDirList);
+        
+        thIndexDirList.start();
+        try{
+            thIndexDirList.join();
+        } catch(InterruptedException ex){
+            ex.printStackTrace();
+        }
+        //make word index
+        ThIndexWord thIndexWord = new ThIndexWord();
+        thIndexWord.start();
     }
 }

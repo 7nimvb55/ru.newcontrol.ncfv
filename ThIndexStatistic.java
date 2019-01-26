@@ -15,21 +15,10 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.util.UUID;
-
 /**
  *
  * @author wladimirowichbiaran
  */
-public class ThIndexWord extends Thread{
-    ThIndexWord(){
-        super(UUID.randomUUID().toString());
-        //Thread.currentThread().setName(UUID.randomUUID().toString());
-    }
-    
-    @Override
-    public void run(){
-        ThWordManager thWordManager = new ThWordManager();
-    }
+public class ThIndexStatistic {
     
 }
