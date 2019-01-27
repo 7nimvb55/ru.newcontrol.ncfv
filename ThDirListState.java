@@ -26,6 +26,9 @@ public class ThDirListState {
     private ThDirListBusWrited busWritedJob;
     private Boolean isSetWritedJob;
     
+    private ThDirListBusReaded busSendToIndexWord;
+    private Boolean isSetSendToIndexWord;
+    
     ThDirListState(){
         setFalseReadedJob();
         setFalseWritedJob();
@@ -80,6 +83,33 @@ public class ThDirListState {
     }
     protected Boolean isWritedJob(){
         if( this.isSetWritedJob ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * 
+     * @return
+     * @throws #java.lang.IllegalArgumentException
+     */
+    protected ThDirListBusReaded getBusJobForSendToIndexWord(){
+        if( !this.isReadedJob() ){
+            throw new IllegalArgumentException("Bus jobs for read not set in " + ThDirListState.class.getCanonicalName());
+        }
+        return this.busSendToIndexWord;
+    }
+    protected void setBusJobForSendToIndexWord(final ThDirListBusReaded busReadOuter){
+        this.busSendToIndexWord = busReadOuter;
+        setTrueReadedJob();
+    }
+    protected void setTrueSendToIndexWord(){
+        this.isSetSendToIndexWord = Boolean.TRUE;
+    }
+    protected void setFalseSendToIndexWord(){
+        this.isSetSendToIndexWord = Boolean.FALSE;
+    }
+    protected Boolean isSendToIndexWord(){
+        if( this.isSetSendToIndexWord ){
             return Boolean.TRUE;
         }
         return Boolean.FALSE;

@@ -31,8 +31,13 @@ public class ThIndexWord extends Thread{
     
     @Override
     public void run(){
-        System.out.println(ThIndexWord.class.getCanonicalName() + " do it +++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        this.ruleThIndex.getIndexState().getBusJobForRead().outToConsoleBusContent();
+        System.out.println(ThIndexWord.class.getCanonicalName() 
+                + " do it +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        System.out.println(this.ruleThIndex.getIndexState().getBusJobForRead().getQueueSize().toString()
+                + " do it +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        /**
+         * protected ThDirListStateJobReader ThDirListBusReaded.getJobForRead() string num 40 ...poll()... than queue empty
+         */
     }
     
 }

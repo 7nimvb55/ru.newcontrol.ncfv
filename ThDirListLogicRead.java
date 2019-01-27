@@ -33,12 +33,14 @@ import java.util.logging.Logger;
  * @author wladimirowichbiaran
  */
 public class ThDirListLogicRead {
-    protected void doIndexStorage(ThDirListBusReaded busReadedJob){
+    protected void doIndexStorage(final ThDirListRule outerRuleDirListReadWork){
         /**
          * @todo need optimized that part of code, if have a jobForReadList, then
          * index storage exist, check for exist and open it
          * exceptions to logger append records need too
          */
+        ThDirListBusReaded busJobForSendToIndexWord = outerRuleDirListReadWork.getDirListState().getBusJobForSendToIndexWord();
+        ThDirListBusReaded busReadedJob = outerRuleDirListReadWork.getDirListState().getBusJobForRead();
         ThDirListStateJobReader jobForRead = busReadedJob.getJobForRead();
         if( !jobForRead.isBlankObject() ){
             Path pathIndexFile = NcFsIdxStorageInit.buildPathToFileOfIdxStorage();
@@ -75,6 +77,7 @@ public class ThDirListLogicRead {
                                 + " jobDone " + jobForRead.isReaderJobDone().toString()
                         );
                         countJobs++;
+                        busJobForSendToIndexWord.addReaderJob(jobForRead);
                     }
                     jobForRead = busReadedJob.getJobForRead();
                 }

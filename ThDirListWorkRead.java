@@ -42,7 +42,7 @@ public class ThDirListWorkRead implements Runnable{
              * in the if part and go to sleep
              * also for need stop
              */
-            logicReader.get().doIndexStorage(this.ruleDirListReadWork.getDirListState().getBusJobForRead());
+            logicReader.get().doIndexStorage(this.ruleDirListReadWork);
         } finally {
             logicReader.remove();
             this.ruleDirListReadWork.setFalseRunnedDirListWorkReader();
