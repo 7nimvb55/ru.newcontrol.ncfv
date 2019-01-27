@@ -44,9 +44,12 @@ public class ThDirListRule{
     private ThDirListWorkManager runnableWorkerDirListManager;
     private Boolean isSetDirListWorkManager;
     private Boolean isRunDirListWorkManager;
+    
+    private ThIndexRule outerIndexRule;
 
-    public ThDirListRule () {
+    public ThDirListRule (final ThIndexRule outerRule) {
         //Released version
+        this.outerIndexRule = outerRule;
         this.workerThDirList = new ThreadGroup(UUID.randomUUID().toString());
         setFalseDirListState();
         setFalseDirListCounter();
@@ -235,6 +238,7 @@ public class ThDirListRule{
              * for release wait him finish functions
              */
             String toStringWorkReader = UUID.randomUUID().toString();
+            this.outerIndexRule.addThredNameInQueue(toStringWorkReader);
             Thread thForWorkRead = new Thread(this.workerThDirList, this.runnableWorkerDirListRead, toStringWorkReader);
             thForWorkRead.start();
         }
@@ -246,6 +250,7 @@ public class ThDirListRule{
              * for release wait him finish functions
              */
             String toStringWorkWriter = UUID.randomUUID().toString();
+            this.outerIndexRule.addThredNameInQueue(toStringWorkWriter);
             Thread thForWorkWrite = new Thread(this.workerThDirList, this.runnableWorkerDirListWrite, toStringWorkWriter);
             thForWorkWrite.start();
         }
@@ -257,6 +262,7 @@ public class ThDirListRule{
              * for release wait him finish functions
              */
             String toStringWorkManager = UUID.randomUUID().toString();
+            this.outerIndexRule.addThredNameInQueue(toStringWorkManager);
             Thread thForWorkManager = new Thread(this.workerThDirList, this.runnableWorkerDirListManager, toStringWorkManager);
             thForWorkManager.start();
         }

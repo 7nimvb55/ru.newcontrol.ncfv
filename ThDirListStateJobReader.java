@@ -31,6 +31,8 @@ public class ThDirListStateJobReader {
     
     private Boolean readerBlankJob;
     private Boolean jobReaderIsDone;
+    private Boolean jobReaderDataSend;
+    private Boolean jobReaderDataIndexedByWord;
     private URI readFromFs;
     
     private Path forReadPath;
@@ -45,6 +47,9 @@ public class ThDirListStateJobReader {
         setTrueBlankObject();
         setTrueReaderJobDone();
         
+        setFalseDataSend();
+        setFalseDataIndexedByWord();
+        
         this.readedData = new ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>();
     }
     protected ThDirListStateJobReader(Path pathForJob, URI fromFs){
@@ -55,9 +60,14 @@ public class ThDirListStateJobReader {
         setFalseBlankObject();
         setFalseReaderJobDone();
         
+        setFalseDataSend();
+        setFalseDataIndexedByWord();
+        
         this.readedData = new ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>();
     }
-
+    /**
+     * 
+     */
     protected void setTrueBlankObject(){
         this.readerBlankJob = Boolean.TRUE;
     }
@@ -70,6 +80,40 @@ public class ThDirListStateJobReader {
         }
         return Boolean.FALSE;
     }
+    /**
+     * 
+     */
+    protected void setTrueDataSend(){
+        this.jobReaderDataSend = Boolean.TRUE;
+    }
+    protected void setFalseDataSend(){
+        this.jobReaderDataSend = Boolean.FALSE;
+    }
+    protected Boolean isDataSend(){
+        if( this.jobReaderDataSend ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * 
+     */
+    protected void setTrueDataIndexedByWord(){
+        this.jobReaderDataIndexedByWord = Boolean.TRUE;
+    }
+    protected void setFalseDataIndexedByWord(){
+        this.jobReaderDataIndexedByWord = Boolean.FALSE;
+    }
+    protected Boolean isDataIndexedByWord(){
+        if( this.jobReaderDataIndexedByWord ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * 
+     * @return 
+     */
     protected UUID getID(){
         return this.randomUUID;
     }

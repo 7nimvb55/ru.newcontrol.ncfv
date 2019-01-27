@@ -15,6 +15,8 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.concurrent.ArrayBlockingQueue;
+
 /**
  *
  * @author wladimirowichbiaran
@@ -27,14 +29,31 @@ public class ThIndexRule {
     private ThIndexMaker threadIndexMaker;
     private Boolean isSetThreadIndexMaker;
     private Boolean isRunThreadIndexMaker;
+            
+    
+    private ThIndexWord threadIndexWord;
+    private Boolean isSetThreadIndexWord;
+    private Boolean isRunThreadIndexWord;
+    
+    private ThIndexState currentIndexState;
+    private Boolean isSetIndexState;
+    
+    protected ArrayBlockingQueue<String> namesWorkerDirList;
 
     public ThIndexRule() {
         setFalseThreadIndexDirList();
-        setFalseRunnedThreadIndexDirList();
         setFalseThreadIndexMaker();
+                
+        setFalseRunnedThreadIndexDirList();
         setFalseRunnedThreadIndexMaker();
+        this.namesWorkerDirList = new ArrayBlockingQueue<String>(50);
     }
-    
+    protected void addThredNameInQueue(String forAdd){
+        this.namesWorkerDirList.add(forAdd);
+    }
+    protected ArrayBlockingQueue<String> getQueueThreadNames(){
+        return this.namesWorkerDirList;
+    }
     /**
      * ThIndexDirList
      * @return 
@@ -108,6 +127,70 @@ public class ThIndexRule {
     }
     protected Boolean isRunnedThreadIndexMaker(){
         if( this.isRunThreadIndexMaker ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * ThIndexWord
+     * @return 
+     */
+    protected ThIndexWord getThreadIndexWord(){
+        if( !this.isThreadIndexWord() ){
+            throw new IllegalArgumentException(ThIndexWord.class.getCanonicalName() + " object not set in " + ThIndexRule.class.getCanonicalName());
+        }
+        return this.threadIndexWord;
+    }
+    protected void setThreadIndexWord(final ThIndexWord threadIndexWordOuter){
+        this.threadIndexWord = threadIndexWordOuter;
+        setTrueThreadIndexWord();
+    }
+    protected void setTrueThreadIndexWord(){
+        this.isSetThreadIndexWord = Boolean.TRUE;
+    }
+    protected void setFalseThreadIndexWord(){
+        this.isSetThreadIndexWord = Boolean.FALSE;
+    }
+    protected Boolean isThreadIndexWord(){
+        if( this.isSetThreadIndexWord ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    protected void setTrueRunnedThreadIndexWord(){
+        this.isRunThreadIndexWord = Boolean.TRUE;
+    }
+    protected void setFalseRunnedThreadIndexWord(){
+        this.isRunThreadIndexWord = Boolean.FALSE;
+    }
+    protected Boolean isRunnedThreadIndexWord(){
+        if( this.isRunThreadIndexWord ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * ThIndexState
+     * @return 
+     */
+    protected ThIndexState getIndexState(){
+        if( !this.isIndexState() ){
+            throw new IllegalArgumentException(ThIndexState.class.getCanonicalName() + " object not set in " + ThIndexRule.class.getCanonicalName());
+        }
+        return this.currentIndexState;
+    }
+    protected void setIndexState(final ThIndexState stateIndexOuter){
+        this.currentIndexState = stateIndexOuter;
+        setTrueIndexState();
+    }
+    protected void setTrueIndexState(){
+        this.isSetIndexState = Boolean.TRUE;
+    }
+    protected void setFalseIndexState(){
+        this.isSetIndexState = Boolean.FALSE;
+    }
+    protected Boolean isIndexState(){
+        if( this.isSetIndexState ){
             return Boolean.TRUE;
         }
         return Boolean.FALSE;

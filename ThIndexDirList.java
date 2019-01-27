@@ -60,12 +60,12 @@ public class ThIndexDirList extends Thread{
         ThreadLocal<ThDirListWorkWrite> thDirListWorkWrite = new ThreadLocal<ThDirListWorkWrite>();
         ThreadLocal<ThDirListWorkManager> thDirListManager = new ThreadLocal<ThDirListWorkManager>();
         try{    
-            ThDirListBusReaded thDirListBusReaded = new ThDirListBusReaded();
+            ThDirListBusReaded thDirListBusReaded = this.ruleThIndex.getIndexState().getBusJobForRead();
             thDirListBusDataReaded.set(thDirListBusReaded);
             ThDirListBusWrited thDirListBusWrited = new ThDirListBusWrited();
             thDirListBusDataWrited.set(thDirListBusWrited);
             
-            ThDirListRule thDirListRuleObject = new ThDirListRule();
+            ThDirListRule thDirListRuleObject = new ThDirListRule(this.ruleThIndex);
             System.out.println(thDirListRuleObject.toString());
             thDirListRule.set(thDirListRuleObject);
             
@@ -97,6 +97,7 @@ public class ThIndexDirList extends Thread{
             
             thDirListWorkRead.set(new ThDirListWorkRead(thDirListRuleObject));
             thDirListRule.get().setDirListWorkReader(thDirListWorkRead.get());
+            
             thDirListWorkWrite.set(new ThDirListWorkWrite(thDirListRuleObject));
             thDirListRule.get().setDirListWorkWriter(thDirListWorkWrite.get());
             

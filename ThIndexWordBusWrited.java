@@ -15,24 +15,10 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.util.UUID;
-
 /**
  *
  * @author wladimirowichbiaran
  */
-public class ThIndexWord extends Thread{
-    private ThIndexRule ruleThIndex;
-    ThIndexWord(ThIndexRule outerRule){
-        super(UUID.randomUUID().toString());
-        this.ruleThIndex = outerRule;
-        //Thread.currentThread().setName(UUID.randomUUID().toString());
-    }
-    
-    @Override
-    public void run(){
-        System.out.println(ThIndexWord.class.getCanonicalName() + " do it +++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        this.ruleThIndex.getIndexState().getBusJobForRead().outToConsoleBusContent();
-    }
+public class ThIndexWordBusWrited {
     
 }

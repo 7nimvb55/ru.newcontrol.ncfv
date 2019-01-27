@@ -43,7 +43,7 @@ public class ThIndexManager extends Thread{
             ex.printStackTrace();
         }
         //make word index
-        ThIndexWord thIndexWord = new ThIndexWord();
+        ThIndexWord thIndexWord = new ThIndexWord(thIndexRule);
         thIndexWord.start();
     }
 }

@@ -24,6 +24,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
 import javax.security.auth.Policy;
 
 
@@ -66,16 +67,22 @@ public class Ncfv {
         runIndexMakeAndDirList();
     }
     private static void runIndexMakeAndDirList(){
+        ThIndexState thIndexStateObj = new ThIndexState();
+        ThDirListBusReaded thDirListBusReaded = new ThDirListBusReaded();
+        thIndexStateObj.setBusJobForRead(thDirListBusReaded);
         ThIndexRule thIndexRule = new ThIndexRule();
+        thIndexRule.setIndexState(thIndexStateObj);
         ThIndexMaker thIndexMaker = new ThIndexMaker(thIndexRule);
         ThIndexDirList thIndexDirList = new ThIndexDirList(thIndexRule);
-        
+        ThIndexWord thIndexWord = new ThIndexWord(thIndexRule);
         thIndexRule.setThreadIndexMaker(thIndexMaker);
         thIndexRule.setThreadIndexDirList(thIndexDirList);
+        thIndexRule.setThreadIndexWord(thIndexWord);
         thIndexMaker.start();
         waitForFinishedThread();
         thIndexDirList.start();
-        
+        waitForFinishedIndexDirListThread(thIndexRule);
+        thIndexWord.start();
     }
     /*private static void runIndexMakeWordIntoZipByThreads(){
         
@@ -105,12 +112,7 @@ public class Ncfv {
                 
                 Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
                 for( Entry<Thread, StackTraceElement[]> stackItem : allStackTraces.entrySet() ){
-                    //for( StackTraceElement itemTrace : stackItem.getValue() ){
-                        //this.nameIndexStorage = "IndexStorage";
-        //this.nameDirlistReader = "DirlistReader";
-        //this.nameDirlistTacker = "DirlistTacker";
-        //this.nameDirListPacker = "DirListPacker";
-        //this.nameDirListWriter = "DirListWriter";
+
                     if( stackItem.getKey().getName().toLowerCase().contains("IndexStorage".toLowerCase())){
                         eqNames = Boolean.TRUE;
                     }
@@ -126,11 +128,41 @@ public class Ncfv {
                     if( stackItem.getKey().getName().toLowerCase().contains("DirListWriter".toLowerCase())){
                         eqNames = Boolean.TRUE;
                     }
-                    //}
+
                 }
                 currentThread.sleep(30*1000);
 
                 System.out.println(" _|_|_|_|_ wait for index process finished _|_|_|_|_-+-+-+-+|+-+|+-");
+            } while (eqNames);
+        } catch (InterruptedException ex){
+                ex.printStackTrace();
+                System.out.println(ex.getMessage());
+        }
+    }
+    private static void waitForFinishedIndexDirListThread(ThIndexRule thIndexRuleOuter){
+        Thread currentThread = Thread.currentThread();
+                
+        Boolean eqNames = Boolean.FALSE;
+        try{
+            currentThread.sleep(60*1000);
+            do{
+                eqNames = Boolean.FALSE;
+                
+                Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
+                for( Entry<Thread, StackTraceElement[]> stackItem : allStackTraces.entrySet() ){
+                    ArrayBlockingQueue<String> queueThreadNames = thIndexRuleOuter.getQueueThreadNames();
+                    for(String itemOfThredName : queueThreadNames){
+                        if( stackItem.getKey().getName().toLowerCase().contains(itemOfThredName.toLowerCase())){
+                            eqNames = Boolean.TRUE;
+                            System.out.println(" _|_|_|_|_ wait for thread " 
+                                    + itemOfThredName 
+                                    + " finished _|_|_|_|_-+-+-+-+|+-+|+-");
+                        }
+                    }
+                }
+                currentThread.sleep(30*1000);
+
+                
             } while (eqNames);
         } catch (InterruptedException ex){
                 ex.printStackTrace();
