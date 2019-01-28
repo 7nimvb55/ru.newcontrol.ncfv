@@ -36,11 +36,14 @@ public class ThIndexState {
         setFalseWritedJob();
     }
     protected AppFileStorageIndex currentIndexStorages(){
-        if( this.isStoriesForIndexList() && (this.storagesForIndexList != null) ){
-            return this.storagesForIndexList;
+        if( this.storagesForIndexList == null ){
+            setTrueStoriesForIndexList();
+            this.storagesForIndexList = new AppFileStorageIndex();
         }
-        setTrueStoriesForIndexList();
-        this.storagesForIndexList = new AppFileStorageIndex();
+        if( !this.isStoriesForIndexList() ){
+            setTrueStoriesForIndexList();
+            this.storagesForIndexList = new AppFileStorageIndex();
+        }
         return this.storagesForIndexList;
     }
     protected void setTrueStoriesForIndexList(){

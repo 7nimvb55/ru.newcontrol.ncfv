@@ -36,22 +36,15 @@ public class ThDirListLogicManager {
     
     protected void doIndexStorage(final ThDirListRule ruleDirList){
         ThDirListBusReaded busReadedJob = ruleDirList.getDirListState().getBusJobForRead();
-        /*Path pathIndexFile = NcFsIdxStorageInit.buildPathToFileOfIdxStorage();
-        Map<String, String> fsProperties = NcFsIdxStorageInit.getFsPropExist();
-        
-        Boolean existFSfile = NcFsIdxOperationFiles.existAndHasAccessRWNotLink(pathIndexFile);
-        
-        if( !existFSfile ){
-            fsProperties = NcFsIdxStorageInit.getFsPropCreate();
-        }
-        
+
         Boolean ifException = Boolean.FALSE;
         
-        URI uriZipIndexStorage = URI.create("jar:file:" + pathIndexFile.toUri().getPath());
-        try(FileSystem fsZipIndexStorage = 
-            FileSystems.newFileSystem(uriZipIndexStorage, fsProperties)){*/
-        Boolean ifException = Boolean.FALSE;
-        AppFileStorageIndex currentIndexStorages = new AppFileStorageIndex();//ruleDirList.getIndexRule().getIndexState().currentIndexStorages();
+        ThIndexRule indexRule = ruleDirList.getIndexRule();
+        ThIndexState indexState = indexRule.getIndexState();
+        AppFileStorageIndex currentIndexStorages = indexState.currentIndexStorages();
+        /**
+         * currentIndexStorages.updateMapForStorages();// - for update Storages info
+         */
         URI byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST);
         Map<String, String> byPrefixGetMap = currentIndexStorages.byPrefixGetMap(AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST);
         try( FileSystem fsForReadData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){

@@ -138,8 +138,11 @@ public class AppFileStorageIndex {
             String fsPrefixConstant){
         Map<String, String> getMapWithURI = storagesMap.get(fsPrefixConstant);
         Map<String, String> forReturnMap = new HashMap<>();
-        getMapWithURI.remove(AppFileNamesConstants.FILE_INDEX_KEY_MAP_URI);
-        forReturnMap.putAll(getMapWithURI);
+        for(Map.Entry<String, String> items : getMapWithURI.entrySet()){
+            if( !items.getKey().toLowerCase().contains(AppFileNamesConstants.FILE_INDEX_KEY_MAP_URI.toLowerCase()) ){
+                forReturnMap.put(new String(items.getKey()), new String(items.getValue()));
+            }
+        }
         return forReturnMap;
     }
     /**

@@ -43,21 +43,14 @@ public class ThDirListLogicRead {
         ThDirListBusReaded busReadedJob = outerRuleDirListReadWork.getDirListState().getBusJobForRead();
         ThDirListStateJobReader jobForRead = busReadedJob.getJobForRead();
         if( !jobForRead.isBlankObject() ){
-            /*Path pathIndexFile = NcFsIdxStorageInit.buildPathToFileOfIdxStorage();
-            Map<String, String> fsProperties = NcFsIdxStorageInit.getFsPropExist();
+ 
+            ThIndexRule indexRule = outerRuleDirListReadWork.getIndexRule();
+            ThIndexState indexState = indexRule.getIndexState();
+            AppFileStorageIndex currentIndexStorages = indexState.currentIndexStorages();
 
-            Boolean existFSfile = NcFsIdxOperationFiles.existAndHasAccessRWNotLink(pathIndexFile);
-
-            if( !existFSfile ){
-                fsProperties = NcFsIdxStorageInit.getFsPropCreate();
-            }
-
-            Boolean ifException = Boolean.FALSE;
-
-            URI uriZipIndexStorage = URI.create("jar:file:" + pathIndexFile.toUri().getPath());
-            URI readedFileSystem = jobForRead.getReadedFileSystem();
-            try( FileSystem fsForReadData = FileSystems.newFileSystem(uriZipIndexStorage, fsProperties) ){*/
-            AppFileStorageIndex currentIndexStorages = new AppFileStorageIndex();//outerRuleDirListReadWork.getIndexRule().getIndexState().currentIndexStorages();
+            /**
+             * currentIndexStorages.updateMapForStorages();// - for update Storages info
+             */
             URI byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST);
             Map<String, String> byPrefixGetMap = currentIndexStorages.byPrefixGetMap(AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST);
             try( FileSystem fsForReadData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){    

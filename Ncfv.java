@@ -67,6 +67,11 @@ public class Ncfv {
         runIndexMakeAndDirList();
     }
     private static void runIndexMakeAndDirList(){
+        /**
+         * if run DirListWork(Logic)Manager, get info about storages content
+         * after than run need part... do it in the ThIndexManager
+         */
+        
         ThIndexState thIndexStateObj = new ThIndexState();
         ThDirListBusReaded thDirListBusReaded = new ThDirListBusReaded();
         thIndexStateObj.setBusJobForRead(thDirListBusReaded);
