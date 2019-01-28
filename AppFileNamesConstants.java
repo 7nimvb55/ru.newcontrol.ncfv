@@ -46,6 +46,7 @@ public class AppFileNamesConstants {
     
     // In thread system used for main index directories
     protected static String DIR_IDX = "/ncidxfv";
+    protected static String DIR_IDX_ROOT = "/";
     // old versions prefixes, names
     protected static String DIR_TMP = "/t";
     protected static String DIR_DIR_LIST = "/di";

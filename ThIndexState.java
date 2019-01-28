@@ -36,7 +36,7 @@ public class ThIndexState {
         setFalseWritedJob();
     }
     protected AppFileStorageIndex currentIndexStorages(){
-        if( this.isStoriesForIndexList() ){
+        if( this.isStoriesForIndexList() && (this.storagesForIndexList != null) ){
             return this.storagesForIndexList;
         }
         setTrueStoriesForIndexList();

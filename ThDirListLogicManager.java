@@ -34,8 +34,9 @@ import java.util.Map;
 public class ThDirListLogicManager {
     
     
-    protected void doIndexStorage(ThDirListBusReaded busReadedJob){
-        Path pathIndexFile = NcFsIdxStorageInit.buildPathToFileOfIdxStorage();
+    protected void doIndexStorage(final ThDirListRule ruleDirList){
+        ThDirListBusReaded busReadedJob = ruleDirList.getDirListState().getBusJobForRead();
+        /*Path pathIndexFile = NcFsIdxStorageInit.buildPathToFileOfIdxStorage();
         Map<String, String> fsProperties = NcFsIdxStorageInit.getFsPropExist();
         
         Boolean existFSfile = NcFsIdxOperationFiles.existAndHasAccessRWNotLink(pathIndexFile);
@@ -48,20 +49,25 @@ public class ThDirListLogicManager {
         
         URI uriZipIndexStorage = URI.create("jar:file:" + pathIndexFile.toUri().getPath());
         try(FileSystem fsZipIndexStorage = 
-            FileSystems.newFileSystem(uriZipIndexStorage, fsProperties)){
-            NcParamFs dataStorage = NcFsIdxStorageInit.initStorageStructure(fsZipIndexStorage);
+            FileSystems.newFileSystem(uriZipIndexStorage, fsProperties)){*/
+        Boolean ifException = Boolean.FALSE;
+        AppFileStorageIndex currentIndexStorages = new AppFileStorageIndex();//ruleDirList.getIndexRule().getIndexState().currentIndexStorages();
+        URI byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST);
+        Map<String, String> byPrefixGetMap = currentIndexStorages.byPrefixGetMap(AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST);
+        try( FileSystem fsForReadData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
+            //NcParamFs dataStorage = NcFsIdxStorageInit.initStorageStructure(fsZipIndexStorage);
    
             //Insert thread code for do in Zip here
             
-            System.out.println("Storage is " + fsZipIndexStorage.toString());
+            System.out.println("Storage is " + fsForReadData.toString());
             
-            Path lookPath = fsZipIndexStorage.getPath(dataStorage.getDirDirList().toString());
+            Path lookPath = fsForReadData.getPath(AppFileNamesConstants.DIR_IDX_ROOT);
             int count = 0;
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(lookPath,"{" + AppFileNamesConstants.SZFS_DIR_LIST_FILE_PREFIX + "}*")) {
                 for (Path entry : stream) {
                     pathIsNotReadWriteLink(entry);
                     pathIsNotFile(entry);
-                    ThDirListStateJobReader thDirListStateJobReader = new ThDirListStateJobReader(entry, uriZipIndexStorage);
+                    ThDirListStateJobReader thDirListStateJobReader = new ThDirListStateJobReader(entry, byPrefixGetUri);
                     busReadedJob.addReaderJob(thDirListStateJobReader);
                     //String replacedPath = entry.toString().replace(FILE_EXTENTION, FILE_FULL_EXTENTION);
                     //Path lockedFilePath = Paths.get(replacedPath);

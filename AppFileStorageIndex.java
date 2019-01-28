@@ -150,7 +150,8 @@ public class AppFileStorageIndex {
      */
     protected static Path getFromIndexDirLastStorage(String prefixForFound) throws IOException{
         Path indexFolder = AppFileStorageIndex.getIndexFolder();
-        ArrayList<Path> filesByMaskFromDir = AppFileOperationsSimple.getFilesByMaskFromDir(indexFolder, prefixForFound);
+        ArrayList<Path> filesByMaskFromDir = AppFileOperationsSimple.getFilesByMaskFromDir(indexFolder, 
+                "{" + prefixForFound + "}*");
         if( filesByMaskFromDir.isEmpty() ){
             throw new IOException(AppFileStorageIndex.class.getCanonicalName() 
                     + " not found storages for prefix " 

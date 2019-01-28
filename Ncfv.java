@@ -71,6 +71,7 @@ public class Ncfv {
         ThDirListBusReaded thDirListBusReaded = new ThDirListBusReaded();
         thIndexStateObj.setBusJobForRead(thDirListBusReaded);
         ThIndexRule thIndexRule = new ThIndexRule();
+        
         thIndexRule.setIndexState(thIndexStateObj);
         ThIndexMaker thIndexMaker = new ThIndexMaker(thIndexRule);
         ThIndexDirList thIndexDirList = new ThIndexDirList(thIndexRule);

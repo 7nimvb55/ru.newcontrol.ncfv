@@ -20,6 +20,7 @@ import java.lang.reflect.ReflectPermission;
 import java.net.NetPermission;
 import java.net.SocketPermission;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Permissions;
 import java.security.AllPermission;
 import java.security.Policy;
@@ -88,10 +89,10 @@ public class AppEtcSecurityHelper {
         permissions.add(new FilePermission("/-", SecurityConstants.FILE_WRITE_ACTION));
         permissions.add(new FilePermission("/-", SecurityConstants.FILE_EXECUTE_ACTION));
         Path userHomePath = AppFileOperationsSimple.getUserHomeRWEDCheckedPath();
-        
+        Path indexFolder = AppFileStorageIndex.getIndexFolder();
         permissions.add(new FilePermission(userHomePath.toString(), SecurityConstants.PROPERTY_RW_ACTION));
         permissions.add(new FilePermission(userHomePath.toString() + "/-", SecurityConstants.PROPERTY_RW_ACTION));
-        permissions.add(new FilePermission(userHomePath.toString() + "/ncidxfv.zip", SecurityConstants.FILE_DELETE_ACTION));
+        permissions.add(new FilePermission(indexFolder.toString() + "/-", SecurityConstants.FILE_DELETE_ACTION));
         //permissions.add(new FilePermission(userHomePath.toString() + "/zipfstmp*", SecurityConstants.FILE_DELETE_ACTION));
         permissions.add(new ReflectPermission("suppressAccessChecks", "read"));
         
