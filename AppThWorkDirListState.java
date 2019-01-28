@@ -43,6 +43,8 @@ public class AppThWorkDirListState {
     private Thread runDirListWriter;
     private FileSystem currentFsZipIndexStorage;
     
+    private ThIndexRule currentIndexRule;
+    
 
     public AppThWorkDirListState(AppObjectsList outerListOfObject, Path makeIndex) {
         this.currentListOfObject = outerListOfObject;
@@ -97,6 +99,12 @@ public class AppThWorkDirListState {
         
         //this.currentListOfObject.putLogMessageInfo("Create objects for WorkDirList");
         //this.currentListOfObject.doLogger();
+    }
+    protected void setIndexRule(final ThIndexRule outerThIndexRule){
+        this.currentIndexRule = outerThIndexRule;
+    }
+    protected ThIndexRule getIndexRule(){
+        return this.currentIndexRule;
     }
     protected void initWorkerGroup(){
         //@todo ThreadGroup, set names, build fields for timestamp class creation

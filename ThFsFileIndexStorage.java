@@ -37,24 +37,28 @@ import java.util.zip.ZipOutputStream;
  * @author wladimirowichbiaran
  */
 public class ThFsFileIndexStorage {
-    protected static Path getNewDirListFile(NcParamFs indexStorage, Boolean notFull) {
+    protected static Path getNewDirListFile(//NcParamFs indexStorage, 
+            AppThWorkDirListRule outerRuleDirListWork,
+            Boolean notFull) {
+        FileSystem indexStorage = outerRuleDirListWork.getFsZipIndexStorage();
         String newTmpFileName = AppFileNamesConstants.SZFS_DIR_LIST_FILE_PREFIX;
         if( notFull ){
             newTmpFileName = newTmpFileName + AppFileNamesConstants.SZFS_DIR_LIST_FILE_NOT_LIMITED;
         }
         newTmpFileName = newTmpFileName + UUID.randomUUID().toString();
         
-        Path getNewName = indexStorage.getIdxFs().getPath(indexStorage.getDirDirList().toString(), newTmpFileName);
+        Path getNewName = indexStorage.getPath(newTmpFileName);
         return getNewName;
     }
-    protected static void writeData(ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> pollDataToDirListFile, 
-            NcParamFs indexStorage){
+    protected static void writeData(ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> pollDataToDirListFile,
+            AppThWorkDirListRule outerRuleDirListWork){
+            //NcParamFs indexStorage){
         Boolean fileWriteException = Boolean.FALSE;
         Path newDirListFile;
         if( pollDataToDirListFile.size() != AppConstants.DIR_LIST_RECORDS_COUNT_LIMIT ){
-            newDirListFile = ThFsFileIndexStorage.getNewDirListFile(indexStorage, Boolean.TRUE);
+            newDirListFile = ThFsFileIndexStorage.getNewDirListFile(outerRuleDirListWork, Boolean.TRUE);
         } else {
-            newDirListFile = ThFsFileIndexStorage.getNewDirListFile(indexStorage, Boolean.FALSE);
+            newDirListFile = ThFsFileIndexStorage.getNewDirListFile(outerRuleDirListWork, Boolean.FALSE);
         }
          
 
@@ -70,7 +74,7 @@ public class ThFsFileIndexStorage {
         }
         if( fileWriteException ){
             try{
-                Files.createFile(indexStorage.getIdxFs().getPath(indexStorage.getDirDirList().toString(), 
+                Files.createFile(outerRuleDirListWork.getFsZipIndexStorage().getPath( 
                         newDirListFile.getFileName().toString() + ".lck"));
             } catch(IOException ex){
                 ex.printStackTrace();

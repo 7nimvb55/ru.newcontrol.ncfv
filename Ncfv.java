@@ -130,7 +130,7 @@ public class Ncfv {
                     }
 
                 }
-                currentThread.sleep(30*1000);
+                currentThread.sleep(5*1000);
 
                 System.out.println(" _|_|_|_|_ wait for index process finished _|_|_|_|_-+-+-+-+|+-+|+-");
             } while (eqNames);
@@ -147,7 +147,6 @@ public class Ncfv {
             currentThread.sleep(60*1000);
             do{
                 eqNames = Boolean.FALSE;
-                
                 Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
                 for( Entry<Thread, StackTraceElement[]> stackItem : allStackTraces.entrySet() ){
                     ArrayBlockingQueue<String> queueThreadNames = thIndexRuleOuter.getQueueThreadNames();
@@ -160,9 +159,7 @@ public class Ncfv {
                         }
                     }
                 }
-                currentThread.sleep(30*1000);
-
-                
+                currentThread.sleep(5*1000);
             } while (eqNames);
         } catch (InterruptedException ex){
                 ex.printStackTrace();

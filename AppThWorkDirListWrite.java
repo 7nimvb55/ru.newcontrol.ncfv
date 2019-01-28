@@ -15,7 +15,9 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.net.URI;
 import java.nio.file.FileSystem;
+import java.util.Map;
 
 /**
  *
@@ -32,14 +34,14 @@ public class AppThWorkDirListWrite implements Runnable {
     @Override
     public void run() {
         Boolean needFinishStateDirListWriter = innerRuleForDirListWorkers.getNeedFinishStateDirListWriter();
-        FileSystem fsZipIndexStorage = innerRuleForDirListWorkers.getFsZipIndexStorage();
+        //FileSystem fsZipIndexStorage = innerRuleForDirListWorkers.getFsZipIndexStorage();
         
-        NcParamFs dataStorage = NcFsIdxStorageInit.initStorageStructure(fsZipIndexStorage);
+        //NcParamFs dataStorage = NcFsIdxStorageInit.initStorageStructure(fsZipIndexStorage);
         
         ThreadLocal<ThLogicDirListWriter> logicWriter = new ThreadLocal<ThLogicDirListWriter>();
         try{
-            logicWriter.set(new ThLogicDirListWriter(this.innerRuleForDirListWorkers,
-                dataStorage));
+            logicWriter.set(new ThLogicDirListWriter(this.innerRuleForDirListWorkers));//,
+                //dataStorage));
             logicWriter.get().doWriter();
         } finally {
             logicWriter.remove();

@@ -72,14 +72,16 @@ public class AppObjectsManagerState {
     private AppThWorkDirListState currentWorkState;
     private AppObjectsList currentListOfObjects;
     private AppThManager thManager;
+    private ThIndexRule indexRule;
 
     public AppObjectsManagerState(AppThManager appThManager) {
         this.thManager = appThManager;
         this.currentListOfObjects = appThManager.getListOfObjects();
         this.currentSelectedPathForMakeIndex = Paths.get("/usr/");
-        
+        this.indexRule = appThManager.getIndexRule();
         this.currentWorkState = new AppThWorkDirListState(this.currentListOfObjects,
                 this.currentSelectedPathForMakeIndex);
+        this.currentWorkState.setIndexRule(indexRule);
         
     }
     protected void runWorkMakeDirList(){

@@ -34,6 +34,7 @@ public class ThIndexMaker extends Thread{
         AppObjectsList objectsForApp = new AppObjectsList();
         //@todo AppThManager, AppObjectsManagerState create one it two or... ?
         AppThManager loggerByThreadsMain = new AppThManager(objectsForApp);
+        loggerByThreadsMain.setIndexRule(this.ruleThIndex);
         Ncfv.logInitState(loggerByThreadsMain);
         AppObjectsManagerState withOutLogger = new AppObjectsManagerState(loggerByThreadsMain);
         withOutLogger.runWorkMakeDirList();

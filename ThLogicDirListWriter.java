@@ -32,15 +32,15 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class ThLogicDirListWriter {
     private AppThWorkDirListRule innerRuleForDirListWorkers;
-    private NcParamFs currentWriterFs;
+    //private NcParamFs currentWriterFs;
     
     private ThreadLocal<Long> counterPackCount;
     private ThreadLocal<Long> counterDataSize;
 
-    public ThLogicDirListWriter(AppThWorkDirListRule ruleForDirListWorkers,
-            NcParamFs currentStorageFs) {
+    public ThLogicDirListWriter(AppThWorkDirListRule ruleForDirListWorkers){//,
+            //NcParamFs currentStorageFs) {
         this.innerRuleForDirListWorkers = ruleForDirListWorkers;
-        this.currentWriterFs = currentStorageFs;
+        //this.currentWriterFs = currentStorageFs;
     }
     protected void doWriter(){
         this.counterPackCount = new ThreadLocal<Long>();
@@ -85,7 +85,7 @@ public class ThLogicDirListWriter {
                         Long tmpSumData = this.counterDataSize.get() + (long) poll.size();
                         this.counterDataSize.set( tmpSumData );
                         
-                        this.writeDataToStorage(poll, this.currentWriterFs);
+                        this.writeDataToStorage(poll);//, this.currentWriterFs);
                     }
                     outDataProcessedOfWorkLogic(this.counterPackCount.get(), 
                             this.counterDataSize.get(),
@@ -107,7 +107,7 @@ public class ThLogicDirListWriter {
                 Long tmpSumData = this.counterDataSize.get() + (long) poll.size();
                 this.counterDataSize.set( tmpSumData );
 
-                this.writeDataToStorage(poll, this.currentWriterFs);
+                this.writeDataToStorage(poll);//, this.currentWriterFs);
             }
             outDataProcessedOfWorkLogic(this.counterPackCount.get(), 
                     this.counterDataSize.get(),
@@ -137,8 +137,9 @@ public class ThLogicDirListWriter {
                             + String.valueOf(pipeSize);
         NcAppHelper.outToConsoleIfDevAndParamTrue(strRunLogicLabel, AppConstants.LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WRITER_DATA_COUNT);
     }
-    private void writeDataToStorage(final ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> forWriteData,
-            NcParamFs indexStorage){
-        ThFsFileIndexStorage.writeData(forWriteData, indexStorage);
+    private void writeDataToStorage(final ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> forWriteData){//,
+           //NcParamFs indexStorage){
+        ThFsFileIndexStorage.writeData(forWriteData, this.innerRuleForDirListWorkers);
+                //, indexStorage);
     }
 }

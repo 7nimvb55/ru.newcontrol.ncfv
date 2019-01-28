@@ -26,9 +26,34 @@ public class ThIndexState {
     private ThIndexWordBusWrited busWritedJob;
     private Boolean isSetWritedJob;
     
+    private AppFileStorageIndex storagesForIndexList;
+    private Boolean isSetStoriesForIndexList;
+    
     ThIndexState(){
+        setFalseStoriesForIndexList();
+        currentIndexStorages();
         setFalseReadedJob();
         setFalseWritedJob();
+    }
+    protected AppFileStorageIndex currentIndexStorages(){
+        if( this.isStoriesForIndexList() ){
+            return this.storagesForIndexList;
+        }
+        setTrueStoriesForIndexList();
+        this.storagesForIndexList = new AppFileStorageIndex();
+        return this.storagesForIndexList;
+    }
+    protected void setTrueStoriesForIndexList(){
+        this.isSetStoriesForIndexList = Boolean.TRUE;
+    }
+    protected void setFalseStoriesForIndexList(){
+        this.isSetStoriesForIndexList = Boolean.FALSE;
+    }
+    protected Boolean isStoriesForIndexList(){
+        if( this.isSetStoriesForIndexList ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
     /**
      * 

@@ -44,4 +44,53 @@ public class AppFileNamesConstants {
     protected static String SZFS_DIR_LIST_FILE_PREFIX = "dl-";
     protected static String SZFS_DIR_LIST_FILE_NOT_LIMITED = "notlimited-";
     
+    // In thread system used for main index directories
+    protected static String DIR_IDX = "/ncidxfv";
+    // old versions prefixes, names
+    protected static String DIR_TMP = "/t";
+    protected static String DIR_DIR_LIST = "/di";
+    protected static String DIR_JOURNAL = "/j";
+    protected static String DIR_FILE_LIST = "/fl";
+    protected static String DIR_FILE_TYPE = "/ft";
+    protected static String DIR_FILE_HASH = "/fh";
+    protected static String DIR_FILE_EXIST = "/fx";
+    protected static String DIR_WORD = "/w";
+    protected static String DIR_STORAGE_WORD = "/sw";
+    protected static String DIR_LONG_WORD_LIST = "/lw";
+    protected static String DIR_LONG_WORD_DATA = "/ln";
+    
+    protected static String PRE_DIR_LIST = "dl-";
+    
+    protected static String DIR_APP_DATA = "/appdata";
+    
+    protected static String FILE_INDEX_CONTAINS = "/ncidxfv.zip";
+    // In threads system used constants for folder and file names
+    protected static String FILE_INDEX_KEY_MAP_URI = "UriForStorage";
+    protected static String FILE_INDEX_PREFIX_TMP = "t-";
+    protected static String FILE_INDEX_PREFIX_DIR_LIST = "di-";
+    protected static String FILE_INDEX_PREFIX_JOURNAL = "j-";
+    protected static String FILE_INDEX_PREFIX_FILE_LIST = "fl-";
+    protected static String FILE_INDEX_PREFIX_FILE_TYPE = "ft-";
+    protected static String FILE_INDEX_PREFIX_FILE_HASH = "fh-";
+    protected static String FILE_INDEX_PREFIX_FILE_EXIST = "fx-";
+    protected static String FILE_INDEX_PREFIX_WORD = "w-";
+    protected static String FILE_INDEX_PREFIX_STORAGE_WORD = "sw-";
+    protected static String FILE_INDEX_PREFIX_LONG_WORD_LIST = "lw-";
+    protected static String FILE_INDEX_PREFIX_LONG_WORD_DATA = "ln-";
+    protected static String FILE_INDEX_EXT = ".zip";
+    
+    protected static String FILE_JOURNAL_DISK = "/jdisk.dat";
+    protected static String FILE_DISK_DATA = "/disks.dat";
+    protected static String FILE_ID_DATA = "/ids.dat";
+    
+    protected static String FILE_APP_LOG = "/app.log";
+    
+    protected static String DIR_APP_CFG = "/etc";
+    protected static String FILE_APP_CFG = "/ncfv.conf";
+    
+    protected static String FILE_SRCH_KEY_OUT = "/keywordout.list";
+    protected static String FILE_SRCH_KEY_IN = "/keywordin.list";
+    protected static String FILE_SRCH_DIR_OUT = "/dirout.list";
+    protected static String FILE_SRCH_DIR_IN = "/dirin.list";
+    
 }

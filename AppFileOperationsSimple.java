@@ -40,6 +40,16 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author wladimirowichbiaran
  */
 public class AppFileOperationsSimple {
+    /**
+     * Get from jvm <code>user.home</code> property, processed with functions
+     * <ul>
+     * <li>{@link java.nio.file.Path#normalize() }
+     * <li>{@link java.nio.file.Path#toAbsolutePath() }
+     * <li>{@link java.nio.file.Path#toRealPath(LinkOption.NOFOLLOW_LINKS) }
+     * </ul>
+     * @return
+     * @throws IOException 
+     */
     protected static Path getUserHomePath() throws IOException{
         String usrHomePath = System.getProperty("user.home");
         Path parentForFS = Paths.get(usrHomePath);
@@ -48,6 +58,18 @@ public class AppFileOperationsSimple {
         parentForFS = parentForFS.toRealPath(LinkOption.NOFOLLOW_LINKS);
         return parentForFS;
     }
+    /**
+     * Get Path from,
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.AppFileOperationsSimple#getUserHomePath() }
+     * </ul>
+     * and check by
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.AppFileOperationsSimple#pathIsNotDirectory(java.nio.file.Path) }
+     * <li>{@link ru.newcontrol.ncfv.AppFileOperationsSimple#pathIsNotReadWriteLink(java.nio.file.Path) }
+     * </ul>
+     * @return 
+     */
     protected static Path getUserHomeRWEDCheckedPath(){
         Path toReturn = Paths.get(System.getProperty("user.home"));
         try {
@@ -589,5 +611,72 @@ public class AppFileOperationsSimple {
             forReadFormFilelck.unlock();
         }    
     }
-    
+    /**
+     * For Directory (Folders), get or create if it is not exist, Path from,
+     * <ul>
+     * <li>{@link java.nio.file.Files#createDirectories(java.nio.file.Path, java.nio.file.attribute.FileAttribute...)  }
+     * </ul>
+     * and check by
+     * <ul>
+     * <li>{@link ru.newcontrol.ncfv.AppFileOperationsSimple#pathIsNotDirectory(java.nio.file.Path) }
+     * <li>{@link ru.newcontrol.ncfv.AppFileOperationsSimple#pathIsNotReadWriteLink(java.nio.file.Path) }
+     * </ul> 
+     * @param currentDir
+     * @param anySubDirName
+     * @return 
+     */
+    protected static Path getOrCreateAnySubDir(Path currentDir, String anySubDirName){
+        Path toReturn = Paths.get(currentDir.toString(),
+        anySubDirName);
+        if( Files.notExists(toReturn, LinkOption.NOFOLLOW_LINKS) ){
+            try {
+                Files.createDirectories(toReturn);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                System.out.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
+                System.exit(0);
+            }
+        }
+        try {
+            pathIsNotDirectory(toReturn);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            System.out.println("[ERROR] Not directory " + toReturn.toString());
+            System.exit(0);
+        }
+        try {
+            pathIsNotReadWriteLink(toReturn);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            System.out.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
+            System.exit(0);
+        }
+        return toReturn;
+    }
+    /**
+     * @todo recode for exceptions processed part
+     * @param inFPath
+     * @return 
+     */
+    protected static boolean existAndHasAccessRWNotLink(Path inFPath){
+        try {
+            Path normPath = inFPath.normalize();
+            normPath = normPath.toAbsolutePath();
+            if( Files.isSymbolicLink(normPath) ){
+                return false;
+            }
+            if( Files.exists(normPath, LinkOption.NOFOLLOW_LINKS) ){
+                if( Files.isRegularFile(normPath, LinkOption.NOFOLLOW_LINKS) ){
+                    if( Files.isReadable(normPath) ){
+                        return Files.isWritable(normPath);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("[ERROR] File not readable, writeable or link " + inFPath.toString());
+            System.exit(0);
+        }
+        return false;
+    }
 }

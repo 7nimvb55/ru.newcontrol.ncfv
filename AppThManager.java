@@ -30,6 +30,7 @@ public class AppThManager {
     private ConcurrentSkipListMap<String,Runnable> currentWorkerList;
     private ArrayBlockingQueue<String> messagesQueueForLogging;
     private AppObjectsList outerObectsForApp;
+    private ThIndexRule thIndexRule;
 
     public AppThManager(AppObjectsList objectsForApp) {
         this.outerObectsForApp = objectsForApp;
@@ -40,7 +41,12 @@ public class AppThManager {
     protected AppObjectsList getListOfObjects(){
         return this.outerObectsForApp;
     }
-    
+    protected void setIndexRule(final ThIndexRule outerThIndexRule){
+        this.thIndexRule = outerThIndexRule;
+    }
+    protected ThIndexRule getIndexRule(){
+        return this.thIndexRule;
+    }
     protected static void createNewWorkerGroup(){
         ThreadGroup groupForThreads = new ThreadGroup("ncfvThGroup");
         Thread thForExecutions = new Thread(groupForThreads, "addThread");

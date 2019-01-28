@@ -35,9 +35,8 @@ public class ThIndexWord extends Thread{
                 + " do it +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         System.out.println(this.ruleThIndex.getIndexState().getBusJobForRead().getQueueSize().toString()
                 + " do it +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        /**
-         * protected ThDirListStateJobReader ThDirListBusReaded.getJobForRead() string num 40 ...poll()... than queue empty
-         */
+        
+        
     }
     
 }

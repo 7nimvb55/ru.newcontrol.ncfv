@@ -40,7 +40,8 @@ public class AppThManagerIndexStorage implements Runnable {
     
     @Override
     public void run() {
-        Path pathIndexFile = NcFsIdxStorageInit.buildPathToFileOfIdxStorage();
+        AppFileStorageIndex currentIndexStorages = this.innerRuleForDirListWorkers.getWorkDirListState().getIndexRule().getIndexState().currentIndexStorages();
+        /*Path pathIndexFile = NcFsIdxStorageInit.buildPathToFileOfIdxStorage();
         Map<String, String> fsProperties = NcFsIdxStorageInit.getFsPropExist();
         
         Boolean existFSfile = NcFsIdxOperationFiles.existAndHasAccessRWNotLink(pathIndexFile);
@@ -53,7 +54,13 @@ public class AppThManagerIndexStorage implements Runnable {
         
         URI uriZipIndexStorage = URI.create("jar:file:" + pathIndexFile.toUri().getPath());
         try(FileSystem fsZipIndexStorage = 
-            FileSystems.newFileSystem(uriZipIndexStorage, fsProperties)){
+            FileSystems.newFileSystem(uriZipIndexStorage, fsProperties)){*/
+        Boolean ifException = Boolean.FALSE;
+        URI byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST);
+        Map<String, String> byPrefixGetMap = currentIndexStorages.byPrefixGetMap(AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST);
+        try(FileSystem fsZipIndexStorage = 
+            FileSystems.newFileSystem(byPrefixGetUri, 
+                    byPrefixGetMap)){
             
             innerRuleForDirListWorkers.setFsZipIndexStorage(fsZipIndexStorage);
             AppThWorkDirListState workDirListState = innerRuleForDirListWorkers.getWorkDirListState();

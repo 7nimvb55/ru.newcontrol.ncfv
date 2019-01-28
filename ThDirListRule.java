@@ -61,6 +61,9 @@ public class ThDirListRule{
         setFalseRunnedDirListWorkManager();
     }
     //Released version
+    protected ThIndexRule getIndexRule(){
+        return this.outerIndexRule;
+    }
     /**
      * ThDirListState
      * @return 

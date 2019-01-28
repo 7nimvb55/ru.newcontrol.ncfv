@@ -43,7 +43,7 @@ public class ThDirListLogicRead {
         ThDirListBusReaded busReadedJob = outerRuleDirListReadWork.getDirListState().getBusJobForRead();
         ThDirListStateJobReader jobForRead = busReadedJob.getJobForRead();
         if( !jobForRead.isBlankObject() ){
-            Path pathIndexFile = NcFsIdxStorageInit.buildPathToFileOfIdxStorage();
+            /*Path pathIndexFile = NcFsIdxStorageInit.buildPathToFileOfIdxStorage();
             Map<String, String> fsProperties = NcFsIdxStorageInit.getFsPropExist();
 
             Boolean existFSfile = NcFsIdxOperationFiles.existAndHasAccessRWNotLink(pathIndexFile);
@@ -56,8 +56,11 @@ public class ThDirListLogicRead {
 
             URI uriZipIndexStorage = URI.create("jar:file:" + pathIndexFile.toUri().getPath());
             URI readedFileSystem = jobForRead.getReadedFileSystem();
-            try( FileSystem fsForReadData = FileSystems.newFileSystem(uriZipIndexStorage, fsProperties) ){
-                
+            try( FileSystem fsForReadData = FileSystems.newFileSystem(uriZipIndexStorage, fsProperties) ){*/
+            AppFileStorageIndex currentIndexStorages = outerRuleDirListReadWork.getIndexRule().getIndexState().currentIndexStorages();
+            URI byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST);
+            Map<String, String> byPrefixGetMap = currentIndexStorages.byPrefixGetMap(AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST);
+            try( FileSystem fsForReadData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){    
             
                 int countJobs = 0;
                 while( !busReadedJob.isJobQueueEmpty() ){
@@ -68,6 +71,7 @@ public class ThDirListLogicRead {
                         ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> readDataFromFile = ThDirListFileSystemHelper.readDataFromFile(filePath);
                         jobForRead.putReadedData(readDataFromFile);
                         jobForRead.setTrueReaderJobDone();
+                        busJobForSendToIndexWord.addReaderJob(jobForRead);
                         System.out.println("idx: " 
                                 + countJobs 
                                 + " file " 
@@ -77,7 +81,7 @@ public class ThDirListLogicRead {
                                 + " jobDone " + jobForRead.isReaderJobDone().toString()
                         );
                         countJobs++;
-                        busJobForSendToIndexWord.addReaderJob(jobForRead);
+                        
                     }
                     jobForRead = busReadedJob.getJobForRead();
                 }
