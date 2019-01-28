@@ -57,7 +57,7 @@ public class ThDirListLogicRead {
             URI uriZipIndexStorage = URI.create("jar:file:" + pathIndexFile.toUri().getPath());
             URI readedFileSystem = jobForRead.getReadedFileSystem();
             try( FileSystem fsForReadData = FileSystems.newFileSystem(uriZipIndexStorage, fsProperties) ){*/
-            AppFileStorageIndex currentIndexStorages = outerRuleDirListReadWork.getIndexRule().getIndexState().currentIndexStorages();
+            AppFileStorageIndex currentIndexStorages = new AppFileStorageIndex();//outerRuleDirListReadWork.getIndexRule().getIndexState().currentIndexStorages();
             URI byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST);
             Map<String, String> byPrefixGetMap = currentIndexStorages.byPrefixGetMap(AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST);
             try( FileSystem fsForReadData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){    
