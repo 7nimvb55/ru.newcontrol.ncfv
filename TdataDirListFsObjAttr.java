@@ -32,44 +32,44 @@ import java.util.UUID;
  * @author wladimirowichbiaran
  */
 public class TdataDirListFsObjAttr implements Serializable  {
-    private final long pcNumber;
-    private final long hightNumber;
-    private final long lowNumber;
+    public final long pcNumber;
+    public final long hightNumber;
+    public final long lowNumber;
     
-    private final UUID randomUUID;
+    public final UUID randomUUID;
         
-    private final String file;
-    private final String fileName;
-    private final String fileRealPath;
-    private final int hashCode;
+    public final String file;
+    public final String fileName;
+    public final String fileRealPath;
+    public final int hashCode;
         
     //private final Set<PosixFilePermission> posixFilePermissions;
         
-    private final long creationTime;
-    private final long lastAccessTime;
-    private final long lastModifiedTime;
-    private final long sizeFromAttr;
-    private final long sizeFromFiles;
+    public final long creationTime;
+    public final long lastAccessTime;
+    public final long lastModifiedTime;
+    public final long sizeFromAttr;
+    public final long sizeFromFiles;
         
-    private final boolean directory;
-    private final boolean readable;
-    private final boolean writable;
-    private final boolean executable;
-    private final boolean other;
-    private final boolean symbolicLink;
-    private final boolean absolute;
-    private final boolean notExists;
-    private final boolean exists;
+    public final boolean directory;
+    public final boolean readable;
+    public final boolean writable;
+    public final boolean executable;
+    public final boolean other;
+    public final boolean symbolicLink;
+    public final boolean absolute;
+    public final boolean notExists;
+    public final boolean exists;
 
-    private final boolean regularFile;
-    private final boolean hidden;
+    public final boolean regularFile;
+    public final boolean hidden;
 
-    private final boolean exHidden;
-    private final boolean exPosix;
+    public final boolean exHidden;
+    public final boolean exPosix;
     
-    private final boolean exReal;
-    private final boolean exSize;
-    private final boolean notEqualSize;
+    public final boolean exReal;
+    public final boolean exSize;
+    public final boolean notEqualSize;
     /**
      * 
      * @param file

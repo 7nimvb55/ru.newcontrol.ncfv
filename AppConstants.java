@@ -83,4 +83,7 @@ public class AppConstants {
     protected static final Boolean LOG_LEVEL_IS_DEV_TO_CONS_DIR_LIST_WRITER_DATA_COUNT = Boolean.TRUE;
     
     protected static final Integer PIPE_READ_FS_TO_TACKER_WORKER_QUEUE_SIZE = 100000;
+    
+    protected static final String INDEX_DATA_TRANSFER_CODE_WORD = "WORD";
+    protected static final String INDEX_DATA_TRANSFER_CODE_LONG_WORD = "WORD_LONG";
 }

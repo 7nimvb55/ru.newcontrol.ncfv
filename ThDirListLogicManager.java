@@ -68,6 +68,7 @@ public class ThDirListLogicManager {
                         //return entry;
                     //}
                     System.out.println("Directory is " + entry.toString());
+                    //ThWordLogicFilter.processFilterInputedString(entry.toString());
                     count++;
                     
                     //Read into readedFromDirListDataBus

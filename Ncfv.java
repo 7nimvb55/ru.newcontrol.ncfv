@@ -63,7 +63,12 @@ public class Ncfv {
         //String runIndexMakeIntoZipByThreads = runIndexMakeIntoZipByThreads();
         //System.out.println("Waited name " + runIndexMakeIntoZipByThreads);
         
-        //runIndexMakeWordIntoZipByThreads();
+        //runIndexMakeWordIntoZipByThreads(); 
+        /**
+         * ThWordLogicFilter.processFilterInputedString("C:\\WINDOWS\\W1ND0W5\\KA6E/\\b\\ЖИЛА\\ЯКОРЬ"
+         *      + "ъъ\\!лэйбэл\\windows\\winDows\\!Новая папка\\Ярлык\\$$$проеКт\\T3\\ПP0EKT\\новая исполнительная"
+         *      + "\\исполнительнаядокументацияпопроектуосвоениятерриториальногофондалесногохозяйствароссийскойфедерациинавпериодсдветысячидевятнадцатогогодаподветысячидвадцатьдевятыйгод");
+         */
         runIndexMakeAndDirList();
     }
     private static void runIndexMakeAndDirList(){
@@ -84,8 +89,16 @@ public class Ncfv {
         thIndexRule.setThreadIndexMaker(thIndexMaker);
         thIndexRule.setThreadIndexDirList(thIndexDirList);
         thIndexRule.setThreadIndexWord(thIndexWord);
+        /**
+         * @todo when storage index create and not need for new create not run for this methods
+         */
         thIndexMaker.start();
         waitForFinishedThread();
+        /**
+         * @todo append flag updated process, this ma used in while( updatedProcess ) { wait for end update }
+         * after create storages workers... need release for storages (file systems) workers...
+         */
+        thIndexStateObj.currentIndexStorages().updateMapForStorages();
         thIndexDirList.start();
         waitForFinishedIndexDirListThread(thIndexRule);
         thIndexWord.start();

@@ -112,6 +112,7 @@ public enum NcPathToArrListStr {
      * @return 
      */    
     protected ArrayList<String> retArrListStr(String fstrti){
+        fstrti.codePointAt(0);
         String[] tmpStr = fstrti.split(getName());
         ArrayList<String> fstro = new ArrayList<String>();
         for (String i : tmpStr){

@@ -41,8 +41,6 @@ public class AppFileNamesConstants {
     protected static String LOG_INDEX_PREFIX = "index-";
     protected static String LOG_HTML_KEY_FOR_CURRENT_SUB_DIR = "currentHtmlSubDir";
     
-    protected static String SZFS_DIR_LIST_FILE_PREFIX = "dl-";
-    protected static String SZFS_DIR_LIST_FILE_NOT_LIMITED = "notlimited-";
     
     // In thread system used for main index directories
     protected static String DIR_IDX = "/ncidxfv";
@@ -66,6 +64,10 @@ public class AppFileNamesConstants {
     
     protected static String FILE_INDEX_CONTAINS = "/ncidxfv.zip";
     // In threads system used constants for folder and file names
+    
+    protected static String SZFS_DIR_LIST_FILE_PREFIX = "dl-";
+    protected static String SZFS_DIR_LIST_FILE_NOT_LIMITED = "notlimited-";
+    
     protected static String FILE_INDEX_KEY_MAP_URI = "UriForStorage";
     protected static String FILE_INDEX_PREFIX_TMP = "t-";
     protected static String FILE_INDEX_PREFIX_DIR_LIST = "di-";
