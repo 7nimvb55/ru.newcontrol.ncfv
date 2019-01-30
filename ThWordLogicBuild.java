@@ -61,7 +61,17 @@ public class ThWordLogicBuild {
                             String shortDataToString = recordItem.getValue().file;
                             Path dirListReaded = Paths.get(shortDataToString);
                             for (int i = 0; i < dirListReaded.getNameCount(); i++) {
+                                /**
+                                 * @todo release index by depth dirictories, file extentions, data time map
+                                 * create job for bus index jobs workers
+                                 * do for word index in runnables workers,
+                                 * sort results to packets by queue system
+                                 * 
+                                 * for dirlist reader need release jobforneed read data
+                                 * before end of release current packet
+                                 */
                                 Path namePart = dirListReaded.getName(i);
+                                //outOfMemory exception
                                 ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, TdataWord>> doWordForIndex = 
                                     ThWordLogicFilter.doWordForIndex(recordItem.getKey(), readedPath.toString(), namePart.toString());
                                 ConcurrentSkipListMap<UUID, TdataWord> getWord = doWordForIndex.get(AppConstants.INDEX_DATA_TRANSFER_CODE_WORD);
@@ -161,9 +171,13 @@ public class ThWordLogicBuild {
                                 new ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, TdataWord>>();
                             }*/
                         }
+                        jobForRead.cleanReadedData();
+                        jobForRead.setTrueReaderJobDone();
                     }
                 }
             }
+            
+            
         }
     }
 }

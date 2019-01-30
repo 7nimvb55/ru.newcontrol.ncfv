@@ -43,7 +43,13 @@ public class ThWordLogicWrite {
         long counIterations = 0;
         do{ 
             AppFileStorageIndex currentIndexStorages = ruleWordOuter.getIndexRule().getIndexState().currentIndexStorages();
-
+            /**
+             * @todo release some bus for each index system, 
+             * got jobs and read write it in by queue system, workers whrere
+             * opened storages
+             * 
+             * save data in limited file packets
+             */
             
 
             ThWordState wordState = ruleWordOuter.getWordState();
@@ -140,7 +146,7 @@ public class ThWordLogicWrite {
                             } catch (IOException ex) {
                                 ex.printStackTrace();
                             }
-                            
+                            jobForWrite.cleanWriterData();
                             jobForWrite.setTrueWriterJobDone();
                         }
                         

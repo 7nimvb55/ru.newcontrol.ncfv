@@ -22,7 +22,10 @@ package ru.newcontrol.ncfv;
 public class ThWordState {
     /*private ThWordBusReaded busReadedJob;
     private Boolean isSetReadedJob;*/
-    
+    /**
+     * @todo add bus for long word
+     * add new jobwrited class for long word and some index
+     */
     private ThWordBusWrited busWritedJob;
     private Boolean isSetWritedJob;
     
