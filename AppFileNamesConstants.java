@@ -64,7 +64,7 @@ public class AppFileNamesConstants {
     
     protected static String FILE_INDEX_CONTAINS = "/ncidxfv.zip";
     // In threads system used constants for folder and file names
-    
+    protected static String DIR_INDEX_OLD_DATA = "old-";
     protected static String SZFS_DIR_LIST_FILE_PREFIX = "dl-";
     protected static String SZFS_DIR_LIST_FILE_NOT_LIMITED = "notlimited-";
     
@@ -80,6 +80,7 @@ public class AppFileNamesConstants {
     protected static String FILE_INDEX_PREFIX_STORAGE_WORD = "sw-";
     protected static String FILE_INDEX_PREFIX_LONG_WORD_LIST = "lw-";
     protected static String FILE_INDEX_PREFIX_LONG_WORD_DATA = "ln-";
+    
     protected static String FILE_INDEX_EXT = ".zip";
     
     protected static String FILE_JOURNAL_DISK = "/jdisk.dat";

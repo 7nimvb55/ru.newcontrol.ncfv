@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URI;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
@@ -37,6 +40,7 @@ public class ThWordLogicWrite {
     protected void doWriteJobFromBusForWord(ThWordRule ruleWordOuter){
         ConcurrentSkipListMap<UUID, String> listLongWordNames = 
                                     new ConcurrentSkipListMap<UUID, String>();
+        long counIterations = 0;
         do{ 
             AppFileStorageIndex currentIndexStorages = ruleWordOuter.getIndexRule().getIndexState().currentIndexStorages();
 
@@ -49,6 +53,7 @@ public class ThWordLogicWrite {
                 
                     do{
                         if( !jobForWrite.isBlankObject() && !jobForWrite.isWritedDataEmpty() ){
+                            currentIndexStorages.updateMapForStorages();
                             String writerPath = jobForWrite.getFileNameForWrite();
                             Boolean longWord = jobForWrite.isLongWord();
                             String nameSavedInLongWordList = writerPath;
@@ -80,7 +85,34 @@ public class ThWordLogicWrite {
                                     } catch(Exception ex){
                                         ex.printStackTrace();
                                     }
-                                    Files.delete(nowWritedFile);
+                                    try{
+                                        Path mvOldDir = fsForReadData.getPath(AppFileNamesConstants.DIR_INDEX_OLD_DATA);
+                                        if( Files.notExists(mvOldDir) ){
+                                            Files.createDirectories(mvOldDir);
+                                        }
+                                        Path forNewMove = fsForReadData.getPath(AppFileNamesConstants.DIR_INDEX_OLD_DATA
+                                                ,writerPath + "-"
+                                                + AppFileOperationsSimple.getNowTimeStringWithMS() 
+                                                + "-" 
+                                                + String.valueOf(counIterations));
+                                    
+                                        Files.move(nowWritedFile, forNewMove);
+                                    } catch(UnsupportedOperationException ex){
+                                        System.err.println(ex.getMessage());
+                                        ex.printStackTrace();
+                                    } catch(FileAlreadyExistsException ex){
+                                        System.err.println(ex.getMessage());
+                                        ex.printStackTrace();
+                                    } catch(DirectoryNotEmptyException ex){
+                                        System.err.println(ex.getMessage());
+                                        ex.printStackTrace();
+                                    } catch(AtomicMoveNotSupportedException ex){
+                                        System.err.println(ex.getMessage());
+                                        ex.printStackTrace();
+                                    } catch(IOException ex){
+                                        System.err.println(ex.getMessage());
+                                        ex.printStackTrace();
+                                    }
                                 }
                                 ConcurrentSkipListMap<UUID, TdataWord> readyForWriteData =
                                         new ConcurrentSkipListMap<UUID, TdataWord>();
