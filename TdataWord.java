@@ -15,13 +15,14 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  *
  * @author wladimirowichbiaran
  */
-public class TdataWord {
+public class TdataWord implements Serializable {
     /**
      * file path where record saved
      */

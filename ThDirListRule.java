@@ -23,7 +23,7 @@ import java.util.UUID;
  *
  * @author wladimirowichbiaran
  */
-public class ThDirListRule{
+public class ThDirListRule {
     //Released version
     private ThreadGroup workerThDirList;
     private ThDirListState currentDirListState;

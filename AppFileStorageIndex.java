@@ -181,6 +181,7 @@ public class AppFileStorageIndex {
         listForReturn.add(AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
         listForReturn.add(AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD);
         listForReturn.add(AppFileNamesConstants.FILE_INDEX_PREFIX_LONG_WORD_LIST);
+        listForReturn.add(AppFileNamesConstants.FILE_INDEX_PREFIX_LONG_WORD_DATA);
         return listForReturn;
     }
 }

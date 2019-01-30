@@ -15,6 +15,7 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -24,36 +25,50 @@ import java.util.concurrent.ConcurrentSkipListMap;
  *
  * @author wladimirowichbiaran
  */
-public class ThDirListStateJobWriter {
+public class ThWordStateJobWriter {
     private final UUID randomUUID;
     private final long creationNanoTime;
     
     private Boolean writerBlankJob;
     private Boolean jobWriterIsDone;
-    private FileSystem writeToFs;
-    private Path forWritePath;
+    private Boolean isLongWordJob;
+    //private URI writeToFsUri;
+    private String forWriteFileName;
     private int writerSize;
     private Boolean isWriterDataEmpty;
     
-    private ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> writerData;
+    private ConcurrentSkipListMap<UUID, TdataWord> writerData;
     
-    protected ThDirListStateJobWriter(){
+    protected ThWordStateJobWriter(){
         this.randomUUID = UUID.randomUUID();
         this.creationNanoTime = System.nanoTime();
         setTrueBlankObject();
         setTrueWriterJobDone();
+        setFalseLongWord();
         
-        this.writerData = new ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>();
+        this.writerData = new ConcurrentSkipListMap<UUID, TdataWord>();
     }
-    protected ThDirListStateJobWriter(Path pathForJob, FileSystem fromFs){
-        this.forWritePath = pathForJob;
-        this.writeToFs = fromFs;
+    protected ThWordStateJobWriter(String pathForJob){
+        this.forWriteFileName = pathForJob;
+        //this.writeToFsUri = fromFsUri;
         this.randomUUID = UUID.randomUUID();
         this.creationNanoTime = System.nanoTime();
         setFalseBlankObject();
         setFalseWriterJobDone();
+        setFalseLongWord();
         
-        this.writerData = new ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>();
+        this.writerData = new ConcurrentSkipListMap<UUID, TdataWord>();
+    }
+    protected ThWordStateJobWriter(String pathForJob, Boolean longWord){
+        this.forWriteFileName = pathForJob;
+        //this.writeToFsUri = fromFsUri;
+        this.randomUUID = UUID.randomUUID();
+        this.creationNanoTime = System.nanoTime();
+        setFalseBlankObject();
+        setFalseWriterJobDone();
+        setTrueLongWord();
+        
+        this.writerData = new ConcurrentSkipListMap<UUID, TdataWord>();
     }
 
     protected void setTrueBlankObject(){
@@ -64,6 +79,18 @@ public class ThDirListStateJobWriter {
     }
     protected Boolean isBlankObject(){
         if( this.writerBlankJob ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    protected void setTrueLongWord(){
+        this.isLongWordJob = Boolean.TRUE;
+    }
+    protected void setFalseLongWord(){
+        this.isLongWordJob = Boolean.FALSE;
+    }
+    protected Boolean isLongWord(){
+        if( this.isLongWordJob ){
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
@@ -86,11 +113,11 @@ public class ThDirListStateJobWriter {
         }
         return Boolean.FALSE;
     }
-    protected void putWritedData(final ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> inputedData){
+    protected void putWritedData(final ConcurrentSkipListMap<UUID, TdataWord> inputedData){
         this.writerSize = (int) inputedData.size();
         this.writerData.putAll(inputedData);
     }
-    protected ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> getWriterData(){
+    protected ConcurrentSkipListMap<UUID, TdataWord> getWriterData(){
         return this.writerData;
     }
     protected Boolean isWritedDataEmpty(){
@@ -100,15 +127,15 @@ public class ThDirListStateJobWriter {
         return Boolean.FALSE;
     }
     protected void cleanWriterData(){
-        this.writerData = new ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr>();
+        this.writerData = new ConcurrentSkipListMap<UUID, TdataWord>();
     }
     protected Integer getWriterDataSize(){
         return (int) this.writerSize;
     }
-    protected FileSystem getWritedFileSystem(){
-        return this.writeToFs;
-    }
-    protected Path getWriterPath(){
-        return this.forWritePath;
+    /*protected URI getWritedStorageUri(){
+        return this.writeToFsUri;
+    }*/
+    protected String getFileNameForWrite(){
+        return this.forWriteFileName;
     }
 }

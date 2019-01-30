@@ -40,48 +40,114 @@ public class ThIndexWord extends Thread{
         ThDirListBusReaded busJobForRead = this.ruleThIndex.getIndexState().getBusJobForRead();
         System.out.println(busJobForRead.getQueueSize().toString()
                 + " do it +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        //ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, TdataWord>> doWordForIndex = 
-        //        ThWordLogicFilter.doWordForIndex(recordId, storagePath, inputedPath);
-        //doWordForIndex.get(AppConstants.INDEX_DATA_TRANSFER_CODE_WORD);
-        //doWordForIndex.get(AppConstants.INDEX_DATA_TRANSFER_CODE_LONG_WORD);
+        ThWordBusWrited thWordBusWrited = new ThWordBusWrited();
+        ThWordState thWordState = new ThWordState();
+        thWordState.setBusJobForWrite(thWordBusWrited);
+        ThWordRule thWordRule = new ThWordRule(this.ruleThIndex);
+        ThWordWorkBuild thWordWorkBuild = new ThWordWorkBuild(thWordRule);
+        ThWordWorkWrite thWordWorkWrite = new ThWordWorkWrite(thWordRule);
+        
+        thWordRule.setWordState(thWordState);
+        thWordRule.setWordWorkBuild(thWordWorkBuild);
+        thWordRule.setWordWorkWriter(thWordWorkWrite);
+        thWordRule.runBuildWordWorkers();
+        //uncomment
+        //processWordIndex(thWordRule);
+        
+        thWordRule.runWriteToWord();
+    }
+    private void processWordIndex(ThWordRule ruleWordOuter){
+        ThDirListBusReaded busJobForRead = this.ruleThIndex.getIndexState().getBusJobForRead();
+        //for send data into word writer
+        ThWordBusWrited busJobForWrite = ruleWordOuter.getWordState().getBusJobForWrite();
+        System.out.println(ThWordLogicBuild.class.getCanonicalName() 
+                + " do it ++busJobForRead"
+                        + busJobForRead.toString() + "++"
+                        + busJobForRead.getQueueSize() + "++++++busJobForWrite++"
+                        //+ busJobForWrite.toString() + "++"
+                        //+ busJobForWrite.getQueueSize() 
+                + "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         while( !busJobForRead.isJobQueueEmpty() ){
             ThDirListStateJobReader jobForRead = busJobForRead.getJobForRead();
             if( !jobForRead.isBlankObject() ){
-            if( !jobForRead.isReadedDataEmpty() ){
-            if( jobForRead.isReaderJobDone() ){
-                Path readedPath = jobForRead.getReadedPath();
-                ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> readedData = jobForRead.getReadedData();
-                for( Map.Entry<UUID, TdataDirListFsObjAttr> recordItem : readedData.entrySet() ){
-                    String shortDataToString = recordItem.getValue().file;
-                    Path dirListReaded = Paths.get(shortDataToString);
-                    for (int i = 0; i < dirListReaded.getNameCount(); i++) {
-                        Path namePart = dirListReaded.getName(i);
-                        ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, TdataWord>> doWordForIndex = 
-                            ThWordLogicFilter.doWordForIndex(recordItem.getKey(), readedPath.toString(), namePart.toString());
-                        ConcurrentSkipListMap<UUID, TdataWord> getWord = doWordForIndex.get(AppConstants.INDEX_DATA_TRANSFER_CODE_WORD);
-                        ConcurrentSkipListMap<UUID, TdataWord> getLongWord = doWordForIndex.get(AppConstants.INDEX_DATA_TRANSFER_CODE_LONG_WORD);
-                        for(Map.Entry<UUID, TdataWord> itemWord : getWord.entrySet()){
-                            System.out.println("src: " + namePart.toString()
-                            + " key: " + itemWord.getKey().toString()
-                            + " str: " +  itemWord.getValue().strSubString
-                            + " hex: " +  itemWord.getValue().hexSubString);
+                //if( !jobForRead.isReadedDataEmpty() ){
+                    //if( jobForRead.isReaderJobDone() ){
+                        Path readedPath = jobForRead.getReadedPath();
+                        ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> readedData = jobForRead.getReadedData();
+                        ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, TdataWord>> packetDataForWord = 
+                                new ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, TdataWord>>();
+                        ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, TdataWord>> packetDataForWordLong = 
+                                new ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, TdataWord>>();
+                        int iterations = 0;
+                        System.out.println(" read from job size " + readedData.size());
+                        for( Map.Entry<UUID, TdataDirListFsObjAttr> recordItem : readedData.entrySet() ){
+                            String shortDataToString = recordItem.getValue().file;
+                            Path dirListReaded = Paths.get(shortDataToString);
+                            for (int i = 0; i < dirListReaded.getNameCount(); i++) {
+                                Path namePart = dirListReaded.getName(i);
+                                ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, TdataWord>> doWordForIndex = 
+                                    ThWordLogicFilter.doWordForIndex(recordItem.getKey(), readedPath.toString(), namePart.toString());
+                                ConcurrentSkipListMap<UUID, TdataWord> getWord = doWordForIndex.get(AppConstants.INDEX_DATA_TRANSFER_CODE_WORD);
+                                ConcurrentSkipListMap<UUID, TdataWord> getLongWord = doWordForIndex.get(AppConstants.INDEX_DATA_TRANSFER_CODE_LONG_WORD);
+                                for(Map.Entry<UUID, TdataWord> itemWord : getWord.entrySet()){
+                                    System.out.println("src: " + namePart.toString()
+                                    + " key: " + itemWord.getKey().toString()
+                                    + " str: " +  itemWord.getValue().strSubString
+                                    + " hex: " +  itemWord.getValue().hexSubString);
+                                    ConcurrentSkipListMap<UUID, TdataWord> tmpForPut = new ConcurrentSkipListMap<UUID, TdataWord>();
+                                    tmpForPut.put(itemWord.getKey(), itemWord.getValue());
+                                    ConcurrentSkipListMap<UUID, TdataWord> getPrevVal = packetDataForWord.remove(itemWord.getValue().hexSubString);
+                                    if( getPrevVal != null){
+                                        getPrevVal.putAll(tmpForPut);
+                                        packetDataForWord.put(itemWord.getValue().hexSubString, getPrevVal);
+                                    } else {
+                                        packetDataForWord.put(itemWord.getValue().hexSubString, tmpForPut);
+                                    }
+                                    
+                                    
+                                    //ThWordStateJobWriter thWordStateJobWriter = new ThWordStateJobWriter(itemWord.getValue().hexSubString);
+                                    //thWordStateJobWriter.putWritedData(getWord);
+                                    
+                                    //busJobForWrite.addWriterJob(thWordStateJobWriter);
+                                }
+                                for(Map.Entry<UUID, TdataWord> itemLongWord : getLongWord.entrySet()){
+                                    System.out.println("src: " + namePart.toString()
+                                    + " key: " + itemLongWord.getKey().toString()
+                                    + " str: " +  itemLongWord.getValue().strSubString
+                                    + " hex: " +  itemLongWord.getValue().hexSubString);
+                                    ConcurrentSkipListMap<UUID, TdataWord> tmpForPutLong = new ConcurrentSkipListMap<UUID, TdataWord>();
+                                    tmpForPutLong.put(itemLongWord.getKey(), itemLongWord.getValue());
+                                    ConcurrentSkipListMap<UUID, TdataWord> getPrevValLong = packetDataForWordLong.remove(itemLongWord.getValue().hexSubString);
+                                    if( getPrevValLong != null){
+                                        getPrevValLong.putAll(tmpForPutLong);
+                                        packetDataForWordLong.put(itemLongWord.getValue().hexSubString, getPrevValLong);
+                                    } else {
+                                        packetDataForWordLong.put(itemLongWord.getValue().hexSubString, tmpForPutLong);
+                                    }
+                                }
+
+                            }
+                            if( iterations > 1000){
+                                for(Map.Entry<String, ConcurrentSkipListMap<UUID, TdataWord>> itemWord : packetDataForWord.entrySet()){
+                                    ThWordStateJobWriter thWordStateJobWriter = new ThWordStateJobWriter(itemWord.getKey());
+                                    thWordStateJobWriter.putWritedData(itemWord.getValue());
+                                    
+                                    busJobForWrite.addWriterJob(thWordStateJobWriter);
+                                }
+                                for(Map.Entry<String, ConcurrentSkipListMap<UUID, TdataWord>> itemLongWord : packetDataForWordLong.entrySet()){
+                                    ThWordStateJobWriter thWordStateJobWriter = new ThWordStateJobWriter(itemLongWord.getKey(), Boolean.TRUE);
+                                    thWordStateJobWriter.putWritedData(itemLongWord.getValue());
+                                    
+                                    busJobForWrite.addWriterJob(thWordStateJobWriter);
+                                }
+                                iterations = 0;
+                            }
+                            iterations++;
                         }
-                        for(Map.Entry<UUID, TdataWord> itemLongWord : getLongWord.entrySet()){
-                            System.out.println("src: " + namePart.toString()
-                            + " key: " + itemLongWord.getKey().toString()
-                            + " str: " +  itemLongWord.getValue().strSubString
-                            + " hex: " +  itemLongWord.getValue().hexSubString);
-                        }
-                        
-                    }
-                    
-                    
-                }
-            }
-            }
+                    //}
+                //}
             }
         }
-        
     }
     
 }

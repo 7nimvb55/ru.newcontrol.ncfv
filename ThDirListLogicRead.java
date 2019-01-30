@@ -39,6 +39,7 @@ public class ThDirListLogicRead {
          * index storage exist, check for exist and open it
          * exceptions to logger append records need too
          */
+        System.out.println(ThDirListLogicRead.class.getCanonicalName() + " =====>");
         ThDirListBusReaded busJobForSendToIndexWord = outerRuleDirListReadWork.getDirListState().getBusJobForSendToIndexWord();
         ThDirListBusReaded busReadedJob = outerRuleDirListReadWork.getDirListState().getBusJobForRead();
         ThDirListStateJobReader jobForRead = busReadedJob.getJobForRead();
@@ -47,14 +48,15 @@ public class ThDirListLogicRead {
             ThIndexRule indexRule = outerRuleDirListReadWork.getIndexRule();
             ThIndexState indexState = indexRule.getIndexState();
             AppFileStorageIndex currentIndexStorages = indexState.currentIndexStorages();
-
+            currentIndexStorages.updateMapForStorages();
             /**
              * currentIndexStorages.updateMapForStorages();// - for update Storages info
              */
+            System.out.println(ThDirListLogicRead.class.getCanonicalName() + " preOpen storage =====>");
             URI byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST);
             Map<String, String> byPrefixGetMap = currentIndexStorages.byPrefixGetMap(AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST);
             try( FileSystem fsForReadData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){    
-            
+                System.out.println(ThDirListLogicRead.class.getCanonicalName() + " open storage " + fsForReadData.toString());
                 int countJobs = 0;
                 while( !busReadedJob.isJobQueueEmpty() ){
 
@@ -79,14 +81,19 @@ public class ThDirListLogicRead {
                     jobForRead = busReadedJob.getJobForRead();
                 }
             } catch(FileSystemNotFoundException ex){
+                System.err.println(ex.getMessage());
                 ex.printStackTrace();
             } catch(ProviderNotFoundException ex){
+                System.err.println(ex.getMessage());
                 ex.printStackTrace();
             } catch(IllegalArgumentException ex){
+                System.err.println(ex.getMessage());
                 ex.printStackTrace();
             } catch(SecurityException ex){
+                System.err.println(ex.getMessage());
                 ex.printStackTrace();
             } catch (IOException ex) {
+                System.err.println(ex.getMessage());
                 ex.printStackTrace();
             } 
         }

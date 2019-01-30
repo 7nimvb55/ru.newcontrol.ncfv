@@ -69,12 +69,14 @@ public class ThIndexDirList extends Thread{
             thDirListBusDataWrited.set(thDirListBusWrited);
             
             ThDirListRule thDirListRuleObject = new ThDirListRule(this.ruleThIndex);
-            System.out.println(thDirListRuleObject.toString());
+            System.out.println(ThIndexDirList.class.getCanonicalName() 
+                    + " create rule object " 
+                    + thDirListRuleObject.toString());
             thDirListRule.set(thDirListRuleObject);
             
             ThDirListState thDirListStateObject = new ThDirListState();
             thDirListState.set(thDirListStateObject);
-            
+            //what is that
             thDirListState.get().setBusJobForSendToIndexWord(this.ruleThIndex.getIndexState().getBusJobForRead());
             thDirListState.get().setBusJobForRead(thDirListBusDataReaded.get());
             thDirListState.get().setBusJobForWrite(thDirListBusDataWrited.get());

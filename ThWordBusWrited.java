@@ -15,7 +15,6 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -25,24 +24,24 @@ import java.util.concurrent.ConcurrentSkipListMap;
  *
  * @author wladimirowichbiaran
  */
-public class ThDirListBusWrited {
-    private ConcurrentSkipListMap<UUID, ThDirListStateJobWriter> forWriteQueue;
+public class ThWordBusWrited {
+    private ConcurrentSkipListMap<UUID, ThWordStateJobWriter> forWriteQueue;
     
-    protected ThDirListBusWrited(){
-        this.forWriteQueue = new ConcurrentSkipListMap<UUID, ThDirListStateJobWriter>();
+    protected ThWordBusWrited(){
+        this.forWriteQueue = new ConcurrentSkipListMap<UUID, ThWordStateJobWriter>();
         
     }
-    protected void addWriterJob(final ThDirListStateJobWriter jobForDone){
+    protected void addWriterJob(final ThWordStateJobWriter jobForDone){
         if( !jobForDone.isBlankObject() ){
             this.forWriteQueue.put(jobForDone.getID(), jobForDone);
         }
     }
-    protected ThDirListStateJobWriter getJobForWrite(){
-        Map.Entry<UUID, ThDirListStateJobWriter> pollFirstEntry = this.forWriteQueue.pollFirstEntry();
+    protected ThWordStateJobWriter getJobForWrite(){
+        Map.Entry<UUID, ThWordStateJobWriter> pollFirstEntry = this.forWriteQueue.pollFirstEntry();
         if( pollFirstEntry != null ){
                 return pollFirstEntry.getValue();
         }
-        return new ThDirListStateJobWriter();
+        return new ThWordStateJobWriter();
     }
     protected Boolean isJobQueueEmpty(){
         if( this.forWriteQueue.isEmpty() ){
@@ -54,7 +53,7 @@ public class ThDirListBusWrited {
         return (int) this.forWriteQueue.size();
     }
     protected void cleanQueue(){
-        this.forWriteQueue = new ConcurrentSkipListMap<UUID, ThDirListStateJobWriter>();
+        this.forWriteQueue = new ConcurrentSkipListMap<UUID, ThWordStateJobWriter>();
     }
     protected void shrinkJobDoneItems(){
         
@@ -63,7 +62,7 @@ public class ThDirListBusWrited {
             ArrayBlockingQueue<UUID> listOfDoneJob = new ArrayBlockingQueue<UUID>((int) this.forWriteQueue.size());
             thListJobDone.set(listOfDoneJob);
             Boolean notHaveDoneJob = Boolean.FALSE;
-            for( Map.Entry<UUID, ThDirListStateJobWriter> itemJob : this.forWriteQueue.entrySet() ){
+            for( Map.Entry<UUID, ThWordStateJobWriter> itemJob : this.forWriteQueue.entrySet() ){
                 if( itemJob.getValue().isWriterJobDone() ){
                     thListJobDone.get().add(itemJob.getKey());
                 }
@@ -91,4 +90,5 @@ public class ThDirListBusWrited {
             thListJobDone.remove();
         }
     }
+    
 }
