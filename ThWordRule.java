@@ -41,6 +41,10 @@ public class ThWordRule {
     private Boolean isSetWordWorkWriter;
     private Boolean isRunWordWorkWriter;
     
+    private ThLongWordWorkWrite runnableWorkerLongWordWrite;
+    private Boolean isSetLongWordWorkWriter;
+    private Boolean isRunLongWordWorkWriter;
+    
     private ThWordWorkBuild runnableWorkerWordBuild;
     private Boolean isSetWordWorkBuild;
     private Boolean isRunWordWorkBuild;
@@ -55,9 +59,11 @@ public class ThWordRule {
         //setFalseWordCounter();
         //setFalseWordWorkReader();
         setFalseWordWorkWriter();
+        setFalseLongWordWorkWriter();
         setFalseWordWorkBuild();
         //setFalseRunnedWordWorkReader();
         setFalseRunnedWordWorkWriter();
+        setFalseRunnedLongWordWorkWriter();
         setFalseRunnedWordWorkBuild();
     }
     //Released version
@@ -193,6 +199,44 @@ public class ThWordRule {
         return Boolean.FALSE;
     }
     /**
+     * ThLongWordWorkWrite
+     * @return 
+     */
+    protected ThLongWordWorkWrite getLongWordWorkWriter(){
+        if( !this.isLongWordWorkWriter() ){
+            throw new IllegalArgumentException(ThLongWordWorkWrite.class.getCanonicalName() + " object not set in " + ThWordRule.class.getCanonicalName());
+        }
+        return this.runnableWorkerLongWordWrite;
+    }
+    protected void setLongWordWorkWriter(final ThLongWordWorkWrite runnableWorkerLongWordWriteOuter){
+        this.runnableWorkerLongWordWrite = runnableWorkerLongWordWriteOuter;
+        setTrueLongWordWorkWriter();
+    }
+    protected void setTrueLongWordWorkWriter(){
+        this.isSetLongWordWorkWriter = Boolean.TRUE;
+    }
+    protected void setFalseLongWordWorkWriter(){
+        this.isSetLongWordWorkWriter = Boolean.FALSE;
+    }
+    protected Boolean isLongWordWorkWriter(){
+        if( this.isSetLongWordWorkWriter ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    protected void setTrueRunnedLongWordWorkWriter(){
+        this.isRunLongWordWorkWriter = Boolean.TRUE;
+    }
+    protected void setFalseRunnedLongWordWorkWriter(){
+        this.isRunLongWordWorkWriter = Boolean.FALSE;
+    }
+    protected Boolean isRunnedLongWordWorkWriter(){
+        if( this.isRunLongWordWorkWriter ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
      * ThWordWorkBuild
      * @return 
      */
@@ -256,6 +300,18 @@ public class ThWordRule {
             this.outerIndexRule.addThredNameInQueue(toStringWorkWriter);
             Thread thForWorkWrite = new Thread(this.workerThWord, this.runnableWorkerWordWrite, toStringWorkWriter);
             thForWorkWrite.start();
+        }
+    }
+    protected void runWriteToLongWord(){
+        if( isLongWordWorkWriter() && !isRunnedLongWordWorkWriter() ){
+            /**
+             * @todo release workWriter Bus names for runned threads names threads
+             * for release wait him finish functions
+             */
+            String toStringLongWordWorkWriter = UUID.randomUUID().toString();
+            this.outerIndexRule.addThredNameInQueue(toStringLongWordWorkWriter);
+            Thread thForLongWordWorkWrite = new Thread(this.workerThWord, this.runnableWorkerLongWordWrite, toStringLongWordWorkWriter);
+            thForLongWordWorkWrite.start();
         }
     }
     protected void runBuildWordWorkers(){

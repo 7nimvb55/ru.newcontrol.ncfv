@@ -33,6 +33,8 @@ import java.security.ProtectionDomain;
 public class AppThWorkDirListRule {
     private ThreadGroup workerDirList;
     
+    private ThIndexRule currentIndexRule;
+    
     private String nameIndexStorage;
     private String nameDirlistReader;
     private String nameDirlistTacker;
@@ -71,6 +73,7 @@ public class AppThWorkDirListRule {
     private AppThWorkDirListState workDirListState;
 
     public AppThWorkDirListRule(Path pathForMakeIndex) {
+        
         this.storageSetted = Boolean.FALSE;
         this.dirlistReaderSetted = Boolean.FALSE;
         this.dirlistTackerSetted = Boolean.FALSE;

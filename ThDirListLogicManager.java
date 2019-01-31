@@ -36,7 +36,13 @@ public class ThDirListLogicManager {
     
     protected void doIndexStorage(final ThDirListRule ruleDirList){
         ThDirListBusReaded busReadedJob = ruleDirList.getDirListState().getBusJobForRead();
-
+        /**
+         * ThIndexStatistic
+         */
+        ThIndexStatistic indexStatistic = ruleDirList.getIndexRule().getIndexStatistic();
+        indexStatistic.updateDataStorages();
+        indexStatistic.printToConsoleListContent();
+        
         Boolean ifException = Boolean.FALSE;
         
         ThIndexRule indexRule = ruleDirList.getIndexRule();

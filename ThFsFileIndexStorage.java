@@ -37,29 +37,45 @@ import java.util.zip.ZipOutputStream;
  * @author wladimirowichbiaran
  */
 public class ThFsFileIndexStorage {
-    protected static Path getNewDirListFile(//NcParamFs indexStorage, 
+    protected static Path getNewDirListFile(ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> pollDataToDirListFile,
             AppThWorkDirListRule outerRuleDirListWork,
             Boolean notFull) {
+        
+        
+        
         FileSystem indexStorage = outerRuleDirListWork.getFsZipIndexStorage();
         String newTmpFileName = AppFileNamesConstants.SZFS_DIR_LIST_FILE_PREFIX;
-        if( notFull ){
+        /*if( notFull ){
             newTmpFileName = newTmpFileName + AppFileNamesConstants.SZFS_DIR_LIST_FILE_NOT_LIMITED;
-        }
+        }*/
         newTmpFileName = newTmpFileName + UUID.randomUUID().toString();
+        AppThWorkDirListState workDirListState = outerRuleDirListWork.getWorkDirListState();
+        ThIndexRule indexRule = workDirListState.getIndexRule();
+        ThIndexStatistic indexStatistic = indexRule.getIndexStatistic();
+        String createNewNameForWriteWithAllAddRecords = indexStatistic.createNewNameForWriteWithAllAddRecords(
+                AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST, 
+                newTmpFileName, 
+                pollDataToDirListFile);
         
-        Path getNewName = indexStorage.getPath(newTmpFileName);
+        Path getNewName = indexStorage.getPath(createNewNameForWriteWithAllAddRecords);
         return getNewName;
     }
+
     protected static void writeData(ConcurrentSkipListMap<UUID, TdataDirListFsObjAttr> pollDataToDirListFile,
             AppThWorkDirListRule outerRuleDirListWork){
-            //NcParamFs indexStorage){
+        //NcParamFs indexStorage){
+        AppThWorkDirListState workDirListState = outerRuleDirListWork.getWorkDirListState();
+        ThIndexRule indexRule = workDirListState.getIndexRule();
+        ThIndexStatistic indexStatistic = indexRule.getIndexStatistic();
+        //String createNewNameForWriteWithAllAddRecords = indexStatistic.createNewNameForWriteWithAllAddRecords(AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST, tagFileName, pollDataToDirListFile);
+        
         Boolean fileWriteException = Boolean.FALSE;
-        Path newDirListFile;
-        if( pollDataToDirListFile.size() != AppConstants.DIR_LIST_RECORDS_COUNT_LIMIT ){
-            newDirListFile = ThFsFileIndexStorage.getNewDirListFile(outerRuleDirListWork, Boolean.TRUE);
-        } else {
-            newDirListFile = ThFsFileIndexStorage.getNewDirListFile(outerRuleDirListWork, Boolean.FALSE);
-        }
+        Path newDirListFile = ThFsFileIndexStorage.getNewDirListFile(pollDataToDirListFile, outerRuleDirListWork, Boolean.TRUE);
+        //if( pollDataToDirListFile.size() != AppConstants.DIR_LIST_RECORDS_COUNT_LIMIT ){
+            //newDirListFile = ThFsFileIndexStorage.getNewDirListFile(pollDataToDirListFile, outerRuleDirListWork, Boolean.TRUE);
+        //} else {
+        //    newDirListFile = ThFsFileIndexStorage.getNewDirListFile(pollDataToDirListFile, outerRuleDirListWork, Boolean.FALSE);
+        //}
          
 
         if( pollDataToDirListFile != null ){
@@ -67,11 +83,14 @@ public class ThFsFileIndexStorage {
                 new ObjectOutputStream(Files.newOutputStream(newDirListFile)))
             {
                 oos.writeObject(pollDataToDirListFile);
+                indexStatistic.addToListSizeRemoveListProcess(AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST, newDirListFile);
             } catch(Exception ex){
                 ex.printStackTrace();
                 fileWriteException = Boolean.TRUE;
             }
         }
+        pollDataToDirListFile.clear();
+        pollDataToDirListFile = null;
         if( fileWriteException ){
             try{
                 Files.createFile(outerRuleDirListWork.getFsZipIndexStorage().getPath( 

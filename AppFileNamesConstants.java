@@ -64,6 +64,7 @@ public class AppFileNamesConstants {
     
     protected static String FILE_INDEX_CONTAINS = "/ncidxfv.zip";
     // In threads system used constants for folder and file names
+    protected static String FILE_DIR_PART_SEPARATOR = "-";
     protected static String DIR_INDEX_OLD_DATA = "old-";
     protected static String SZFS_DIR_LIST_FILE_PREFIX = "dl-";
     protected static String SZFS_DIR_LIST_FILE_NOT_LIMITED = "notlimited-";

@@ -40,26 +40,37 @@ public class ThIndexWord extends Thread{
         ThDirListBusReaded busJobForRead = this.ruleThIndex.getIndexState().getBusJobForRead();
         System.out.println(busJobForRead.getQueueSize().toString()
                 + " do it +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        ThWordBusWrited thWordBusWrited = new ThWordBusWrited();
+        ThWordBusWrited thWordBusWordWrited = new ThWordBusWrited();
+        ThWordBusWrited thWordBusLongWordWrited = new ThWordBusWrited();
+        
         ThWordState thWordState = new ThWordState();
-        thWordState.setBusJobForWrite(thWordBusWrited);
+        
+        thWordState.setBusJobForWordWrite(thWordBusWordWrited);
+        thWordState.setBusJobForLongWordWrite(thWordBusLongWordWrited);
+        
         ThWordRule thWordRule = new ThWordRule(this.ruleThIndex);
+        
         ThWordWorkBuild thWordWorkBuild = new ThWordWorkBuild(thWordRule);
         ThWordWorkWrite thWordWorkWrite = new ThWordWorkWrite(thWordRule);
+        ThLongWordWorkWrite thLongWordWorkWrite = new ThLongWordWorkWrite(thWordRule);
         
         thWordRule.setWordState(thWordState);
         thWordRule.setWordWorkBuild(thWordWorkBuild);
         thWordRule.setWordWorkWriter(thWordWorkWrite);
+        thWordRule.setLongWordWorkWriter(thLongWordWorkWrite);
         thWordRule.runBuildWordWorkers();
         //uncomment
         //processWordIndex(thWordRule);
         
         thWordRule.runWriteToWord();
+        thWordRule.runWriteToLongWord();
     }
     private void processWordIndex(ThWordRule ruleWordOuter){
         ThDirListBusReaded busJobForRead = this.ruleThIndex.getIndexState().getBusJobForRead();
         //for send data into word writer
-        ThWordBusWrited busJobForWrite = ruleWordOuter.getWordState().getBusJobForWrite();
+        ThWordBusWrited busJobForWordWrite = ruleWordOuter.getWordState().getBusJobForWordWrite();
+        ThWordBusWrited busJobForLongWordWrite = ruleWordOuter.getWordState().getBusJobForLongWordWrite();
+        //LongWord
         System.out.println(ThWordLogicBuild.class.getCanonicalName() 
                 + " do it ++busJobForRead"
                         + busJobForRead.toString() + "++"
@@ -127,21 +138,21 @@ public class ThIndexWord extends Thread{
                                 }
 
                             }
-                            if( iterations > 1000){
-                                for(Map.Entry<String, ConcurrentSkipListMap<UUID, TdataWord>> itemWord : packetDataForWord.entrySet()){
-                                    ThWordStateJobWriter thWordStateJobWriter = new ThWordStateJobWriter(itemWord.getKey());
-                                    thWordStateJobWriter.putWritedData(itemWord.getValue());
-                                    
-                                    busJobForWrite.addWriterJob(thWordStateJobWriter);
-                                }
-                                for(Map.Entry<String, ConcurrentSkipListMap<UUID, TdataWord>> itemLongWord : packetDataForWordLong.entrySet()){
-                                    ThWordStateJobWriter thWordStateJobWriter = new ThWordStateJobWriter(itemLongWord.getKey(), Boolean.TRUE);
-                                    thWordStateJobWriter.putWritedData(itemLongWord.getValue());
-                                    
-                                    busJobForWrite.addWriterJob(thWordStateJobWriter);
-                                }
-                                iterations = 0;
+                            
+                            for(Map.Entry<String, ConcurrentSkipListMap<UUID, TdataWord>> itemWord : packetDataForWord.entrySet()){
+                                ThWordStateJobWriter thWordStateJobWriter = new ThWordStateJobWriter(itemWord.getKey());
+                                thWordStateJobWriter.putWritedData(itemWord.getValue());
+
+                                busJobForWordWrite.addWriterJob(thWordStateJobWriter);
                             }
+                            for(Map.Entry<String, ConcurrentSkipListMap<UUID, TdataWord>> itemLongWord : packetDataForWordLong.entrySet()){
+                                ThWordStateJobWriter thWordStateJobWriter = new ThWordStateJobWriter(itemLongWord.getKey(), Boolean.TRUE);
+                                thWordStateJobWriter.putWritedData(itemLongWord.getValue());
+
+                                busJobForLongWordWrite.addWriterJob(thWordStateJobWriter);
+                            }
+                            iterations = 0;
+                            
                             iterations++;
                         }
                     //}

@@ -38,9 +38,11 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class ThWordLogicWrite {
     protected void doWriteJobFromBusForWord(ThWordRule ruleWordOuter){
-        ConcurrentSkipListMap<UUID, String> listLongWordNames = 
-                                    new ConcurrentSkipListMap<UUID, String>();
+     
         long counIterations = 0;
+        ThIndexRule indexRule = ruleWordOuter.getIndexRule();
+        ThIndexStatistic indexStatistic = indexRule.getIndexStatistic();
+        indexStatistic.updateDataStorages();
         do{ 
             AppFileStorageIndex currentIndexStorages = ruleWordOuter.getIndexRule().getIndexState().currentIndexStorages();
             /**
@@ -50,10 +52,13 @@ public class ThWordLogicWrite {
              * 
              * save data in limited file packets
              */
+            URI byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
+            Map<String, String> byPrefixGetMap = currentIndexStorages.byPrefixGetMap(
+                    AppFileNamesConstants.FILE_INDEX_PREFIX_WORD); 
             
-
+            try( FileSystem fsForReadData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
             ThWordState wordState = ruleWordOuter.getWordState();
-            ThWordBusWrited busJobForWrite = wordState.getBusJobForWrite();
+            ThWordBusWrited busJobForWrite = wordState.getBusJobForWordWrite();
             if(!busJobForWrite.isJobQueueEmpty()){
                 ThWordStateJobWriter jobForWrite = busJobForWrite.getJobForWrite();
                 
@@ -61,91 +66,77 @@ public class ThWordLogicWrite {
                         if( !jobForWrite.isBlankObject() && !jobForWrite.isWritedDataEmpty() ){
                             currentIndexStorages.updateMapForStorages();
                             String writerPath = jobForWrite.getFileNameForWrite();
-                            Boolean longWord = jobForWrite.isLongWord();
-                            String nameSavedInLongWordList = writerPath;
-                            UUID recordForLongWord = UUID.randomUUID();
-                            URI byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
-                            Map<String, String> byPrefixGetMap = currentIndexStorages.byPrefixGetMap(AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
                             
-                            if( longWord ){
-                                writerPath = recordForLongWord.toString();
-                                listLongWordNames.put(recordForLongWord, nameSavedInLongWordList);
-                                byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_LONG_WORD_DATA);
-                                byPrefixGetMap = currentIndexStorages.byPrefixGetMap(AppFileNamesConstants.FILE_INDEX_PREFIX_LONG_WORD_DATA);
-                            }
                             ConcurrentSkipListMap<UUID, TdataWord> writerData = 
                                     new ConcurrentSkipListMap<UUID, TdataWord>();
                             writerData.putAll(jobForWrite.getWriterData());
+                            writerPath = indexStatistic.createNewNameForWriteWithAllAddRecords(
+                                    AppFileNamesConstants.FILE_INDEX_PREFIX_WORD, 
+                                    writerPath, 
+                                    writerData);
                             
-                            try( FileSystem fsForReadData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
-                                Path nowWritedFile = fsForReadData.getPath(writerPath);
-                                ConcurrentSkipListMap<UUID, TdataWord> readedFormData =
-                                        new ConcurrentSkipListMap<UUID, TdataWord>();
-                                if( Files.exists(nowWritedFile) ){
+                            Path nowWritedFile = fsForReadData.getPath(writerPath);
+                            /*ConcurrentSkipListMap<UUID, TdataWord> readedFormData =
+                                    new ConcurrentSkipListMap<UUID, TdataWord>();
+                            if( Files.exists(nowWritedFile) ){
 
-                                    try(ObjectInputStream ois = 
-                                        new ObjectInputStream(Files.newInputStream(nowWritedFile)))
-                                    {
-                                        readedFormData.putAll((ConcurrentSkipListMap<UUID, TdataWord>) ois.readObject());
-
-                                    } catch(Exception ex){
-                                        ex.printStackTrace();
-                                    }
-                                    try{
-                                        Path mvOldDir = fsForReadData.getPath(AppFileNamesConstants.DIR_INDEX_OLD_DATA);
-                                        if( Files.notExists(mvOldDir) ){
-                                            Files.createDirectories(mvOldDir);
-                                        }
-                                        Path forNewMove = fsForReadData.getPath(AppFileNamesConstants.DIR_INDEX_OLD_DATA
-                                                ,writerPath + "-"
-                                                + AppFileOperationsSimple.getNowTimeStringWithMS() 
-                                                + "-" 
-                                                + String.valueOf(counIterations));
-                                    
-                                        Files.move(nowWritedFile, forNewMove);
-                                    } catch(UnsupportedOperationException ex){
-                                        System.err.println(ex.getMessage());
-                                        ex.printStackTrace();
-                                    } catch(FileAlreadyExistsException ex){
-                                        System.err.println(ex.getMessage());
-                                        ex.printStackTrace();
-                                    } catch(DirectoryNotEmptyException ex){
-                                        System.err.println(ex.getMessage());
-                                        ex.printStackTrace();
-                                    } catch(AtomicMoveNotSupportedException ex){
-                                        System.err.println(ex.getMessage());
-                                        ex.printStackTrace();
-                                    } catch(IOException ex){
-                                        System.err.println(ex.getMessage());
-                                        ex.printStackTrace();
-                                    }
-                                }
-                                ConcurrentSkipListMap<UUID, TdataWord> readyForWriteData =
-                                        new ConcurrentSkipListMap<UUID, TdataWord>();
-                                readyForWriteData.putAll(readedFormData);
-                                readyForWriteData.putAll(writerData);
-                                try(ObjectOutputStream oos = 
-                                    new ObjectOutputStream(Files.newOutputStream(nowWritedFile)))
+                                try(ObjectInputStream ois = 
+                                    new ObjectInputStream(Files.newInputStream(nowWritedFile)))
                                 {
-                                    oos.writeObject(readyForWriteData);
-                                    System.out.println(ThWordLogicWrite.class.getCanonicalName() 
-                                            + " => => =>                                             => => => " 
-                                            + nowWritedFile.toUri().toString() 
-                                            + " writed size " + readyForWriteData.size());
+                                    readedFormData.putAll((ConcurrentSkipListMap<UUID, TdataWord>) ois.readObject());
+
                                 } catch(Exception ex){
                                     ex.printStackTrace();
                                 }
-                            } catch(FileSystemNotFoundException ex){
-                                ex.printStackTrace();
-                            } catch(ProviderNotFoundException ex){
-                                ex.printStackTrace();
-                            } catch(IllegalArgumentException ex){
-                                ex.printStackTrace();
-                            } catch(SecurityException ex){
-                                ex.printStackTrace();
-                            } catch (IOException ex) {
+                                try{
+                                    Path mvOldDir = fsForReadData.getPath(AppFileNamesConstants.DIR_INDEX_OLD_DATA);
+                                    if( Files.notExists(mvOldDir) ){
+                                        Files.createDirectories(mvOldDir);
+                                    }
+                                    Path forNewMove = fsForReadData.getPath(AppFileNamesConstants.DIR_INDEX_OLD_DATA
+                                            ,writerPath + "-"
+                                            + AppFileOperationsSimple.getNowTimeStringWithMS() 
+                                            + "-" 
+                                            + String.valueOf(counIterations));
+
+                                    Files.move(nowWritedFile, forNewMove);
+                                } catch(UnsupportedOperationException ex){
+                                    System.err.println(ex.getMessage());
+                                    ex.printStackTrace();
+                                } catch(FileAlreadyExistsException ex){
+                                    System.err.println(ex.getMessage());
+                                    ex.printStackTrace();
+                                } catch(DirectoryNotEmptyException ex){
+                                    System.err.println(ex.getMessage());
+                                    ex.printStackTrace();
+                                } catch(AtomicMoveNotSupportedException ex){
+                                    System.err.println(ex.getMessage());
+                                    ex.printStackTrace();
+                                } catch(IOException ex){
+                                    System.err.println(ex.getMessage());
+                                    ex.printStackTrace();
+                                }
+                            }
+                            ConcurrentSkipListMap<UUID, TdataWord> readyForWriteData =
+                                    new ConcurrentSkipListMap<UUID, TdataWord>();
+                            readyForWriteData.putAll(readedFormData);
+                            readyForWriteData.putAll(writerData);*/
+                            try(ObjectOutputStream oos = 
+                                new ObjectOutputStream(Files.newOutputStream(nowWritedFile)))
+                            {
+                                oos.writeObject(writerData);
+                                System.out.println(ThWordLogicWrite.class.getCanonicalName() 
+                                        + " => => =>                                             => => => " 
+                                        + nowWritedFile.toUri().toString() 
+                                        + " writed size " + writerData.size());
+                                indexStatistic.addToListSizeRemoveListProcess(
+                                            AppFileNamesConstants.FILE_INDEX_PREFIX_WORD, 
+                                            nowWritedFile);
+                            } catch(Exception ex){
                                 ex.printStackTrace();
                             }
+                            writerData.clear();
+                            writerData = null;
                             jobForWrite.cleanWriterData();
                             jobForWrite.setTrueWriterJobDone();
                         }
@@ -154,33 +145,19 @@ public class ThWordLogicWrite {
                     } while( !busJobForWrite.isJobQueueEmpty() );
                 
             }
+        } catch(FileSystemNotFoundException ex){
+            ex.printStackTrace();
+        } catch(ProviderNotFoundException ex){
+            ex.printStackTrace();
+        } catch(IllegalArgumentException ex){
+            ex.printStackTrace();
+        } catch(SecurityException ex){
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         } while( ruleWordOuter.isRunnedWordWorkBuild() );
         
-        if( !listLongWordNames.isEmpty() ){
-            AppFileStorageIndex currentIndexStorages = ruleWordOuter.getIndexRule().getIndexState().currentIndexStorages();
-            URI byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_LONG_WORD_LIST);
-            Map<String, String> byPrefixGetMap = currentIndexStorages.byPrefixGetMap(AppFileNamesConstants.FILE_INDEX_PREFIX_LONG_WORD_LIST);
-            UUID recordForLongWord = UUID.randomUUID();
-            try( FileSystem fsForReadData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
-                Path nowWritedFile = fsForReadData.getPath(recordForLongWord.toString());
-                try(ObjectOutputStream oos = 
-                    new ObjectOutputStream(Files.newOutputStream(nowWritedFile)))
-                {
-                    oos.writeObject(listLongWordNames);
-                } catch(Exception ex){
-                    ex.printStackTrace();
-                }
-            } catch(FileSystemNotFoundException ex){
-                ex.printStackTrace();
-            } catch(ProviderNotFoundException ex){
-                ex.printStackTrace();
-            } catch(IllegalArgumentException ex){
-                ex.printStackTrace();
-            } catch(SecurityException ex){
-                ex.printStackTrace();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
+        
     }
 }

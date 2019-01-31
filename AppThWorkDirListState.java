@@ -47,6 +47,7 @@ public class AppThWorkDirListState {
     
 
     public AppThWorkDirListState(AppObjectsList outerListOfObject, Path makeIndex) {
+        
         this.currentListOfObject = outerListOfObject;
         this.ruleForDirListWorkers = new AppThWorkDirListRule(makeIndex);
         

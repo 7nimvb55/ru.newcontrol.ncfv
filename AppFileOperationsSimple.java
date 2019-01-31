@@ -30,6 +30,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -555,6 +556,13 @@ public class AppFileOperationsSimple {
             forGetTimelck.unlock();
         }
     }
+    /**
+     * Return contained in directory files, directories... etc (Path object)
+     * by mask equal of regular expression
+     * @param dirForRead
+     * @param maskForReturn
+     * @return 
+     */
     protected static ArrayList<Path> getFilesByMaskFromDir(Path dirForRead, String maskForReturn){
         ArrayList<Path> toReturn = new ArrayList<Path>();
         int count = 0;
@@ -678,5 +686,81 @@ public class AppFileOperationsSimple {
             System.exit(0);
         }
         return false;
+    }
+    /**
+     * build String file name for storages in format: tagFileName-forSizeDetect-volNum
+     * @param tagFileName
+     * @param forSizeDetect
+     * @param volNum
+     * @return 
+     */
+    protected static String buildInStorageFileName(String tagFileName, ConcurrentSkipListMap<?, ?> forSizeDetect, Integer volNum){
+        String nameForReturn = tagFileName 
+                + AppFileNamesConstants.FILE_DIR_PART_SEPARATOR 
+                + String.valueOf(forSizeDetect.size())
+                + AppFileNamesConstants.FILE_DIR_PART_SEPARATOR 
+                + String.valueOf(volNum);
+        
+        return nameForReturn;
+    }
+    /**
+     * from path get for Stoages objects HashMap with fullName, tagName, Size, Volume number
+     * 
+     * @param folderItem
+     * @return Map<String, String>:
+     *              "fullName", value
+     *              "tagName", value
+     *              "sizePart", value
+     *              "volumePart", value
+     */
+    protected static Map<String, String> getFromNameTagSizeVol(Path  folderItem){
+        Map<String, String> forReturn = new HashMap<String, String>();
+        
+        char[] separatorName = AppFileNamesConstants.FILE_DIR_PART_SEPARATOR.toCharArray();
+        
+        Path itemPathFormDir = folderItem.getFileName();
+        String nameIndexPart = "";
+        String sizePart = "";
+        String volumePart = "";
+        String nameOfFile = itemPathFormDir.toString();
+        char[] nameOfFileToCharArray = nameOfFile.toCharArray();
+        Boolean firstSeparator = Boolean.FALSE;
+        Boolean secondSeparator = Boolean.FALSE;
+        int idx  = nameOfFileToCharArray.length;
+        int firstIndx = 0;
+        int secondIndx = 0;
+        do{
+            idx--;
+            if( nameOfFileToCharArray[idx] == separatorName[0] ){
+                if( firstSeparator && !secondSeparator ){
+                        secondSeparator = Boolean.TRUE;
+                        secondIndx = idx;
+                }
+                if( !firstSeparator ){
+                    firstSeparator = Boolean.TRUE;
+                    firstIndx = idx;
+                }
+            }
+            if( firstSeparator && secondSeparator ){
+                nameIndexPart = nameOfFile.substring(0, secondIndx);
+                sizePart = nameOfFile.substring(secondIndx, firstIndx);
+                try{
+                    forReturn.put("fullName", nameOfFile);
+                    forReturn.put("tagName", nameIndexPart);
+                    forReturn.put("sizePart", sizePart);
+                } catch(NumberFormatException ex){
+                    System.err.println(ex.getMessage());
+                    ex.printStackTrace();
+                }
+                volumePart = nameOfFile.substring(firstIndx, (nameOfFile.length() - 1));
+                try{
+                    forReturn.put("volumePart", volumePart);
+                } catch(NumberFormatException ex){
+                    System.err.println(ex.getMessage());
+                    ex.printStackTrace();
+                }
+            }
+        } while( idx != 0 );
+        return forReturn;
     }
 }

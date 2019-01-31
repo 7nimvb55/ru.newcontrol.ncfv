@@ -35,7 +35,7 @@ public class ThWordLogicBuild {
         
         ThDirListBusReaded busJobForRead = ruleWordOuter.getIndexRule().getIndexState().getBusJobForRead();
         //for send data into word writer
-        ThWordBusWrited busJobForWrite = ruleWordOuter.getWordState().getBusJobForWrite();
+        ThWordBusWrited busJobForWrite = ruleWordOuter.getWordState().getBusJobForWordWrite();
         System.out.println(ThWordLogicBuild.class.getCanonicalName() 
                 + " do it ++busJobForRead"
                         + busJobForRead.toString() + "++"

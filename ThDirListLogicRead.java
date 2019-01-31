@@ -59,7 +59,12 @@ public class ThDirListLogicRead {
                 System.out.println(ThDirListLogicRead.class.getCanonicalName() + " open storage " + fsForReadData.toString());
                 int countJobs = 0;
                 while( !busReadedJob.isJobQueueEmpty() ){
-
+                    /**
+                     * @todo recode to do while ...
+                     * read one job
+                     * add readerJob for Word
+                     * goto sleep, while job not ready for Done
+                     */
                     if( !jobForRead.isBlankObject() ){
 
                         Path filePath = ThDirListFileSystemHelper.getFilePath(fsForReadData, jobForRead.getReadedPath());

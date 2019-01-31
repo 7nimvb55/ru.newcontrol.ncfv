@@ -19,6 +19,7 @@ package ru.newcontrol.ncfv;
 
 import java.io.File;
 import java.security.AccessControlException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -51,19 +52,7 @@ public class Ncfv {
     
     public static void main(String[] args) {
         AppEtcSecurityHelper.createNewSecurity();
-        //AppObjectsListLab.runnablesInThreadsTest();
-        /**
-         * @todo
-         * 
-         * in runIndexMakeIntoZipByThreads need fix for start create zip storage
-         * in runIndexMakeWordIntoZipByThreads need start after creation part of
-         * index in runIndexMakeIntoZipByThreads
-         */
-        //that make
-        //String runIndexMakeIntoZipByThreads = runIndexMakeIntoZipByThreads();
-        //System.out.println("Waited name " + runIndexMakeIntoZipByThreads);
-        
-        //runIndexMakeWordIntoZipByThreads(); 
+        //runIndexMakeWordIntoZipByThreads();
         /**
          * ThWordLogicFilter.processFilterInputedString("C:\\WINDOWS\\W1ND0W5\\KA6E/\\b\\ЖИЛА\\ЯКОРЬ"
          *      + "ъъ\\!лэйбэл\\windows\\winDows\\!Новая папка\\Ярлык\\$$$проеКт\\T3\\ПP0EKT\\новая исполнительная"
@@ -82,13 +71,20 @@ public class Ncfv {
         thIndexStateObj.setBusJobForRead(thDirListBusReaded);
         ThIndexRule thIndexRule = new ThIndexRule();
         
+        
         thIndexRule.setIndexState(thIndexStateObj);
         ThIndexMaker thIndexMaker = new ThIndexMaker(thIndexRule);
         ThIndexDirList thIndexDirList = new ThIndexDirList(thIndexRule);
         ThIndexWord thIndexWord = new ThIndexWord(thIndexRule);
+        
+        
+        ThIndexStatistic thIndexStatistic = new ThIndexStatistic(thIndexRule);
+        thIndexRule.setIndexStatistic(thIndexStatistic);
+        
         thIndexRule.setThreadIndexMaker(thIndexMaker);
         thIndexRule.setThreadIndexDirList(thIndexDirList);
         thIndexRule.setThreadIndexWord(thIndexWord);
+        
         /**
          * @todo when storage index create and not need for new create not run for this methods
          */
@@ -98,7 +94,7 @@ public class Ncfv {
          * @todo append flag updated process, this ma used in while( updatedProcess ) { wait for end update }
          * after create storages workers... need release for storages (file systems) workers...
          */
-        thIndexStateObj.currentIndexStorages().updateMapForStorages();
+        //thIndexStateObj.currentIndexStorages().updateMapForStorages();
         thIndexDirList.start();
         waitForFinishedIndexDirListThread(thIndexRule);
         thIndexWord.start();

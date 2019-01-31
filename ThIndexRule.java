@@ -38,6 +38,9 @@ public class ThIndexRule {
     private ThIndexState currentIndexState;
     private Boolean isSetIndexState;
     
+    private ThIndexStatistic currentIndexStatistic;
+    private Boolean isSetIndexStatistic;
+    
     protected ArrayBlockingQueue<String> namesWorkerDirList;
 
     public ThIndexRule() {
@@ -46,6 +49,7 @@ public class ThIndexRule {
                 
         setFalseRunnedThreadIndexDirList();
         setFalseRunnedThreadIndexMaker();
+        setFalseIndexStatistic();
         this.namesWorkerDirList = new ArrayBlockingQueue<String>(50);
     }
     protected void addThredNameInQueue(String forAdd){
@@ -191,6 +195,32 @@ public class ThIndexRule {
     }
     protected Boolean isIndexState(){
         if( this.isSetIndexState ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * ThIndexStatistic
+     * @return 
+     */
+    protected ThIndexStatistic getIndexStatistic(){
+        if( !this.isIndexStatistic() ){
+            throw new IllegalArgumentException(ThIndexStatistic.class.getCanonicalName() + " object not set in " + ThIndexRule.class.getCanonicalName());
+        }
+        return this.currentIndexStatistic;
+    }
+    protected void setIndexStatistic(final ThIndexStatistic stateIndexOuter){
+        this.currentIndexStatistic = stateIndexOuter;
+        setTrueIndexStatistic();
+    }
+    protected void setTrueIndexStatistic(){
+        this.isSetIndexStatistic = Boolean.TRUE;
+    }
+    protected void setFalseIndexStatistic(){
+        this.isSetIndexStatistic = Boolean.FALSE;
+    }
+    protected Boolean isIndexStatistic(){
+        if( this.isSetIndexStatistic ){
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
