@@ -67,7 +67,7 @@ public class ThLongWordLogicWrite {
 
                     do{
                         if( !jobForWrite.isBlankObject() && !jobForWrite.isWritedDataEmpty() ){
-                            currentIndexStorages.updateMapForStorages();
+                            //currentIndexStorages.updateMapForStorages();
                             String writerPath = jobForWrite.getFileNameForWrite();
                             Boolean longWord = jobForWrite.isLongWord();
                             String nameSavedInLongWordList = writerPath;

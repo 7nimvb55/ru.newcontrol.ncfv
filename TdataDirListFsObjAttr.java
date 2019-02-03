@@ -100,16 +100,16 @@ public class TdataDirListFsObjAttr implements Serializable  {
      * @param notEqualSize 
      */
 
-    public TdataDirListFsObjAttr(long lowNumber, Path file, Path fileName, Path fileRealPath,
-            int hashCode, Set<PosixFilePermission> posixFilePermissions,
-            FileTime creationTime, FileTime lastAccessTime,
-            FileTime lastModifiedTime, long sizeFromAttr,
-            long sizeFromFiles, boolean directory, boolean readable,
-            boolean writable, boolean executable, boolean other,
-            boolean symbolicLink, boolean absolute, boolean notExists,
-            boolean exists, boolean regularFile, boolean hidden,
-            boolean exHidden, boolean exPosix, boolean exReal,
-            boolean exSize, boolean notEqualSize) {
+    public TdataDirListFsObjAttr(final long lowNumber, final Path file, final Path fileName, final Path fileRealPath,
+            final int hashCode, final Set<PosixFilePermission> posixFilePermissions,
+            final FileTime creationTime, final FileTime lastAccessTime,
+            final FileTime lastModifiedTime, final long sizeFromAttr,
+            final long sizeFromFiles, final boolean directory, final boolean readable,
+            final boolean writable, final boolean executable, final boolean other,
+            final boolean symbolicLink, final boolean absolute, final boolean notExists,
+            final boolean exists, final boolean regularFile, final boolean hidden,
+            final boolean exHidden, final boolean exPosix, final boolean exReal,
+            final boolean exSize, final boolean notEqualSize) {
         // for presonal computer id when released network functional
         // in one of main app class for provided this functional
         this.pcNumber = 0;

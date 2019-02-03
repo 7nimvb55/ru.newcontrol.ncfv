@@ -27,6 +27,10 @@ public class AppConstants {
     protected static final Integer STORAGE_WORD_RECORDS_COUNT_LIMIT = 100;
     protected static final Integer FILE_LIST_RECORDS_COUNT_LIMIT = 100;
     
+    protected static final Integer NOT_USED_ABOVE_TIME_LIMIT = 100000;
+    
+    protected static final Integer FILTER_STORAGE_WORD_MESSAGES_QUEUE_SIZE = 10000;
+    
     protected static final Integer LOG_HTML_CLEAN_FROM_BUS_ABOVE_QUEUE_SIZE = 1;
     protected static final Integer LOG_HTML_JOB_QUEUE_SIZE = 100;
     protected static final Integer LOG_HTML_MESSAGES_QUEUE_SIZE = 10000;

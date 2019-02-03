@@ -36,7 +36,9 @@ public class ThWordRule {
     private ThWordWorkRead runnableWorkerWordRead;
     private Boolean isSetWordWorkReader;
     private Boolean isRunWordWorkReader;*/
-    
+    /**
+     * ThWordWorkWrite
+     */
     private ThWordWorkWrite runnableWorkerWordWrite;
     private Boolean isSetWordWorkWriter;
     private Boolean isRunWordWorkWriter;
@@ -58,13 +60,22 @@ public class ThWordRule {
         setFalseWordState();
         //setFalseWordCounter();
         //setFalseWordWorkReader();
+        /**
+         * ThWordWorkWrite
+         */
         setFalseWordWorkWriter();
-        setFalseLongWordWorkWriter();
-        setFalseWordWorkBuild();
-        //setFalseRunnedWordWorkReader();
         setFalseRunnedWordWorkWriter();
-        setFalseRunnedLongWordWorkWriter();
+        /**
+         * ThWordWorkBuild
+         */
+        setFalseWordWorkBuild();
         setFalseRunnedWordWorkBuild();
+        //setFalseRunnedWordWorkReader();
+        /**
+         * ThLongWordWorkWriter
+         */
+        setFalseLongWordWorkWriter();
+        setFalseRunnedLongWordWorkWriter();
     }
     //Released version
     protected ThIndexRule getIndexRule(){

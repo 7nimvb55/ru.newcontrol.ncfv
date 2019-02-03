@@ -64,7 +64,7 @@ public class ThWordLogicWrite {
                 
                     do{
                         if( !jobForWrite.isBlankObject() && !jobForWrite.isWritedDataEmpty() ){
-                            currentIndexStorages.updateMapForStorages();
+                            //currentIndexStorages.updateMapForStorages();
                             String writerPath = jobForWrite.getFileNameForWrite();
                             
                             ConcurrentSkipListMap<UUID, TdataWord> writerData = 

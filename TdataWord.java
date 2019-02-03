@@ -42,6 +42,7 @@ public class TdataWord implements Serializable {
      *
      */
     public int strSubStringHash;
+    public int typeWord;
     /** hexSubString - returned by toStrUTFinHEX() */
     public String hexSubString;
     /** h - strSubString.hashCode() */
@@ -71,6 +72,7 @@ public class TdataWord implements Serializable {
         this.strSubStringHash = -777;
         this.hexSubString = "";
         this.hexSubStringHash = -777;
+        this.typeWord = -777;
         this.positionSubString = -777;
         this.lengthSubString = -777;
         long nowSysTime = System.nanoTime();
@@ -95,22 +97,25 @@ public class TdataWord implements Serializable {
      * @param positionSubString
      * @param lengthSubString
      */
-    public TdataWord(UUID recordId,
-            String dirListStorageName,
-            String strSubString,
-            String hexSubString,
-            int positionSubString,
-            int lengthSubString) {
+    public TdataWord(final UUID recordId,
+            final String dirListStorageName,
+            final String strSubString,
+            final int calcTypeWord,
+            final String hexSubString,
+            final int positionSubString,
+            final int lengthSubString) {
+
         this.randomUUID = UUID.randomUUID();
         this.recordUUID = recordId;
         this.dirListFile = dirListStorageName;
         this.strSubString = strSubString;
         this.strSubStringHash = strSubString.hashCode();
+        this.typeWord = calcTypeWord;
         this.hexSubString = hexSubString;
         this.hexSubStringHash = hexSubString.hashCode();
         this.positionSubString = positionSubString;
         this.lengthSubString = lengthSubString;
-        long nowSysTime = System.nanoTime();
+        final long nowSysTime = System.nanoTime();
         this.recordTime = nowSysTime;
         this.recordHash = (
                 this.randomUUID.toString()

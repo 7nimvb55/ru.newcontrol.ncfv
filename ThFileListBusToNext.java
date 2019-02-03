@@ -18,51 +18,68 @@ package ru.newcontrol.ncfv;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  *
  * @author wladimirowichbiaran
  */
-public class ThDirListBusReaded {
-    private ConcurrentSkipListMap<UUID, ThDirListStateJobReader> forReadQueue;
+public class ThFileListBusToNext {
+    private ConcurrentSkipListMap<UUID, ConcurrentHashMap<Integer, ?>> forWriteQueue;
     
-    protected ThDirListBusReaded(){
-        this.forReadQueue = new ConcurrentSkipListMap<UUID, ThDirListStateJobReader>();
+    protected ThFileListBusToNext(){
+        this.forWriteQueue = new ConcurrentSkipListMap<UUID, ConcurrentHashMap<Integer, ?>>();
+        
     }
-    protected void addReaderJob(final ThDirListStateJobReader jobForDone){
-        if( !jobForDone.isBlankObject() ){
-            this.forReadQueue.put(jobForDone.getID(), jobForDone);
+    protected void addWriterJob(final UUID keyDirListRecord, final ConcurrentHashMap<Integer, ?> dataForFilter){
+        if( !dataForFilter.isEmpty() ){
+            this.forWriteQueue.put(keyDirListRecord, dataForFilter);
         }
     }
-    protected ThDirListStateJobReader getJobForRead(){
-        Map.Entry<UUID, ThDirListStateJobReader> pollFirstEntry = this.forReadQueue.pollFirstEntry();
+    /**
+     * 
+     * @return 
+     * @throws NullPointerException when return null or empty object
+     */
+    protected ConcurrentHashMap<Integer, ?> getJobForWrite(){
+        Map.Entry<UUID, ConcurrentHashMap<Integer, ?>> pollFirstEntry = this.forWriteQueue.pollFirstEntry();
         if( pollFirstEntry != null ){
+            if( !pollFirstEntry.getValue().isEmpty() ){
                 return pollFirstEntry.getValue();
+            }
+            throw new NullPointerException(ThFileListBusToNext.class.getCanonicalName()
+                + " in bus empty object");
         }
-        return new ThDirListStateJobReader();
+        throw new NullPointerException(ThFileListBusToNext.class.getCanonicalName()
+                + " in bus null object");
     }
     protected Boolean isJobQueueEmpty(){
-        if( this.forReadQueue.isEmpty() ){
+        if( this.forWriteQueue.isEmpty() ){
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
     }
     protected Integer getQueueSize(){
-        return (int) this.forReadQueue.size();
+        return (int) this.forWriteQueue.size();
     }
     protected void cleanQueue(){
-        this.forReadQueue = new ConcurrentSkipListMap<UUID, ThDirListStateJobReader>();
+        this.forWriteQueue = null;
+        this.forWriteQueue = new ConcurrentSkipListMap<UUID, ConcurrentHashMap<Integer, ?>>();
     }
-    
-    protected void shrinkJobDoneItems(){
+    /**
+     * Read in bus job UUIDs where set flag jobDone, write it in quue structure,
+     * after that delete from job bus UUID from wroted queue
+     */
+    protected void shrinkEmptyItems(){
         
         ThreadLocal<ArrayBlockingQueue<UUID>> thListJobDone = new ThreadLocal<ArrayBlockingQueue<UUID>>();
         try{
-            ArrayBlockingQueue<UUID> listOfDoneJob = new ArrayBlockingQueue<UUID>((int) this.forReadQueue.size());
+            ArrayBlockingQueue<UUID> listOfDoneJob = new ArrayBlockingQueue<UUID>((int) this.forWriteQueue.size());
             thListJobDone.set(listOfDoneJob);
-            for( Map.Entry<UUID, ThDirListStateJobReader> itemJob : this.forReadQueue.entrySet() ){
-                if( itemJob.getValue().isReaderJobDone() ){
+            Boolean notHaveDoneJob = Boolean.FALSE;
+            for( Map.Entry<UUID, ConcurrentHashMap<Integer, ?>> itemJob : this.forWriteQueue.entrySet() ){
+                if( itemJob.getValue().isEmpty() ){
                     thListJobDone.get().add(itemJob.getKey());
                 }
             }
@@ -71,12 +88,13 @@ public class ThDirListBusReaded {
                     do{
                         UUID poll = thListJobDone.get().poll();
                         if( poll != null){
-                            this.forReadQueue.remove(poll);
-                            UUID ceilingKey = this.forReadQueue.ceilingKey(poll);
+                            this.forWriteQueue.remove(poll);
+                            UUID ceilingKey = this.forWriteQueue.ceilingKey(poll);
                             if( ceilingKey == null ){
                                 thListJobDone.get().add(poll);
                             }
                         }
+
                     }while( !thListJobDone.get().isEmpty() );
                 }
             } catch ( ClassCastException ex ){
@@ -88,16 +106,4 @@ public class ThDirListBusReaded {
             thListJobDone.remove();
         }
     }
-    protected void outToConsoleBusContent(){
-        for(Map.Entry<UUID, ThDirListStateJobReader> itemBus : this.forReadQueue.entrySet() ){
-            System.out.println("Key: " 
-                    + itemBus.getKey().toString()
-                    + " Value: "
-                    + itemBus.getValue().getReadedPath().toString()
-                    + " isDoneJob: "
-                    + String.valueOf(itemBus.getValue().isReaderJobDone())
-            );
-        }
-    }
-    
 }

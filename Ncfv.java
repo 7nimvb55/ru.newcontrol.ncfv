@@ -59,6 +59,7 @@ public class Ncfv {
          *      + "\\исполнительнаядокументацияпопроектуосвоениятерриториальногофондалесногохозяйствароссийскойфедерациинавпериодсдветысячидевятнадцатогогодаподветысячидвадцатьдевятыйгод");
          */
         runIndexMakeAndDirList();
+        //outputToConsoleStrings();
     }
     private static void runIndexMakeAndDirList(){
         /**
@@ -75,15 +76,15 @@ public class Ncfv {
         thIndexRule.setIndexState(thIndexStateObj);
         ThIndexMaker thIndexMaker = new ThIndexMaker(thIndexRule);
         ThIndexDirList thIndexDirList = new ThIndexDirList(thIndexRule);
-        ThIndexWord thIndexWord = new ThIndexWord(thIndexRule);
-        
+        //ThIndexWord thIndexWord = new ThIndexWord(thIndexRule);
+        ThIndexFileList thIndexFileList = new ThIndexFileList(thIndexRule);
         
         ThIndexStatistic thIndexStatistic = new ThIndexStatistic(thIndexRule);
         thIndexRule.setIndexStatistic(thIndexStatistic);
         
         thIndexRule.setThreadIndexMaker(thIndexMaker);
         thIndexRule.setThreadIndexDirList(thIndexDirList);
-        thIndexRule.setThreadIndexWord(thIndexWord);
+        //thIndexRule.setThreadIndexWord(thIndexWord);
         
         /**
          * @todo when storage index create and not need for new create not run for this methods
@@ -97,7 +98,38 @@ public class Ncfv {
         //thIndexStateObj.currentIndexStorages().updateMapForStorages();
         thIndexDirList.start();
         waitForFinishedIndexDirListThread(thIndexRule);
-        thIndexWord.start();
+        //thIndexWord.start();
+        thIndexFileList.start();
+    }
+    /**
+     * jobWalkerStorageType - job types:
+     *  - - - scanNotLimited, typeWordStorage
+     *  - - - scanLimited, typeWordStorage
+     *  - - - scanAllFiles, typeWordStorage
+     *  + + + not released in this bus version moveFilesDirectories, typeWordStorage
+     *  - - - createDirectoryTypeWord, typeWordStorage
+     */
+    private static void outputToConsoleStrings(){
+        System.out.println("InDirNamesRecordsVolumeNumber - " + "InDirNamesRecordsVolumeNumber".hashCode());
+        System.out.println("SourcesNowMoveIntoNew - " + "SourcesNowMoveIntoNew".hashCode());
+        System.out.println("LastAccessCountAccess - " + "LastAccessCountAccess".hashCode());
+        System.out.println("CacheToLimitFileSystemLimit - " + "CacheToLimitFileSystemLimit".hashCode());
+        System.out.println("FlagsProcess - " + "FlagsProcess".hashCode());
+        
+        System.out.println("countRecordsOnFileSystem - " + "countRecordsOnFileSystem".hashCode());
+        System.out.println("volumeNumber - " + "volumeNumber".hashCode());
+        System.out.println("currentFileName - " + "currentFileName".hashCode());
+        System.out.println("newFileName - " + "newFileName".hashCode());
+        System.out.println("lastAccessNanotime - " + "lastAccessNanotime".hashCode());
+        System.out.println("countDataUseIterationsSummary - " + "countDataUseIterationsSummary".hashCode());
+        System.out.println("currentInCache - " + "currentInCache".hashCode());
+        System.out.println("addNeedToFileSystemLimit - " + "addNeedToFileSystemLimit".hashCode());
+        System.out.println("indexSystemLimitOnStorage - " + "indexSystemLimitOnStorage".hashCode());
+        System.out.println("isWriteProcess - " + "isWriteProcess".hashCode());
+        System.out.println("isReadProcess - " + "isReadProcess".hashCode());
+        System.out.println("isCachedData - " + "isCachedData".hashCode());
+        System.out.println("isCalculatedData - " + "isCalculatedData".hashCode());
+        System.out.println("isUdatedDataInHashMap - " + "isUdatedDataInHashMap".hashCode());
     }
     /*private static void runIndexMakeWordIntoZipByThreads(){
         

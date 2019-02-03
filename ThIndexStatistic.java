@@ -25,6 +25,7 @@ import java.nio.file.ProviderNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
@@ -32,6 +33,24 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * @author wladimirowichbiaran
  */
 public class ThIndexStatistic {
+    /**
+     * ConcurrentHashMap<Integer, Integer> (<hashFieldCode, Value>)
+     * hashFieldCode:
+     * - Size
+     * - VolumeNum
+     * Search by tagFileName current VolumeNum and get his size
+     * data for record size summ with writed size and compared with limit for
+     * index type if need accumulate data to limit size, send it into cache
+     * data structure, while volume not have limited size or time limit in nanos
+     * 
+     * and control to sizes for cache lists
+     * 
+     * ConcurrentHashMap<Integer,  - Strorage hash value
+     *   ConcurrentHashMap<Integer, - Type of word index hash value
+     *     ConcurrentHashMap<String, 
+     *       ConcurrentHashMap<Integer, Integer>>>>
+     */
+    private ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, Integer>>>> fileStoragesMap;
     /**
      * <String, <String, Integer>> Structure for <Storage, <tagFileName, volumeCol>>
      * String - part of file name indexName (tag file name)

@@ -55,6 +55,10 @@ public class ThWordBusWrited {
     protected void cleanQueue(){
         this.forWriteQueue = new ConcurrentSkipListMap<UUID, ThWordStateJobWriter>();
     }
+    /**
+     * Read in bus job UUIDs where set flag jobDone, write it in quue structure,
+     * after that delete from job bus UUID from wroted queue
+     */
     protected void shrinkJobDoneItems(){
         
         ThreadLocal<ArrayBlockingQueue<UUID>> thListJobDone = new ThreadLocal<ArrayBlockingQueue<UUID>>();

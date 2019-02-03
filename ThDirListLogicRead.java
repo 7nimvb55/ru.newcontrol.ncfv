@@ -48,7 +48,7 @@ public class ThDirListLogicRead {
             ThIndexRule indexRule = outerRuleDirListReadWork.getIndexRule();
             ThIndexState indexState = indexRule.getIndexState();
             AppFileStorageIndex currentIndexStorages = indexState.currentIndexStorages();
-            currentIndexStorages.updateMapForStorages();
+            //currentIndexStorages.updateMapForStorages();
             /**
              * currentIndexStorages.updateMapForStorages();// - for update Storages info
              */

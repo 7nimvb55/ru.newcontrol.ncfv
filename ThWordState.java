@@ -15,13 +15,27 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * How work
  * @author wladimirowichbiaran
  */
 public class ThWordState {
-    /*private ThWordBusReaded busReadedJob;
-    private Boolean isSetReadedJob;*/
+    /**
+     * create, get, set bus from 
+     *  - ThWordLogicFilter to 
+     *  - - - busJobStorageWalker ConcurrentHashMap<Integer, Integer>(jobTypes, typeWordStorage)
+     *  - - - 
+     *  - - - 
+     * ThWordLogicStorageRouter
+     * ThWordLogicStorageWalker
+     * ThWordLogicStorageReader
+     * ThWordLogicStorageWriter
+     * 
+     * private ThWordBusReaded busReadedJob;
+     * private Boolean isSetReadedJob;
+     */
     /**
      * @todo add bus for long word
      * add new jobwrited class for long word and some index
@@ -148,5 +162,29 @@ public class ThWordState {
         }
         return Boolean.FALSE;
     }*/
+    /**
+     * Read from JobBusForStorageWalker data, writed by
+     * ThWordLogicFilter
+     * ThWordLogicStorageRouter
+     * Bus commands system:
+     *  - jobWalkerStorageType - job types:
+     *  - - - scanNotLimited, typeWordStorage
+     *  - - - scanLimited, typeWordStorage
+     *  - - - scanAllFiles, typeWordStorage
+     *  + + + not released in this bus version moveFilesDirectories, typeWordStorage
+     *  - - - createDirectoryTypeWord, typeWordStorage
+     * @return 
+     */
+    protected ConcurrentHashMap<Integer, Integer> getJobStorageWalker(){
+        ConcurrentHashMap<Integer, Integer> createdJobForReturn;
+        try{
+            createdJobForReturn = new ConcurrentHashMap<Integer, Integer>();
+            return createdJobForReturn;
+        }finally{
+            createdJobForReturn = null;
+        }
+        
+    }
+        
     
 }
