@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
@@ -28,6 +29,9 @@ import java.util.concurrent.ConcurrentSkipListMap;
 public class ThFileListLogicBuild {
     protected void doBuildToIndexFileList(final ThFileListRule outerRuleFileList){
         ThDirListBusReaded busJobForRead = outerRuleFileList.getIndexRule().getIndexState().getBusJobForRead();
+        // bus for output data to next index system
+        ThFileListState fileListState = outerRuleFileList.getFileListState();
+        ThFileListBusToNext busJobForFileListToNext = fileListState.getBusJobForFileListToNext();
         while( !busJobForRead.isJobQueueEmpty() ){
             ThDirListStateJobReader jobForRead = busJobForRead.getJobForRead();
             if( !jobForRead.isBlankObject() ){
@@ -54,10 +58,15 @@ public class ThFileListLogicBuild {
                                  */
                                 Path namePart = dirListReaded.getName(i);
 
-                                System.out.println(
-                                        "file: " + readedPath.toString()
-                                        + " recnum " + recordItem.getKey().toString()
-                                        + " dataToNext " + namePart.toString()        );
+                                //System.out.println(
+                                //        "file: " + readedPath.toString()
+                                //        + " recnum " + recordItem.getKey().toString()
+                                //        + " dataToNext " + namePart.toString()        );
+                                
+                                ConcurrentHashMap<Integer, String> outputedDataForSend = buildDataForSend(
+                                        readedPath.toString(), 
+                                        namePart.toString());
+                                busJobForFileListToNext.addWriterJob(recordItem.getKey(), outputedDataForSend);
                             }
                         }
                     }
@@ -67,6 +76,30 @@ public class ThFileListLogicBuild {
                 }
             }
         }
+    }
+    private static ConcurrentHashMap<Integer, String> buildDataForSend(
+            final String readedPath, 
+            String namePart){
+        String funcReadedPath;
+        String funcNamePart;
+        ConcurrentHashMap<Integer, String> dataForSend;
+        try {
+            funcReadedPath = new String(readedPath.toCharArray());
+            funcNamePart = new String(namePart.toCharArray());
+            dataForSend = new ConcurrentHashMap<Integer, String>();
+            /**
+             * funcReadedPath - 1506682974
+             * funcNamePart - -589260798
+             */
+            dataForSend.put(1506682974, funcReadedPath);
+            dataForSend.put(-589260798, funcNamePart);
+            return dataForSend;
+        } finally {
+            funcReadedPath = null;
+            funcNamePart = null;
+            dataForSend = null;
+        }
+        
     }
 }
 

@@ -78,6 +78,7 @@ public class Ncfv {
         ThIndexDirList thIndexDirList = new ThIndexDirList(thIndexRule);
         //ThIndexWord thIndexWord = new ThIndexWord(thIndexRule);
         ThIndexFileList thIndexFileList = new ThIndexFileList(thIndexRule);
+        ThIndexStorageWord thIndexStorageWord = new ThIndexStorageWord(thIndexRule);
         
         ThIndexStatistic thIndexStatistic = new ThIndexStatistic(thIndexRule);
         thIndexRule.setIndexStatistic(thIndexStatistic);
@@ -98,8 +99,9 @@ public class Ncfv {
         //thIndexStateObj.currentIndexStorages().updateMapForStorages();
         thIndexDirList.start();
         waitForFinishedIndexDirListThread(thIndexRule);
-        //thIndexWord.start();
         thIndexFileList.start();
+        thIndexStorageWord.start();
+        //thIndexWord.start();
     }
     /**
      * jobWalkerStorageType - job types:
@@ -110,6 +112,9 @@ public class Ncfv {
      *  - - - createDirectoryTypeWord, typeWordStorage
      */
     private static void outputToConsoleStrings(){
+        System.out.println("funcReadedPath - " + "funcReadedPath".hashCode());
+        System.out.println("funcNamePart - " + "funcNamePart".hashCode());
+        
         System.out.println("InDirNamesRecordsVolumeNumber - " + "InDirNamesRecordsVolumeNumber".hashCode());
         System.out.println("SourcesNowMoveIntoNew - " + "SourcesNowMoveIntoNew".hashCode());
         System.out.println("LastAccessCountAccess - " + "LastAccessCountAccess".hashCode());

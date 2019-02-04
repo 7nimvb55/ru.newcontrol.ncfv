@@ -39,10 +39,11 @@ public class ThIndexFileList extends Thread{
 
         ThFileListBusToNext thFileListBusToNext = new ThFileListBusToNext();
         ThFileListState thFileListState = new ThFileListState();
-        thFileListState.setBusJobForFileListWrite(thFileListBusToNext);
+        thFileListState.setBusJobForFileListToNext(thFileListBusToNext);
 
         ThFileListRule thFileListRule = new ThFileListRule(this.ruleThIndex);
-        
+        ThIndexState indexState = this.ruleThIndex.getIndexState();
+        indexState.setRuleFileList(thFileListRule);
         ThFileListWorkBuild thFileListWorkBuild = new ThFileListWorkBuild(thFileListRule);
 
         thFileListRule.setFileListState(thFileListState);

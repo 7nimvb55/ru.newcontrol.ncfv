@@ -38,21 +38,28 @@ public class ThFileListBusToNext {
         }
     }
     /**
-     * 
+     * job data for index make process
      * @return 
      * @throws NullPointerException when return null or empty object
      */
-    protected ConcurrentHashMap<Integer, ?> getJobForWrite(){
-        Map.Entry<UUID, ConcurrentHashMap<Integer, ?>> pollFirstEntry = this.forWriteQueue.pollFirstEntry();
-        if( pollFirstEntry != null ){
-            if( !pollFirstEntry.getValue().isEmpty() ){
-                return pollFirstEntry.getValue();
+    protected ConcurrentHashMap <UUID, ConcurrentHashMap<Integer, ?>> getJobForWrite(){
+        ConcurrentHashMap <UUID, ConcurrentHashMap<Integer, ?>> dataJobReturn;
+        try{
+            Map.Entry<UUID, ConcurrentHashMap<Integer, ?>> pollFirstEntry = this.forWriteQueue.pollFirstEntry();
+            if( pollFirstEntry != null ){
+                if( !pollFirstEntry.getValue().isEmpty() ){
+                    dataJobReturn = new ConcurrentHashMap <UUID, ConcurrentHashMap<Integer, ?>>();
+                    dataJobReturn.put(pollFirstEntry.getKey(), pollFirstEntry.getValue());
+                    return dataJobReturn;
+                }
+                throw new NullPointerException(ThFileListBusToNext.class.getCanonicalName()
+                    + " in bus empty object");
             }
             throw new NullPointerException(ThFileListBusToNext.class.getCanonicalName()
-                + " in bus empty object");
+                    + " in bus null object");
+        } finally {
+            dataJobReturn = null;
         }
-        throw new NullPointerException(ThFileListBusToNext.class.getCanonicalName()
-                + " in bus null object");
     }
     protected Boolean isJobQueueEmpty(){
         if( this.forWriteQueue.isEmpty() ){

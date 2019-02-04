@@ -33,14 +33,17 @@ public class ThFileListState {
      * @return 
      * @throws #java.lang.IllegalArgumentException
      */
-    protected ThFileListBusToNext getBusJobForFileListWrite(){
+    protected ThFileListBusToNext getBusJobForFileListToNext(){
         if( !this.isFileListToNextJob() ){
-            throw new IllegalArgumentException("Bus jobs for write not set in " + ThFileListState.class.getCanonicalName());
+            throw new IllegalArgumentException(ThFileListBusToNext.class.getCanonicalName() 
+                    + " object type of Bus jobs "
+                    + "for transfer data into next index system not set in " 
+                    + ThFileListState.class.getCanonicalName());
         }
         return this.busFileListToNextJob;
     }
-    protected void setBusJobForFileListWrite(final ThFileListBusToNext busFileListWriteOuter){
-        this.busFileListToNextJob = busFileListWriteOuter;
+    protected void setBusJobForFileListToNext(final ThFileListBusToNext busFileListToNextOuter){
+        this.busFileListToNextJob = busFileListToNextOuter;
         setTrueFileListToNextJob();
     }
     protected void setTrueFileListToNextJob(){

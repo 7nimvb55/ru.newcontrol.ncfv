@@ -147,8 +147,9 @@ public class ThStorageWordRule {
              */
             String toStringStorageWordWorkFilter = UUID.randomUUID().toString();
             this.indexRule.addThredNameInQueue(toStringStorageWordWorkFilter);
-            Thread thForWorkWrite = new Thread(this.workerThStorageWord, this.runnableWorkerStorageWordFilter, toStringStorageWordWorkFilter);
-            thForWorkWrite.start();
+            Thread thForWorkFilter = new Thread(this.workerThStorageWord, this.runnableWorkerStorageWordFilter, toStringStorageWordWorkFilter);
+            thForWorkFilter.setPriority(2);
+            thForWorkFilter.start();
         }
     }
     /**
@@ -200,8 +201,9 @@ public class ThStorageWordRule {
              */
             String toStringStorageWordWorkRouter = UUID.randomUUID().toString();
             this.indexRule.addThredNameInQueue(toStringStorageWordWorkRouter);
-            Thread thForWorkWrite = new Thread(this.workerThStorageWord, this.runnableWorkerStorageWordRouter, toStringStorageWordWorkRouter);
-            thForWorkWrite.start();
+            Thread thForWorkRouter = new Thread(this.workerThStorageWord, this.runnableWorkerStorageWordRouter, toStringStorageWordWorkRouter);
+            thForWorkRouter.setPriority(5);
+            thForWorkRouter.start();
         }
     }
     /**
@@ -254,6 +256,7 @@ public class ThStorageWordRule {
             String toStringStorageWordWorkWrite = UUID.randomUUID().toString();
             this.indexRule.addThredNameInQueue(toStringStorageWordWorkWrite);
             Thread thForWorkWrite = new Thread(this.workerThStorageWord, this.runnableWorkerStorageWordWrite, toStringStorageWordWorkWrite);
+            thForWorkWrite.setPriority(3);
             thForWorkWrite.start();
         }
     }
@@ -307,6 +310,7 @@ public class ThStorageWordRule {
             String toStringStorageWordWorkRead = UUID.randomUUID().toString();
             this.indexRule.addThredNameInQueue(toStringStorageWordWorkRead);
             Thread thForWorkRead = new Thread(this.workerThStorageWord, this.runnableWorkerStorageWordRead, toStringStorageWordWorkRead);
+            thForWorkRead.setPriority(4);
             thForWorkRead.start();
         }
     }

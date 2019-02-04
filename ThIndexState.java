@@ -20,6 +20,10 @@ package ru.newcontrol.ncfv;
  * @author wladimirowichbiaran
  */
 public class ThIndexState {
+    /**
+     * @todo add to this rule set for rule FileList, StorageWord, Word, LongWord
+     * create his bus in his state and set by his rule
+     */
     private ThDirListBusReaded busReadedJob;
     private Boolean isSetReadedJob;
     
@@ -28,8 +32,25 @@ public class ThIndexState {
     
     private AppFileStorageIndex storagesForIndexList;
     private Boolean isSetStoriesForIndexList;
-    
+    /**
+     * ThFileListRule
+     */
+    private ThFileListRule ruleFileListObject;
+    private Boolean isSetFileListRule;
+    /**
+     * ThStorageWordRule
+     */
+    private ThStorageWordRule ruleStorageWordObject;
+    private Boolean isSetStorageWordRule;
     ThIndexState(){
+        /**
+         * ThFileListRule
+         */
+        setFalseRuleFileList();
+        /**
+         * ThStorageWordRule
+         */
+        setFalseRuleStorageWord();
         setFalseStoriesForIndexList();
         currentIndexStorages();
         setFalseReadedJob();
@@ -108,6 +129,70 @@ public class ThIndexState {
     }
     protected Boolean isWritedJob(){
         if( this.isSetWritedJob ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * 
+     * @return ThFileListRule objects for manage index system FileList
+     * @throws IllegalArgumentException when object not set
+     */
+    protected ThFileListRule getRuleFileList(){
+        if( !this.isRuleFileList() ){
+            throw new IllegalArgumentException(ThFileListRule.class.getCanonicalName()
+                    + "not set in " + ThIndexState.class.getCanonicalName());
+        }
+        return (ThFileListRule) this.ruleFileListObject;
+    }
+    /**
+     * set ThFileListRule objects for manage index system FileList
+     * @param busReadOuter 
+     */
+    protected void setRuleFileList(final ThFileListRule busReadOuter){
+        this.ruleFileListObject = (ThFileListRule) busReadOuter;
+        setTrueRuleFileList();
+    }
+    protected void setTrueRuleFileList(){
+        this.isSetFileListRule = Boolean.TRUE;
+    }
+    protected void setFalseRuleFileList(){
+        this.isSetFileListRule = Boolean.FALSE;
+    }
+    protected Boolean isRuleFileList(){
+        if( this.isSetFileListRule ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * 
+     * @return ThStorageWordRule objects for manage index system StorageWord
+     * @throws #java.lang.IllegalArgumentException when object not set
+     */
+    protected ThStorageWordRule getRuleStorageWord(){
+        if( !this.isRuleStorageWord() ){
+            throw new IllegalArgumentException(ThStorageWordRule.class.getCanonicalName()
+                    + "not set in " + ThIndexState.class.getCanonicalName());
+        }
+        return (ThStorageWordRule) this.ruleStorageWordObject;
+    }
+    /**
+     * set ThStorageWordRule objects for manage index system StorageWord
+     * @param busReadOuter 
+     */
+    protected void setRuleStorageWord(final ThStorageWordRule busReadOuter){
+        this.ruleStorageWordObject = (ThStorageWordRule) busReadOuter;
+        setTrueRuleStorageWord();
+    }
+    protected void setTrueRuleStorageWord(){
+        this.isSetStorageWordRule = Boolean.TRUE;
+    }
+    protected void setFalseRuleStorageWord(){
+        this.isSetStorageWordRule = Boolean.FALSE;
+    }
+    protected Boolean isRuleStorageWord(){
+        if( this.isSetStorageWordRule ){
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
