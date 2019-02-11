@@ -70,9 +70,9 @@ public class ThStorageWordLogicWrite {
             
             ThStorageWordState wordState = outerRuleStorageWord.getStorageWordState();
             ThStorageWordBusOutput busJobForWrite = wordState.getBusJobForWordWrite();
-                ArrayBlockingQueue<TdataStorageWord> busForTypeWord = busJobForWrite.getBusForTypeWord(0);
+                ArrayBlockingQueue<TdataWord> busForTypeWord = busJobForWrite.getBusForTypeWord(0);
             if( !busForTypeWord.isEmpty() ){
-                TdataStorageWord jobForWrite = busForTypeWord.poll();
+                TdataWord jobForWrite = busForTypeWord.poll();
                 /**
                  * need get from job data with cache and readed data
                  * wait if need read

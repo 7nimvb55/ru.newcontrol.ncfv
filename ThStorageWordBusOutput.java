@@ -34,10 +34,10 @@ public class ThStorageWordBusOutput {
      * <typeWordBus, <TdataStorageWord>>
      * ThWordLogicFilter.getWordCode(inputedPath.codePointAt(int idexCharCodePoint))
      */
-    private ConcurrentHashMap<Integer, ArrayBlockingQueue<TdataStorageWord>> poolBusWordData;
+    private ConcurrentHashMap<Integer, ArrayBlockingQueue<TdataWord>> poolBusWordData;
     
     ThStorageWordBusOutput(){
-        this.poolBusWordData = new ConcurrentHashMap<Integer, ArrayBlockingQueue<TdataStorageWord>>();
+        this.poolBusWordData = new ConcurrentHashMap<Integer, ArrayBlockingQueue<TdataWord>>();
         this.lastLastAccessUsedBusNanoTime = new ConcurrentHashMap<Integer, Long>();
     }
     /**
@@ -45,14 +45,14 @@ public class ThStorageWordBusOutput {
      * @param typeWordByDetectedCodePoint
      * @return 
      */
-    protected ArrayBlockingQueue<TdataStorageWord> getBusForTypeWord(final int typeWordByDetectedCodePoint){
+    protected ArrayBlockingQueue<TdataWord> getBusForTypeWord(final int typeWordByDetectedCodePoint){
         int inputedVal;
-        ArrayBlockingQueue<TdataStorageWord> getBusFormPool;
+        ArrayBlockingQueue<TdataWord> getBusFormPool;
         try{
             inputedVal = (int) typeWordByDetectedCodePoint;
             getBusFormPool = this.poolBusWordData.get(inputedVal);
             if( getBusFormPool == null ){
-                getBusFormPool = new ArrayBlockingQueue<TdataStorageWord>(AppConstants.FILTER_STORAGE_WORD_MESSAGES_QUEUE_SIZE);
+                getBusFormPool = new ArrayBlockingQueue<TdataWord>(AppConstants.FILTER_STORAGE_WORD_MESSAGES_QUEUE_SIZE);
             }
             setLastAccessForUseTime(inputedVal);
             return getBusFormPool;
@@ -122,7 +122,7 @@ public class ThStorageWordBusOutput {
      */
     protected Boolean isBusNotEmpty(final int typeWordByDetectedCodePoint){
         int inputedTypBusValue;
-        ArrayBlockingQueue<TdataStorageWord> testedBusForTypeWord;
+        ArrayBlockingQueue<TdataWord> testedBusForTypeWord;
         try{
             inputedTypBusValue = typeWordByDetectedCodePoint;
             
@@ -144,7 +144,7 @@ public class ThStorageWordBusOutput {
      */
     protected Boolean isBusNotExist(final int typeWordByDetectedCodePoint){
         int inputedTypBusValue;
-        ArrayBlockingQueue<TdataStorageWord> testedBusForTypeWord;
+        ArrayBlockingQueue<TdataWord> testedBusForTypeWord;
         try{
             inputedTypBusValue = typeWordByDetectedCodePoint;
             

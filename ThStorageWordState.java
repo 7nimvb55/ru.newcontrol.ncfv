@@ -25,9 +25,15 @@ public class ThStorageWordState {
      */
     private ThStorageWordBusOutput busWordWritedJob;
     private Boolean isSetWordWritedJob;
+    /**
+     * ThStorageWordBusOutput
+     */
+    private ThStorageWordBusOutput busLongWordWritedJob;
+    private Boolean isSetLongWordWritedJob;
     
     public ThStorageWordState() {
         setFalseWordWritedJob();
+        setFalseLongWordWritedJob();
     }
     
     /**
@@ -53,6 +59,33 @@ public class ThStorageWordState {
     }
     protected Boolean isWordWritedJob(){
         if( this.isSetWordWritedJob ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * 
+     * @return 
+     * @throws #java.lang.IllegalArgumentException
+     */
+    protected ThStorageWordBusOutput getBusJobForLongWordWrite(){
+        if( !this.isLongWordWritedJob() ){
+            throw new IllegalArgumentException("Bus jobs for output not set in " + ThWordState.class.getCanonicalName());
+        }
+        return this.busLongWordWritedJob;
+    }
+    protected void setBusJobForLongWordWrite(final ThStorageWordBusOutput busLongWordWriteOuter){
+        this.busLongWordWritedJob = busLongWordWriteOuter;
+        setTrueLongWordWritedJob();
+    }
+    protected void setTrueLongWordWritedJob(){
+        this.isSetLongWordWritedJob = Boolean.TRUE;
+    }
+    protected void setFalseLongWordWritedJob(){
+        this.isSetLongWordWritedJob = Boolean.FALSE;
+    }
+    protected Boolean isLongWordWritedJob(){
+        if( this.isSetLongWordWritedJob ){
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
