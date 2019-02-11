@@ -234,6 +234,9 @@ public class ThStorageWordLogicFilter {
                 ThStorageWordBusOutput busJobForLongWordWrite = inputedStorageWordState.getBusJobForLongWordWrite();
                 ArrayBlockingQueue<TdataWord> busForTypeLongWord = busJobForLongWordWrite.getBusForTypeWord(prevWordCodeType);
                 busForTypeLongWord.add(forLastAddData);
+                int size = busForTypeLongWord.size();
+                System.out.println(">    >    >    >    >    >    >    >    >    >    >LongWord bus for typeWord " 
+                        + prevWordCodeType + " size " + size);
                 
             } else {
                 //AppConstants.INDEX_DATA_TRANSFER_CODE_WORD;
@@ -241,7 +244,9 @@ public class ThStorageWordLogicFilter {
                 ThStorageWordBusOutput busJobForWordWrite = inputedStorageWordState.getBusJobForWordWrite();
                 ArrayBlockingQueue<TdataWord> busForTypeWord = busJobForWordWrite.getBusForTypeWord(prevWordCodeType);
                 busForTypeWord.add(forLastAddData);
-                
+                int size = busForTypeWord.size();
+                System.out.println(">    >    >    >    >    >Word bus for typeWord " 
+                        + prevWordCodeType + " size " + size);
             }
             
             //return forReturnFinishedPut(forReturnWord, forReturnLongWord);

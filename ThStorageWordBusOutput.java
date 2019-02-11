@@ -53,6 +53,7 @@ public class ThStorageWordBusOutput {
             getBusFormPool = this.poolBusWordData.get(inputedVal);
             if( getBusFormPool == null ){
                 getBusFormPool = new ArrayBlockingQueue<TdataWord>(AppConstants.FILTER_STORAGE_WORD_MESSAGES_QUEUE_SIZE);
+                this.poolBusWordData.put(inputedVal, getBusFormPool);
             }
             setLastAccessForUseTime(inputedVal);
             return getBusFormPool;
