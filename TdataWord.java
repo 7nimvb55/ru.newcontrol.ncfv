@@ -24,6 +24,8 @@ import java.util.UUID;
  */
 public class TdataWord implements Serializable {
     /**
+     * 
+     * 
      * file path where record saved
      */
     public String dirListFile;
@@ -31,6 +33,9 @@ public class TdataWord implements Serializable {
      * UUID record in list of data in file
      */
     public UUID recordUUID;
+    /**
+     * 
+     */
     public UUID randomUUID;
     /** 
      * strSubString - returned by one of NcPathToArrListStr.(*NCLVLABC*).retStr
@@ -42,6 +47,9 @@ public class TdataWord implements Serializable {
      *
      */
     public int strSubStringHash;
+    /**
+     * 
+     */
     public int typeWord;
     /** hexSubString - returned by toStrUTFinHEX() */
     public String hexSubString;
@@ -68,6 +76,8 @@ public class TdataWord implements Serializable {
      */
     public TdataWord() {
         this.randomUUID = UUID.randomUUID();
+        this.recordUUID = this.randomUUID;
+        this.dirListFile = "";
         this.strSubString = "";
         this.strSubStringHash = -777;
         this.hexSubString = "";
@@ -78,24 +88,28 @@ public class TdataWord implements Serializable {
         long nowSysTime = System.nanoTime();
         this.recordTime = nowSysTime;
         this.recordHash = (
-                ""
-                + this.strSubString
-                + this.strSubStringHash
-                + this.hexSubString
-                + this.hexSubStringHash
-                + this.positionSubString
-                + this.lengthSubString
-                + nowSysTime).hashCode();
+                new String("")
+                .concat(this.randomUUID.toString())
+                .concat(this.recordUUID.toString())
+                .concat(this.dirListFile)
+                .concat(this.strSubString)
+                .concat(String.valueOf(this.strSubStringHash))
+                .concat(this.hexSubString)
+                .concat(String.valueOf(this.typeWord))
+                .concat(String.valueOf(this.hexSubStringHash))
+                .concat(String.valueOf(this.positionSubString))
+                .concat(String.valueOf(this.lengthSubString))
+                .concat(String.valueOf(nowSysTime))).hashCode();
     }
-
     /**
-     *
-     * @param inClassId
-     * @param toFileId
+     * 
+     * @param recordId
+     * @param dirListStorageName
      * @param strSubString
+     * @param calcTypeWord
      * @param hexSubString
      * @param positionSubString
-     * @param lengthSubString
+     * @param lengthSubString 
      */
     public TdataWord(final UUID recordId,
             final String dirListStorageName,
@@ -118,15 +132,17 @@ public class TdataWord implements Serializable {
         final long nowSysTime = System.nanoTime();
         this.recordTime = nowSysTime;
         this.recordHash = (
-                this.randomUUID.toString()
-                + String.valueOf(this.recordUUID.toString())
-                + String.valueOf(this.dirListFile)
-                + this.strSubString
-                + String.valueOf(this.strSubStringHash)
-                + this.hexSubString
-                + String.valueOf(this.hexSubStringHash)
-                + String.valueOf(this.positionSubString)
-                + String.valueOf(this.lengthSubString)
-                + String.valueOf(nowSysTime)).hashCode();
+                new String("")
+                .concat(this.randomUUID.toString())
+                .concat(this.recordUUID.toString())
+                .concat(this.dirListFile)
+                .concat(this.strSubString)
+                .concat(String.valueOf(this.strSubStringHash))
+                .concat(this.hexSubString)
+                .concat(String.valueOf(this.typeWord))
+                .concat(String.valueOf(this.hexSubStringHash))
+                .concat(String.valueOf(this.positionSubString))
+                .concat(String.valueOf(this.lengthSubString))
+                .concat(String.valueOf(nowSysTime))).hashCode();
     }
 }

@@ -15,6 +15,7 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.nio.file.Path;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,7 +39,7 @@ public class ThStorageWordLogicFilter {
         do{
         while( !busJobForFileListToNext.isJobQueueEmpty() ){
             ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, ?>> jobForWrite = busJobForFileListToNext.getJobForWrite();
-            ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, String>> resortInputedStructure = resortInputedStructure(jobForWrite);
+            ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Path>> resortInputedStructure = resortInputedStructure(jobForWrite);
             
         }
         } while( ruleFileList.isRunnedFileListWorkBuild() );
@@ -46,15 +47,15 @@ public class ThStorageWordLogicFilter {
 
 
     }
-    private static ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, String>> resortInputedStructure(
+    private static ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Path>> resortInputedStructure(
             final ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, ?>> inputedStructure){
-        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, String>> ouputStructure;
+        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Path>> ouputStructure;
 
         try{
-            ouputStructure = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, String>>();
+            ouputStructure = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Path>>();
             for(Entry<UUID, ConcurrentHashMap<Integer, ?>> itemFromStructure : inputedStructure.entrySet()){
                 UUID keyInputedData = (UUID) itemFromStructure.getKey();
-                ConcurrentHashMap<Integer, String> jobData = getJobData(itemFromStructure.getValue());
+                ConcurrentHashMap<Integer, Path> jobData = getJobData(itemFromStructure.getValue());
                 ouputStructure.put(keyInputedData, jobData);
                 System.out.println("transfered UUID: " + keyInputedData.toString());
             }
@@ -63,30 +64,34 @@ public class ThStorageWordLogicFilter {
             ouputStructure = null;
         }
     }
-    private static ConcurrentHashMap<Integer, String> getJobData(
+    /**
+     * @todo convert Path to String, extract name parts and more... do it
+     * @param inputedData
+     * @return 
+     */
+    private static ConcurrentHashMap<Integer, Path> getJobData(
             final ConcurrentHashMap<Integer, ?> inputedData){
-        String funcReadedPath;
-        String funcNamePart;
-        ConcurrentHashMap<Integer, String> forDataOutput;
+        Path funcReadedPath;
+        Path funcNamePart;
+        ConcurrentHashMap<Integer, Path> forDataOutput;
         try{
-            String getReadedPath = (String) inputedData.get(1506682974);
-            forDataOutput = new ConcurrentHashMap<Integer, String>();
-            if( !getReadedPath.isEmpty() ){
-                funcReadedPath = new String(getReadedPath.toCharArray());
-                forDataOutput.put(1506682974, funcReadedPath);
-            } else {
-                funcReadedPath = new String("N/A");
+            Path getReadedPath = (Path) inputedData.get(1506682974);
+            forDataOutput = new ConcurrentHashMap<Integer, Path>();
+            if( getReadedPath == null ){
+                throw new NullPointerException(ThStorageWordLogicFilter.class.getCanonicalName()
+                    + " read from bus null key value");
             }
-            
-            String getNamePart = (String) inputedData.get(-589260798);
-            if( !getNamePart.isEmpty() ){
-                funcNamePart = new String(getNamePart.toCharArray());
-                forDataOutput.put(-589260798, funcNamePart);
-            } else {
-                funcNamePart = new String("N/A");
+            funcReadedPath = getReadedPath;
+            forDataOutput.put(1506682974, funcReadedPath);
+            Path getNamePart = (Path) inputedData.get(-589260798);
+            if( getNamePart == null ){
+                throw new NullPointerException(ThStorageWordLogicFilter.class.getCanonicalName()
+                    + " read from bus null key value");
             }
-            System.out.println("transfered funcReadedPath:  " + funcReadedPath
-                    + " funcNamePart: " + funcNamePart);
+            funcNamePart = getNamePart;
+            forDataOutput.put(-589260798, funcNamePart);
+            System.out.println("transfered funcReadedPath:  " + funcReadedPath.toString()
+                    + " funcNamePart: " + funcNamePart.toString());
             return forDataOutput;
         } finally {
             funcReadedPath = null;

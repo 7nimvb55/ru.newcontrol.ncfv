@@ -22,25 +22,73 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
- *
+ * <p> @todo when add data into bus, need save sended hash of objects and keys 
+ * in the *statistic or some *sendedDataControls sub object, not in bus object,
+ * when read data from bus, need calculate readed hash of objects, keys in
+ * *readedDataControls and build reports about calc sended, readed hashes
+ * 
  * @author wladimirowichbiaran
  */
 public class ThFileListBusToNext {
     private ConcurrentSkipListMap<UUID, ConcurrentHashMap<Integer, ?>> forWriteQueue;
-    
+    /**
+     * @todo when add data into bus, need save sended hash of objects and keys 
+     * in the *statistic or some *sendedDataControls sub object, not in bus object,
+     * when read data from bus, need calculate readed hash of objects, keys in
+     * *readedDataControls and build reports about calc sended, readed hashes
+     */
     protected ThFileListBusToNext(){
         this.forWriteQueue = new ConcurrentSkipListMap<UUID, ConcurrentHashMap<Integer, ?>>();
         
     }
+    /**
+     * Bus for data transfer format example:
+     * ThFileListLogicBuild get data from ThDirListStateJobReader in special
+     * class (1) - TdataDirListFsObjAttr, for next technology stadies of make 
+     * index, get for need fields of data and save it in next structure:
+     * 
+     * ConcurrentSkipListMap<UUID, ConcurrentHashMap<Integer, ?>>
+     *                      <recordDirList, <fieldsCodes, fieldsValue>>
+     * 
+     * this function used 
+     * {@link java.util.concurrent.ConcurrentSkipListMap#put(java.lang.Object, java.lang.Object) }
+     * 
+     * @param keyDirListRecord
+     * @param dataForFilter 
+     * @throws NullPointerException when add null in key, data object
+     * @see 
+     * java.util.concurrent.ConcurrentSkipListMap#put(java.lang.Object, java.lang.Object)
+     * 
+     */
+    
     protected void addWriterJob(final UUID keyDirListRecord, final ConcurrentHashMap<Integer, ?> dataForFilter){
-        if( !dataForFilter.isEmpty() ){
-            this.forWriteQueue.put(keyDirListRecord, dataForFilter);
+        ConcurrentHashMap<Integer, ?> dataForAdd;
+        UUID keyDirListForTransfer;
+        try{
+            keyDirListForTransfer = keyDirListRecord;
+            if( keyDirListForTransfer == null ){
+                throw new NullPointerException(ThFileListBusToNext.class.getCanonicalName()
+                    + " add to bus null key value");
+            }
+            dataForAdd = dataForFilter;
+            if( dataForAdd == null ){
+                throw new NullPointerException(ThFileListBusToNext.class.getCanonicalName()
+                    + " add to bus null object value");
+            }
+            if( !dataForAdd.isEmpty() ){
+                this.forWriteQueue.put(keyDirListForTransfer, dataForAdd);
+            }
+        } finally {
+            dataForAdd = null;
+            keyDirListForTransfer = null;
         }
     }
     /**
      * job data for index make process
      * @return 
      * @throws NullPointerException when return null or empty object
+     * @see ThFileListBusToNext 
+     * @todo
      */
     protected ConcurrentHashMap <UUID, ConcurrentHashMap<Integer, ?>> getJobForWrite(){
         ConcurrentHashMap <UUID, ConcurrentHashMap<Integer, ?>> dataJobReturn;

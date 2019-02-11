@@ -16,7 +16,16 @@
 package ru.newcontrol.ncfv;
 
 /**
- *
+ * From ThStorageWordBusOutput get data, convert int typeWord to String for 
+ * directory, create or add to path, get from bus data, read heximal value,  
+ * first four bytes, create or add to sub path, calculate length for subString 
+ * value, generate name for list file in format wl-(UUID)-(Size)-(Volume Number)
+ * 
+ * ThStorageWordStatistic - search directories and list file names
+ * ThStorageWordCache - temp storages for data
+ * ThStorageWordHelperFileSystem - static functions for create, move, scan 
+ * directories and list files
+ * 
  * @author wladimirowichbiaran
  */
 public class ThStorageWordLogicRouter {

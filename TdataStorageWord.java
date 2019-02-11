@@ -19,7 +19,12 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- *
+ * @todo change structure for StorageWord
+ * ConcurrentHashMap<String, String>
+ *               <hexSubStr, subStr>
+ * index structure:
+ *  ../dir(typeWord)/hexLetter(D2AF)/length(13)/records-data-files-85-3
+ * 
  * @author wladimirowichbiaran
  */
 public class TdataStorageWord implements Serializable {

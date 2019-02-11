@@ -46,7 +46,13 @@ public class ThFileListLogicBuild {
                         for( Map.Entry<UUID, TdataDirListFsObjAttr> recordItem : readedData.entrySet() ){
                             String shortDataToString = recordItem.getValue().file;
                             Path dirListReaded = Paths.get(shortDataToString);
-                            for (int i = 0; i < dirListReaded.getNameCount(); i++) {
+                            
+                            ConcurrentHashMap<Integer, Path> outputedDataForSend = buildDataForSend(
+                                        readedPath, 
+                                        dirListReaded);
+                            
+                            busJobForFileListToNext.addWriterJob(recordItem.getKey(), outputedDataForSend);
+                            //for (int i = 0; i < dirListReaded.getNameCount(); i++) {
                                 /**
                                  * @todo release index by depth dirictories, file extentions, data time map
                                  * create job for bus index jobs workers
@@ -56,18 +62,19 @@ public class ThFileListLogicBuild {
                                  * for dirlist reader need release jobforneed read data
                                  * before end of release current packet
                                  */
-                                Path namePart = dirListReaded.getName(i);
+                                //Path namePart = dirListReaded.getName(i);
 
                                 //System.out.println(
                                 //        "file: " + readedPath.toString()
                                 //        + " recnum " + recordItem.getKey().toString()
                                 //        + " dataToNext " + namePart.toString()        );
+                                /**
+                                 * 
+                                 */
                                 
-                                ConcurrentHashMap<Integer, String> outputedDataForSend = buildDataForSend(
-                                        readedPath.toString(), 
-                                        namePart.toString());
-                                busJobForFileListToNext.addWriterJob(recordItem.getKey(), outputedDataForSend);
-                            }
+                                
+                            //}
+                            
                         }
                     }
                     jobForRead.cleanReadedData();
@@ -77,17 +84,18 @@ public class ThFileListLogicBuild {
             }
         }
     }
-    private static ConcurrentHashMap<Integer, String> buildDataForSend(
-            final String readedPath, 
-            String namePart){
-        String funcReadedPath;
-        String funcNamePart;
-        ConcurrentHashMap<Integer, String> dataForSend;
+    private static ConcurrentHashMap<Integer, Path> buildDataForSend(
+            final Path readedPath, 
+            final Path namePart){
+        Path funcReadedPath;
+        Path funcNamePart;
+        ConcurrentHashMap<Integer, Path> dataForSend;
         try {
-            funcReadedPath = new String(readedPath.toCharArray());
-            funcNamePart = new String(namePart.toCharArray());
-            dataForSend = new ConcurrentHashMap<Integer, String>();
+            funcReadedPath = (Path) readedPath;
+            funcNamePart = (Path) namePart;
+            dataForSend = new ConcurrentHashMap<Integer, Path>();
             /**
+             * indexOfnamePathElement
              * funcReadedPath - 1506682974
              * funcNamePart - -589260798
              */
