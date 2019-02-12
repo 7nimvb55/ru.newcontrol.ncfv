@@ -56,6 +56,12 @@ public class ThStorageWordLogicFilter {
 
 
     }
+    /**
+     * Get data from busJobForFileListToNext and put into Bus ThStorageWordLogicRouter,
+     * ThWordLogicFilter, ThWordLogicFilter
+     * @param inputedStorageWordState
+     * @param inputedStructure 
+     */
     private static void resortInputedStructure(
             final ThStorageWordState inputedStorageWordState,
             final ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, ?>> inputedStructure){
@@ -84,6 +90,7 @@ public class ThStorageWordLogicFilter {
         final ThStorageWordState inStorageWordState,
         UUID keyInProcessData,
         final ConcurrentHashMap<Integer, Path> forTransferData){
+        Path namePartItem;
         String fVal;
         String sVal;
         try{
@@ -92,10 +99,14 @@ public class ThStorageWordLogicFilter {
              * funcNamePart - -589260798
              */
             fVal = (String) forTransferData.get(1506682974).toString();
-            sVal = (String) forTransferData.get(-589260798).toString();
-            doWordForIndex(inStorageWordState, keyInProcessData, 
-                    fVal,  
-                    sVal);
+            namePartItem = (Path) forTransferData.get(-589260798);
+            int nameCount = namePartItem.getNameCount();
+            for(int idxName = 0; idxName < nameCount; idxName++){
+                sVal = (String) namePartItem.getName(idxName).toString();
+                doWordForIndex(inStorageWordState, keyInProcessData, 
+                        fVal,  
+                        sVal);
+            }
         } finally {
             fVal = null;
             sVal = null;
@@ -185,8 +196,8 @@ public class ThStorageWordLogicFilter {
             toCharArray = inputedNamePartPath.toCharArray();
             idexChar = 0;
             prevWordCodeType = (int) ThStorageWordLogicFilter.getWordCode(inputedNamePartPath.codePointAt(idexChar));
-            word = "";
-            heximalWord = "";
+            word = new String("");
+            heximalWord = new String("");
             startPos = 0;
             lengthWord = 0;
             for(char item : toCharArray){
@@ -198,39 +209,68 @@ public class ThStorageWordLogicFilter {
                 }
                 if( (prevWordCodeType != wordCodeType) ){
                     lengthWord = word.length();
-                    forAddData= new TdataWord(recordId, storagePath, word, prevWordCodeType, heximalWord, startPos, lengthWord);
                     /**
+                     * into ThStorageWordBusRouter data by Bus type:
+                     * - prevWordCodeType - bus type
+                     * ConcurrentHashMap<String(1), String(2)>
+                     * - (1) - heximalWord
+                     * - (2) - word
+                     */
+                    ThStorageWordBusInput busJobForStorageWordRouter = inputedStorageWordState.getBusJobForStorageWordRouterJob();
+                    ConcurrentHashMap<String, String> busForTypeStorageWordRouter = busJobForStorageWordRouter.getBusForTypeWord(prevWordCodeType);
+                    busForTypeStorageWordRouter.put(heximalWord, word);
+                    
+                    /**
+                     * create data for transfer into LongWord, Word indexes
+                     *
+                    forAddData= new TdataWord(recordId, storagePath, word, prevWordCodeType, heximalWord, startPos, lengthWord);
+                    **
                      * put job to Bus by type ThWordState
                      */
                     
-                    
+                    /**
+                     * 
+                     *
                     if( lengthWord > 25){
-                        //AppConstants.INDEX_DATA_TRANSFER_CODE_LONG_WORD
-                        //forReturnLongWord.put(UUID.randomUUID(), forAddData);
                         ThStorageWordBusOutput busJobForLongWordWrite = inputedStorageWordState.getBusJobForLongWordWrite();
                         ArrayBlockingQueue<TdataWord> busForTypeLongWord = busJobForLongWordWrite.getBusForTypeWord(prevWordCodeType);
                         busForTypeLongWord.add(forAddData);
                     } else {
-                        //AppConstants.INDEX_DATA_TRANSFER_CODE_WORD;
-                        //forReturnWord.put(UUID.randomUUID(), forAddData);
                         ThStorageWordBusOutput busJobForWordWrite = inputedStorageWordState.getBusJobForWordWrite();
                         ArrayBlockingQueue<TdataWord> busForTypeWord = busJobForWordWrite.getBusForTypeWord(prevWordCodeType);
                         busForTypeWord.add(forAddData);
-                    }
-                    word = null;
-                    heximalWord = null;
+                    }*/
+                    word = new String("");
+                    heximalWord = new String("");
                     startPos = idexChar;
                 }
-                word = word + item;
-                heximalWord = heximalWord + toHexString;
+                //word = word + item;
+                word = word.concat(String.valueOf(item));
+                //heximalWord = heximalWord + toHexString;
+                heximalWord = heximalWord.concat(toHexString);
                 idexChar++;
                 prevWordCodeType = wordCodeType;
             }
             lengthWord = word.length();
+            /**
+             * into ThStorageWordBusRouter data by Bus type:
+             * - prevWordCodeType - bus type
+             * ConcurrentHashMap<String(1), String(2)>
+             * - (1) - heximalWord
+             * - (2) - word
+             */
+            ThStorageWordBusInput busJobForStorageWordRouter = inputedStorageWordState.getBusJobForStorageWordRouterJob();
+            ConcurrentHashMap<String, String> busForTypeStorageWordRouter = busJobForStorageWordRouter.getBusForTypeWord(prevWordCodeType);
+            busForTypeStorageWordRouter.put(heximalWord, word);
+            
+            /**
+             * create data for transfer into LongWord, Word indexes
+             */
+            /**
+             * tmp comment befor not released StorageWord part
+             *
             forLastAddData = new TdataWord(recordId, storagePath, word, prevWordCodeType, heximalWord, startPos, lengthWord);
             if( lengthWord > 25){
-                //AppConstants.INDEX_DATA_TRANSFER_CODE_LONG_WORD
-                //forReturnLongWord.put(UUID.randomUUID(), forLastAddData);
                 ThStorageWordBusOutput busJobForLongWordWrite = inputedStorageWordState.getBusJobForLongWordWrite();
                 ArrayBlockingQueue<TdataWord> busForTypeLongWord = busJobForLongWordWrite.getBusForTypeWord(prevWordCodeType);
                 busForTypeLongWord.add(forLastAddData);
@@ -239,8 +279,6 @@ public class ThStorageWordLogicFilter {
                         + prevWordCodeType + " size " + size);
                 
             } else {
-                //AppConstants.INDEX_DATA_TRANSFER_CODE_WORD;
-                //forReturnWord.put(UUID.randomUUID(), forLastAddData);
                 ThStorageWordBusOutput busJobForWordWrite = inputedStorageWordState.getBusJobForWordWrite();
                 ArrayBlockingQueue<TdataWord> busForTypeWord = busJobForWordWrite.getBusForTypeWord(prevWordCodeType);
                 busForTypeWord.add(forLastAddData);
@@ -248,8 +286,8 @@ public class ThStorageWordLogicFilter {
                 System.out.println(">    >    >    >    >    >Word bus for typeWord " 
                         + prevWordCodeType + " size " + size);
             }
-            
-            //return forReturnFinishedPut(forReturnWord, forReturnLongWord);
+            */
+
         } finally {
             forReturnLongWord = null;
             forReturnWord = null;

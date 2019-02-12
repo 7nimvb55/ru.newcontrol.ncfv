@@ -15,6 +15,9 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * From ThStorageWordBusOutput get data, convert int typeWord to String for 
  * directory, create or add to path, get from bus data, read heximal value,  
@@ -32,9 +35,29 @@ public class ThStorageWordLogicRouter {
     protected void doRouterForIndexStorageWord(ThStorageWordRule outerRuleStorageWord){
         ThIndexRule indexRule = outerRuleStorageWord.getIndexRule();
         ThIndexStatistic indexStatistic = indexRule.getIndexStatistic();
-        
+        ThStorageWordState storageWordState = outerRuleStorageWord.getStorageWordState();
         ThStorageWordStatistic storageWordStatistic = outerRuleStorageWord.getStorageWordStatistic();
+        System.out.println("++++++++++++++++++++++++++++++start " + ThStorageWordLogicRouter.class.getCanonicalName());
+        ThStorageWordBusInput busJobForStorageWordRouter = storageWordState.getBusJobForStorageWordRouterJob();
+        do{
+            ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> busForTypeStorageWordRouter = busJobForStorageWordRouter.getMaxUsedBusesSet();
+            for(Map.Entry<Integer, ConcurrentHashMap<String, String>> items : busForTypeStorageWordRouter.entrySet()){
+                System.out.println("For bus typeWord " + items.getKey());
+                for(Map.Entry<String, String> itemsOfBus : items.getValue().entrySet()){
+                    System.out.println("For bus hexWord " + itemsOfBus.getKey() + " subString " + items.getValue().remove(itemsOfBus.getKey()));
+
+                }
+            }
+        } while( outerRuleStorageWord.isRunnedStorageWordWorkFilter() );
         
-        
+        ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> busForTypeStorageWordRouter = busJobForStorageWordRouter.getMaxUsedBusesSet();
+            for(Map.Entry<Integer, ConcurrentHashMap<String, String>> items : busForTypeStorageWordRouter.entrySet()){
+                System.out.println("For bus typeWord " + items.getKey());
+                for(Map.Entry<String, String> itemsOfBus : items.getValue().entrySet()){
+                    System.out.println("For bus hexWord " + itemsOfBus.getKey() + " subString " + items.getValue().remove(itemsOfBus.getKey()));
+
+                }
+        }
+        System.out.println("++++++++++++++++++++++++++++++stop " + ThStorageWordLogicRouter.class.getCanonicalName());
     }
 }

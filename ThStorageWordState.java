@@ -21,6 +21,11 @@ package ru.newcontrol.ncfv;
  */
 public class ThStorageWordState {
     /**
+     * ThStorageWordBusInput
+     */
+    private ThStorageWordBusInput busStorageWordRouterJob;
+    private Boolean isSetStorageWordRouterJob;
+    /**
      * ThStorageWordBusOutput
      */
     private ThStorageWordBusOutput busWordWritedJob;
@@ -32,10 +37,37 @@ public class ThStorageWordState {
     private Boolean isSetLongWordWritedJob;
     
     public ThStorageWordState() {
+        setFalseStorageWordRouterJob();
         setFalseWordWritedJob();
         setFalseLongWordWritedJob();
     }
-    
+    /**
+     * 
+     * @return 
+     * @throws #java.lang.IllegalArgumentException
+     */
+    protected ThStorageWordBusInput getBusJobForStorageWordRouterJob(){
+        if( !this.isStorageWordRouterJob() ){
+            throw new IllegalArgumentException("Bus jobs for output not set in " + ThStorageWordState.class.getCanonicalName());
+        }
+        return this.busStorageWordRouterJob;
+    }
+    protected void setBusJobForStorageWordRouterJob(final ThStorageWordBusInput busStorageWordRouterJobOuter){
+        this.busStorageWordRouterJob = busStorageWordRouterJobOuter;
+        setTrueStorageWordRouterJob();
+    }
+    protected void setTrueStorageWordRouterJob(){
+        this.isSetStorageWordRouterJob = Boolean.TRUE;
+    }
+    protected void setFalseStorageWordRouterJob(){
+        this.isSetStorageWordRouterJob = Boolean.FALSE;
+    }
+    protected Boolean isStorageWordRouterJob(){
+        if( this.isSetStorageWordRouterJob ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
     /**
      * 
      * @return 
