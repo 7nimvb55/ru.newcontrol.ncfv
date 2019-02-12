@@ -196,8 +196,8 @@ public class ThStorageWordLogicFilter {
             toCharArray = inputedNamePartPath.toCharArray();
             idexChar = 0;
             prevWordCodeType = (int) ThStorageWordLogicFilter.getWordCode(inputedNamePartPath.codePointAt(idexChar));
-            word = new String("");
-            heximalWord = new String("");
+            word = new String();
+            heximalWord = new String();
             startPos = 0;
             lengthWord = 0;
             for(char item : toCharArray){
@@ -240,8 +240,11 @@ public class ThStorageWordLogicFilter {
                         ArrayBlockingQueue<TdataWord> busForTypeWord = busJobForWordWrite.getBusForTypeWord(prevWordCodeType);
                         busForTypeWord.add(forAddData);
                     }*/
-                    word = new String("");
-                    heximalWord = new String("");
+                    String[] oldVal = {word, heximalWord};
+                    oldVal = null;
+                    word = new String();
+                    heximalWord = new String();
+                    
                     startPos = idexChar;
                 }
                 //word = word + item;
