@@ -21,6 +21,7 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -183,8 +184,12 @@ public class ThStorageWordLogicFilter {
         char[] toCharArray;
         int idexChar;
         int prevWordCodeType;
-        String word;
-        String heximalWord;
+        
+        char[] arrCharHeximalWord;
+        char[] arrCharWord;
+        
+        //String word;
+        //String heximalWord;
         String toHexString;
         int startPos;
         int lengthWord;
@@ -196,19 +201,26 @@ public class ThStorageWordLogicFilter {
             toCharArray = inputedNamePartPath.toCharArray();
             idexChar = 0;
             prevWordCodeType = (int) ThStorageWordLogicFilter.getWordCode(inputedNamePartPath.codePointAt(idexChar));
-            word = new String();
-            heximalWord = new String();
+            
+            arrCharHeximalWord = new char[0];
+            arrCharWord = new char[0];
+            
+            //word = new String();
+            //heximalWord = new String();
             startPos = 0;
             lengthWord = 0;
             for(char item : toCharArray){
                 int codePointAt = inputedNamePartPath.codePointAt(idexChar);
                 int wordCodeType = (int) ThStorageWordLogicFilter.getWordCode(codePointAt);
-                toHexString = Integer.toHexString(codePointAt);
+                toHexString = Integer.toHexString(codePointAt).toUpperCase();
+                // @todo see for who faster DatatypeConverter.printHexBinary(bytes);
                 if( toHexString.length() == 2 ){
                     toHexString = "00" + toHexString;
                 }
                 if( (prevWordCodeType != wordCodeType) ){
-                    lengthWord = word.length();
+                    lengthWord = arrCharWord.length;
+                    //lengthWord = word.length();
+                    //@todo input in bus in func
                     /**
                      * into ThStorageWordBusRouter data by Bus type:
                      * - prevWordCodeType - bus type
@@ -216,9 +228,12 @@ public class ThStorageWordLogicFilter {
                      * - (1) - heximalWord
                      * - (2) - word
                      */
-                    ThStorageWordBusInput busJobForStorageWordRouter = inputedStorageWordState.getBusJobForStorageWordRouterJob();
-                    ConcurrentHashMap<String, String> busForTypeStorageWordRouter = busJobForStorageWordRouter.getBusForTypeWord(prevWordCodeType);
-                    busForTypeStorageWordRouter.put(heximalWord, word);
+                    
+                    outputToStorageWordRouter(inputedStorageWordState, prevWordCodeType, arrCharHeximalWord, arrCharWord);
+                    
+                    //ThStorageWordBusInput busJobForStorageWordRouter = inputedStorageWordState.getBusJobForStorageWordRouterJob();
+                    //ConcurrentHashMap<String, String> busForTypeStorageWordRouter = busJobForStorageWordRouter.getBusForTypeWord(prevWordCodeType);
+                    //busForTypeStorageWordRouter.put(heximalWord, word);
                     
                     /**
                      * create data for transfer into LongWord, Word indexes
@@ -240,21 +255,39 @@ public class ThStorageWordLogicFilter {
                         ArrayBlockingQueue<TdataWord> busForTypeWord = busJobForWordWrite.getBusForTypeWord(prevWordCodeType);
                         busForTypeWord.add(forAddData);
                     }*/
-                    String[] oldVal = {word, heximalWord};
-                    oldVal = null;
-                    word = new String();
-                    heximalWord = new String();
+                    
+                    arrCharWord = null;
+                    arrCharHeximalWord = null;
+                    arrCharHeximalWord = new char[0];
+                    arrCharWord = new char[0];
+                    
+                    //String[] oldVal = {word, heximalWord};
+                    //oldVal = null;
+                    //word = new String();
+                    //heximalWord = new String();
                     
                     startPos = idexChar;
                 }
                 //word = word + item;
-                word = word.concat(String.valueOf(item));
+                int lengthIncWord = arrCharWord.length;
+                lengthIncWord++;
+                arrCharWord = Arrays.copyOf(arrCharWord, lengthIncWord);
+                arrCharWord[lengthIncWord] = item;
+                
+                //word = word.concat(String.valueOf(item));
                 //heximalWord = heximalWord + toHexString;
-                heximalWord = heximalWord.concat(toHexString);
+                
+                int lengthIncHeximalWord = arrCharHeximalWord.length;
+                lengthIncHeximalWord++;
+                arrCharHeximalWord = Arrays.copyOf(arrCharHeximalWord, lengthIncHeximalWord);
+                arrCharHeximalWord[lengthIncWord] = item;
+                
+                //heximalWord = heximalWord.concat(toHexString);
                 idexChar++;
                 prevWordCodeType = wordCodeType;
             }
-            lengthWord = word.length();
+            lengthWord = arrCharWord.length;
+            //lengthWord = word.length();
             /**
              * into ThStorageWordBusRouter data by Bus type:
              * - prevWordCodeType - bus type
@@ -262,9 +295,12 @@ public class ThStorageWordLogicFilter {
              * - (1) - heximalWord
              * - (2) - word
              */
-            ThStorageWordBusInput busJobForStorageWordRouter = inputedStorageWordState.getBusJobForStorageWordRouterJob();
-            ConcurrentHashMap<String, String> busForTypeStorageWordRouter = busJobForStorageWordRouter.getBusForTypeWord(prevWordCodeType);
-            busForTypeStorageWordRouter.put(heximalWord, word);
+            
+            outputToStorageWordRouter(inputedStorageWordState, prevWordCodeType, arrCharHeximalWord, arrCharWord);
+            
+            //ThStorageWordBusInput busJobForStorageWordRouter = inputedStorageWordState.getBusJobForStorageWordRouterJob();
+            //ConcurrentHashMap<String, String> busForTypeStorageWordRouter = busJobForStorageWordRouter.getBusForTypeWord(prevWordCodeType);
+            //busForTypeStorageWordRouter.put(heximalWord, word);
             
             /**
              * create data for transfer into LongWord, Word indexes
@@ -295,11 +331,40 @@ public class ThStorageWordLogicFilter {
             forReturnLongWord = null;
             forReturnWord = null;
             toCharArray = null;
-            word = null;
-            heximalWord = null;
+            //word = null;
+            //heximalWord = null;
             toHexString = null;
             forLastAddData = null;
             forAddData = null;
         }
     }
+    /**
+     * 
+     * @param inputedStorageWordState
+     * @param typeWord
+     * @param chHeximalWord
+     * @param chWord 
+     */
+    private static void outputToStorageWordRouter(final ThStorageWordState inputedStorageWordState,
+            final int typeWord,
+            final char[] chHeximalWord, 
+            final char[] chWord){
+        String heximalWord;
+        String word;
+        ThStorageWordBusInput busJobForStorageWordRouter;
+        ConcurrentHashMap<String, String> busForTypeStorageWordRouter;
+        try {
+            heximalWord = new String(chHeximalWord);
+            word = new String(chWord);
+            busJobForStorageWordRouter = inputedStorageWordState.getBusJobForStorageWordRouterJob();
+            busForTypeStorageWordRouter = busJobForStorageWordRouter.getBusForTypeWord(typeWord);
+            busForTypeStorageWordRouter.put(heximalWord, word);
+        } finally {
+            heximalWord = null;
+            word = null;
+            busJobForStorageWordRouter = null;
+            busForTypeStorageWordRouter = null;
+        }
+    }
+    
 }
