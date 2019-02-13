@@ -17,6 +17,7 @@ package ru.newcontrol.ncfv;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -44,32 +45,33 @@ public class ThStorageWordStatistic {
      *   ConcurrentHashMap<String,    - (2a) - tagFileName.substring(0,3)
      *     ConcurrentHashMap<Integer, - (2b) - subString.length                            
      *     ConcurrentHashMap<String,  - (3) - tagFileName with hex view
-     * > >   ConcurrentHashMap<Integer,  - (3a) - Fields - <hashDestinationName, Field>
-     * (3a) <hashDestinationName, <Integer, byTypeValue(3a.[1-5], 4)>:
-     *      1 - InDirNamesRecordsVolumeNumber
-     *      2 - SourcesNowMoveIntoNew
-     *      3 - LastAccessCountAccess
-     *      4 - CacheToLimitFileSystemLimit
-     *      5 - FlagsProcess
-     * > > >   ConcurrentHashMap<Integer, Integer>>>>> - (4) - <hashFieldName, Value>
-     * 
-     * (4) <hashFieldName, Value (Class of 3a.[1-5])>:
+     * > >   ConcurrentHashMap<Integer, UUID>
+     *          <ThStorageWordStatusDataFs.hashCode(), recordUUID>
+     *          <ThStorageWordStatusName.hashCode(), recordUUID>
+     *          <ThStorageWordStatusActivity.hashCode(), recordUUID>
+     *          <ThStorageWordStatusDataCache.hashCode(), recordUUID>
+     *          <ThStorageWordStatusWorkers.hashCode(), recordUUID>
+     * -------------------------------------------------------------------------
+     * ThStorageWordStatusDataFs
      * countFS    - (3a.1) - Integer countRecordsOnFileSystem - updated onWrite, 
      *                before write (Read, Write into old file name, 
      *                after write Files.move to newFileName
      *     - (3a.1) - Integer volumeNumber - update onWrite, before
      *                write = ifLimit ? update : none
      * -------------------------------------------------------------------------
+     * ThStorageWordStatusName
      * namesFS    - (3a.2) - String currentFileName - full file name where read 
      *                from data
      *     - (3a.2) - String newFileName - full file name for Files.move 
      *                operation after write created when readJobDataSize
      * -------------------------------------------------------------------------
+     * ThStorageWordStatusActivity
      * timeUSE    - (3a.3) - Long lastAccessNanotime - update onWrite, before 
      *                write
      *     - (3a.3) - Long countDataUseIterationsSummary - update onWrite, 
      *                before write, count++ sended jobWrite
      * -------------------------------------------------------------------------
+     * ThStorageWordStatusDataCache
      * countTMP   - (3a.4) - Integer currentInCache - records count, need when 
      *                get job for write for example:
      *                fromJobToWriteDataSize + countRecordsOnFileSystem + 
@@ -87,16 +89,23 @@ public class ThStorageWordStatistic {
      *                I. - readFromFileSystem...
      *                II. - resultNowData
      *                III. - sendJobForWriter, update HashMap data ...
-     *     - (3a.4) - Integer addNeedToFileSystemLimit - 
-     *     - (3a.4) - Integer indexSystemLimitOnStorage -
+     *     - (3a.4) - Integer addNeedToFileSystemLimit - exist in data file
+     *                records size => indexSystemLimitOnStorage - sizeFormFileName
+     *                @todo when data read need calculate name and readed data size
+     *     - (3a.4) - Integer indexSystemLimitOnStorage - limit from constants
      * -------------------------------------------------------------------------
+     * ThStorageWordStatusWorkers
      * flagsProc  - (3a.5) - Boolean isWriteProcess - when this param init do it
      *     - (3a.5) - Boolean isReadProcess - when this param init do it
      *     - (3a.5) - Boolean isCachedData - when this param init do it
      *     - (3a.5) - Boolean isCalculatedData
      *     - (3a.5) - Boolean isUdatedDataInHashMap
      */
-    private ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, ?>>>>>> fileStoragesMap;
+    private ConcurrentHashMap<Integer, 
+                ConcurrentHashMap<String, 
+                    ConcurrentHashMap<Integer, 
+                        ConcurrentHashMap<String, 
+                            ConcurrentHashMap<Integer, UUID>>>>> fileStoragesMap;
     public ThStorageWordStatistic() {
         this.fileStoragesMap = createNewListStoragesMapEmpty();
     }
@@ -130,29 +139,25 @@ public class ThStorageWordStatistic {
      * @return lvl (3a)
      * @throws IllegalArgumentException
      */
-    protected ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, ?>> getTypeWordTagFileNameParams(
+    protected ConcurrentHashMap<Integer, UUID> getTypeWordTagFileNameFlowUuids(
             final Integer typeWord, 
             final String tagName, 
             final String strSubString){
         
         //(3)
-        ConcurrentHashMap<Integer, 
-                ConcurrentHashMap<Integer, ?>> tagFileNameParams;
+        ConcurrentHashMap<Integer, UUID> tagFileNameParams;
         //(1)
         ConcurrentHashMap<String, 
                 ConcurrentHashMap<Integer, 
                     ConcurrentHashMap<String, 
-                        ConcurrentHashMap<Integer, 
-                            ConcurrentHashMap<Integer, ?>>>>> getListByTypeWord;
+                        ConcurrentHashMap<Integer, UUID>>>> getListByTypeWord;
         //(2a)
         ConcurrentHashMap<Integer, 
                 ConcurrentHashMap<String, 
-                    ConcurrentHashMap<Integer, 
-                        ConcurrentHashMap<Integer, ?>>>> getListByTagNameCode;
+                        ConcurrentHashMap<Integer, UUID>>> getListByTagNameCode;
         //(2b)
         ConcurrentHashMap<String, 
-                ConcurrentHashMap<Integer, 
-                    ConcurrentHashMap<Integer, ?>>> getListBySubStrLength;
+                        ConcurrentHashMap<Integer, UUID>> getListBySubStrLength;
         
         try{
             int strSubStringlength = strSubString.length();
@@ -172,15 +177,18 @@ public class ThStorageWordStatistic {
             }
             
             getListByTypeWord = getListByType(typeWord);
-            String substring = tagName.substring(0, 3);
-            getListByTagNameCode = getListByTypeWord.get(substring);
+            String substringTagName = tagName.substring(0, 3);
+            getListByTagNameCode = getListByTypeWord.get(substringTagName);
             if( getListByTagNameCode == null ){
-                getListByTagNameCode = new ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, ?>>>>();
-                getListByTypeWord.put(substring, getListByTagNameCode);
+                getListByTagNameCode = new ConcurrentHashMap<Integer, 
+                                                ConcurrentHashMap<String, 
+                                                        ConcurrentHashMap<Integer, UUID>>>();
+                getListByTypeWord.put(substringTagName, getListByTagNameCode);
             }
             getListBySubStrLength = getListByTagNameCode.get(strSubStringlength);
             if( getListBySubStrLength == null ){
-                getListBySubStrLength = new ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, ?>>>();
+                getListBySubStrLength = new ConcurrentHashMap<String, 
+                                                ConcurrentHashMap<Integer, UUID>>();
                 getListByTagNameCode.put(strSubStringlength, getListBySubStrLength);
             }
             tagFileNameParams = getTagFileNameParams(getListBySubStrLength, tagName);
@@ -198,14 +206,14 @@ public class ThStorageWordStatistic {
      * @param tagName
      * @return lvl (3)
      */
-    protected ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, ?>> getTagFileNameParams(
-            final ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, ?>>> getListByTypeWord,
+    protected ConcurrentHashMap<Integer, UUID> getTagFileNameParams(
+            final ConcurrentHashMap<String, ConcurrentHashMap<Integer, UUID>> getListByTypeWord,
             final String tagName){
-        ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, ?>> getListByTagFileName;
+        ConcurrentHashMap<Integer, UUID> getListByTagFileName;
         try{
             getListByTagFileName = getListByTypeWord.get(tagName);
             if( getListByTagFileName == null ){
-                getListByTagFileName = new ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, ?>>();
+                getListByTagFileName = new ConcurrentHashMap<Integer, UUID>();
                 getListByTypeWord.put(tagName, getListByTagFileName);
                 /**
                  * -> get results from: 
@@ -227,325 +235,44 @@ public class ThStorageWordStatistic {
     }
     /**
      * 
-     * @param countRecords
-     * @param volumeNumber
-     * @return lvl(4, 3a.1) ready for put in list lvl(3)
+     * @param typeWord
+     * @param tagName
+     * @param strSubString
+     * @param keysPointsFlow ConcurrentHashMap<Integer, UUID>
+     *          <ThStorageWordStatusDataFs.hashCode(), recordUUID>
+     *          <ThStorageWordStatusName.hashCode(), recordUUID>
+     *          <ThStorageWordStatusActivity.hashCode(), recordUUID>
+     *          <ThStorageWordStatusDataCache.hashCode(), recordUUID>
+     *          <ThStorageWordStatusWorkers.hashCode(), recordUUID>
      */
-    protected ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>> createStructureParamsCountFS(
-                        final Integer countRecords,
-                        final Integer volumeNumber){
-        ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>> returnedParams;
-        ConcurrentHashMap<Integer, Integer> countFS;
-        try{
-            countFS = setInParamCountFS(countRecords,
-                        volumeNumber);
-            Integer groupIdByNumberCountFS = getGroupIdByNumber(1);
-            returnedParams = new ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>();
-            returnedParams.put(groupIdByNumberCountFS , countFS);
-            return returnedParams;
-        } finally {
-            returnedParams = null;
-            countFS = null;
-        }
-    }
-    /**
-     * 
-     * @param srcFileName
-     * @param destFileName
-     * @return lvl(4, 3a.2) ready for put in list lvl(3)
-     */
-    protected ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, String>> createStructureParamsNamesFS(
-                        final String srcFileName,
-                        final String destFileName){
-        ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, String>> returnedParams;
-        ConcurrentHashMap<Integer, String> namesFS;
-        try{
-            namesFS = setInParamNamesFS(
-                        srcFileName,
-                        destFileName);
-            Integer groupIdByNumberNamesFS = getGroupIdByNumber(2);
-            returnedParams = new ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, String>>();
-            returnedParams.put(groupIdByNumberNamesFS , namesFS);
-            return returnedParams;
-        } finally {
-            returnedParams = null;
-            namesFS = null;
-        }
-    }
-    /**
-     * 
-     * @param countDataUseIterationsSummary
-     * @return lvl(4, 3a.3) ready for put in list lvl(3)
-     */
-    protected ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Long>> createStructureParamsTimeUSE(final long countDataUseIterationsSummary){
-        ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Long>> returnedParams;
-        ConcurrentHashMap<Integer, Long> timeUSE;
-        try{
-            timeUSE = setInParamTimeUSE(countDataUseIterationsSummary);
-            Integer groupIdByNumberTimeUSE = getGroupIdByNumber(3);
-            returnedParams = new ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Long>>();
-            returnedParams.put(groupIdByNumberTimeUSE , timeUSE);
-            return returnedParams;
-        } finally {
-            returnedParams = null;
-            timeUSE = null;
-        }
-    }
-    /**
-     * 
-     * @param currentInCache
-     * @param addNeedToFileSystemLimit
-     * @param indexSystemLimitOnStorage
-     * @return lvl(4, 3a.4) ready for put in list lvl(3)
-     */
-    protected ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>> createStructureParamsCountTMP(
-                        final Integer currentInCache,
-                        final Integer addNeedToFileSystemLimit,
-                        final Integer indexSystemLimitOnStorage){
-        ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>> returnedParams;
-        ConcurrentHashMap<Integer, Integer> countTMP;
-        try{
-            countTMP = setInParamCountTMP(
-                        currentInCache,
-                        addNeedToFileSystemLimit,
-                        indexSystemLimitOnStorage);
-            Integer groupIdByNumberCountTMP = getGroupIdByNumber(4);
-            returnedParams = new ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>();
-            returnedParams.put(groupIdByNumberCountTMP , countTMP);
-            return returnedParams;
-        } finally {
-            returnedParams = null;
-            countTMP = null;
-        }
-    }
-    /**
-     * 
-     * @param isWriteProcess
-     * @param isReadProcess
-     * @param isCachedData
-     * @param isCalculatedData
-     * @param isUdatedDataInHashMap
-     * @param isMoveFileReady
-     * @return lvl(4, 3a.5) ready for put in list lvl(3)
-     */
-    protected ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Boolean>> createStructureParamsFlagsProc(
-                        final Boolean isWriteProcess,
-                        final Boolean isReadProcess,
-                        final Boolean isCachedData,
-                        final Boolean isCalculatedData,
-                        final Boolean isUdatedDataInHashMap,
-                        final Boolean isMoveFileReady){
-        ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Boolean>> returnedParams;
-        ConcurrentHashMap<Integer, Boolean> flagsProc;
-        try{
-            flagsProc = setInParamFlagsProc(
-                        isWriteProcess,
-                        isReadProcess,
-                        isCachedData,
-                        isCalculatedData,
-                        isUdatedDataInHashMap,
-                        isMoveFileReady);
-            Integer groupIdByNumberFlagsProc = getGroupIdByNumber(5);
-            returnedParams = new ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Boolean>>();
-            returnedParams.put(groupIdByNumberFlagsProc , flagsProc);
-            return returnedParams;
-        } finally {
-            returnedParams = null;
-            flagsProc = null;
-        }
-    }
-    /**
-     * 
-     * @param countRecords
-     * @param volumeNumber
-     * @return lvl(3a.1)
-     */
-    protected ConcurrentHashMap<Integer, Integer> setInParamCountFS(
-                        final Integer countRecords,
-                        final Integer volumeNumber){
-        ConcurrentHashMap<Integer, Integer> returnedHashMap;
-        Integer funcCountRecords;
-        Integer funcVolumeNumber;
+    protected void setParamsPointsFlow(
+            final Integer typeWord, 
+            final String tagName, 
+            final String strSubString,
+            final ConcurrentHashMap<Integer, UUID> keysPointsFlow){
+
+        
         try {
-            funcCountRecords = countRecords;
-            if( funcCountRecords < 0 ){
-                funcCountRecords = 0;
-            }
-            funcVolumeNumber = volumeNumber;
-            if( funcVolumeNumber < 0 ){
-                funcVolumeNumber = 0;
-            }
-            returnedHashMap = new ConcurrentHashMap<Integer, Integer>();
-            //countRecordsOnFileSystem.hashCode() - -2011092003
-            returnedHashMap.put(-2011092003, funcCountRecords);
-            //volumeNumber.hashCode() - -1832815869
-            returnedHashMap.put(-1832815869, funcVolumeNumber);
-            return returnedHashMap;
+            ConcurrentHashMap<Integer, UUID> typeWordTagFileNameFlowUuids = getTypeWordTagFileNameFlowUuids(
+                    typeWord,
+                    tagName,
+                    strSubString);
+            typeWordTagFileNameFlowUuids.putAll(keysPointsFlow);
         } finally {
-            returnedHashMap = null;
-            funcCountRecords = null;
-            funcVolumeNumber = null;
+
         }
-    }
-    /**
-     * 
-     * @param srcFileName
-     * @param destFileName
-     * @return lvl(3a.2)
-     */
-    protected ConcurrentHashMap<Integer, String> setInParamNamesFS(
-                        final String srcFileName,
-                        final String destFileName){
-        ConcurrentHashMap<Integer, String> returnedHashMap;
-        String srcFuncFileName;
-        String destFuncFileName;
-        try {
-            srcFuncFileName = srcFileName;
-            destFuncFileName = destFileName;
-            if( srcFuncFileName.isEmpty() ){
-                srcFuncFileName = "undefinedSrcName-0-0"; // getDafaultNames with current Size and Volume Number
-            }
-            if( destFuncFileName.isEmpty() ){
-                destFuncFileName = "undefinedDestName-0-0";
-            }
-            returnedHashMap = new ConcurrentHashMap<Integer, String>();
-            //currentFileName - 1517772480
-            returnedHashMap.put(1517772480, srcFuncFileName);
-            //newFileName - 521024487
-            returnedHashMap.put(521024487, destFuncFileName);
-            return returnedHashMap;
-        } finally {
-            returnedHashMap = null;
-            srcFuncFileName = null;
-            destFuncFileName = null;
-        }
-    }
-    /**
-     * 
-     * @param countDataUseIterationsSummary
-     * @return lvl(3a.3)
-     */
-    protected ConcurrentHashMap<Integer, Long> setInParamTimeUSE(final long countDataUseIterationsSummary){
-        ConcurrentHashMap<Integer, Long> returnedHashMap;
-        Long countIterations;
-        try {
-            returnedHashMap = new ConcurrentHashMap<Integer, Long>();
-            countIterations = countDataUseIterationsSummary;
-            if( countIterations < 0L ){
-                countIterations = 0L;
-            }
-            //lastAccessNanotime - -1553995461
-            long nanoTime = System.nanoTime();
-            returnedHashMap.put(-1553995461, nanoTime);
-            //countDataUseIterationsSummary - 1445275074
-            returnedHashMap.put(1445275074, countIterations);
-            return returnedHashMap;
-        } finally {
-            returnedHashMap = null;
-            countIterations = null;
-        }
-    }
-    /**
-     * 
-     * @param currentInCache
-     * @param addNeedToFileSystemLimit
-     * @param indexSystemLimitOnStorage
-     * @return lvl(3a.4)
-     */
-    protected ConcurrentHashMap<Integer, Integer> setInParamCountTMP(
-                        final Integer currentInCache,
-                        final Integer addNeedToFileSystemLimit,
-                        final Integer indexSystemLimitOnStorage){
-        ConcurrentHashMap<Integer, Integer> returnedHashMap;
-        Integer defaultInCache;
-        Integer defaultNeedToFileSystemLimit;
-        Integer defaultIndexSystemLimitOnStorage;
-        try {
-            defaultInCache = currentInCache;
-            if( defaultInCache < 0 ){
-                defaultInCache = 0;
-            }
-            defaultNeedToFileSystemLimit = addNeedToFileSystemLimit;
-            if( defaultNeedToFileSystemLimit < 0 ){
-                defaultNeedToFileSystemLimit = 0;
-            }
-            defaultIndexSystemLimitOnStorage = indexSystemLimitOnStorage;
-            if( defaultIndexSystemLimitOnStorage < 0 ){
-                defaultIndexSystemLimitOnStorage = 0;
-            }
-            returnedHashMap = new ConcurrentHashMap<Integer, Integer>();
-            //currentInCache - 322802084
-            returnedHashMap.put(322802084, defaultInCache);
-            //addNeedToFileSystemLimit - 1443203998
-            returnedHashMap.put(1443203998, defaultNeedToFileSystemLimit);
-            //indexSystemLimitOnStorage - 585177634
-            returnedHashMap.put(585177634, defaultIndexSystemLimitOnStorage);
-            return returnedHashMap;
-        } finally {
-            returnedHashMap = null;
-            defaultInCache = null;
-            defaultNeedToFileSystemLimit = null;
-            defaultIndexSystemLimitOnStorage = null;
-        }
-    }
-    /**
-     * 
-     * @param isWriteProcess
-     * @param isReadProcess
-     * @param isCachedData
-     * @param isCalculatedData
-     * @param isUdatedDataInHashMap
-     * @param isMoveFileReady
-     * @return lvl(3a.5)
-     */
-    protected ConcurrentHashMap<Integer, Boolean> setInParamFlagsProc(
-                        final Boolean isWriteProcess,
-                        final Boolean isReadProcess,
-                        final Boolean isCachedData,
-                        final Boolean isCalculatedData,
-                        final Boolean isUdatedDataInHashMap,
-                        final Boolean isMoveFileReady){
-        ConcurrentHashMap<Integer, Boolean> returnedHashMap;
-        Boolean funcWriteProcess;
-        Boolean funcReadProcess;
-        Boolean funcCachedData;
-        Boolean funcCalculatedData;
-        Boolean funcUdatedDataInHashMap;
-        Boolean funcMoveFileReady;
-        try {
-            funcWriteProcess = isWriteProcess;
-            funcReadProcess = isReadProcess;
-            funcCachedData = isCachedData;
-            funcCalculatedData = isCalculatedData;
-            funcUdatedDataInHashMap = isUdatedDataInHashMap;
-            funcMoveFileReady = isMoveFileReady;
-            returnedHashMap = new ConcurrentHashMap<Integer, Boolean>();
-            //isWriteProcess - 1640531930
-            returnedHashMap.put(1640531930, funcWriteProcess);
-            //isReadProcess - 1836000367
-            returnedHashMap.put(1836000367, funcReadProcess);
-            //isCachedData - -2091433802
-            returnedHashMap.put(-2091433802, funcCachedData);
-            //isCalculatedData - 1804093010
-            returnedHashMap.put(1804093010, funcCalculatedData);
-            //isUdatedDataInHashMap - -2092233516
-            returnedHashMap.put(-2092233516, funcUdatedDataInHashMap);
-            //isMoveFileReady -
-            returnedHashMap.put("isMoveFileReady".hashCode(), funcMoveFileReady);
-            return returnedHashMap;
-        } finally {
-            returnedHashMap = null;
-            funcWriteProcess = null;
-            funcReadProcess = null;
-            funcCachedData = null;
-            funcCalculatedData = null;
-            funcUdatedDataInHashMap = null;
-            funcMoveFileReady = null;
-        }
+        
     }
     
-    protected ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, ?>>>>>> createNewListStoragesMapEmpty(){
-        return new ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, ?>>>>>>();
+    
+    
+    protected ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, 
+                            ConcurrentHashMap<Integer, UUID>>>>> createNewListStoragesMapEmpty(){
+        return new ConcurrentHashMap<Integer, 
+                        ConcurrentHashMap<String, 
+                            ConcurrentHashMap<Integer, 
+                                ConcurrentHashMap<String, 
+                                    ConcurrentHashMap<Integer, UUID>>>>>();
     }
     protected Map<String, String> getOperationsFileNames(final int typeWordOuter, final String tagFileNameOuter){
         Map<String, String> returnedNames;
@@ -565,12 +292,21 @@ public class ThStorageWordStatistic {
      * @param typeWordOuter
      * @return 
      */
-    protected ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, ?>>>>> getListByType(final int typeWordOuter){
-        ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, ?>>>>> forListReturn;
+    protected ConcurrentHashMap<String, 
+                ConcurrentHashMap<Integer, 
+                    ConcurrentHashMap<String, 
+                        ConcurrentHashMap<Integer, UUID>>>> getListByType(final int typeWordOuter){
+        ConcurrentHashMap<String, 
+                ConcurrentHashMap<Integer, 
+                    ConcurrentHashMap<String, 
+                        ConcurrentHashMap<Integer, UUID>>>> forListReturn;
         try{
             forListReturn = this.fileStoragesMap.get(typeWordOuter);
             if( forListReturn == null ){
-                forListReturn = new ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, ?>>>>>();
+                forListReturn = new ConcurrentHashMap<String, 
+                ConcurrentHashMap<Integer, 
+                    ConcurrentHashMap<String, 
+                        ConcurrentHashMap<Integer, UUID>>>>();
                 this.fileStoragesMap.put(typeWordOuter, forListReturn);
             }
             return forListReturn;

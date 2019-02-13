@@ -44,6 +44,9 @@ public class AppFileNamesConstants {
     
     // In thread system used for main index directories
     protected static String DIR_IDX = "/ncidxfv";
+    /**
+     * return /
+     */
     protected static String DIR_IDX_ROOT = "/";
     // old versions prefixes, names
     protected static String DIR_TMP = "/t";
@@ -63,10 +66,24 @@ public class AppFileNamesConstants {
     protected static String DIR_APP_DATA = "/appdata";
     
     protected static String FILE_INDEX_CONTAINS = "/ncidxfv.zip";
-    // In threads system used constants for folder and file names
+    /**
+     * In threads system used constants for folder and file names
+     * return -
+     */
     protected static String FILE_DIR_PART_SEPARATOR = "-";
     protected static String DIR_INDEX_OLD_DATA = "old-";
+    /**
+     * Storage Zip File System for index system DirList
+     * prefix for data file
+     * return dl-
+     */
     protected static String SZFS_DIR_LIST_FILE_PREFIX = "dl-";
+    /**
+     * Storage Zip File System for index system StorageWord
+     * prefix for data file
+     * return wl-
+     */
+    protected static String SZFS_STORAGE_WORD_FILE_PREFIX = "wl-";
     protected static String SZFS_DIR_LIST_FILE_NOT_LIMITED = "notlimited-";
     
     protected static String FILE_INDEX_KEY_MAP_URI = "UriForStorage";

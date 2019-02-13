@@ -24,6 +24,10 @@ public class AppConstants {
     protected static final Integer DEFAULT_STORAGE_RECORDS_COUNT_LIMIT = 100;
     protected static final Integer DIR_LIST_RECORDS_COUNT_LIMIT = 100;
     protected static final Integer WORD_RECORDS_COUNT_LIMIT = 100;
+    /**
+     * Index system StorageWord limit for count records in one data file
+     * return 100
+     */
     protected static final Integer STORAGE_WORD_RECORDS_COUNT_LIMIT = 100;
     protected static final Integer FILE_LIST_RECORDS_COUNT_LIMIT = 100;
     

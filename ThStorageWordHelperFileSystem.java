@@ -15,18 +15,41 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  *
  * @author wladimirowichbiaran
  */
 public class ThStorageWordHelperFileSystem {
     /**
-     * create directory by typeWord
+     * create strinc for directory by typeWord
      * buildName for word Store in format:
      * heximalViewForWord-SizeDataRecords-Volume
      * 
      */
-    protected static void buildNewTypeWordStore(int inputCodePoinType){
+    /**
+     * build strings for directories by format
+     * <code>/typeWord/hexTagName.substring(0,3)/subString.length() </code>
+     * @param inputCodePoinType
+     * @param partHexTagName
+     * @param lengSubString 
+     */
+    protected static String buildTypeWordStoreSubDirictories(
+            int inputCodePoinType,
+            final String partHexTagName,
+            final int lengSubString){
+        Path toReturnSubDirictoriesName;
+        try {
+            toReturnSubDirictoriesName = Paths.get(
+                    AppFileNamesConstants.DIR_IDX_ROOT, 
+                    String.valueOf(inputCodePoinType), 
+                    partHexTagName, String.valueOf(lengSubString));
+            return toReturnSubDirictoriesName.toString();
+        } finally {
+            toReturnSubDirictoriesName = null;
+        }
         
     }
 }
