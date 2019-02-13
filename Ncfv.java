@@ -17,15 +17,25 @@
 
 package ru.newcontrol.ncfv;
 
+import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.AccessControlException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.security.auth.Policy;
 
 
@@ -52,14 +62,15 @@ public class Ncfv {
     
     public static void main(String[] args) {
         AppEtcSecurityHelper.createNewSecurity();
-        //runIndexMakeWordIntoZipByThreads();
-        /**
-         * ThWordLogicFilter.processFilterInputedString("C:\\WINDOWS\\W1ND0W5\\KA6E/\\b\\ЖИЛА\\ЯКОРЬ"
-         *      + "ъъ\\!лэйбэл\\windows\\winDows\\!Новая папка\\Ярлык\\$$$проеКт\\T3\\ПP0EKT\\новая исполнительная"
-         *      + "\\исполнительнаядокументацияпопроектуосвоениятерриториальногофондалесногохозяйствароссийскойфедерациинавпериодсдветысячидевятнадцатогогодаподветысячидвадцатьдевятыйгод");
-         */
-        runIndexMakeAndDirList();
-        //outputToConsoleStrings();
+        
+            //runIndexMakeWordIntoZipByThreads();
+            /**
+             * ThWordLogicFilter.processFilterInputedString("C:\\WINDOWS\\W1ND0W5\\KA6E/\\b\\ЖИЛА\\ЯКОРЬ"
+             *      + "ъъ\\!лэйбэл\\windows\\winDows\\!Новая папка\\Ярлык\\$$$проеКт\\T3\\ПP0EKT\\новая исполнительная"
+             *      + "\\исполнительнаядокументацияпопроектуосвоениятерриториальногофондалесногохозяйствароссийскойфедерациинавпериодсдветысячидевятнадцатогогодаподветысячидвадцатьдевятыйгод");
+             */
+            runIndexMakeAndDirList();
+            //outputToConsoleStrings();
     }
     private static void runIndexMakeAndDirList(){
         /**
