@@ -69,8 +69,8 @@ public class ThStorageWordLogicRouter {
                             + items.getValue().remove(itemsOfBus.getKey()));
 
                 }*/
-                removeDataForCurrentTypeWordBus(storageWordStatistic, items.getKey(), items.getValue());
-                busForTypeStorageWordRouter.remove(items.getKey()); 
+                removeDataForCurrentTypeWordBus(storageWordStatistic, items.getKey(), busForTypeStorageWordRouter.remove(items.getKey()));
+                
             }
         } while( outerRuleStorageWord.isRunnedStorageWordWorkFilter() );
         
@@ -84,8 +84,8 @@ public class ThStorageWordLogicRouter {
                             + items.getValue().remove(itemsOfBus.getKey()));
 
                 }*/
-                removeDataForCurrentTypeWordBus(storageWordStatistic, items.getKey(), items.getValue());
-                busForTypeStorageWordRouter.remove(items.getKey());
+                removeDataForCurrentTypeWordBus(storageWordStatistic, items.getKey(), busForTypeStorageWordRouter.remove(items.getKey()));
+                
         }
         System.out.println("++++++++++++++++++++++++++++++stop " + ThStorageWordLogicRouter.class.getCanonicalName());
     }
@@ -223,7 +223,11 @@ public class ThStorageWordLogicRouter {
             keysPointsFlow.put("ThStorageWordStatusDataCache".hashCode(), keyFlowStatusDataCache);
             ThStorageWordStatusDataCache thStorageWordStatusDataCache = currentStorageWordStatistic.getStorageWordStatusDataCache();
             ThStorageWordCache thStorageWordCache = currentStorageWordStatistic.getStorageWordCache();
-            
+            /**
+             * @todo
+             * in index system StorageWord data fields if not save in UUID key
+             * for distinct fields
+             */
             thStorageWordCache.setDataIntoCacheFlow(keyFlowStatusDataCache, typeWordFunc, tagNameFunc, strSubStringFunc);
             
             thStorageWordStatusDataCache.createStructureParamsCountTmp(
