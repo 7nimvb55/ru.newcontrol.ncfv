@@ -106,9 +106,46 @@ public class ThStorageWordStatistic {
                     ConcurrentHashMap<Integer, 
                         ConcurrentHashMap<String, 
                             ConcurrentHashMap<Integer, UUID>>>>> fileStoragesMap;
+    
+    private ThStorageWordCache thStorageWordCache;
+    private ThStorageWordStatusDataFs thStorageWordStatusDataFs;
+    private ThStorageWordStatusName thStorageWordStatusName;
+    private ThStorageWordStatusActivity thStorageWordStatusActivity;
+    private ThStorageWordStatusDataCache thStorageWordStatusDataCache;
+    private ThStorageWordStatusWorkers thStorageWordStatusWorkers;
+    
     public ThStorageWordStatistic() {
         this.fileStoragesMap = createNewListStoragesMapEmpty();
+        
+        this.thStorageWordCache = new ThStorageWordCache();
+        
+        this.thStorageWordStatusDataFs = new ThStorageWordStatusDataFs();
+        this.thStorageWordStatusName = new ThStorageWordStatusName();
+        this.thStorageWordStatusActivity = new ThStorageWordStatusActivity();
+        this.thStorageWordStatusDataCache = new ThStorageWordStatusDataCache();
+        this.thStorageWordStatusWorkers = new ThStorageWordStatusWorkers();
     }
+    
+    protected ThStorageWordCache getStorageWordCache(){
+        return this.thStorageWordCache;
+    }
+    protected ThStorageWordStatusDataFs getStorageWordStatusDataFs(){
+        return this.thStorageWordStatusDataFs;
+    }
+    protected ThStorageWordStatusName getStorageWordStatusName(){
+        return this.thStorageWordStatusName;
+    }
+    protected ThStorageWordStatusActivity getStorageWordStatusActivity(){
+        return this.thStorageWordStatusActivity;
+    }
+    protected ThStorageWordStatusDataCache getStorageWordStatusDataCache(){
+        return this.thStorageWordStatusDataCache;
+    }
+    protected ThStorageWordStatusWorkers getStorageWordStatusWorkers(){
+        return this.thStorageWordStatusWorkers;
+    }
+    
+    
     //label
     
     

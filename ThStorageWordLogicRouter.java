@@ -168,7 +168,7 @@ public class ThStorageWordLogicRouter {
             
             UUID keyFlowStatusDataFs = UUID.randomUUID();
             keysPointsFlow.put("ThStorageWordStatusDataFs".hashCode(), keyFlowStatusDataFs);
-            ThStorageWordStatusDataFs thStorageWordStatusDataFs = new ThStorageWordStatusDataFs();
+            ThStorageWordStatusDataFs thStorageWordStatusDataFs = currentStorageWordStatistic.getStorageWordStatusDataFs();
             
             thStorageWordStatusDataFs.createStructureParamsCountFs(
                     keyFlowStatusDataFs,
@@ -197,7 +197,7 @@ public class ThStorageWordLogicRouter {
             
             UUID keyFlowStatusName = UUID.randomUUID();
             keysPointsFlow.put("ThStorageWordStatusName".hashCode(), keyFlowStatusName);
-            ThStorageWordStatusName thStorageWordStatusName = new ThStorageWordStatusName();
+            ThStorageWordStatusName thStorageWordStatusName = currentStorageWordStatistic.getStorageWordStatusName();
             
             thStorageWordStatusName.createStructureParamsNamesFs(
                     keyFlowStatusName,
@@ -207,7 +207,7 @@ public class ThStorageWordLogicRouter {
             
             UUID keyFlowStatusActivity = UUID.randomUUID();
             keysPointsFlow.put("ThStorageWordStatusActivity".hashCode(), keyFlowStatusActivity);
-            ThStorageWordStatusActivity thStorageWordStatusActivity = new ThStorageWordStatusActivity();
+            ThStorageWordStatusActivity thStorageWordStatusActivity = currentStorageWordStatistic.getStorageWordStatusActivity();
             
             thStorageWordStatusActivity.createAddToListParamsTimeUse(
                     keyFlowStatusActivity, 
@@ -219,8 +219,8 @@ public class ThStorageWordLogicRouter {
             
             UUID keyFlowStatusDataCache = UUID.randomUUID();
             keysPointsFlow.put("ThStorageWordStatusDataCache".hashCode(), keyFlowStatusDataCache);
-            ThStorageWordStatusDataCache thStorageWordStatusDataCache = new ThStorageWordStatusDataCache();
-            ThStorageWordCache thStorageWordCache = new ThStorageWordCache();
+            ThStorageWordStatusDataCache thStorageWordStatusDataCache = currentStorageWordStatistic.getStorageWordStatusDataCache();
+            ThStorageWordCache thStorageWordCache = currentStorageWordStatistic.getStorageWordCache();
             
             thStorageWordCache.setDataIntoCacheFlow(keyFlowStatusDataCache, typeWordFunc, tagNameFunc, strSubStringFunc);
             
@@ -243,7 +243,7 @@ public class ThStorageWordLogicRouter {
             
             UUID keyFlowStatusWorkers = UUID.randomUUID();
             keysPointsFlow.put("ThStorageWordStatusWorkers".hashCode(), keyFlowStatusWorkers);
-            ThStorageWordStatusWorkers thStorageWordStatusWorkers = new ThStorageWordStatusWorkers();
+            ThStorageWordStatusWorkers thStorageWordStatusWorkers = currentStorageWordStatistic.getStorageWordStatusWorkers();
             
             thStorageWordStatusWorkers.createStructureParamsFlagsProc(
                     keyFlowStatusWorkers,

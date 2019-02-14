@@ -214,7 +214,9 @@ public class ThStorageWordCache {
                     for(Map.Entry<String, ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>>> itemTagName : itemLength.getValue().entrySet()){
                         for(Map.Entry<UUID, ConcurrentHashMap<String, String>> itemCaheKey : itemTagName.getValue().entrySet()){
                             for(Map.Entry<String, String> itemData : itemCaheKey.getValue().entrySet()){
-                                System.out.println("keysCacheData " + itemCaheKey.getKey().toString() + " hexName " + itemData.getKey() + " subStr " + itemData.getValue());
+                                System.out.println(
+                                        " -  -  -  -  -   -      -     -     -       -    -   -  keysCacheData " 
+                                                + itemCaheKey.getKey().toString() + " hexName " + itemData.getKey() + " subStr " + itemData.getValue());
                             }
                         }
                     }
