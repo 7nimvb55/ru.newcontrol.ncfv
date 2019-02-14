@@ -251,17 +251,16 @@ public class ThStorageWordStatistic {
             final String strSubString,
             final ConcurrentHashMap<Integer, UUID> keysPointsFlow){
 
-        
+        ConcurrentHashMap<Integer, UUID> typeWordTagFileNameFlowUuids;
         try {
-            ConcurrentHashMap<Integer, UUID> typeWordTagFileNameFlowUuids = getTypeWordTagFileNameFlowUuids(
+            typeWordTagFileNameFlowUuids = getTypeWordTagFileNameFlowUuids(
                     typeWord,
                     tagName,
                     strSubString);
             typeWordTagFileNameFlowUuids.putAll(keysPointsFlow);
         } finally {
-
+            typeWordTagFileNameFlowUuids = null;
         }
-        
     }
     
     

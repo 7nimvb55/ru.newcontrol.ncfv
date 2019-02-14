@@ -74,17 +74,25 @@ public class ThStorageWordLogicRouter {
         
         ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> busForTypeStorageWordRouter = busJobForStorageWordRouter.getMaxUsedBusesSet();
             for(Map.Entry<Integer, ConcurrentHashMap<String, String>> items : busForTypeStorageWordRouter.entrySet()){
-                System.out.println("For bus typeWord " + items.getKey());
-                for(Map.Entry<String, String> itemsOfBus : items.getValue().entrySet()){
+                System.out.println("From bus typeWord " + items.getKey());
+                /*for(Map.Entry<String, String> itemsOfBus : items.getValue().entrySet()){
                     System.out.println("For bus hexWord " 
                             + itemsOfBus.getKey() 
                             + " subString " 
                             + items.getValue().remove(itemsOfBus.getKey()));
 
-                }
+                }*/
+                removeDataForCurrentTypeWordBus(storageWordStatistic, items.getKey(), items.getValue());
+                busForTypeStorageWordRouter.remove(items.getKey());
         }
         System.out.println("++++++++++++++++++++++++++++++stop " + ThStorageWordLogicRouter.class.getCanonicalName());
     }
+    /**
+     * 
+     * @param storageWordStatistic
+     * @param fromBusItemKey
+     * @param fromBusItemValue 
+     */
     private static void removeDataForCurrentTypeWordBus(
             ThStorageWordStatistic storageWordStatistic,
             final Integer fromBusItemKey, 
@@ -212,6 +220,9 @@ public class ThStorageWordLogicRouter {
             UUID keyFlowStatusDataCache = UUID.randomUUID();
             keysPointsFlow.put("ThStorageWordStatusDataCache".hashCode(), keyFlowStatusDataCache);
             ThStorageWordStatusDataCache thStorageWordStatusDataCache = new ThStorageWordStatusDataCache();
+            ThStorageWordCache thStorageWordCache = new ThStorageWordCache();
+            
+            thStorageWordCache.setDataIntoCacheFlow(keyFlowStatusDataCache, typeWordFunc, tagNameFunc, strSubStringFunc);
             
             thStorageWordStatusDataCache.createStructureParamsCountTmp(
                     keyFlowStatusDataCache,
@@ -250,6 +261,7 @@ public class ThStorageWordLogicRouter {
                             strSubStringFunc,
                             keysPointsFlow);
             
+            thStorageWordCache.printCacheData();
         } catch(IllegalArgumentException exIllArg) {
             System.err.println(exIllArg.getMessage());
             exIllArg.printStackTrace();
