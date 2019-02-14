@@ -49,7 +49,7 @@ public class ThStorageWordLogicRouter {
                  * (1) - typeWord - directory in zipfs storage to string
                  */
                 System.out.println("For bus typeWord " + items.getKey());
-                for(Map.Entry<String, String> itemsOfBus : items.getValue().entrySet()){
+                //for(Map.Entry<String, String> itemsOfBus : items.getValue().entrySet()){
                     /**
                      * (2) - hexTagName
                      * (2a) - itemsOfBus.getKey() - .substring(0,3) - subDirectory into (1)
@@ -63,12 +63,14 @@ public class ThStorageWordLogicRouter {
                      *          released in ThStorageWordRouter, ThStorageWordStatistic
                      *                  ThStorageWordCache
                      */
-                    System.out.println("For bus hexWord " 
+                    /*System.out.println("For bus hexWord " 
                             + itemsOfBus.getKey() 
                             + " subString " 
                             + items.getValue().remove(itemsOfBus.getKey()));
 
-                }
+                }*/
+                removeDataForCurrentTypeWordBus(storageWordStatistic, items.getKey(), items.getValue());
+                busForTypeStorageWordRouter.remove(items.getKey()); 
             }
         } while( outerRuleStorageWord.isRunnedStorageWordWorkFilter() );
         
