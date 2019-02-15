@@ -21,47 +21,54 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *
+ * ConcurrentHashMap<Integer,   - (2) - Type of word index hash value
+ *   ConcurrentHashMap<String,    - (2a) - tagFileName.substring(0,3)
+ *     ConcurrentHashMap<Integer, - (2b) - subString.length                            
+ *     ConcurrentHashMap<String, String> (3) - <hexWord (tagFileName), subString>
  * @author wladimirowichbiaran
  */
 public class ThStorageWordCache {
     
-        private ConcurrentHashMap<Integer, 
-                ConcurrentHashMap<String, 
-                    ConcurrentHashMap<Integer, 
-                        ConcurrentHashMap<String, 
-                            ConcurrentHashMap<String, String>>>>> cachedData;
+    private ConcurrentHashMap<Integer, 
+            ConcurrentHashMap<String, 
+                ConcurrentHashMap<Integer, 
+                    ConcurrentHashMap<String, String>>>> cachedData;
     
     public ThStorageWordCache() {
         this.cachedData = createNewListStoragesMapEmpty();
     }
-    protected ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, 
-                            ConcurrentHashMap<String, String>>>>> createNewListStoragesMapEmpty(){
+    protected ConcurrentHashMap<Integer, 
+        ConcurrentHashMap<String, 
+            ConcurrentHashMap<Integer, 
+                ConcurrentHashMap<String, String>>>> createNewListStoragesMapEmpty(){
         return new ConcurrentHashMap<Integer, 
                         ConcurrentHashMap<String, 
                             ConcurrentHashMap<Integer, 
-                                ConcurrentHashMap<String, 
-                                    ConcurrentHashMap<String, String>>>>>();
+                                ConcurrentHashMap<String, String>>>>();
     }
+    /**
+     * 
+     * @param typeWord
+     * @param tagName
+     * @param strSubString
+     * @return 
+     * ConcurrentHashMap<String, String> (3) - <hexWord (tagFileName), subString>
+     */
     protected ConcurrentHashMap<String, String> getTypeWordTagFileNameFlowUuids(
             final Integer typeWord, 
             final String tagName, 
             final String strSubString){
         
-        //(3)
-        ConcurrentHashMap<String, String> tagFileNameParams;
+
         //(1)
         ConcurrentHashMap<String, 
                 ConcurrentHashMap<Integer, 
-                    ConcurrentHashMap<String, 
-                        ConcurrentHashMap<String, String>>>> getListByTypeWord;
+                    ConcurrentHashMap<String, String>>> getListByTypeWord;
         //(2a)
         ConcurrentHashMap<Integer, 
-                ConcurrentHashMap<String, 
-                        ConcurrentHashMap<String, String>>> getListByTagNameCode;
+                ConcurrentHashMap<String, String>> getListByTagNameCode;
         //(2b)
-        ConcurrentHashMap<String, 
-                        ConcurrentHashMap<String, String>> getListBySubStrLength;
+        ConcurrentHashMap<String, String> getListBySubStrLength;
         
         try{
             int strSubStringlength = strSubString.length();
@@ -85,21 +92,19 @@ public class ThStorageWordCache {
             getListByTagNameCode = getListByTypeWord.get(substringTagName);
             if( getListByTagNameCode == null ){
                 getListByTagNameCode = new ConcurrentHashMap<Integer, 
-                                                ConcurrentHashMap<String, 
-                                                        ConcurrentHashMap<String, String>>>();
+                                                ConcurrentHashMap<String, String>> ();
                 getListByTypeWord.put(substringTagName, getListByTagNameCode);
             }
             getListBySubStrLength = getListByTagNameCode.get(strSubStringlength);
             if( getListBySubStrLength == null ){
-                getListBySubStrLength = new ConcurrentHashMap<String, 
-                                                ConcurrentHashMap<String, String>>();
+                getListBySubStrLength = new ConcurrentHashMap<String, String>();
                 getListByTagNameCode.put(strSubStringlength, getListBySubStrLength);
             }
-            tagFileNameParams = getTagFileNameParams(getListBySubStrLength, tagName);
-            return tagFileNameParams;
+            
+            return getListBySubStrLength;
         } finally {
             getListByTypeWord = null;
-            tagFileNameParams = null;
+            
             getListByTagNameCode = null;
             getListBySubStrLength = null;
         }
@@ -141,22 +146,22 @@ public class ThStorageWordCache {
      * return list of not limited files from structure
      * @param typeWordOuter
      * @return 
+     *   ConcurrentHashMap<String,    - (2a) - tagFileName.substring(0,3)
+     *     ConcurrentHashMap<Integer, - (2b) - subString.length                            
+     *     ConcurrentHashMap<String, String> - <hexWord (tagFileName), subString>
      */
     protected ConcurrentHashMap<String, 
                 ConcurrentHashMap<Integer, 
-                    ConcurrentHashMap<String, 
-                        ConcurrentHashMap<String, String>>>> getListByType(final int typeWordOuter){
+                    ConcurrentHashMap<String, String>>> getListByType(final int typeWordOuter){
         ConcurrentHashMap<String, 
                 ConcurrentHashMap<Integer, 
-                    ConcurrentHashMap<String, 
-                        ConcurrentHashMap<String, String>>>> forListReturn;
+                    ConcurrentHashMap<String, String>>> forListReturn;
         try{
             forListReturn = this.cachedData.get(typeWordOuter);
             if( forListReturn == null ){
                 forListReturn = new ConcurrentHashMap<String, 
                 ConcurrentHashMap<Integer, 
-                    ConcurrentHashMap<String, 
-                        ConcurrentHashMap<String, String>>>>();
+                    ConcurrentHashMap<String, String>>>();
                 this.cachedData.put(typeWordOuter, forListReturn);
             }
             return forListReturn;
@@ -177,11 +182,9 @@ public class ThStorageWordCache {
      *          <ThStorageWordStatusWorkers.hashCode(), recordUUID>
      */
     protected void setDataIntoCacheFlow(
-            final UUID keyFlowStatusDataCacheInputed,
             final Integer typeWord, 
             final String tagName, 
             final String strSubString){
-        UUID keyFlowStatusDataCacheFunc;
         Integer funcTypeWord;
         String funcSubString;
         String funcHexTagName;
@@ -191,7 +194,6 @@ public class ThStorageWordCache {
             funcTypeWord = typeWord;
             funcSubString = strSubString;
             funcHexTagName = tagName;
-            keyFlowStatusDataCacheFunc = keyFlowStatusDataCacheInputed;
             typeWordTagFileNameFlowUuids = getTypeWordTagFileNameFlowUuids(
                     funcTypeWord,
                     funcHexTagName,
@@ -205,21 +207,17 @@ public class ThStorageWordCache {
             funcTypeWord = null;
             funcSubString = null;
             funcHexTagName = null;
-            keyFlowStatusDataCacheFunc = null;
         }
     }
     protected void printCacheData(){
-        for( Map.Entry<Integer,ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<String, String>>>>> cachedTypes : this.cachedData.entrySet()){
-            for(Map.Entry<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<String, String>>>> hexSubByte : cachedTypes.getValue().entrySet()){
-                for(Map.Entry<Integer, ConcurrentHashMap<String, ConcurrentHashMap<String, String>>> itemLength : hexSubByte.getValue().entrySet()){
-                    for(Map.Entry<String, ConcurrentHashMap<String, String>> itemTagName : itemLength.getValue().entrySet()){
-                        
-                            for(Map.Entry<String, String> itemData : itemTagName.getValue().entrySet()){
-                                System.out.println(
-                                        " -  -  -  -  -   -      -     -     -       -    -   -  keysCacheData " 
-                                                + itemTagName.getKey().toString() + " hexName " + itemData.getKey() + " subStr " + itemData.getValue());
-                            }
-                        
+        for( Map.Entry<Integer,ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>>> cachedTypes : this.cachedData.entrySet()){
+            for(Map.Entry<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>> hexSubByte : cachedTypes.getValue().entrySet()){
+                for(Map.Entry<Integer, ConcurrentHashMap<String, String>> itemLength : hexSubByte.getValue().entrySet()){
+                    for(Map.Entry<String, String> itemData : itemLength.getValue().entrySet()){
+                        System.out.println(" -  -  -  -  -   -      -     -     -       -    -   -  hexName " 
+                                + itemData.getKey() 
+                                + " subStr " 
+                                + itemData.getValue());
                     }
                 }
             }
