@@ -27,6 +27,7 @@ import java.nio.file.ProviderNotFoundException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
@@ -69,16 +70,88 @@ public class ThStorageWordLogicWrite {
             
             
             ThStorageWordState wordState = outerRuleStorageWord.getStorageWordState();
-            ThStorageWordBusOutput busJobForWrite = wordState.getBusJobForWordWrite();
-                ArrayBlockingQueue<TdataWord> busForTypeWord = busJobForWrite.getBusForTypeWord(0);
-            if( !busForTypeWord.isEmpty() ){
-                TdataWord jobForWrite = busForTypeWord.poll();
-                /**
-                 * need get from job data with cache and readed data
-                 * wait if need read
-                 */
-                //doWrite();
-            }
+            ThStorageWordBusWriter busJobForWrite = wordState.getBusJobForStorageWordRouterJobToWriter();
+            ThStorageWordStatistic storageWordStatistic = outerRuleStorageWord.getStorageWordStatistic();
+            ThStorageWordCache storageWordCache = storageWordStatistic.getStorageWordCache();
+            ThStorageWordStatusActivity storageWordStatusActivity = storageWordStatistic.getStorageWordStatusActivity();
+            ThStorageWordStatusDataCache storageWordStatusDataCache = storageWordStatistic.getStorageWordStatusDataCache();
+            ThStorageWordStatusDataFs storageWordStatusDataFs = storageWordStatistic.getStorageWordStatusDataFs();
+            ThStorageWordStatusName storageWordStatusName = storageWordStatistic.getStorageWordStatusName();
+            ThStorageWordStatusWorkers storageWordStatusWorkers = storageWordStatistic.getStorageWordStatusWorkers();
+            
+            
+            
+            ConcurrentHashMap<Integer, ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>>> maxUsedBusesSet = busJobForWrite.getMaxUsedBusesSet();
+            
+            for(Map.Entry<Integer, ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>>> busVal : maxUsedBusesSet.entrySet()){
+                for(Map.Entry<UUID, ConcurrentHashMap<String, String>> forWriterJobUUID : busVal.getValue().entrySet()){
+                    /**
+                     * @todo get PointFlow for UUID
+                     * call write func
+                     */
+                    
+                    for(Map.Entry<String, String> itemsTagNames : forWriterJobUUID.getValue().entrySet()){
+                        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> typeWordTagFileNameFlowUuids = storageWordStatistic.getTypeWordTagFileNameFlowUuids(busVal.getKey(), 
+                                itemsTagNames.getKey(), 
+                                itemsTagNames.getValue());
+                        
+                        for( Map.Entry<UUID, ConcurrentHashMap<Integer, UUID>> itemFlowMainUUID : typeWordTagFileNameFlowUuids.entrySet() ){
+                            
+                            int countThStorageWordStatusDataFs = 0;
+                            int countThStorageWordStatusName = 0;
+                            int countThStorageWordStatusActivity = 0;
+                            int countThStorageWordStatusDataCache = 0;
+                            int countThStorageWordStatusWorkers = 0;
+                            
+                            for(Map.Entry<Integer, UUID> itemsElements : itemFlowMainUUID.getValue().entrySet()){
+                                switch ( itemsElements.getKey() ){
+                                    case 24537146: 
+                                        countThStorageWordStatusDataFs++;
+                                        continue; //ThStorageWordStatusDataFs
+                                    case -835430034: 
+                                        countThStorageWordStatusName++;
+                                        continue; //ThStorageWordStatusName
+                                    case -1339250574: 
+                                        countThStorageWordStatusActivity++;
+                                        continue; //ThStorageWordStatusActivity
+                                    case 838467829: 
+                                        countThStorageWordStatusDataCache++;
+                                        continue; //ThStorageWordStatusDataCache
+                                    case 842641138: 
+                                        countThStorageWordStatusWorkers++;
+                                        continue; //ThStorageWordStatusWorkers
+                                }
+                                new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
+                                        + " parameters of data for write into file of StorageWord not valid");
+                            }
+                            
+                            if( countThStorageWordStatusDataFs != 2 ){
+                                new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
+                                        + " parameters flowDataFs not valid");
+                            }
+                            if( countThStorageWordStatusName != 2 ){
+                                new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
+                                        + " parameters flowName not valid");
+                                }
+                            if( countThStorageWordStatusActivity != 2 ){
+                                new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
+                                        + " parameters flowActivity not valid");  
+                            }     
+                            if( countThStorageWordStatusDataCache != 2 ){
+                                new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
+                                        + " parameters flowDataCache not valid");
+                            }
+                            if( countThStorageWordStatusWorkers != 5 ){
+                                new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
+                                        + " parameters flowWorkers not valid");
+                            }
+                            
+                            UUID keyMainFlow = itemFlowMainUUID.getKey();
+                            ConcurrentHashMap<Integer, UUID> flowPointsMap = itemFlowMainUUID.getValue();
+                        }
+                    }
+                }
+            } 
         
             } finally {
                 
@@ -102,6 +175,7 @@ public class ThStorageWordLogicWrite {
         }
         
     }
+
    /* private void doWrite(){
         
         try{

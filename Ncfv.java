@@ -70,6 +70,7 @@ public class Ncfv {
              *      + "\\исполнительнаядокументацияпопроектуосвоениятерриториальногофондалесногохозяйствароссийскойфедерациинавпериодсдветысячидевятнадцатогогодаподветысячидвадцатьдевятыйгод");
              */
             runIndexMakeAndDirList();
+            
             //outputToConsoleStrings();
     }
     private static void runIndexMakeAndDirList(){
@@ -101,8 +102,8 @@ public class Ncfv {
         /**
          * @todo when storage index create and not need for new create not run for this methods
          */
-        thIndexMaker.start();
-        waitForFinishedThread();
+        //thIndexMaker.start();
+        //waitForFinishedThread();
         /**
          * @todo append flag updated process, this ma used in while( updatedProcess ) { wait for end update }
          * after create storages workers... need release for storages (file systems) workers...
@@ -123,12 +124,15 @@ public class Ncfv {
      *  - - - createDirectoryTypeWord, typeWordStorage
      */
     private static void outputToConsoleStrings(){
-        System.out.println("funcReadedPath - " + "funcReadedPath".hashCode());
-        System.out.println("funcNamePart - " + "funcNamePart".hashCode());
+
         
-        System.out.println("InDirNamesRecordsVolumeNumber - " + "InDirNamesRecordsVolumeNumber".hashCode());
-        System.out.println("SourcesNowMoveIntoNew - " + "SourcesNowMoveIntoNew".hashCode());
-        System.out.println("LastAccessCountAccess - " + "LastAccessCountAccess".hashCode());
+        
+        System.out.println("ThStorageWordStatusDataFs - " + "ThStorageWordStatusDataFs".hashCode());
+        System.out.println("ThStorageWordStatusName - " + "ThStorageWordStatusName".hashCode());
+        
+        System.out.println("ThStorageWordStatusActivity - " + "ThStorageWordStatusActivity".hashCode());
+        System.out.println("ThStorageWordStatusDataCache - " + "ThStorageWordStatusDataCache".hashCode());
+        System.out.println("ThStorageWordStatusWorkers - " + "ThStorageWordStatusWorkers".hashCode());
         System.out.println("CacheToLimitFileSystemLimit - " + "CacheToLimitFileSystemLimit".hashCode());
         System.out.println("FlagsProcess - " + "FlagsProcess".hashCode());
         

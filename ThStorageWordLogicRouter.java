@@ -35,11 +35,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author wladimirowichbiaran
  */
 public class ThStorageWordLogicRouter {
-    protected void doRouterForIndexStorageWord(ThStorageWordRule outerRuleStorageWord){
-        ThIndexRule indexRule = outerRuleStorageWord.getIndexRule();
+    protected void doRouterForIndexStorageWord(final ThStorageWordRule outerRuleStorageWord){
+        final ThStorageWordRule funcRuleStorageWord = (ThStorageWordRule) outerRuleStorageWord;
+        ThIndexRule indexRule = funcRuleStorageWord.getIndexRule();
         ThIndexStatistic indexStatistic = indexRule.getIndexStatistic();
-        ThStorageWordState storageWordState = outerRuleStorageWord.getStorageWordState();
-        ThStorageWordStatistic storageWordStatistic = outerRuleStorageWord.getStorageWordStatistic();
+        ThStorageWordState storageWordState = funcRuleStorageWord.getStorageWordState();
+        ThStorageWordStatistic storageWordStatistic = funcRuleStorageWord.getStorageWordStatistic();
         System.out.println("++++++++++++++++++++++++++++++start " + ThStorageWordLogicRouter.class.getCanonicalName());
         ThStorageWordBusInput busJobForStorageWordRouter = storageWordState.getBusJobForStorageWordRouterJob();
         do{
@@ -69,7 +70,7 @@ public class ThStorageWordLogicRouter {
                             + items.getValue().remove(itemsOfBus.getKey()));
 
                 }*/
-                removeDataForCurrentTypeWordBus(storageWordStatistic, items.getKey(), busForTypeStorageWordRouter.remove(items.getKey()));
+                removeDataForCurrentTypeWordBus(funcRuleStorageWord, items.getKey(), busForTypeStorageWordRouter.remove(items.getKey()));
                 
             }
         } while( outerRuleStorageWord.isRunnedStorageWordWorkFilter() );
@@ -84,7 +85,7 @@ public class ThStorageWordLogicRouter {
                             + items.getValue().remove(itemsOfBus.getKey()));
 
                 }*/
-                removeDataForCurrentTypeWordBus(storageWordStatistic, items.getKey(), busForTypeStorageWordRouter.remove(items.getKey()));
+                removeDataForCurrentTypeWordBus(funcRuleStorageWord, items.getKey(), busForTypeStorageWordRouter.remove(items.getKey()));
                 
         }
         System.out.println("++++++++++++++++++++++++++++++stop " + ThStorageWordLogicRouter.class.getCanonicalName());
@@ -96,12 +97,14 @@ public class ThStorageWordLogicRouter {
      * @param fromBusItemValue 
      */
     private static void removeDataForCurrentTypeWordBus(
-            ThStorageWordStatistic storageWordStatistic,
+            final ThStorageWordRule outerRuleStorageWord,
             final Integer fromBusItemKey, 
             final ConcurrentHashMap<String, String> fromBusItemValue){
         Integer typeWord;
         ConcurrentHashMap<String, String> hexTagNameSubString;
+        ThStorageWordRule funcRuleStorageWord;
         try {
+            funcRuleStorageWord = (ThStorageWordRule) outerRuleStorageWord;
             typeWord = fromBusItemKey;
             hexTagNameSubString = fromBusItemValue;
             for(Map.Entry<String, String> itemsHexTagSubStr : hexTagNameSubString.entrySet()){
@@ -120,7 +123,7 @@ public class ThStorageWordLogicRouter {
                         recHexTagName.substring(0, 3), 
                         recSubString.length());
                 //(2)
-                setFlagsToStatisticsList(storageWordStatistic,
+                setFlagsToStatisticsList(funcRuleStorageWord,
                         typeWord, 
                         recHexTagName, 
                         recSubString, 
@@ -135,27 +138,50 @@ public class ThStorageWordLogicRouter {
         } finally {
             typeWord = null;
             hexTagNameSubString = null;
+            funcRuleStorageWord = null;
         }
         
     }
     private static void setFlagsToStatisticsList(
-            ThStorageWordStatistic storageWordStatistic,
+            final ThStorageWordRule outerRuleStorageWord,
             final Integer typeWordInputed, 
             final String tagNameInputed, 
             final String strSubStringInputed,
             final String buildTypeWordStoreSubDirictoriesInputed){
+        ThStorageWordRule funcRuleStorageWord;
         ThStorageWordStatistic currentStorageWordStatistic;
+        ThStorageWordState storageWordState;
+        ThStorageWordBusWriter busJobForStorageWordRouterJobToWriter;
+        
+        ThStorageWordStatusName thStorageWordStatusName;
+        ThStorageWordStatusActivity thStorageWordStatusActivity;
+        ThStorageWordStatusDataCache thStorageWordStatusDataCache;
+        ThStorageWordCache thStorageWordCache;
+        ThStorageWordStatusWorkers thStorageWordStatusWorkers;
+        ThStorageWordStatusDataFs thStorageWordStatusDataFs;
+        
         Integer typeWordFunc;
         String tagNameFunc;
         String strSubStringFunc;
         String buildTypeWordStoreSubDirictoriesFunc;
         
-        ConcurrentHashMap<Integer, UUID> keysPointsFlow;
+        UUID mainFlowLabel;
+        UUID keyFlowStatusDataFs;
+        UUID keyFlowStatusName;
+        UUID keyFlowStatusActivity;
+        UUID keyFlowStatusDataCache;
+        UUID keyFlowStatusWorkers;
         
+        
+        ConcurrentHashMap<Integer, UUID> keysPointsFlow;
+        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> mainFlowContent;
         String storageWordFileNameSrc;
         String namesFsFileNameDestMoveTo;
         try{
-            currentStorageWordStatistic = storageWordStatistic;
+            funcRuleStorageWord = (ThStorageWordRule) outerRuleStorageWord;
+            currentStorageWordStatistic = (ThStorageWordStatistic) funcRuleStorageWord.getStorageWordStatistic();
+            storageWordState = (ThStorageWordState) funcRuleStorageWord.getStorageWordState();
+            busJobForStorageWordRouterJobToWriter = (ThStorageWordBusWriter) storageWordState.getBusJobForStorageWordRouterJobToWriter();
             typeWordFunc = typeWordInputed;
             tagNameFunc = tagNameInputed;
             strSubStringFunc = strSubStringInputed;
@@ -168,38 +194,42 @@ public class ThStorageWordLogicRouter {
             Integer countFsVolumeNumberSrc = 0;
             Integer countFsVolumeNumberDestMoveTo = 0;
             
-            UUID keyFlowStatusDataFs = UUID.randomUUID();
+            keyFlowStatusDataFs = UUID.randomUUID();
             keysPointsFlow.put("ThStorageWordStatusDataFs".hashCode(), keyFlowStatusDataFs);
-            ThStorageWordStatusDataFs thStorageWordStatusDataFs = currentStorageWordStatistic.getStorageWordStatusDataFs();
+            thStorageWordStatusDataFs = currentStorageWordStatistic.getStorageWordStatusDataFs();
             
             thStorageWordStatusDataFs.createStructureParamsCountFs(
                     keyFlowStatusDataFs,
                     countFsCountRecordsSrc, 
                     countFsVolumeNumberSrc);
             //this is a jobWrite UUID, to fix create jobListsStatus
-            UUID randomUUID = UUID.randomUUID();
+            mainFlowLabel = UUID.randomUUID();
             
             storageWordFileNameSrc = new String()
                     .concat(AppFileNamesConstants.SZFS_STORAGE_WORD_FILE_PREFIX)
-                    .concat(randomUUID.toString().concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
+                    .concat(mainFlowLabel.toString().concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
                     .concat(String.valueOf(countFsCountRecordsSrc))
                     .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
                     .concat(String.valueOf(countFsVolumeNumberSrc));
+            /**
+             * @todo isOnFileSystem exist data
+             * put job for read, read for readed bus data
+             */
             Path getNamesFsFileNameSrc = Paths.get(buildTypeWordStoreSubDirictoriesFunc, storageWordFileNameSrc);
             String namesFsFileNameSrc = getNamesFsFileNameSrc.toString();
             
             String storageWordFileNameDestMoveTo = new String()
                     .concat(AppFileNamesConstants.SZFS_STORAGE_WORD_FILE_PREFIX)
-                    .concat(randomUUID.toString().concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
+                    .concat(mainFlowLabel.toString().concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
                     .concat(String.valueOf(countFsCountRecordsDestMoveTo))
                     .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
                     .concat(String.valueOf(countFsVolumeNumberDestMoveTo));
             Path getNamesFsFileNameDestMoveTo = Paths.get(buildTypeWordStoreSubDirictoriesFunc, storageWordFileNameDestMoveTo);
             namesFsFileNameDestMoveTo = getNamesFsFileNameDestMoveTo.toString();
             
-            UUID keyFlowStatusName = UUID.randomUUID();
+            keyFlowStatusName = UUID.randomUUID();
             keysPointsFlow.put("ThStorageWordStatusName".hashCode(), keyFlowStatusName);
-            ThStorageWordStatusName thStorageWordStatusName = currentStorageWordStatistic.getStorageWordStatusName();
+            thStorageWordStatusName = currentStorageWordStatistic.getStorageWordStatusName();
             
             thStorageWordStatusName.createStructureParamsNamesFs(
                     keyFlowStatusName,
@@ -207,9 +237,9 @@ public class ThStorageWordLogicRouter {
                     namesFsFileNameDestMoveTo);
             Integer timeUSEIterationIncrement = 0;
             
-            UUID keyFlowStatusActivity = UUID.randomUUID();
+            keyFlowStatusActivity = UUID.randomUUID();
             keysPointsFlow.put("ThStorageWordStatusActivity".hashCode(), keyFlowStatusActivity);
-            ThStorageWordStatusActivity thStorageWordStatusActivity = currentStorageWordStatistic.getStorageWordStatusActivity();
+            thStorageWordStatusActivity = currentStorageWordStatistic.getStorageWordStatusActivity();
             
             thStorageWordStatusActivity.createAddToListParamsTimeUse(
                     keyFlowStatusActivity, 
@@ -219,10 +249,10 @@ public class ThStorageWordLogicRouter {
             Integer countTmpAddNeedToFileSystemLimit = AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT - countFsCountRecordsDestMoveTo;
             Integer countTmpIndexSystemLimitOnStorage = AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT;
             
-            UUID keyFlowStatusDataCache = UUID.randomUUID();
+            keyFlowStatusDataCache = UUID.randomUUID();
             keysPointsFlow.put("ThStorageWordStatusDataCache".hashCode(), keyFlowStatusDataCache);
-            ThStorageWordStatusDataCache thStorageWordStatusDataCache = currentStorageWordStatistic.getStorageWordStatusDataCache();
-            ThStorageWordCache thStorageWordCache = currentStorageWordStatistic.getStorageWordCache();
+            thStorageWordStatusDataCache = currentStorageWordStatistic.getStorageWordStatusDataCache();
+            thStorageWordCache = currentStorageWordStatistic.getStorageWordCache();
             /**
              * @todo
              * in index system StorageWord data fields if not save in UUID key
@@ -243,10 +273,11 @@ public class ThStorageWordLogicRouter {
             Boolean isUdatedDataInHashMap = Boolean.FALSE;
             Boolean isMoveFileReady = Boolean.FALSE;
             
-            UUID keyFlowStatusWorkers = UUID.randomUUID();
+            keyFlowStatusWorkers = UUID.randomUUID();
             keysPointsFlow.put("ThStorageWordStatusWorkers".hashCode(), keyFlowStatusWorkers);
-            ThStorageWordStatusWorkers thStorageWordStatusWorkers = currentStorageWordStatistic.getStorageWordStatusWorkers();
-            
+            thStorageWordStatusWorkers = currentStorageWordStatistic.getStorageWordStatusWorkers();
+            mainFlowContent = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>();
+            mainFlowContent.put(mainFlowLabel, keysPointsFlow);
             thStorageWordStatusWorkers.createStructureParamsFlagsProc(
                     keyFlowStatusWorkers,
                     isWriteProcess, 
@@ -260,9 +291,20 @@ public class ThStorageWordLogicRouter {
                             typeWordFunc, 
                             tagNameFunc, 
                             strSubStringFunc,
-                            keysPointsFlow);
+                            mainFlowContent);
             
-            thStorageWordCache.printCacheData();
+            ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>> busForTypeWord 
+                    = busJobForStorageWordRouterJobToWriter.getBusForTypeWord(typeWordFunc);
+            
+            ConcurrentHashMap<String, String> dataForOutput = new ConcurrentHashMap<String, String>();
+            dataForOutput.put(tagNameFunc, strSubStringFunc);
+            /**
+             * ... so part for job data hash..., readed hash, restructure cash on parts readed and write
+             */
+            busForTypeWord.put(mainFlowLabel, dataForOutput);
+            
+            //thStorageWordCache.printCacheData();
+            
         } catch(IllegalArgumentException exIllArg) {
             System.err.println(exIllArg.getMessage());
             exIllArg.printStackTrace();
@@ -274,6 +316,26 @@ public class ThStorageWordLogicRouter {
             strSubStringFunc =  null;
             buildTypeWordStoreSubDirictoriesFunc =  null;
             
+            funcRuleStorageWord = null;
+            currentStorageWordStatistic = null;
+            storageWordState = null;
+            busJobForStorageWordRouterJobToWriter = null;
+            
+            thStorageWordStatusName = null;
+            thStorageWordStatusActivity = null;
+            thStorageWordStatusDataCache = null;
+            thStorageWordCache = null;
+            thStorageWordStatusWorkers = null;
+            thStorageWordStatusDataFs = null;
+            
+            mainFlowLabel = null;
+            keyFlowStatusDataFs = null;
+            keyFlowStatusName = null;
+            keyFlowStatusActivity = null;
+            keyFlowStatusDataCache = null;
+            keyFlowStatusWorkers = null;
+            
         }
     }
+    
 }

@@ -45,12 +45,13 @@ public class ThStorageWordStatistic {
      *   ConcurrentHashMap<String,    - (2a) - tagFileName.substring(0,3)
      *     ConcurrentHashMap<Integer, - (2b) - subString.length                            
      *     ConcurrentHashMap<String,  - (3) - tagFileName with hex view
-     * > >   ConcurrentHashMap<Integer, UUID>
+     * > >   ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>
+     *          <UUID MainFlow, Field.hashCode(), valueUUID>
      *          <ThStorageWordStatusDataFs.hashCode(), recordUUID>
      *          <ThStorageWordStatusName.hashCode(), recordUUID>
      *          <ThStorageWordStatusActivity.hashCode(), recordUUID>
      *          <ThStorageWordStatusDataCache.hashCode(), recordUUID>
-     *          <ThStorageWordStatusWorkers.hashCode(), recordUUID>
+     *          <ThStorageWordStatusWorkers.hashCode(), recordUUID>>
      * -------------------------------------------------------------------------
      * ThStorageWordStatusDataFs
      * countFS    - (3a.1) - Integer countRecordsOnFileSystem - updated onWrite, 
@@ -105,7 +106,7 @@ public class ThStorageWordStatistic {
                 ConcurrentHashMap<String, 
                     ConcurrentHashMap<Integer, 
                         ConcurrentHashMap<String, 
-                            ConcurrentHashMap<Integer, UUID>>>>> fileStoragesMap;
+                            ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>>> fileStoragesMap;
     
     private ThStorageWordCache thStorageWordCache;
     private ThStorageWordStatusDataFs thStorageWordStatusDataFs;
@@ -176,25 +177,25 @@ public class ThStorageWordStatistic {
      * @return lvl (3a)
      * @throws IllegalArgumentException
      */
-    protected ConcurrentHashMap<Integer, UUID> getTypeWordTagFileNameFlowUuids(
+    protected ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> getTypeWordTagFileNameFlowUuids(
             final Integer typeWord, 
             final String tagName, 
             final String strSubString){
         
         //(3)
-        ConcurrentHashMap<Integer, UUID> tagFileNameParams;
+        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> tagFileNameParams;
         //(1)
         ConcurrentHashMap<String, 
                 ConcurrentHashMap<Integer, 
                     ConcurrentHashMap<String, 
-                        ConcurrentHashMap<Integer, UUID>>>> getListByTypeWord;
+                        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>> getListByTypeWord;
         //(2a)
         ConcurrentHashMap<Integer, 
                 ConcurrentHashMap<String, 
-                        ConcurrentHashMap<Integer, UUID>>> getListByTagNameCode;
+                        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>> getListByTagNameCode;
         //(2b)
         ConcurrentHashMap<String, 
-                        ConcurrentHashMap<Integer, UUID>> getListBySubStrLength;
+                        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>> getListBySubStrLength;
         
         try{
             int strSubStringlength = strSubString.length();
@@ -219,13 +220,14 @@ public class ThStorageWordStatistic {
             if( getListByTagNameCode == null ){
                 getListByTagNameCode = new ConcurrentHashMap<Integer, 
                                                 ConcurrentHashMap<String, 
-                                                        ConcurrentHashMap<Integer, UUID>>>();
+                                                        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>();
                 getListByTypeWord.put(substringTagName, getListByTagNameCode);
+                
             }
             getListBySubStrLength = getListByTagNameCode.get(strSubStringlength);
             if( getListBySubStrLength == null ){
                 getListBySubStrLength = new ConcurrentHashMap<String, 
-                                                ConcurrentHashMap<Integer, UUID>>();
+                                                ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>();
                 getListByTagNameCode.put(strSubStringlength, getListBySubStrLength);
             }
             tagFileNameParams = getTagFileNameParams(getListBySubStrLength, tagName);
@@ -243,14 +245,14 @@ public class ThStorageWordStatistic {
      * @param tagName
      * @return lvl (3)
      */
-    protected ConcurrentHashMap<Integer, UUID> getTagFileNameParams(
-            final ConcurrentHashMap<String, ConcurrentHashMap<Integer, UUID>> getListByTypeWord,
+    protected ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> getTagFileNameParams(
+            final ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>> getListByTypeWord,
             final String tagName){
-        ConcurrentHashMap<Integer, UUID> getListByTagFileName;
+        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> getListByTagFileName;
         try{
             getListByTagFileName = getListByTypeWord.get(tagName);
             if( getListByTagFileName == null ){
-                getListByTagFileName = new ConcurrentHashMap<Integer, UUID>();
+                getListByTagFileName = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>();
                 getListByTypeWord.put(tagName, getListByTagFileName);
                 /**
                  * -> get results from: 
@@ -271,7 +273,7 @@ public class ThStorageWordStatistic {
         }
     }
     /**
-     * 
+     * @todo check for inputed params
      * @param typeWord
      * @param tagName
      * @param strSubString
@@ -286,15 +288,75 @@ public class ThStorageWordStatistic {
             final Integer typeWord, 
             final String tagName, 
             final String strSubString,
-            final ConcurrentHashMap<Integer, UUID> keysPointsFlow){
-
-        ConcurrentHashMap<Integer, UUID> typeWordTagFileNameFlowUuids;
+            final ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> mainFlowContentInputed){
+        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> mainFlowContentFunc;
+        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> typeWordTagFileNameFlowUuids;
         try {
+            mainFlowContentFunc = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>();
+            for(Map.Entry<UUID, ConcurrentHashMap<Integer, UUID>> itemsContent : mainFlowContentInputed.entrySet()){
+                if( itemsContent.getValue().isEmpty() ){
+                    new IllegalArgumentException(ThStorageWordStatistic.class.getCanonicalName() + " parameters of data for set into cache is empty");
+                }
+                
+                int countThStorageWordStatusDataFs = 0;
+                int countThStorageWordStatusName = 0;
+                int countThStorageWordStatusActivity = 0;
+                int countThStorageWordStatusDataCache = 0;
+                int countThStorageWordStatusWorkers = 0;
+                
+                for(Map.Entry<Integer, UUID> itemsElements : itemsContent.getValue().entrySet()){
+                    switch ( itemsElements.getKey() ){
+                        case 24537146: 
+                            countThStorageWordStatusDataFs++;
+                            continue; //ThStorageWordStatusDataFs
+                        case -835430034: 
+                            countThStorageWordStatusName++;
+                            continue; //ThStorageWordStatusName
+                        case -1339250574: 
+                            countThStorageWordStatusActivity++;
+                            continue; //ThStorageWordStatusActivity
+                        case 838467829: 
+                            countThStorageWordStatusDataCache++;
+                            continue; //ThStorageWordStatusDataCache
+                        case 842641138: 
+                            countThStorageWordStatusWorkers++;
+                            continue; //ThStorageWordStatusWorkers
+                    }
+                    
+                    new IllegalArgumentException(ThStorageWordStatistic.class.getCanonicalName() + " parameters of data for set into cache not valid");
+                }
+                
+                if( countThStorageWordStatusDataFs != 2 ){
+                                new IllegalArgumentException(ThStorageWordStatistic.class.getCanonicalName() 
+                                        + " parameters flowDataFs not valid");
+                }
+                if( countThStorageWordStatusName != 2 ){
+                    new IllegalArgumentException(ThStorageWordStatistic.class.getCanonicalName() 
+                            + " parameters flowName not valid");
+                    }
+                if( countThStorageWordStatusActivity != 2 ){
+                    new IllegalArgumentException(ThStorageWordStatistic.class.getCanonicalName() 
+                            + " parameters flowActivity not valid");  
+                }     
+                if( countThStorageWordStatusDataCache != 2 ){
+                    new IllegalArgumentException(ThStorageWordStatistic.class.getCanonicalName() 
+                            + " parameters flowDataCache not valid");
+                }
+                if( countThStorageWordStatusWorkers != 5 ){
+                    new IllegalArgumentException(ThStorageWordStatistic.class.getCanonicalName() 
+                            + " parameters flowWorkers not valid");
+                }
+                
+                
+                mainFlowContentFunc.put(itemsContent.getKey(), itemsContent.getValue());
+            }
+            
             typeWordTagFileNameFlowUuids = getTypeWordTagFileNameFlowUuids(
                     typeWord,
                     tagName,
                     strSubString);
-            typeWordTagFileNameFlowUuids.putAll(keysPointsFlow);
+            
+            typeWordTagFileNameFlowUuids.putAll(mainFlowContentFunc);
         } finally {
             typeWordTagFileNameFlowUuids = null;
         }
@@ -303,12 +365,12 @@ public class ThStorageWordStatistic {
     
     
     protected ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, 
-                            ConcurrentHashMap<Integer, UUID>>>>> createNewListStoragesMapEmpty(){
+                            ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>>> createNewListStoragesMapEmpty(){
         return new ConcurrentHashMap<Integer, 
                         ConcurrentHashMap<String, 
                             ConcurrentHashMap<Integer, 
                                 ConcurrentHashMap<String, 
-                                    ConcurrentHashMap<Integer, UUID>>>>>();
+                                    ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>>>();
     }
     protected Map<String, String> getOperationsFileNames(final int typeWordOuter, final String tagFileNameOuter){
         Map<String, String> returnedNames;
@@ -331,18 +393,18 @@ public class ThStorageWordStatistic {
     protected ConcurrentHashMap<String, 
                 ConcurrentHashMap<Integer, 
                     ConcurrentHashMap<String, 
-                        ConcurrentHashMap<Integer, UUID>>>> getListByType(final int typeWordOuter){
+                        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>> getListByType(final int typeWordOuter){
         ConcurrentHashMap<String, 
                 ConcurrentHashMap<Integer, 
                     ConcurrentHashMap<String, 
-                        ConcurrentHashMap<Integer, UUID>>>> forListReturn;
+                        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>> forListReturn;
         try{
             forListReturn = this.fileStoragesMap.get(typeWordOuter);
             if( forListReturn == null ){
                 forListReturn = new ConcurrentHashMap<String, 
                 ConcurrentHashMap<Integer, 
                     ConcurrentHashMap<String, 
-                        ConcurrentHashMap<Integer, UUID>>>>();
+                        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>>();
                 this.fileStoragesMap.put(typeWordOuter, forListReturn);
             }
             return forListReturn;

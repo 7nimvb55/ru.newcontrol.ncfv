@@ -26,6 +26,11 @@ public class ThStorageWordState {
     private ThStorageWordBusInput busStorageWordRouterJob;
     private Boolean isSetStorageWordRouterJob;
     /**
+     * ThStorageWordBusWriter
+     */
+    private ThStorageWordBusWriter busStorageWordRouterJobToWriter;
+    private Boolean isSetStorageWordRouterJobToWriter;
+    /**
      * ThStorageWordBusOutput
      */
     private ThStorageWordBusOutput busWordWritedJob;
@@ -40,6 +45,7 @@ public class ThStorageWordState {
         setFalseStorageWordRouterJob();
         setFalseWordWritedJob();
         setFalseLongWordWritedJob();
+        setFalseStorageWordRouterJobToWriter();
     }
     /**
      * 
@@ -64,6 +70,33 @@ public class ThStorageWordState {
     }
     protected Boolean isStorageWordRouterJob(){
         if( this.isSetStorageWordRouterJob ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * 
+     * @return 
+     * @throws #java.lang.IllegalArgumentException
+     */
+    protected ThStorageWordBusWriter getBusJobForStorageWordRouterJobToWriter(){
+        if( !this.isStorageWordRouterJobToWriter() ){
+            throw new IllegalArgumentException("Bus jobs for output not set in " + ThStorageWordState.class.getCanonicalName());
+        }
+        return this.busStorageWordRouterJobToWriter;
+    }
+    protected void setBusJobForStorageWordRouterJobToWriter(final ThStorageWordBusWriter busStorageWordRouterJobToWriterOuter){
+        this.busStorageWordRouterJobToWriter = busStorageWordRouterJobToWriterOuter;
+        setTrueStorageWordRouterJobToWriter();
+    }
+    protected void setTrueStorageWordRouterJobToWriter(){
+        this.isSetStorageWordRouterJobToWriter = Boolean.TRUE;
+    }
+    protected void setFalseStorageWordRouterJobToWriter(){
+        this.isSetStorageWordRouterJobToWriter = Boolean.FALSE;
+    }
+    protected Boolean isStorageWordRouterJobToWriter(){
+        if( this.isSetStorageWordRouterJobToWriter ){
             return Boolean.TRUE;
         }
         return Boolean.FALSE;

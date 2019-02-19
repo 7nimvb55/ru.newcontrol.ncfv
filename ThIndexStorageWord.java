@@ -39,11 +39,13 @@ public class ThIndexStorageWord extends Thread{
         ThStorageWordBusInput thStorageWordBusInput = new ThStorageWordBusInput();
         ThStorageWordBusOutput thStorageWordBusOutput = new ThStorageWordBusOutput();
         ThStorageWordBusOutput thStorageLongWordBusOutput = new ThStorageWordBusOutput();
+        ThStorageWordBusWriter thStorageLongWordBusWriter = new ThStorageWordBusWriter();
         //init State
         ThStorageWordState thStorageWordState = new ThStorageWordState();
         thStorageWordState.setBusJobForStorageWordRouterJob(thStorageWordBusInput);
         thStorageWordState.setBusJobForWordWrite(thStorageWordBusOutput);
         thStorageWordState.setBusJobForLongWordWrite(thStorageLongWordBusOutput);
+        thStorageWordState.setBusJobForStorageWordRouterJobToWriter(thStorageLongWordBusWriter);
         ThStorageWordStatistic thStorageWordStatistic = new ThStorageWordStatistic();
         //init Rule
         ThStorageWordRule thStorageWordRule = new ThStorageWordRule(this.ruleThIndex);
