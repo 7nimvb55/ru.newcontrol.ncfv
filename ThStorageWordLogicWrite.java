@@ -67,8 +67,6 @@ public class ThStorageWordLogicWrite {
              * save data in limited file packets
              */
             
-            
-            
             ThStorageWordState wordState = outerRuleStorageWord.getStorageWordState();
             ThStorageWordBusWriter busJobForWrite = wordState.getBusJobForStorageWordRouterJobToWriter();
             ThStorageWordStatistic storageWordStatistic = outerRuleStorageWord.getStorageWordStatistic();
@@ -78,8 +76,6 @@ public class ThStorageWordLogicWrite {
             ThStorageWordStatusDataFs storageWordStatusDataFs = storageWordStatistic.getStorageWordStatusDataFs();
             ThStorageWordStatusName storageWordStatusName = storageWordStatistic.getStorageWordStatusName();
             ThStorageWordStatusWorkers storageWordStatusWorkers = storageWordStatistic.getStorageWordStatusWorkers();
-            
-            
             
             ConcurrentHashMap<Integer, ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>>> maxUsedBusesSet = busJobForWrite.getMaxUsedBusesSet();
             
