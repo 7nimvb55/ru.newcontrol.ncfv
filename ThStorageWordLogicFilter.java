@@ -223,8 +223,24 @@ public class ThStorageWordLogicFilter {
                      * - (1) - heximalWord
                      * - (2) - word
                      */
-                    ThStorageWordBusInput busJobForStorageWordRouter = inputedStorageWordState.getBusJobForStorageWordRouterJob();
+                    ThStorageWordBusInput busJobForStorageWordRouter = (ThStorageWordBusInput) inputedStorageWordState.getBusJobForStorageWordRouterJob();
                     ConcurrentHashMap<String, String> busForTypeStorageWordRouter = busJobForStorageWordRouter.getBusForTypeWord(prevWordCodeType);
+                    int hexLenVal = (int) heximalWord.length();
+                    int wordLenVal = (int) word.length() * 4;
+                    
+                    if( hexLenVal != wordLenVal ){
+                      throw new IllegalArgumentException(ThStorageWordLogicFilter.class.getCanonicalName() 
+                            + " illegal length of inputed in index string, hexTagName: "
+                            + heximalWord + " lengthHex: " + hexLenVal
+                            + " strSubString: " + word + " lengthStr: " + wordLenVal
+                            + " lengthHex == lengthStr * 4 ");
+                    }
+                    if( hexLenVal < 4 ){
+                        throw new IllegalArgumentException(ThStorageWordLogicFilter.class.getCanonicalName() 
+                                + " illegal length of inputed in index string, hexTagName: "
+                                + heximalWord + " length: " + hexLenVal
+                                + " < 4 ");
+                    }
                     busForTypeStorageWordRouter.put(heximalWord, word);
                     
                     /**

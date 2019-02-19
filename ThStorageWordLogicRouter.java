@@ -108,8 +108,23 @@ public class ThStorageWordLogicRouter {
             typeWord = fromBusItemKey;
             hexTagNameSubString = fromBusItemValue;
             for(Map.Entry<String, String> itemsHexTagSubStr : hexTagNameSubString.entrySet()){
-                String recHexTagName = itemsHexTagSubStr.getKey();
-                String recSubString = itemsHexTagSubStr.getValue();
+                String recHexTagName = (String) itemsHexTagSubStr.getKey();
+                String recSubString = (String) itemsHexTagSubStr.getValue();
+                int strSubStringlength = recHexTagName.length();
+                int tagNamelength = recSubString.length();
+                if( (strSubStringlength * 4) != tagNamelength ){
+                    throw new IllegalArgumentException(ThStorageWordLogicRouter.class.getCanonicalName() 
+                            + " illegal length of inputed in index string, hexTagName: "
+                            + recHexTagName + " lengthHex: " + recHexTagName.length()
+                            + " strSubString: " + recSubString + " lengthStr: " + recSubString.length()
+                            + " lengthHex == lengthStr * 4 ");
+                }
+                if( tagNamelength < 4 ){
+                    throw new IllegalArgumentException(ThStorageWordLogicRouter.class.getCanonicalName() 
+                            + " illegal length of inputed in index string, hexTagName: "
+                            + recHexTagName + " length: " + recHexTagName.length()
+                            + " < 4 ");
+                }
                 /**
                  * (1) - generate directories names
                  * (2) - statistics flags
