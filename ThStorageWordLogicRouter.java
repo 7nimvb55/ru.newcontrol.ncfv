@@ -110,8 +110,9 @@ public class ThStorageWordLogicRouter {
             for(Map.Entry<String, String> itemsHexTagSubStr : hexTagNameSubString.entrySet()){
                 String recHexTagName = (String) itemsHexTagSubStr.getKey();
                 String recSubString = (String) itemsHexTagSubStr.getValue();
-                int strSubStringlength = recHexTagName.length();
-                int tagNamelength = recSubString.length();
+                int tagNamelength = (int) recHexTagName.length();
+                int strSubStringlength = (int) recSubString.length();
+                
                 if( (strSubStringlength * 4) != tagNamelength ){
                     throw new IllegalArgumentException(ThStorageWordLogicRouter.class.getCanonicalName() 
                             + " illegal length of inputed in index string, hexTagName: "
@@ -119,6 +120,7 @@ public class ThStorageWordLogicRouter {
                             + " strSubString: " + recSubString + " lengthStr: " + recSubString.length()
                             + " lengthHex == lengthStr * 4 ");
                 }
+                
                 if( tagNamelength < 4 ){
                     throw new IllegalArgumentException(ThStorageWordLogicRouter.class.getCanonicalName() 
                             + " illegal length of inputed in index string, hexTagName: "
@@ -318,7 +320,7 @@ public class ThStorageWordLogicRouter {
              */
             busForTypeWord.put(mainFlowLabel, dataForOutput);
             
-            //thStorageWordCache.printCacheData();
+            thStorageWordCache.printCacheData();
             
         } catch(IllegalArgumentException exIllArg) {
             System.err.println(exIllArg.getMessage());

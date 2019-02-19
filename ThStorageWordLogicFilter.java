@@ -73,7 +73,7 @@ public class ThStorageWordLogicFilter {
                 
             }
             //ouputStructure = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Path>>();
-            for(Entry<UUID, ConcurrentHashMap<Integer, ?>> itemFromStructure : inputedStructure.entrySet()){
+            for( Entry<UUID, ConcurrentHashMap<Integer, ?>> itemFromStructure : inputedStructure.entrySet() ){
                 UUID keyInputedData = (UUID) itemFromStructure.getKey();
                 ConcurrentHashMap<Integer, Path> jobData = getJobData(itemFromStructure.getValue());
                 //ouputStructure.put(keyInputedData, jobData);
@@ -101,7 +101,7 @@ public class ThStorageWordLogicFilter {
             fVal = (String) forTransferData.get(1506682974).toString();
             namePartItem = (Path) forTransferData.get(-589260798);
             int nameCount = namePartItem.getNameCount();
-            for(int idxName = 0; idxName < nameCount; idxName++){
+            for( int idxName = 0; idxName < nameCount; idxName++ ){
                 sVal = (String) namePartItem.getName(idxName).toString();
                 doWordForIndex(inStorageWordState, keyInProcessData, 
                         fVal,  
@@ -150,6 +150,10 @@ public class ThStorageWordLogicFilter {
     }
     private static Integer getWordCode(int codePoint){
         int forReturnType = 0;
+        if( !Character.isValidCodePoint(codePoint) ){
+            throw new IllegalArgumentException(ThStorageWordLogicFilter.class.getCanonicalName() 
+                            + " not valid character ");
+        }
         int unicodeBlockToString = Character.UnicodeBlock.of(codePoint).hashCode();
         forReturnType = unicodeBlockToString;
         boolean alphabetic = Character.isAlphabetic(codePoint);
@@ -185,14 +189,17 @@ public class ThStorageWordLogicFilter {
             final UUID recordId, 
             final String storagePath, 
             final String inputedNamePartPath){
+        String funcNamePartPath;
         ConcurrentSkipListMap<UUID, TdataWord> forReturnLongWord;
         ConcurrentSkipListMap<UUID, TdataWord> forReturnWord;
         char[] toCharArray;
         int idexChar;
         int prevWordCodeType;
+        int codePointsCount;
         String word;
         String heximalWord;
         String toHexString;
+        String tmpToHexSym;
         int startPos;
         int lengthWord;
         TdataWord forLastAddData;
@@ -200,20 +207,43 @@ public class ThStorageWordLogicFilter {
         try{
             //forReturnLongWord = new ConcurrentSkipListMap<UUID, TdataWord>();
             //forReturnWord = new ConcurrentSkipListMap<UUID, TdataWord>();
-            toCharArray = inputedNamePartPath.toCharArray();
+            funcNamePartPath = (String) inputedNamePartPath;
+            
+            toCharArray = funcNamePartPath.toCharArray();
             idexChar = 0;
             prevWordCodeType = (int) ThStorageWordLogicFilter.getWordCode(inputedNamePartPath.codePointAt(idexChar));
             word = new String();
             heximalWord = new String();
             startPos = 0;
             lengthWord = 0;
-            for(char item : toCharArray){
-                int codePointAt = inputedNamePartPath.codePointAt(idexChar);
-                int wordCodeType = (int) ThStorageWordLogicFilter.getWordCode(codePointAt);
-                toHexString = Integer.toHexString(codePointAt).toUpperCase();
-                if( toHexString.length() == 2 ){
-                    toHexString = "00" + toHexString;
+            codePointsCount = 0;
+            for(int idxStr = 0; idxStr < funcNamePartPath.length(); idxStr++ ){
+                int codePointAt = funcNamePartPath.codePointAt(idxStr);
+                if( !Character.isValidCodePoint(codePointAt) ){
+                    continue;
                 }
+                codePointsCount += Character.charCount(codePointAt);
+                char[] codePointsToChars = Character.toChars(codePointAt);
+                int wordCodeType = (int) ThStorageWordLogicFilter.getWordCode(codePointAt);
+                toHexString = new String();
+                
+                for( char item : codePointsToChars ){
+                    tmpToHexSym = new String();
+                    tmpToHexSym = Integer.toHexString(item).toUpperCase();
+                    if( tmpToHexSym.length() == 1 ){
+                        tmpToHexSym = "0" + tmpToHexSym;
+                    }
+                    if( tmpToHexSym.length() == 2 ){
+                        tmpToHexSym = "00" + tmpToHexSym;
+                    }
+                    if( tmpToHexSym.length() == 3 ){
+                        tmpToHexSym = "0" + tmpToHexSym;
+                    }
+                    toHexString = toHexString.concat(tmpToHexSym);
+                    String[] oldToHexSym = {tmpToHexSym};
+                    oldToHexSym = null;
+                }
+                
                 if( (prevWordCodeType != wordCodeType) ){
                     lengthWord = word.length();
                     /**
@@ -226,14 +256,16 @@ public class ThStorageWordLogicFilter {
                     ThStorageWordBusInput busJobForStorageWordRouter = (ThStorageWordBusInput) inputedStorageWordState.getBusJobForStorageWordRouterJob();
                     ConcurrentHashMap<String, String> busForTypeStorageWordRouter = busJobForStorageWordRouter.getBusForTypeWord(prevWordCodeType);
                     int hexLenVal = (int) heximalWord.length();
-                    int wordLenVal = (int) word.length() * 4;
+                    int wordLenVal = (int) word.length();
+                    wordLenVal *= 4;
                     
                     if( hexLenVal != wordLenVal ){
-                      throw new IllegalArgumentException(ThStorageWordLogicFilter.class.getCanonicalName() 
+                        throw new IllegalArgumentException(ThStorageWordLogicFilter.class.getCanonicalName() 
                             + " illegal length of inputed in index string, hexTagName: "
                             + heximalWord + " lengthHex: " + hexLenVal
                             + " strSubString: " + word + " lengthStr: " + wordLenVal
-                            + " lengthHex == lengthStr * 4 ");
+                            + " lengthHex == lengthStr * 4 char count "
+                            + (codePointsCount));
                     }
                     if( hexLenVal < 4 ){
                         throw new IllegalArgumentException(ThStorageWordLogicFilter.class.getCanonicalName() 
@@ -267,13 +299,15 @@ public class ThStorageWordLogicFilter {
                     oldVal = null;
                     word = new String();
                     heximalWord = new String();
-                    
+                    codePointsCount = 0;
                     startPos = idexChar;
                 }
                 //word = word + item;
-                word = word.concat(String.valueOf(item));
+                for(char item : codePointsToChars){
+                    word = word.concat(String.valueOf(item));
+                }
                 //heximalWord = heximalWord + toHexString;
-                heximalWord = heximalWord.concat(toHexString);
+                heximalWord = heximalWord.concat(new String(toHexString));
                 idexChar++;
                 prevWordCodeType = wordCodeType;
                 String[] oldToHex = {toHexString};
@@ -316,6 +350,47 @@ public class ThStorageWordLogicFilter {
             }
             */
 
+        } finally {
+            forReturnLongWord = null;
+            forReturnWord = null;
+            toCharArray = null;
+            word = null;
+            heximalWord = null;
+            toHexString = null;
+            forLastAddData = null;
+            forAddData = null;
+        }
+    }
+    
+    protected void doWordIndexCharacters(
+            final ThStorageWordState inputedStorageWordState,
+            final UUID recordId, 
+            final String storagePath, 
+            final String inputedNamePartPath){
+        String funcNamePartPath;
+        
+        ConcurrentSkipListMap<UUID, TdataWord> forReturnLongWord;
+        ConcurrentSkipListMap<UUID, TdataWord> forReturnWord;
+        char[] toCharArray;
+        int idexChar;
+        int prevWordCodeType;
+        String word;
+        String heximalWord;
+        String toHexString;
+        int startPos;
+        int lengthWord;
+        TdataWord forLastAddData;
+        TdataWord forAddData;
+        try{
+            funcNamePartPath = (String) inputedNamePartPath;
+            
+            idexChar = 0;
+            prevWordCodeType = (int) ThStorageWordLogicFilter.getWordCode(inputedNamePartPath.codePointAt(idexChar));
+            word = new String();
+            heximalWord = new String();
+            startPos = 0;
+            lengthWord = 0;
+            Character.toChars(idexChar);
         } finally {
             forReturnLongWord = null;
             forReturnWord = null;
