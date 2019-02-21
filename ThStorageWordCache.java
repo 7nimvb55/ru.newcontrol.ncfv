@@ -54,7 +54,7 @@ public class ThStorageWordCache {
      * @return 
      * ConcurrentHashMap<String, String> (3) - <hexWord (tagFileName), subString>
      */
-    protected ConcurrentHashMap<String, String> getTypeWordTagFileNameFlowUuids(
+    protected ConcurrentHashMap<String, String> getTypeWordTagFileNameData(
             final Integer typeWord, 
             final String tagName, 
             final String strSubString){
@@ -105,6 +105,98 @@ public class ThStorageWordCache {
         } finally {
             getListByTypeWord = null;
             
+            getListByTagNameCode = null;
+            getListBySubStrLength = null;
+        }
+    }
+    /**
+     * Remove and return data from cache
+     * @param typeWord
+     * @param tagName
+     * @param strSubString
+     * @return 
+     * ConcurrentHashMap<String, String> (3) - <hexWord (tagFileName), subString>
+     */
+    protected ConcurrentHashMap<String, String> pollTypeWordTagFileNameData(
+            final Integer typeWord, 
+            final String tagName, 
+            final String strSubString){
+        
+
+        //(1)
+        ConcurrentHashMap<String, 
+                ConcurrentHashMap<Integer, 
+                    ConcurrentHashMap<String, String>>> getListByTypeWord;
+        //(2a)
+        ConcurrentHashMap<Integer, 
+                ConcurrentHashMap<String, String>> getListByTagNameCode;
+        //(2b)
+        ConcurrentHashMap<String, String> getListBySubStrLength;
+        
+        Integer typeWordFunc;
+        String tagNameFunc;
+        String strSubStringFunc;
+        try{
+            typeWordFunc = (Integer) typeWord;
+            tagNameFunc = (String) tagName;
+            strSubStringFunc = (String) strSubString;
+            
+            
+            int strSubStringlength = strSubStringFunc.length();
+            int tagNamelength = tagNameFunc.length();
+            if( (strSubStringlength * 4) != tagNamelength ){
+                throw new IllegalArgumentException(ThStorageWordStatistic.class.getCanonicalName() 
+                        + " illegal length of inputed in index string, hexTagName: "
+                        + tagNameFunc + " lengthHex: " + tagNameFunc.length()
+                        + " strSubString: " + strSubStringFunc + " lengthStr: " + strSubStringFunc.length()
+                        + " lengthHex == lengthStr * 4 ");
+            }
+            if( tagNamelength < 4 ){
+                throw new IllegalArgumentException(ThStorageWordStatistic.class.getCanonicalName() 
+                        + " illegal length of inputed in index string, hexTagName: "
+                        + tagNameFunc + " length: " + tagNameFunc.length()
+                        + " < 4 ");
+            }
+            
+            getListByTypeWord = getListByType(typeWordFunc);
+            String substringTagName = tagNameFunc.substring(0, 3);
+            getListByTagNameCode = getListByTypeWord.get(substringTagName);
+            if( getListByTagNameCode == null ){
+                getListByTagNameCode = new ConcurrentHashMap<Integer, 
+                                                ConcurrentHashMap<String, String>> ();
+                getListByTypeWord.put(substringTagName, getListByTagNameCode);
+            }
+            Boolean returnFormCacheNull = Boolean.FALSE;
+            
+            getListBySubStrLength = null;
+            try{
+                getListBySubStrLength = getListByTagNameCode.remove(strSubStringlength);
+            } catch (NullPointerException exCache) {
+                String message = exCache.getMessage();
+                returnFormCacheNull = Boolean.TRUE;
+            }
+            if( getListBySubStrLength == null ){
+                throw new NullPointerException(ThStorageWordCache.class.getCanonicalName() 
+                        + " for word by type " + String.valueOf(typeWordFunc)
+                        + " tagName " + tagNameFunc
+                        + " subString " + strSubStringFunc
+                        + " data in cache is null");
+            }
+            if( returnFormCacheNull ){
+                throw new NullPointerException(ThStorageWordCache.class.getCanonicalName() 
+                        + " for word by type " + String.valueOf(typeWordFunc)
+                        + " tagName " + tagNameFunc
+                        + " subString " + strSubStringFunc
+                        + " data in cache is null");
+            }
+            
+            return getListBySubStrLength;
+        } finally {
+            typeWordFunc = null;
+            tagNameFunc = null;
+            strSubStringFunc = null;
+            
+            getListByTypeWord = null;
             getListByTagNameCode = null;
             getListBySubStrLength = null;
         }
@@ -194,7 +286,7 @@ public class ThStorageWordCache {
             funcTypeWord = typeWord;
             funcSubString = strSubString;
             funcHexTagName = tagName;
-            typeWordTagFileNameFlowUuids = getTypeWordTagFileNameFlowUuids(
+            typeWordTagFileNameFlowUuids = getTypeWordTagFileNameData(
                     funcTypeWord,
                     funcHexTagName,
                     funcSubString);
