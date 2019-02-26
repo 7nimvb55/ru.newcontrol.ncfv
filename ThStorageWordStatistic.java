@@ -330,7 +330,7 @@ public class ThStorageWordStatistic {
                                 new IllegalArgumentException(ThStorageWordStatistic.class.getCanonicalName() 
                                         + " parameters flowDataFs not valid");
                 }
-                if( countThStorageWordStatusName != 2 ){
+                if( countThStorageWordStatusName != 3 ){
                     new IllegalArgumentException(ThStorageWordStatistic.class.getCanonicalName() 
                             + " parameters flowName not valid");
                     }

@@ -68,7 +68,7 @@ public class ThStorageWordLogicFilter {
         ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Path>> ouputStructure;
         ThStorageWordState valStorageWordState;
         try{
-            valStorageWordState = inputedStorageWordState;
+            valStorageWordState = (ThStorageWordState) inputedStorageWordState;
             if( valStorageWordState == null ){
                 
             }
@@ -148,6 +148,12 @@ public class ThStorageWordLogicFilter {
         }
         
     }
+    /**
+     * 
+     * @param codePoint
+     * @return 
+     * @throws IllegalArgumentException
+     */
     private static Integer getWordCode(int codePoint){
         int forReturnType = 0;
         if( !Character.isValidCodePoint(codePoint) ){
@@ -183,6 +189,7 @@ public class ThStorageWordLogicFilter {
      * @param recordId
      * @param storagePath
      * @param inputedNamePartPath 
+     * @throws IllegalArgumentException
      */
     private static void doWordForIndex(
             final ThStorageWordState inputedStorageWordState,
@@ -211,7 +218,26 @@ public class ThStorageWordLogicFilter {
             
             toCharArray = funcNamePartPath.toCharArray();
             idexChar = 0;
-            prevWordCodeType = (int) ThStorageWordLogicFilter.getWordCode(inputedNamePartPath.codePointAt(idexChar));
+            /**
+             * if exception than start of string in next... etc...
+             */
+            Boolean isNotValid = Boolean.FALSE;
+            do{
+                isNotValid = Boolean.FALSE;
+                try {
+                    prevWordCodeType = (int) ThStorageWordLogicFilter.getWordCode(funcNamePartPath.codePointAt(idexChar));
+                } catch(IllegalArgumentException exArg) {
+                        System.err.println(exArg.getMessage());
+                        isNotValid = Boolean.TRUE;
+                        idexChar++;
+                        String tmpSubStr = (String) new String(funcNamePartPath.substring(idexChar));
+                        funcNamePartPath = (String) tmpSubStr;
+                }
+            } while( isNotValid );
+            
+            idexChar = 0;
+            prevWordCodeType = (int) ThStorageWordLogicFilter.getWordCode(funcNamePartPath.codePointAt(idexChar));
+            
             word = new String();
             heximalWord = new String();
             startPos = 0;
@@ -222,9 +248,29 @@ public class ThStorageWordLogicFilter {
                 if( !Character.isValidCodePoint(codePointAt) ){
                     continue;
                 }
+                int tmpType = 0;
+                int wordCodeType = Integer.MIN_VALUE;
+                Boolean intMinValOfTypeTrue = Boolean.FALSE;
+                try {
+                    tmpType = (int) ThStorageWordLogicFilter.getWordCode(codePointAt);
+                    if( tmpType == Integer.MIN_VALUE ){
+                        intMinValOfTypeTrue = Boolean.TRUE;
+                    }
+                    wordCodeType = tmpType;
+                } catch(IllegalArgumentException exArg) {
+                    System.err.println(exArg.getMessage());
+                    continue;
+                }
+                
+                if( wordCodeType == Integer.MIN_VALUE ){
+                     if( !intMinValOfTypeTrue ){
+                         continue;
+                     }
+                }
+                
                 codePointsCount += Character.charCount(codePointAt);
                 char[] codePointsToChars = Character.toChars(codePointAt);
-                int wordCodeType = (int) ThStorageWordLogicFilter.getWordCode(codePointAt);
+                
                 toHexString = new String();
                 
                 for( char item : codePointsToChars ){

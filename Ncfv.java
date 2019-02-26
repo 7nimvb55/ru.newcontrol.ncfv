@@ -102,8 +102,8 @@ public class Ncfv {
         /**
          * @todo when storage index create and not need for new create not run for this methods
          */
-        thIndexMaker.start();
-        waitForFinishedThread();
+        //thIndexMaker.start();
+        //waitForFinishedThread();
         /**
          * @todo append flag updated process, this ma used in while( updatedProcess ) { wait for end update }
          * after create storages workers... need release for storages (file systems) workers...
@@ -125,7 +125,7 @@ public class Ncfv {
      */
     private static void outputToConsoleStrings(){
 
-        
+        System.out.println("storageDirectoryName - " + "storageDirectoryName".hashCode());
         
         System.out.println("ThStorageWordStatusDataFs - " + "ThStorageWordStatusDataFs".hashCode());
         System.out.println("ThStorageWordStatusName - " + "ThStorageWordStatusName".hashCode());

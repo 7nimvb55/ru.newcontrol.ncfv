@@ -24,14 +24,12 @@ import java.util.concurrent.ConcurrentHashMap;
  *                from data
  *     - (3a.2) - String newFileName - full file name for Files.move 
  *                operation after write created when readJobDataSize
+ *      - (3a.2) - String storageDirectoryName - full directory name
+ *                in storage for data files save
  * @author wladimirowichbiaran
  */
 public class ThStorageWordStatusName {
-    /**
-     * ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Long>>
-     * <keyPointFlowName, <lastAccessNanotime.hashCode(), Long Value>>
-     *                        <countDataUseIterationsSummary.hashCode(), Long Value>
-     */
+
     private ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, String>> poolStatusName;
     
     ThStorageWordStatusName(){
@@ -91,6 +89,7 @@ public class ThStorageWordStatusName {
      */
     protected ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, String>> createStructureParamsNamesFs(
                         final UUID keyPointFlowName,
+                        final String directoryName,
                         final String srcFileName,
                         final String destFileName){
         ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, String>> returnedParams;
@@ -99,6 +98,7 @@ public class ThStorageWordStatusName {
         try{
             keyPointFlowNamesFs = keyPointFlowName;
             namesFS = setInParamNamesFS(
+                        directoryName,
                         srcFileName,
                         destFileName);
             returnedParams = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, String>>();
@@ -118,14 +118,20 @@ public class ThStorageWordStatusName {
      * @return lvl(3a.2)
      */
     protected ConcurrentHashMap<Integer, String> setInParamNamesFS(
+                        final String directoryName,
                         final String srcFileName,
                         final String destFileName){
         ConcurrentHashMap<Integer, String> returnedHashMap;
+        String directoryFuncName;
         String srcFuncFileName;
         String destFuncFileName;
         try {
-            srcFuncFileName = srcFileName;
-            destFuncFileName = destFileName;
+            directoryFuncName = (String) directoryName;
+            srcFuncFileName = (String) srcFileName;
+            destFuncFileName = (String) destFileName;
+            if( directoryFuncName.isEmpty() ){
+                directoryFuncName = "undefinedSrcName-0-0";
+            }
             if( srcFuncFileName.isEmpty() ){
                 srcFuncFileName = "undefinedSrcName-0-0"; // getDafaultNames with current Size and Volume Number
             }
@@ -133,13 +139,17 @@ public class ThStorageWordStatusName {
                 destFuncFileName = "undefinedDestName-0-0";
             }
             returnedHashMap = new ConcurrentHashMap<Integer, String>();
+            //storageDirectoryName - 1962941405
+            returnedHashMap.put(1962941405, directoryFuncName);
             //currentFileName - 1517772480
             returnedHashMap.put(1517772480, srcFuncFileName);
             //newFileName - 521024487
             returnedHashMap.put(521024487, destFuncFileName);
+            
             return returnedHashMap;
         } finally {
             returnedHashMap = null;
+            directoryFuncName = null;
             srcFuncFileName = null;
             destFuncFileName = null;
         }

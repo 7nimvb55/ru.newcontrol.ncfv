@@ -199,10 +199,10 @@ public class ThStorageWordLogicRouter {
             currentStorageWordStatistic = (ThStorageWordStatistic) funcRuleStorageWord.getStorageWordStatistic();
             storageWordState = (ThStorageWordState) funcRuleStorageWord.getStorageWordState();
             busJobForStorageWordRouterJobToWriter = (ThStorageWordBusWriter) storageWordState.getBusJobForStorageWordRouterJobToWriter();
-            typeWordFunc = typeWordInputed;
-            tagNameFunc = tagNameInputed;
-            strSubStringFunc = strSubStringInputed;
-            buildTypeWordStoreSubDirictoriesFunc = buildTypeWordStoreSubDirictoriesInputed;
+            typeWordFunc = (Integer) typeWordInputed;
+            tagNameFunc = (String) tagNameInputed;
+            strSubStringFunc = (String) strSubStringInputed;
+            buildTypeWordStoreSubDirictoriesFunc = (String) buildTypeWordStoreSubDirictoriesInputed;
             
             keysPointsFlow = new ConcurrentHashMap<Integer, UUID>();
             
@@ -250,6 +250,7 @@ public class ThStorageWordLogicRouter {
             
             thStorageWordStatusName.createStructureParamsNamesFs(
                     keyFlowStatusName,
+                    buildTypeWordStoreSubDirictoriesFunc,
                     namesFsFileNameSrc, 
                     namesFsFileNameDestMoveTo);
             Integer timeUSEIterationIncrement = 0;
