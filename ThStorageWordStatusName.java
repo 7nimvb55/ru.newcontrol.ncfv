@@ -15,6 +15,7 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -154,5 +155,72 @@ public class ThStorageWordStatusName {
             destFuncFileName = null;
         }
     }
+    /**
+     * 
+     * @param keyPointFlowName
+     * @throw IllegalArgumentException if count of parameters or his
+     * names not equal concept
+     */
     
+    protected void validateCountParams(final UUID keyPointFlowName){
+        ConcurrentHashMap<Integer, String> statusNameForKeyPointFlow;
+        UUID keyPointFlowNameFunc;
+        Integer countThStorageWordStatusNameStorageDirectoryName;
+        Integer countThStorageWordStatusNameCurrentFileName;
+        Integer countThStorageWordStatusNameNewFileName;
+        Integer countSummaryOfParameters;
+        try {
+            keyPointFlowNameFunc = (UUID) keyPointFlowName;
+            if( !isStatusNameNotExist(keyPointFlowNameFunc) ){
+                statusNameForKeyPointFlow = getStatusNameForKeyPointFlow(keyPointFlowNameFunc);
+                countSummaryOfParameters = 0;
+                countThStorageWordStatusNameStorageDirectoryName = 0;
+                countThStorageWordStatusNameCurrentFileName = 0;
+                countThStorageWordStatusNameNewFileName = 0;
+                for(Map.Entry<Integer, String> itemOfLong: statusNameForKeyPointFlow.entrySet()){
+                    countSummaryOfParameters++;
+                    switch ( itemOfLong.getKey() ) {
+                        case 1962941405:
+                            countThStorageWordStatusNameStorageDirectoryName++;
+                            continue;
+                        case 1517772480:
+                            countThStorageWordStatusNameCurrentFileName++;
+                            continue;
+                        case 521024487:
+                            countThStorageWordStatusNameNewFileName++;
+                            continue;
+                    }
+                    new IllegalArgumentException(ThStorageWordStatusName.class.getCanonicalName() 
+                            + " parameters of flow statusName in StorageWord is not valid, has more values");
+                }
+                if( countSummaryOfParameters != 3 ){
+                    new IllegalArgumentException(ThStorageWordStatusName.class.getCanonicalName() 
+                            + " parameters of flow statusName in StorageWord is not valid, "
+                            + "count records not equal three");
+                }
+                if( countThStorageWordStatusNameStorageDirectoryName != 1 ){
+                    new IllegalArgumentException(ThStorageWordStatusName.class.getCanonicalName() 
+                            + " parameters of flow statusName in StorageWord is not valid, "
+                            + "count records for StorageDirectoryName not equal one");
+                }
+                if( countThStorageWordStatusNameCurrentFileName != 1 ){
+                    new IllegalArgumentException(ThStorageWordStatusName.class.getCanonicalName() 
+                            + " parameters of flow statusName in StorageWord is not valid, "
+                            + "count records for CurrentFileName not equal one");
+                }
+                if( countThStorageWordStatusNameNewFileName != 1 ){
+                    new IllegalArgumentException(ThStorageWordStatusName.class.getCanonicalName() 
+                            + " parameters of flow statusName in StorageWord is not valid, "
+                            + "count records for IndexSystemLimitOnStorage not equal one");
+                }
+            }
+        } finally {
+            statusNameForKeyPointFlow = null;
+            keyPointFlowNameFunc = null;
+            countThStorageWordStatusNameStorageDirectoryName = null;
+            countThStorageWordStatusNameCurrentFileName = null;
+            countThStorageWordStatusNameNewFileName = null;
+            countSummaryOfParameters = null;
+        }
+    }
 }

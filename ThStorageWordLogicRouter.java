@@ -276,7 +276,10 @@ public class ThStorageWordLogicRouter {
              * in index system StorageWord data fields if not save in UUID key
              * for distinct fields
              */
-            thStorageWordCache.setDataIntoCacheFlow(typeWordFunc, tagNameFunc, strSubStringFunc);
+            
+            Boolean isCachedData = Boolean.FALSE;
+            
+            isCachedData = thStorageWordCache.setDataIntoCacheFlow(typeWordFunc, tagNameFunc, strSubStringFunc);
             
             thStorageWordStatusDataCache.createStructureParamsCountTmp(
                     keyFlowStatusDataCache,
@@ -286,7 +289,7 @@ public class ThStorageWordLogicRouter {
             
             Boolean isWriteProcess = Boolean.FALSE;
             Boolean isReadProcess = Boolean.FALSE;
-            Boolean isCachedData = Boolean.FALSE;
+            
             Boolean isCalculatedData = Boolean.FALSE;
             Boolean isUdatedDataInHashMap = Boolean.FALSE;
             Boolean isMoveFileReady = Boolean.FALSE;

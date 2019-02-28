@@ -15,6 +15,7 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -178,5 +179,72 @@ public class ThStorageWordStatusDataCache {
             defaultIndexSystemLimitOnStorage = null;
         }
     }
+    /**
+     * 
+     * @param keyPointFlowDataCache
+     * @throw IllegalArgumentException if count of parameters or his
+     * names not equal concept
+     */
     
+    protected void validateCountParams(final UUID keyPointFlowDataCache){
+        ConcurrentHashMap<Integer, Integer> statusDataCacheForKeyPointFlow;
+        UUID keyPointFlowDataCacheFunc;
+        Integer countThStorageWordStatusDataCacheCurrentInCache;
+        Integer countThStorageWordStatusAddNeedToFileSystemLimit;
+        Integer countThStorageWordStatusIndexSystemLimitOnStorage;
+        Integer countSummaryOfParameters;
+        try {
+            keyPointFlowDataCacheFunc = (UUID) keyPointFlowDataCache;
+            if( !isStatusDataCacheNotExist(keyPointFlowDataCacheFunc) ){
+                statusDataCacheForKeyPointFlow = getStatusDataCacheForKeyPointFlow(keyPointFlowDataCacheFunc);
+                countSummaryOfParameters = 0;
+                countThStorageWordStatusDataCacheCurrentInCache = 0;
+                countThStorageWordStatusAddNeedToFileSystemLimit = 0;
+                countThStorageWordStatusIndexSystemLimitOnStorage = 0;
+                for(Map.Entry<Integer, Integer> itemOfLong: statusDataCacheForKeyPointFlow.entrySet()){
+                    countSummaryOfParameters++;
+                    switch ( itemOfLong.getKey() ) {
+                        case 322802084:
+                            countThStorageWordStatusDataCacheCurrentInCache++;
+                            continue;
+                        case 1443203998:
+                            countThStorageWordStatusAddNeedToFileSystemLimit++;
+                            continue;
+                        case 585177634:
+                            countThStorageWordStatusIndexSystemLimitOnStorage++;
+                            continue;
+                    }
+                    new IllegalArgumentException(ThStorageWordStatusDataCache.class.getCanonicalName() 
+                            + " parameters of flow statusDataCache in StorageWord is not valid, has more values");
+                }
+                if( countSummaryOfParameters != 3 ){
+                    new IllegalArgumentException(ThStorageWordStatusDataCache.class.getCanonicalName() 
+                            + " parameters of flow statusDataCache in StorageWord is not valid, "
+                            + "count records not equal three");
+                }
+                if( countThStorageWordStatusDataCacheCurrentInCache != 1 ){
+                    new IllegalArgumentException(ThStorageWordStatusDataCache.class.getCanonicalName() 
+                            + " parameters of flow statusDataCache in StorageWord is not valid, "
+                            + "count records for CacheCurrentInCache not equal one");
+                }
+                if( countThStorageWordStatusAddNeedToFileSystemLimit != 1 ){
+                    new IllegalArgumentException(ThStorageWordStatusDataCache.class.getCanonicalName() 
+                            + " parameters of flow statusDataCache in StorageWord is not valid, "
+                            + "count records for AddNeedToFileSystemLimit not equal one");
+                }
+                if( countThStorageWordStatusIndexSystemLimitOnStorage != 1 ){
+                    new IllegalArgumentException(ThStorageWordStatusDataCache.class.getCanonicalName() 
+                            + " parameters of flow statusDataCache in StorageWord is not valid, "
+                            + "count records for IndexSystemLimitOnStorage not equal one");
+                }
+            }
+        } finally {
+            statusDataCacheForKeyPointFlow = null;
+            keyPointFlowDataCacheFunc = null;
+            countThStorageWordStatusDataCacheCurrentInCache = null;
+            countThStorageWordStatusAddNeedToFileSystemLimit = null;
+            countThStorageWordStatusIndexSystemLimitOnStorage = null;
+            countSummaryOfParameters = null;
+        }
+    }
 }

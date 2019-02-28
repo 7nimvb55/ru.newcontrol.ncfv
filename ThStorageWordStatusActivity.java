@@ -15,6 +15,7 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -153,5 +154,62 @@ public class ThStorageWordStatusActivity {
             countIterations = null;
         }
     }
+    /**
+     * 
+     * @param keyPointFlowActivity
+     * @throw IllegalArgumentException if count of parameters or his
+     * names not equal concept
+     */
     
+    protected void validateCountParams(final UUID keyPointFlowActivity){
+        ConcurrentHashMap<Integer, Long> statusActivityForKeyPointFlow;
+        UUID keyPointFlowActivityFunc;
+        Integer countThStorageWordStatusActivityLastAccessNanotime;
+        Integer countThStorageWordStatusActivityDataUseIterationsSummary;
+        Integer countSummaryOfParameters;
+        try {
+            keyPointFlowActivityFunc = (UUID) keyPointFlowActivity;
+            if( !isStatusActivityNotExist(keyPointFlowActivityFunc) ){
+                statusActivityForKeyPointFlow = getStatusActivityForKeyPointFlow(keyPointFlowActivityFunc);
+                countSummaryOfParameters = 0;
+                countThStorageWordStatusActivityLastAccessNanotime = 0;
+                countThStorageWordStatusActivityDataUseIterationsSummary = 0;
+                for(Map.Entry<Integer, Long> itemOfLong: statusActivityForKeyPointFlow.entrySet()){
+                    countSummaryOfParameters++;
+                    switch ( itemOfLong.getKey() ) {
+                        case -1553995461:
+                            countThStorageWordStatusActivityLastAccessNanotime++;
+                            continue;
+                        case 1445275074:
+                            countThStorageWordStatusActivityDataUseIterationsSummary++;
+                            continue;
+                    }
+                    new IllegalArgumentException(ThStorageWordStatusActivity.class.getCanonicalName() 
+                            + " parameters of flow statusActivity in StorageWord is not valid, has more values");
+                }
+                if( countSummaryOfParameters != 2 ){
+                    new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
+                            + " parameters of flow statusActivity in StorageWord is not valid, "
+                            + "count records not equal two");
+                }
+                if( countThStorageWordStatusActivityLastAccessNanotime != 1 ){
+                    new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
+                            + " parameters of flow statusActivity in StorageWord is not valid, "
+                            + "count records for lastAccessNanotime not equal one");
+                }
+                if( countThStorageWordStatusActivityDataUseIterationsSummary != 1 ){
+                    new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
+                            + " parameters of flow statusActivity in StorageWord is not valid, "
+                            + "count records for countDataUseIterationsSummary not equal one");
+                }
+            }
+        } finally {
+            statusActivityForKeyPointFlow = null;
+            keyPointFlowActivityFunc = null;
+            countThStorageWordStatusActivityLastAccessNanotime = null;
+            countThStorageWordStatusActivityDataUseIterationsSummary = null;
+            countSummaryOfParameters = null;
+        }
+    }
+   
 }

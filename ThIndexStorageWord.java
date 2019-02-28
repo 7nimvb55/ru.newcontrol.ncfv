@@ -49,18 +49,18 @@ public class ThIndexStorageWord extends Thread{
         ThStorageWordStatistic thStorageWordStatistic = new ThStorageWordStatistic();
         //init Rule
         ThStorageWordRule thStorageWordRule = new ThStorageWordRule(this.ruleThIndex);
-        //init Workers
-        ThStorageWordWorkFilter thStorageWordWorkFilter = new ThStorageWordWorkFilter(thStorageWordRule);
-        ThStorageWordWorkRouter thStorageWordWorkRouter = new ThStorageWordWorkRouter(thStorageWordRule);
-        ThStorageWordWorkWrite thStorageWordWorkWrite = new ThStorageWordWorkWrite(thStorageWordRule);
-        ThStorageWordWorkRead thStorageWordWorkRead = new ThStorageWordWorkRead(thStorageWordRule);
-        
         thStorageWordRule.setStorageWordState(thStorageWordState);
         thStorageWordRule.setStorageWordStatistic(thStorageWordStatistic);
+        //init Workers
+        ThStorageWordWorkFilter thStorageWordWorkFilter = new ThStorageWordWorkFilter(thStorageWordRule);
         thStorageWordRule.setStorageWordWorkFilter(thStorageWordWorkFilter);
+        ThStorageWordWorkRouter thStorageWordWorkRouter = new ThStorageWordWorkRouter(thStorageWordRule);
         thStorageWordRule.setStorageWordWorkRouter(thStorageWordWorkRouter);
+        ThStorageWordWorkWrite thStorageWordWorkWrite = new ThStorageWordWorkWrite(thStorageWordRule);
         thStorageWordRule.setStorageWordWorkWrite(thStorageWordWorkWrite);
+        ThStorageWordWorkRead thStorageWordWorkRead = new ThStorageWordWorkRead(thStorageWordRule);
         thStorageWordRule.setStorageWordWorkRead(thStorageWordWorkRead);
+        
         //set StorageWord Rule in indexState
         indexState.setRuleStorageWord(thStorageWordRule);
         

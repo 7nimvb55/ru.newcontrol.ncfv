@@ -15,6 +15,7 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -145,5 +146,61 @@ public class ThStorageWordStatusDataFs {
             funcVolumeNumber = null;
         }
     }
+    /**
+     * 
+     * @param keyPointFlowDataFs
+     * @throw IllegalArgumentException if count of parameters or his
+     * names not equal concept
+     */
     
+    protected void validateCountParams(final UUID keyPointFlowDataFs){
+        ConcurrentHashMap<Integer, Integer> statusDataFsForKeyPointFlow;
+        UUID keyPointFlowDataFsFunc;
+        Integer countThStorageWordStatusDataFsCountRecordsOnFileSystem;
+        Integer countThStorageWordStatusDataFsVolumeNumber;
+        Integer countSummaryOfParameters;
+        try {
+            keyPointFlowDataFsFunc = (UUID) keyPointFlowDataFs;
+            if( !isStatusDataFsNotExist(keyPointFlowDataFsFunc) ){
+                statusDataFsForKeyPointFlow = getStatusDataFsForKeyPointFlow(keyPointFlowDataFsFunc);
+                countSummaryOfParameters = 0;
+                countThStorageWordStatusDataFsCountRecordsOnFileSystem = 0;
+                countThStorageWordStatusDataFsVolumeNumber = 0;
+                for(Map.Entry<Integer, Integer> itemOfLong: statusDataFsForKeyPointFlow.entrySet()){
+                    countSummaryOfParameters++;
+                    switch ( itemOfLong.getKey() ) {
+                        case -2011092003:
+                            countThStorageWordStatusDataFsCountRecordsOnFileSystem++;
+                            continue;
+                        case -1832815869:
+                            countThStorageWordStatusDataFsVolumeNumber++;
+                            continue;
+                    }
+                    new IllegalArgumentException(ThStorageWordStatusDataFs.class.getCanonicalName() 
+                            + " parameters of flow statusDataFs in StorageWord is not valid, has more values");
+                }
+                if( countSummaryOfParameters != 2 ){
+                    new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
+                            + " parameters of flow statusDataFs in StorageWord is not valid, "
+                            + "count records not equal two");
+                }
+                if( countThStorageWordStatusDataFsCountRecordsOnFileSystem != 1 ){
+                    new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
+                            + " parameters of flow statusDataFs in StorageWord is not valid, "
+                            + "count records for CountRecordsOnFileSystem not equal one");
+                }
+                if( countThStorageWordStatusDataFsVolumeNumber != 1 ){
+                    new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
+                            + " parameters of flow statusDataFs in StorageWord is not valid, "
+                            + "count records for VolumeNumber not equal one");
+                }
+            }
+        } finally {
+            statusDataFsForKeyPointFlow = null;
+            keyPointFlowDataFsFunc = null;
+            countThStorageWordStatusDataFsCountRecordsOnFileSystem = null;
+            countThStorageWordStatusDataFsVolumeNumber = null;
+            countSummaryOfParameters = null;
+        }
+    }
 }

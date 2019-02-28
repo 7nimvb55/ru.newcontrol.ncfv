@@ -325,7 +325,7 @@ public class ThStorageWordRule {
         return this.currentStorageWordState;
     }
     protected void setStorageWordState(final ThStorageWordState stateWordOuter){
-        this.currentStorageWordState = stateWordOuter;
+        this.currentStorageWordState = (ThStorageWordState) stateWordOuter;
         setTrueStorageWordState();
     }
     protected void setTrueStorageWordState(){

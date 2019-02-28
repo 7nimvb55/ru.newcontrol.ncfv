@@ -273,7 +273,7 @@ public class ThStorageWordCache {
      *          <ThStorageWordStatusDataCache.hashCode(), recordUUID>
      *          <ThStorageWordStatusWorkers.hashCode(), recordUUID>
      */
-    protected void setDataIntoCacheFlow(
+    protected Boolean setDataIntoCacheFlow(
             final Integer typeWord, 
             final String tagName, 
             final String strSubString){
@@ -283,16 +283,22 @@ public class ThStorageWordCache {
         ConcurrentHashMap<String, String> inputedData;
         ConcurrentHashMap<String, String> typeWordTagFileNameFlowUuids;
         try {
-            funcTypeWord = typeWord;
-            funcSubString = strSubString;
-            funcHexTagName = tagName;
-            typeWordTagFileNameFlowUuids = getTypeWordTagFileNameData(
-                    funcTypeWord,
-                    funcHexTagName,
-                    funcSubString);
+            funcTypeWord = (Integer) typeWord;
+            funcSubString = (String) strSubString;
+            funcHexTagName = (String) tagName;
+            try{
+                typeWordTagFileNameFlowUuids = getTypeWordTagFileNameData(
+                        funcTypeWord,
+                        funcHexTagName,
+                        funcSubString);
+            } catch(IllegalArgumentException exSetInCahe) {
+                System.err.println(exSetInCahe.getMessage());
+                return Boolean.FALSE;
+            }
             inputedData = new ConcurrentHashMap<String, String>();
             inputedData.put(funcHexTagName, funcSubString);
             typeWordTagFileNameFlowUuids.putAll(inputedData);
+            return Boolean.TRUE;
         } finally {
             typeWordTagFileNameFlowUuids = null;
             inputedData = null;
