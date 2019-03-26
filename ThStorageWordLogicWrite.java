@@ -464,11 +464,8 @@ public class ThStorageWordLogicWrite {
                                                                 statusWorkersForKeyPointFlow.put(-83825824, Boolean.TRUE);
                                                                 statusNameForKeyPointFlow.put(521024487, newFileName);
                                                                 statusNameForKeyPointFlow.put(1517772480, newFileName);
-                                                                //after delete oldFile
-                                                                if( busVal.getValue().containsKey(mainFlowLabel) ){
-                                                                    ConcurrentHashMap<String, String> remove = busVal.getValue().remove(mainFlowLabel);
-                                                                    remove = null;
-                                                                }
+                                                                
+                                                                
                                                             } catch(SecurityException exSecurity) {
                                                                 System.err.println(exSecurity.getMessage());
                                                                 exSecurity.printStackTrace();

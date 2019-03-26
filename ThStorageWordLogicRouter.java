@@ -705,7 +705,7 @@ public class ThStorageWordLogicRouter {
             /**
              * isWriteProcess = TRUE;
              */
-            thStorageWordCache.printCacheData();
+            //thStorageWordCache.printCacheData();
             
         } catch(IllegalArgumentException exIllArg) {
             System.err.println(exIllArg.getMessage());
