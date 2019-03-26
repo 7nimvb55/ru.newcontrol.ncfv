@@ -302,6 +302,8 @@ public class ThStorageWordLogicRouter {
             //this is a jobWrite UUID, to fix create jobListsStatus
             mainFlowLabel = UUID.randomUUID();
             
+            Integer volNumSettedInFlow = 0;
+            
             String fileDataListPrefix = mainFlowLabel.toString();
             
             thStorageWordCache = currentStorageWordStatistic.getStorageWordCache();
@@ -492,6 +494,9 @@ public class ThStorageWordLogicRouter {
                                             statusNameForKeyPointFlow.put(2045325664, fileCurrentName);
                                             fileDataListPrefix = (String) statusNameForKeyPointFlow.get(-980152217);
                                             
+                                            ConcurrentHashMap<Integer, Integer> statusDataFsForKeyPointFlow = thStorageWordStatusDataFs.getStatusDataFsForKeyPointFlow(keyDataFs);
+                                            volNumSettedInFlow = statusDataFsForKeyPointFlow.get(-1832815869);
+                                            
                                         }
                                     }
                                 }
@@ -579,8 +584,8 @@ public class ThStorageWordLogicRouter {
             
             Integer countFsCountRecordsSrc = 0;
             Integer countFsCountRecordsDestMoveTo = (int) thStorageWordCache.sizeDataInCache(typeWordFunc, tagNameFunc, strSubStringFunc);
-            Integer countFsVolumeNumberSrc = 0;
-            Integer countFsVolumeNumberDestMoveTo = 0;
+            Integer countFsVolumeNumberSrc = volNumSettedInFlow;
+            Integer countFsVolumeNumberDestMoveTo = volNumSettedInFlow;
             
             keyFlowStatusDataFs = UUID.randomUUID();
             keysPointsFlow.put("ThStorageWordStatusDataFs".hashCode(), keyFlowStatusDataFs);
@@ -705,7 +710,7 @@ public class ThStorageWordLogicRouter {
             /**
              * isWriteProcess = TRUE;
              */
-            //thStorageWordCache.printCacheData();
+            thStorageWordCache.printCacheData();
             
         } catch(IllegalArgumentException exIllArg) {
             System.err.println(exIllArg.getMessage());

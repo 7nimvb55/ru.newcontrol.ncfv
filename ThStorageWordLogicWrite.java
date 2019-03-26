@@ -305,7 +305,10 @@ public class ThStorageWordLogicWrite {
                                             }
                                             
                                         }
-                                        Integer volNum = 0;
+                                        
+                                        //set into flow
+                                        ConcurrentHashMap<Integer, Integer> statusDataFsForKeyPointFlow = storageWordStatusDataFs.getStatusDataFsForKeyPointFlow(getKeyDataFs);
+                                        Integer volNum = statusDataFsForKeyPointFlow.get(-1832815869);
                                         Integer sizeDataDest = 0;
                                         
                                         
@@ -421,7 +424,7 @@ public class ThStorageWordLogicWrite {
                                                         packetForWriteData.put(keyItem, valItem);
                                                     
                                                         sizeDataDest = packetForWriteData.size();
-                                                        if( ( sizeDataDest == AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT) || (pollTypeWordTagFileNameData.isEmpty() ) ){
+                                                        if( ( sizeDataDest == AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT ) || ( pollTypeWordTagFileNameData.isEmpty() ) ){
                                                             currentFileName = new String()
                                                                 .concat(AppFileNamesConstants.SZFS_STORAGE_WORD_FILE_PREFIX)
                                                                 .concat(prefixFileName.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
@@ -480,6 +483,7 @@ public class ThStorageWordLogicWrite {
                                                                 exUnsupported.printStackTrace();
                                                             }
                                                             volNum++;
+                                                            statusDataFsForKeyPointFlow.put(-1832815869, volNum);
                                                             packetForWriteData = new ConcurrentHashMap<String, String>();
                                                         }
                                                     }
