@@ -23,10 +23,20 @@ import java.util.concurrent.ConcurrentHashMap;
  * ThStorageWordStatusName
  * namesFS    - (3a.2) - String currentFileName - full file name where read 
  *                from data
+ *                  when flow read in storage data this names set equal newFileName
+ *                  after move process, in StatusWorkers set flag isNeedRead
  *     - (3a.2) - String newFileName - full file name for Files.move 
  *                operation after write created when readJobDataSize
- *      - (3a.2) - String storageDirectoryName - full directory name
+ *     - (3a.2) - String storageDirectoryName - full directory name
  *                in storage for data files save
+ *     - (3a.2) - String deletedFileName name of file data from prev iteration of
+ *                  write, read flow
+ *     - (3a.2) - String flowFileNamePrefix name prefix for add in the writer before
+ *                  write to storage and after read from DataCahe, and calculate
+ *                  readed from cache data size, if need readed data limited by
+ *                  vol size for index storages system, in the flow system add last
+ *                  vol file name if it not limited
+ * 
  * @author wladimirowichbiaran
  */
 public class ThStorageWordStatusName {
@@ -84,15 +94,21 @@ public class ThStorageWordStatusName {
     }
     /**
      * 
+     * @param keyPointFlowName
+     * @param directoryName
      * @param srcFileName
      * @param destFileName
+     * @param deletedFileName
+     * @param flowFileNamePrefix
      * @return lvl(4, 3a.2) ready for put in list lvl(3)
      */
     protected ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, String>> createStructureParamsNamesFs(
                         final UUID keyPointFlowName,
                         final String directoryName,
                         final String srcFileName,
-                        final String destFileName){
+                        final String destFileName,
+                        final String deletedFileName,
+                        final String flowFileNamePrefix){
         ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, String>> returnedParams;
         ConcurrentHashMap<Integer, String> namesFS;
         UUID keyPointFlowNamesFs;
@@ -101,7 +117,9 @@ public class ThStorageWordStatusName {
             namesFS = setInParamNamesFS(
                         directoryName,
                         srcFileName,
-                        destFileName);
+                        destFileName,
+                        deletedFileName,
+                        flowFileNamePrefix);
             returnedParams = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, String>>();
             this.poolStatusName.put(keyPointFlowNamesFs, namesFS);
             returnedParams.put(keyPointFlowNamesFs , namesFS);
@@ -114,22 +132,32 @@ public class ThStorageWordStatusName {
     }
     /**
      * 
+     * @param directoryName
      * @param srcFileName
      * @param destFileName
+     * @param deletedFileName
+     * @param flowFileNamePrefix
      * @return lvl(3a.2)
      */
     protected ConcurrentHashMap<Integer, String> setInParamNamesFS(
                         final String directoryName,
                         final String srcFileName,
-                        final String destFileName){
+                        final String destFileName,
+                        final String deletedFileName,
+                        final String flowFileNamePrefix
+                        ){
         ConcurrentHashMap<Integer, String> returnedHashMap;
         String directoryFuncName;
         String srcFuncFileName;
         String destFuncFileName;
+        String deletedFuncFileName;
+        String flowFuncFileNamePrefix;
         try {
             directoryFuncName = (String) directoryName;
             srcFuncFileName = (String) srcFileName;
             destFuncFileName = (String) destFileName;
+            deletedFuncFileName = (String) deletedFileName;
+            flowFuncFileNamePrefix = (String) flowFileNamePrefix;
             if( directoryFuncName.isEmpty() ){
                 directoryFuncName = "undefinedSrcName-0-0";
             }
@@ -139,6 +167,12 @@ public class ThStorageWordStatusName {
             if( destFuncFileName.isEmpty() ){
                 destFuncFileName = "undefinedDestName-0-0";
             }
+            if( deletedFuncFileName.isEmpty() ){
+                deletedFuncFileName = "undefDelName-0-0";
+            }
+            if( flowFuncFileNamePrefix.isEmpty() ){
+                flowFuncFileNamePrefix = "undefFlowPrefName-0-0";
+            }
             returnedHashMap = new ConcurrentHashMap<Integer, String>();
             //storageDirectoryName - 1962941405
             returnedHashMap.put(1962941405, directoryFuncName);
@@ -146,6 +180,10 @@ public class ThStorageWordStatusName {
             returnedHashMap.put(1517772480, srcFuncFileName);
             //newFileName - 521024487
             returnedHashMap.put(521024487, destFuncFileName);
+            //deletedFileName - 2045325664
+            returnedHashMap.put(2045325664, deletedFuncFileName);
+            //flowFileNamePrefix - -980152217
+            returnedHashMap.put(-980152217, flowFuncFileNamePrefix);
             
             return returnedHashMap;
         } finally {
@@ -153,6 +191,8 @@ public class ThStorageWordStatusName {
             directoryFuncName = null;
             srcFuncFileName = null;
             destFuncFileName = null;
+            deletedFuncFileName = null;
+            flowFuncFileNamePrefix = null;
         }
     }
     /**
@@ -168,6 +208,8 @@ public class ThStorageWordStatusName {
         Integer countThStorageWordStatusNameStorageDirectoryName;
         Integer countThStorageWordStatusNameCurrentFileName;
         Integer countThStorageWordStatusNameNewFileName;
+        Integer countThStorageWordStatusNameDeletedFileName;
+        Integer countThStorageWordStatusNameFlowFileNamePrefix;
         Integer countSummaryOfParameters;
         try {
             keyPointFlowNameFunc = (UUID) keyPointFlowName;
@@ -177,6 +219,8 @@ public class ThStorageWordStatusName {
                 countThStorageWordStatusNameStorageDirectoryName = 0;
                 countThStorageWordStatusNameCurrentFileName = 0;
                 countThStorageWordStatusNameNewFileName = 0;
+                countThStorageWordStatusNameDeletedFileName = 0;
+                countThStorageWordStatusNameFlowFileNamePrefix = 0;
                 for(Map.Entry<Integer, String> itemOfLong: statusNameForKeyPointFlow.entrySet()){
                     countSummaryOfParameters++;
                     switch ( itemOfLong.getKey() ) {
@@ -189,11 +233,17 @@ public class ThStorageWordStatusName {
                         case 521024487:
                             countThStorageWordStatusNameNewFileName++;
                             continue;
+                        case 2045325664:
+                            countThStorageWordStatusNameDeletedFileName++;
+                            continue;
+                        case -980152217:
+                            countThStorageWordStatusNameFlowFileNamePrefix++;
+                            continue;
                     }
                     new IllegalArgumentException(ThStorageWordStatusName.class.getCanonicalName() 
                             + " parameters of flow statusName in StorageWord is not valid, has more values");
                 }
-                if( countSummaryOfParameters != 3 ){
+                if( countSummaryOfParameters != 5 ){
                     new IllegalArgumentException(ThStorageWordStatusName.class.getCanonicalName() 
                             + " parameters of flow statusName in StorageWord is not valid, "
                             + "count records not equal three");
@@ -213,6 +263,16 @@ public class ThStorageWordStatusName {
                             + " parameters of flow statusName in StorageWord is not valid, "
                             + "count records for IndexSystemLimitOnStorage not equal one");
                 }
+                if( countThStorageWordStatusNameDeletedFileName != 1 ){
+                    new IllegalArgumentException(ThStorageWordStatusName.class.getCanonicalName() 
+                            + " parameters of flow statusName in StorageWord is not valid, "
+                            + "count records for DeletedFileName not equal one");
+                }
+                if( countThStorageWordStatusNameFlowFileNamePrefix != 1 ){
+                    new IllegalArgumentException(ThStorageWordStatusName.class.getCanonicalName() 
+                            + " parameters of flow statusName in StorageWord is not valid, "
+                            + "count records for FileNamePrefix not equal one");
+                }
             }
         } finally {
             statusNameForKeyPointFlow = null;
@@ -220,6 +280,8 @@ public class ThStorageWordStatusName {
             countThStorageWordStatusNameStorageDirectoryName = null;
             countThStorageWordStatusNameCurrentFileName = null;
             countThStorageWordStatusNameNewFileName = null;
+            countThStorageWordStatusNameDeletedFileName = null;
+            countThStorageWordStatusNameFlowFileNamePrefix = null;
             countSummaryOfParameters = null;
         }
     }

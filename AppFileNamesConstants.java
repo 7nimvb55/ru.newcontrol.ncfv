@@ -79,7 +79,7 @@ public class AppFileNamesConstants {
      */
     protected static String SZFS_DIR_LIST_FILE_PREFIX = "dl-";
     /**
-     * Storage Zip File System for index system StorageWord
+     * Storage Zip File System for index system LongWord
      * prefix for data file
      * return wl-
      */
@@ -95,6 +95,11 @@ public class AppFileNamesConstants {
     protected static String FILE_INDEX_PREFIX_FILE_HASH = "fh-";
     protected static String FILE_INDEX_PREFIX_FILE_EXIST = "fx-";
     protected static String FILE_INDEX_PREFIX_WORD = "w-";
+    /**
+     * Storage Zip File System for index system StorageWord
+     * prefix for data file
+     * return sw-
+     */
     protected static String FILE_INDEX_PREFIX_STORAGE_WORD = "sw-";
     protected static String FILE_INDEX_PREFIX_LONG_WORD_LIST = "lw-";
     protected static String FILE_INDEX_PREFIX_LONG_WORD_DATA = "ln-";

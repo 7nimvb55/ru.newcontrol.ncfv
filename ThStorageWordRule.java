@@ -58,7 +58,12 @@ public class ThStorageWordRule {
      */
     private ThStorageWordStatistic currentStorageWordStatistic;
     private Boolean isSetStorageWordStatistic;
-
+    /**
+     * ThStorageWordFlowReaded thStorageWordFlowRead
+     */
+    private ThStorageWordFlowReaded thStorageWordFlowRead;
+    private Boolean isSetStorageWordFlowReaded;
+    
     public ThStorageWordRule(final ThIndexRule outerRuleIndex) {
         this.indexRule = (ThIndexRule) outerRuleIndex;
         this.workerThStorageWord = new ThreadGroup(UUID.randomUUID().toString());
@@ -70,6 +75,10 @@ public class ThStorageWordRule {
          * ThStorageWordStatistic
          */
         setFalseStorageWordStatistic();
+        /**
+         * ThStorageWordFlowReaded
+         */
+        setFalseStorageWordFlowReaded();
         /**
          * ThStorageWordWorkFilter
          */
@@ -362,6 +371,32 @@ public class ThStorageWordRule {
     }
     protected Boolean isStorageWordStatistic(){
         if( this.isSetStorageWordStatistic ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * ThStorageWordFlowReaded
+     * @return 
+     */
+    protected ThStorageWordFlowReaded getStorageWordFlowReaded(){
+        if( !this.isStorageWordFlowReaded() ){
+            throw new IllegalArgumentException(ThStorageWordFlowReaded.class.getCanonicalName() + " object not set in " + ThWordRule.class.getCanonicalName());
+        }
+        return this.thStorageWordFlowRead;
+    }
+    protected void setStorageWordFlowReaded(final ThStorageWordFlowReaded stateWordOuter){
+        this.thStorageWordFlowRead = stateWordOuter;
+        setTrueStorageWordFlowReaded();
+    }
+    protected void setTrueStorageWordFlowReaded(){
+        this.isSetStorageWordFlowReaded = Boolean.TRUE;
+    }
+    protected void setFalseStorageWordFlowReaded(){
+        this.isSetStorageWordFlowReaded = Boolean.FALSE;
+    }
+    protected Boolean isStorageWordFlowReaded(){
+        if( this.isSetStorageWordFlowReaded ){
             return Boolean.TRUE;
         }
         return Boolean.FALSE;

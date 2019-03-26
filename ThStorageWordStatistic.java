@@ -109,6 +109,7 @@ public class ThStorageWordStatistic {
                             ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>>> fileStoragesMap;
     
     private ThStorageWordCache thStorageWordCache;
+    private ThStorageWordCacheReaded thStorageWordCacheReaded;
     private ThStorageWordStatusDataFs thStorageWordStatusDataFs;
     private ThStorageWordStatusName thStorageWordStatusName;
     private ThStorageWordStatusActivity thStorageWordStatusActivity;
@@ -119,6 +120,7 @@ public class ThStorageWordStatistic {
         this.fileStoragesMap = createNewListStoragesMapEmpty();
         
         this.thStorageWordCache = new ThStorageWordCache();
+        this.thStorageWordCacheReaded = new ThStorageWordCacheReaded();
         
         this.thStorageWordStatusDataFs = new ThStorageWordStatusDataFs();
         this.thStorageWordStatusName = new ThStorageWordStatusName();
@@ -129,6 +131,9 @@ public class ThStorageWordStatistic {
     
     protected ThStorageWordCache getStorageWordCache(){
         return this.thStorageWordCache;
+    }
+    protected ThStorageWordCacheReaded getStorageWordCacheReaded(){
+        return this.thStorageWordCacheReaded;
     }
     protected ThStorageWordStatusDataFs getStorageWordStatusDataFs(){
         return this.thStorageWordStatusDataFs;

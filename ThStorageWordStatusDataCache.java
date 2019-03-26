@@ -39,6 +39,8 @@ import java.util.concurrent.ConcurrentHashMap;
  *                I. - readFromFileSystem...
  *                II. - resultNowData
  *                III. - sendJobForWriter, update HashMap data ...
+ *     - (3a.4) - Integer currentInCacheReaded set when data readed from
+ *                  storage index data file
  *     - (3a.4) - Integer addNeedToFileSystemLimit 
  * - exist in data file
  *                records size => indexSystemLimitOnStorage - sizeFormFileName
@@ -115,6 +117,7 @@ public class ThStorageWordStatusDataCache {
     protected ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>> createStructureParamsCountTmp(
                         final UUID keyPointFlowDataCache,
                         final Integer currentInCache,
+                        final Integer currentInCacheReaded,
                         final Integer addNeedToFileSystemLimit,
                         final Integer indexSystemLimitOnStorage){
         ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>> returnedParams;
@@ -124,6 +127,7 @@ public class ThStorageWordStatusDataCache {
             keyPointFlowDataCacheCountTmp = keyPointFlowDataCache;
             countTmp = setInParamCountTMP(
                         currentInCache,
+                        currentInCacheReaded,
                         addNeedToFileSystemLimit,
                         indexSystemLimitOnStorage);
             returnedParams = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>>();
@@ -139,22 +143,29 @@ public class ThStorageWordStatusDataCache {
     /**
      * 
      * @param currentInCache
+     * @param currentInCacheReaded
      * @param addNeedToFileSystemLimit
      * @param indexSystemLimitOnStorage
      * @return lvl(3a.4)
      */
     protected ConcurrentHashMap<Integer, Integer> setInParamCountTMP(
                         final Integer currentInCache,
+                        final Integer currentInCacheReaded,
                         final Integer addNeedToFileSystemLimit,
                         final Integer indexSystemLimitOnStorage){
         ConcurrentHashMap<Integer, Integer> returnedHashMap;
         Integer defaultInCache;
+        Integer defaultInCacheReaded;
         Integer defaultNeedToFileSystemLimit;
         Integer defaultIndexSystemLimitOnStorage;
         try {
             defaultInCache = currentInCache;
             if( defaultInCache < 0 ){
                 defaultInCache = 0;
+            }
+            defaultInCacheReaded = currentInCacheReaded;
+            if( defaultInCacheReaded < 0 ){
+                defaultInCacheReaded = 0;
             }
             defaultNeedToFileSystemLimit = addNeedToFileSystemLimit;
             if( defaultNeedToFileSystemLimit < 0 ){
@@ -167,6 +178,8 @@ public class ThStorageWordStatusDataCache {
             returnedHashMap = new ConcurrentHashMap<Integer, Integer>();
             //currentInCache - 322802084
             returnedHashMap.put(322802084, defaultInCache);
+            //currentInCacheReaded - -835384455
+            returnedHashMap.put(-835384455, defaultInCacheReaded);
             //addNeedToFileSystemLimit - 1443203998
             returnedHashMap.put(1443203998, defaultNeedToFileSystemLimit);
             //indexSystemLimitOnStorage - 585177634
@@ -175,6 +188,7 @@ public class ThStorageWordStatusDataCache {
         } finally {
             returnedHashMap = null;
             defaultInCache = null;
+            defaultInCacheReaded = null;
             defaultNeedToFileSystemLimit = null;
             defaultIndexSystemLimitOnStorage = null;
         }
@@ -190,6 +204,7 @@ public class ThStorageWordStatusDataCache {
         ConcurrentHashMap<Integer, Integer> statusDataCacheForKeyPointFlow;
         UUID keyPointFlowDataCacheFunc;
         Integer countThStorageWordStatusDataCacheCurrentInCache;
+        Integer countThStorageWordStatusDataCacheCurrentInCacheReaded;
         Integer countThStorageWordStatusAddNeedToFileSystemLimit;
         Integer countThStorageWordStatusIndexSystemLimitOnStorage;
         Integer countSummaryOfParameters;
@@ -199,6 +214,7 @@ public class ThStorageWordStatusDataCache {
                 statusDataCacheForKeyPointFlow = getStatusDataCacheForKeyPointFlow(keyPointFlowDataCacheFunc);
                 countSummaryOfParameters = 0;
                 countThStorageWordStatusDataCacheCurrentInCache = 0;
+                countThStorageWordStatusDataCacheCurrentInCacheReaded = 0;
                 countThStorageWordStatusAddNeedToFileSystemLimit = 0;
                 countThStorageWordStatusIndexSystemLimitOnStorage = 0;
                 for(Map.Entry<Integer, Integer> itemOfLong: statusDataCacheForKeyPointFlow.entrySet()){
@@ -207,6 +223,9 @@ public class ThStorageWordStatusDataCache {
                         case 322802084:
                             countThStorageWordStatusDataCacheCurrentInCache++;
                             continue;
+                        case -835384455:
+                            countThStorageWordStatusDataCacheCurrentInCacheReaded++;
+                            continue;    
                         case 1443203998:
                             countThStorageWordStatusAddNeedToFileSystemLimit++;
                             continue;
@@ -217,7 +236,7 @@ public class ThStorageWordStatusDataCache {
                     new IllegalArgumentException(ThStorageWordStatusDataCache.class.getCanonicalName() 
                             + " parameters of flow statusDataCache in StorageWord is not valid, has more values");
                 }
-                if( countSummaryOfParameters != 3 ){
+                if( countSummaryOfParameters != 4 ){
                     new IllegalArgumentException(ThStorageWordStatusDataCache.class.getCanonicalName() 
                             + " parameters of flow statusDataCache in StorageWord is not valid, "
                             + "count records not equal three");
@@ -225,7 +244,12 @@ public class ThStorageWordStatusDataCache {
                 if( countThStorageWordStatusDataCacheCurrentInCache != 1 ){
                     new IllegalArgumentException(ThStorageWordStatusDataCache.class.getCanonicalName() 
                             + " parameters of flow statusDataCache in StorageWord is not valid, "
-                            + "count records for CacheCurrentInCache not equal one");
+                            + "count records for CurrentInCache not equal one");
+                }
+                if( countThStorageWordStatusDataCacheCurrentInCacheReaded != 1 ){
+                    new IllegalArgumentException(ThStorageWordStatusDataCache.class.getCanonicalName() 
+                            + " parameters of flow statusDataCache in StorageWord is not valid, "
+                            + "count records for CurrentInCacheReaded not equal one");
                 }
                 if( countThStorageWordStatusAddNeedToFileSystemLimit != 1 ){
                     new IllegalArgumentException(ThStorageWordStatusDataCache.class.getCanonicalName() 
@@ -242,6 +266,7 @@ public class ThStorageWordStatusDataCache {
             statusDataCacheForKeyPointFlow = null;
             keyPointFlowDataCacheFunc = null;
             countThStorageWordStatusDataCacheCurrentInCache = null;
+            countThStorageWordStatusDataCacheCurrentInCacheReaded = null;
             countThStorageWordStatusAddNeedToFileSystemLimit = null;
             countThStorageWordStatusIndexSystemLimitOnStorage = null;
             countSummaryOfParameters = null;

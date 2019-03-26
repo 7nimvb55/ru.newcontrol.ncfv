@@ -102,8 +102,8 @@ public class Ncfv {
         /**
          * @todo when storage index create and not need for new create not run for this methods
          */
-        //thIndexMaker.start();
-        //waitForFinishedThread();
+        thIndexMaker.start();
+        waitForFinishedThread();
         /**
          * @todo append flag updated process, this ma used in while( updatedProcess ) { wait for end update }
          * after create storages workers... need release for storages (file systems) workers...
@@ -125,14 +125,14 @@ public class Ncfv {
      */
     private static void outputToConsoleStrings(){
 
-        System.out.println("isMoveFileReady - " + "isMoveFileReady".hashCode());
+        System.out.println("isFlowInWriteBus - " + "isFlowInWriteBus".hashCode());
         
-        System.out.println("ThStorageWordStatusDataFs - " + "ThStorageWordStatusDataFs".hashCode());
-        System.out.println("ThStorageWordStatusName - " + "ThStorageWordStatusName".hashCode());
+        System.out.println("isFlowInReadBus - " + "isFlowInReadBus".hashCode());
+        System.out.println("isNeedDeleteOldFile - " + "isNeedDeleteOldFile".hashCode());
         
-        System.out.println("ThStorageWordStatusActivity - " + "ThStorageWordStatusActivity".hashCode());
-        System.out.println("ThStorageWordStatusDataCache - " + "ThStorageWordStatusDataCache".hashCode());
-        System.out.println("ThStorageWordStatusWorkers - " + "ThStorageWordStatusWorkers".hashCode());
+        System.out.println("isOldFileDeleted - " + "isOldFileDeleted".hashCode());
+        System.out.println("deletedFileName - " + "deletedFileName".hashCode());
+        System.out.println("flowFileNamePrefix - " + "flowFileNamePrefix".hashCode());
         System.out.println("CacheToLimitFileSystemLimit - " + "CacheToLimitFileSystemLimit".hashCode());
         System.out.println("FlagsProcess - " + "FlagsProcess".hashCode());
         

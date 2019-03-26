@@ -27,15 +27,15 @@ import java.util.concurrent.ConcurrentHashMap;
  *     ConcurrentHashMap<String, String> (3) - <hexWord (tagFileName), subString>
  * @author wladimirowichbiaran
  */
-public class ThStorageWordCache {
+public class ThStorageWordCacheReaded {
     
     private ConcurrentHashMap<Integer, 
             ConcurrentHashMap<String, 
                 ConcurrentHashMap<Integer, 
-                    ConcurrentHashMap<String, String>>>> cachedData;
+                    ConcurrentHashMap<String, String>>>> cachedDataReaded;
     
-    public ThStorageWordCache() {
-        this.cachedData = createNewListStoragesMapEmpty();
+    public ThStorageWordCacheReaded() {
+        this.cachedDataReaded = createNewListStoragesMapEmpty();
     }
     protected ConcurrentHashMap<Integer, 
         ConcurrentHashMap<String, 
@@ -176,14 +176,14 @@ public class ThStorageWordCache {
                 returnFormCacheNull = Boolean.TRUE;
             }
             if( getListBySubStrLength == null ){
-                throw new NullPointerException(ThStorageWordCache.class.getCanonicalName() 
+                throw new NullPointerException(ThStorageWordCacheReaded.class.getCanonicalName() 
                         + " for word by type " + String.valueOf(typeWordFunc)
                         + " tagName " + tagNameFunc
                         + " subString " + strSubStringFunc
                         + " data in cache is null");
             }
             if( returnFormCacheNull ){
-                throw new NullPointerException(ThStorageWordCache.class.getCanonicalName() 
+                throw new NullPointerException(ThStorageWordCacheReaded.class.getCanonicalName() 
                         + " for word by type " + String.valueOf(typeWordFunc)
                         + " tagName " + tagNameFunc
                         + " subString " + strSubStringFunc
@@ -252,65 +252,18 @@ public class ThStorageWordCache {
                 ConcurrentHashMap<Integer, 
                     ConcurrentHashMap<String, String>>> forListReturn;
         try{
-            forListReturn = this.cachedData.get(typeWordOuter);
+            forListReturn = this.cachedDataReaded.get(typeWordOuter);
             if( forListReturn == null ){
                 forListReturn = new ConcurrentHashMap<String, 
                 ConcurrentHashMap<Integer, 
                     ConcurrentHashMap<String, String>>>();
-                this.cachedData.put(typeWordOuter, forListReturn);
+                this.cachedDataReaded.put(typeWordOuter, forListReturn);
             }
             return forListReturn;
         } finally {
             forListReturn = null;
         }
     }
-    /**
-     * 
-     * @param typeWord
-     * @param tagName
-     * @param strSubString
-     * @param keysPointsFlow ConcurrentHashMap<String, String>
-     *          <ThStorageWordStatusDataFs.hashCode(), recordUUID>
-     *          <ThStorageWordStatusName.hashCode(), recordUUID>
-     *          <ThStorageWordStatusActivity.hashCode(), recordUUID>
-     *          <ThStorageWordStatusDataCache.hashCode(), recordUUID>
-     *          <ThStorageWordStatusWorkers.hashCode(), recordUUID>
-     */
-    protected Boolean setDataIntoCacheFlow(
-            final Integer typeWord, 
-            final String tagName, 
-            final String strSubString){
-        Integer funcTypeWord;
-        String funcSubString;
-        String funcHexTagName;
-        ConcurrentHashMap<String, String> inputedData;
-        ConcurrentHashMap<String, String> typeWordTagFileNameFlowUuids;
-        try {
-            funcTypeWord = (Integer) typeWord;
-            funcSubString = (String) strSubString;
-            funcHexTagName = (String) tagName;
-            try{
-                typeWordTagFileNameFlowUuids = getTypeWordTagFileNameData(
-                        funcTypeWord,
-                        funcHexTagName,
-                        funcSubString);
-            } catch(IllegalArgumentException exSetInCahe) {
-                System.err.println(exSetInCahe.getMessage());
-                return Boolean.FALSE;
-            }
-            inputedData = new ConcurrentHashMap<String, String>();
-            inputedData.put(funcHexTagName, funcSubString);
-            typeWordTagFileNameFlowUuids.putAll(inputedData);
-            return Boolean.TRUE;
-        } finally {
-            typeWordTagFileNameFlowUuids = null;
-            inputedData = null;
-            funcTypeWord = null;
-            funcSubString = null;
-            funcHexTagName = null;
-        }
-    }
-    
     /**
      * 
      * @param typeWord
@@ -324,7 +277,7 @@ public class ThStorageWordCache {
      *          <ThStorageWordStatusDataCache.hashCode(), recordUUID>
      *          <ThStorageWordStatusWorkers.hashCode(), recordUUID>
      */
-    protected Boolean addAllDataIntoCache(
+    protected Boolean addAllDataIntoCacheReaded(
             final Integer typeWord, 
             final String tagName, 
             final String strSubString,
@@ -381,7 +334,7 @@ public class ThStorageWordCache {
      *          <ThStorageWordStatusDataCache.hashCode(), recordUUID>
      *          <ThStorageWordStatusWorkers.hashCode(), recordUUID>
      */
-    protected Boolean isCacheHasData(
+    protected Boolean isCacheReadedHasData(
             final Integer typeWord, 
             final String tagName, 
             final String strSubString){
@@ -430,7 +383,7 @@ public class ThStorageWordCache {
      *          <ThStorageWordStatusDataCache.hashCode(), recordUUID>
      *          <ThStorageWordStatusWorkers.hashCode(), recordUUID>
      */
-    protected Integer sizeDataInCache(
+    protected Integer sizeDataInCacheReaded(
             final Integer typeWord, 
             final String tagName, 
             final String strSubString){
@@ -467,7 +420,7 @@ public class ThStorageWordCache {
         }
     }
     protected void printCacheData(){
-        for( Map.Entry<Integer,ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>>> cachedTypes : this.cachedData.entrySet()){
+        for( Map.Entry<Integer,ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>>> cachedTypes : this.cachedDataReaded.entrySet()){
             for(Map.Entry<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>> hexSubByte : cachedTypes.getValue().entrySet()){
                 for(Map.Entry<Integer, ConcurrentHashMap<String, String>> itemLength : hexSubByte.getValue().entrySet()){
                     for(Map.Entry<String, String> itemData : itemLength.getValue().entrySet()){

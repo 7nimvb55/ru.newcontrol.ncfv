@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemNotFoundException;
@@ -28,6 +29,7 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.ProviderNotFoundException;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -60,11 +62,11 @@ public class ThStorageWordLogicWrite {
             URI byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD);
             Map<String, String> byPrefixGetMap = currentIndexStorages.byPrefixGetMap(
                     AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD); 
-            try( FileSystem fsForReadData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
+            try( FileSystem fsForWriteData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
         
         
-            do{ 
-                try{
+            do { 
+                try {
 
                 /**
                  * @todo release some bus for each index system, 
@@ -112,7 +114,8 @@ public class ThStorageWordLogicWrite {
                                 if( !flowPointsUUID.isEmpty() ){
                                     if( flowPointsUUID.size() == 5 ){
                                         if( !flowPointsUUID.containsKey("ThStorageWordStatusDataFs".hashCode()) ){
-                                            ConcurrentHashMap<String, String> remove = busVal.getValue().remove(mainFlowLabel);
+                                            ConcurrentHashMap<Integer, UUID> removeBadDataFsUUID = typeWordTagFileNameFlowUuids.remove(mainFlowLabel);
+                                            removeBadDataFsUUID = null;
                                             System.err.println("-----------------"
                                                     + "||||||||||||||||||"
                                                     + "-----------------"
@@ -123,7 +126,8 @@ public class ThStorageWordLogicWrite {
                                             continue;
                                         }
                                         if( !flowPointsUUID.containsKey("ThStorageWordStatusName".hashCode()) ){
-                                            busVal.getValue().remove(mainFlowLabel);
+                                            ConcurrentHashMap<Integer, UUID> removeBadNameUUID = typeWordTagFileNameFlowUuids.remove(mainFlowLabel);
+                                            removeBadNameUUID = null;
                                             System.err.println("-----------------"
                                                     + "||||||||||||||||||"
                                                     + "-----------------"
@@ -134,7 +138,8 @@ public class ThStorageWordLogicWrite {
                                             continue;
                                         }
                                         if( !flowPointsUUID.containsKey("ThStorageWordStatusActivity".hashCode()) ){
-                                            busVal.getValue().remove(mainFlowLabel);
+                                            ConcurrentHashMap<Integer, UUID> removeBadActivityUUID = typeWordTagFileNameFlowUuids.remove(mainFlowLabel);
+                                            removeBadActivityUUID = null;
                                             System.err.println("-----------------"
                                                     + "||||||||||||||||||"
                                                     + "-----------------"
@@ -145,7 +150,8 @@ public class ThStorageWordLogicWrite {
                                             continue;
                                         }
                                         if( !flowPointsUUID.containsKey("ThStorageWordStatusDataCache".hashCode()) ){
-                                            busVal.getValue().remove(mainFlowLabel);
+                                            ConcurrentHashMap<Integer, UUID> removeBadDataCacheUUID = typeWordTagFileNameFlowUuids.remove(mainFlowLabel);
+                                            removeBadDataCacheUUID = null;
                                             System.err.println("-----------------"
                                                     + "||||||||||||||||||"
                                                     + "-----------------"
@@ -156,7 +162,8 @@ public class ThStorageWordLogicWrite {
                                             continue;
                                         }
                                         if( !flowPointsUUID.containsKey("ThStorageWordStatusWorkers".hashCode()) ){
-                                            busVal.getValue().remove(mainFlowLabel);
+                                            ConcurrentHashMap<Integer, UUID> removeBadWorkersUUID = typeWordTagFileNameFlowUuids.remove(mainFlowLabel);
+                                            removeBadWorkersUUID = null;
                                             System.err.println("-----------------"
                                                     + "||||||||||||||||||"
                                                     + "-----------------"
@@ -178,8 +185,9 @@ public class ThStorageWordLogicWrite {
                                         try{
                                             storageWordStatusActivity.validateCountParams(getKeyActivity);
                                         } catch (IllegalArgumentException exActiv) {
-                                            exActiv.getMessage();
-                                            busVal.getValue().remove(mainFlowLabel);
+                                            System.err.println(exActiv.getMessage());
+                                            ConcurrentHashMap<Integer, UUID> removeBadActivityUUID = typeWordTagFileNameFlowUuids.remove(mainFlowLabel);
+                                            removeBadActivityUUID = null;
                                             System.err.println("-----------------"
                                                     + "||||||||||||||||||"
                                                     + "-----------------"
@@ -195,9 +203,10 @@ public class ThStorageWordLogicWrite {
                                         UUID getKeyDataCache = (UUID) flowPointsUUID.get("ThStorageWordStatusDataCache".hashCode());
                                         try{
                                             storageWordStatusDataCache.validateCountParams(getKeyDataCache);
-                                        } catch (IllegalArgumentException exActiv) {
-                                            exActiv.getMessage();
-                                            busVal.getValue().remove(mainFlowLabel);
+                                        } catch (IllegalArgumentException exDataCache) {
+                                            System.err.println(exDataCache.getMessage());
+                                            ConcurrentHashMap<Integer, UUID> removeBadDataCacheUUID = typeWordTagFileNameFlowUuids.remove(mainFlowLabel);
+                                            removeBadDataCacheUUID = null;
                                             System.err.println("-----------------"
                                                     + "||||||||||||||||||"
                                                     + "-----------------"
@@ -214,9 +223,10 @@ public class ThStorageWordLogicWrite {
                                         UUID getKeyDataFs = (UUID) flowPointsUUID.get("ThStorageWordStatusDataFs".hashCode());
                                         try{
                                             storageWordStatusDataFs.validateCountParams(getKeyDataFs);
-                                        } catch (IllegalArgumentException exActiv) {
-                                            exActiv.getMessage();
-                                            busVal.getValue().remove(mainFlowLabel);
+                                        } catch (IllegalArgumentException exDataFs) {
+                                            System.err.println(exDataFs.getMessage());
+                                            ConcurrentHashMap<Integer, UUID> removeBadDataFsUUID = typeWordTagFileNameFlowUuids.remove(mainFlowLabel);
+                                            removeBadDataFsUUID = null;
                                             System.err.println("-----------------"
                                                     + "||||||||||||||||||"
                                                     + "-----------------"
@@ -235,8 +245,9 @@ public class ThStorageWordLogicWrite {
                                         try{
                                             storageWordStatusName.validateCountParams(getKeyName);
                                         } catch (IllegalArgumentException exName) {
-                                            exName.getMessage();
-                                            busVal.getValue().remove(mainFlowLabel);
+                                            System.err.println(exName.getMessage());
+                                            ConcurrentHashMap<Integer, UUID> removeBadNameUUID = typeWordTagFileNameFlowUuids.remove(mainFlowLabel);
+                                            removeBadNameUUID = null;
                                             System.err.println("-----------------"
                                                     + "||||||||||||||||||"
                                                     + "-----------------"
@@ -255,8 +266,9 @@ public class ThStorageWordLogicWrite {
                                         try{
                                             storageWordStatusWorkers.validateCountParams(getKeyWorkers);
                                         } catch (IllegalArgumentException exWorkers) {
-                                            exWorkers.getMessage();
-                                            busVal.getValue().remove(mainFlowLabel);
+                                            System.err.println(exWorkers.getMessage());
+                                            ConcurrentHashMap<Integer, UUID> removeBadWorkersUUID = typeWordTagFileNameFlowUuids.remove(mainFlowLabel);
+                                            removeBadWorkersUUID = null;
                                             System.err.println("-----------------"
                                                     + "||||||||||||||||||"
                                                     + "-----------------"
@@ -269,19 +281,50 @@ public class ThStorageWordLogicWrite {
                                         
                                         ConcurrentHashMap<Integer, String> statusNameForKeyPointFlow = storageWordStatusName.getStatusNameForKeyPointFlow(getKeyName);
                                         ConcurrentHashMap<Integer, Boolean> statusWorkersForKeyPointFlow = storageWordStatusWorkers.getStatusWorkersForKeyPointFlow(getKeyWorkers);
+                                        //isWriteProcess - 1640531930
                                         Boolean getIsWriteInProcess = statusWorkersForKeyPointFlow.get(1640531930);
                                         if( getIsWriteInProcess ){
                                             continue;
                                         }
-                                        //isWriteProcess - 1640531930
+                                        
                                         
                                         
                                         //storageDirectoryName - 1962941405
                                         String storageDirectoryName = statusNameForKeyPointFlow.get(1962941405);
+                                        
+                                        Path storageTypeWordWritedFile = fsForWriteData.getPath(storageDirectoryName);
+                                        if( Files.notExists(storageTypeWordWritedFile, LinkOption.NOFOLLOW_LINKS) ){
+                                            try{
+                                                Files.createDirectories(storageTypeWordWritedFile);
+                                            } catch (FileAlreadyExistsException exAlreadyExist) {
+                                                exAlreadyExist.printStackTrace();
+                                            } catch (SecurityException exSecurity) {
+                                                exSecurity.printStackTrace();
+                                            } catch (UnsupportedOperationException exUnSupp) {
+                                                exUnSupp.printStackTrace();
+                                            }
+                                            
+                                        }
+                                        Integer volNum = 0;
+                                        Integer sizeDataDest = 0;
+                                        
+                                        
+                                        //flowFileNamePrefix - -980152217
+                                        String prefixFileName = statusNameForKeyPointFlow.get(-980152217);
+                                        
                                         //currentFileName - 1517772480
-                                        String currentFileName = statusNameForKeyPointFlow.get(1517772480);
+                                        //String currentFileName = statusNameForKeyPointFlow.get(1517772480);
+                                        String currentFileName = new String()
+                                            .concat(AppFileNamesConstants.SZFS_STORAGE_WORD_FILE_PREFIX)
+                                            .concat(prefixFileName.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
+                                            .concat(String.valueOf(0))
+                                            .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
+                                            .concat(String.valueOf(volNum));
                                         //newFileName - 521024487
-                                        String newFileName = statusNameForKeyPointFlow.get(521024487);
+                                        //String newFileName = statusNameForKeyPointFlow.get(521024487);
+                                        
+                                        
+                                        
                                         
                                         
                                         ConcurrentHashMap<String, String> pollTypeWordTagFileNameData = null;
@@ -298,19 +341,24 @@ public class ThStorageWordLogicWrite {
                                         if( pollTypeWordTagFileNameData == null ){
                                             continue;
                                         }
-                                        Path storageTypeWordWritedFile = fsForReadData.getPath(storageDirectoryName);
-                                        if( Files.notExists(storageTypeWordWritedFile, LinkOption.NOFOLLOW_LINKS) ){
-                                            try{
-                                                Files.createDirectories(storageTypeWordWritedFile);
-                                            } catch (FileAlreadyExistsException exAlreadyExist) {
-                                                exAlreadyExist.printStackTrace();
-                                            } catch (SecurityException exSecurity) {
-                                                exSecurity.printStackTrace();
-                                            } catch (UnsupportedOperationException exUnSupp) {
-                                                exUnSupp.printStackTrace();
-                                            }
-                                            
+                                        Boolean isDataToVol = Boolean.FALSE;
+                                        if( pollTypeWordTagFileNameData.size() > AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT ){
+                                            isDataToVol = Boolean.TRUE;
                                         }
+                                        sizeDataDest = pollTypeWordTagFileNameData.size();
+                                        String newFileName = new String()
+                                            .concat(AppFileNamesConstants.SZFS_STORAGE_WORD_FILE_PREFIX)
+                                            .concat(prefixFileName.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
+                                            .concat(String.valueOf(sizeDataDest))
+                                            .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
+                                            .concat(String.valueOf(volNum));
+                                        /**
+                                         * if size > limit pack data, write, and write new vol
+                                         * with size - limit data
+                                         * 
+                                         * in statistic for remove main uuid need delete for all uuids...
+                                         */
+                                        
                                         /**
                                          * need additional flags 
                                          * isErrorOnWrite, 
@@ -318,44 +366,150 @@ public class ThStorageWordLogicWrite {
                                          * isNullOnDataInCache,
                                          * isErrorOnDataInCache,
                                          */
-                                        Path nowWritedFile = fsForReadData.getPath(currentFileName);
-                                        
-                                        try(ObjectOutputStream oos = 
-                                            new ObjectOutputStream(Files.newOutputStream(nowWritedFile)))
-                                        {
-                                            oos.writeObject(pollTypeWordTagFileNameData);
-                                            System.out.println(ThWordLogicWrite.class.getCanonicalName() 
-                                                    + " => => =>                                             => => => " 
-                                                    + nowWritedFile.toUri().toString() 
-                                                    + " writed size " + pollTypeWordTagFileNameData.size());
-                                            statusWorkersForKeyPointFlow.put(1640531930, Boolean.TRUE);
-                                        } catch(Exception ex){
-                                            ex.printStackTrace();
+                                        if( !isDataToVol ){
+                                            Path nowWritedFile = fsForWriteData.getPath(currentFileName);
+
+                                            try(ObjectOutputStream oos = 
+                                                new ObjectOutputStream(Files.newOutputStream(nowWritedFile)))
+                                            {
+                                                oos.writeObject(pollTypeWordTagFileNameData);
+                                                System.out.println(ThWordLogicWrite.class.getCanonicalName() 
+                                                        + " => => =>                                             => => => " 
+                                                        + nowWritedFile.toUri().toString() 
+                                                        + " writed size " + pollTypeWordTagFileNameData.size());
+                                                statusWorkersForKeyPointFlow.put(1640531930, Boolean.TRUE);
+                                            } catch(Exception ex){
+                                                ex.printStackTrace();
+                                            }
+                                            //isMoveFileReady - -1884096596
+                                            Boolean getIsMoveReady = statusWorkersForKeyPointFlow.get(-1884096596);
+                                            if( getIsMoveReady ){
+                                                continue;
+                                            }
+
+                                            Path moveToFile = fsForWriteData.getPath(newFileName);
+                                            try{
+                                                Files.move(nowWritedFile, moveToFile, StandardCopyOption.ATOMIC_MOVE);
+                                                statusWorkersForKeyPointFlow.put(-1884096596, Boolean.TRUE);
+                                                statusWorkersForKeyPointFlow.put(-83825824, Boolean.TRUE);
+                                                statusNameForKeyPointFlow.put(1517772480, newFileName);
+                                                //after delete oldFile
+                                                ConcurrentHashMap<String, String> remove = busVal.getValue().remove(mainFlowLabel);
+                                                remove = null;
+                                            } catch(SecurityException exSecurity) {
+                                                System.err.println(exSecurity.getMessage());
+                                                exSecurity.printStackTrace();
+                                            } catch(AtomicMoveNotSupportedException exAtomic) {
+                                                System.err.println(exAtomic.getMessage());
+                                                exAtomic.printStackTrace();
+                                            } catch(FileAlreadyExistsException exAlreadyExists) {
+                                                System.err.println(exAlreadyExists.getMessage());
+                                                exAlreadyExists.printStackTrace();
+                                            } catch(UnsupportedOperationException exUnsupported) {
+                                                System.err.println(exUnsupported.getMessage());
+                                                exUnsupported.printStackTrace();
+                                            }
+                                        } else {
+                                            do{
+                                                ConcurrentHashMap<String, String> packetForWriteData = new ConcurrentHashMap<String, String>();
+                                                for(Map.Entry<String, String> valForVolItem : pollTypeWordTagFileNameData.entrySet()){
+                                                    
+                                                    String keyItem = (String) valForVolItem.getKey();
+                                                    if( keyItem != null ){
+                                                        String valItem = (String) pollTypeWordTagFileNameData.remove(keyItem);
+
+                                                        packetForWriteData.put(keyItem, valItem);
+                                                    
+                                                        sizeDataDest = packetForWriteData.size();
+                                                        if( ( sizeDataDest == AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT) || (pollTypeWordTagFileNameData.isEmpty() ) ){
+                                                            currentFileName = new String()
+                                                                .concat(AppFileNamesConstants.SZFS_STORAGE_WORD_FILE_PREFIX)
+                                                                .concat(prefixFileName.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
+                                                                .concat(String.valueOf(0))
+                                                                .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
+                                                                .concat(String.valueOf(volNum));
+                                                            //newFileName - 521024487
+                                                            //String newFileName = statusNameForKeyPointFlow.get(521024487);
+                                                            newFileName = new String()
+                                                                .concat(AppFileNamesConstants.SZFS_STORAGE_WORD_FILE_PREFIX)
+                                                                .concat(prefixFileName.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
+                                                                .concat(String.valueOf(sizeDataDest))
+                                                                .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
+                                                                .concat(String.valueOf(volNum));
+
+                                                            Path nowWritedFile = fsForWriteData.getPath(currentFileName);
+
+                                                            try(ObjectOutputStream oos = 
+                                                                new ObjectOutputStream(Files.newOutputStream(nowWritedFile)))
+                                                            {
+                                                                oos.writeObject(packetForWriteData);
+                                                                System.out.println(ThWordLogicWrite.class.getCanonicalName() 
+                                                                        + " => => =>                                             => => => " 
+                                                                        + nowWritedFile.toUri().toString() 
+                                                                        + " writed size " + pollTypeWordTagFileNameData.size());
+                                                                statusWorkersForKeyPointFlow.put(1640531930, Boolean.TRUE);
+                                                            } catch(Exception ex){
+                                                                ex.printStackTrace();
+                                                            }
+                                                            //isMoveFileReady - -1884096596
+                                                            Boolean getIsMoveReady = statusWorkersForKeyPointFlow.get(-1884096596);
+                                                            if( getIsMoveReady ){
+                                                                continue;
+                                                            }
+
+                                                            Path moveToFile = fsForWriteData.getPath(newFileName);
+                                                            try{
+                                                                Files.move(nowWritedFile, moveToFile, StandardCopyOption.ATOMIC_MOVE);
+                                                                statusWorkersForKeyPointFlow.put(-1884096596, Boolean.TRUE);
+                                                                statusWorkersForKeyPointFlow.put(-83825824, Boolean.TRUE);
+                                                                statusNameForKeyPointFlow.put(521024487, newFileName);
+                                                                statusNameForKeyPointFlow.put(1517772480, newFileName);
+                                                                //after delete oldFile
+                                                                if( busVal.getValue().containsKey(mainFlowLabel) ){
+                                                                    ConcurrentHashMap<String, String> remove = busVal.getValue().remove(mainFlowLabel);
+                                                                    remove = null;
+                                                                }
+                                                            } catch(SecurityException exSecurity) {
+                                                                System.err.println(exSecurity.getMessage());
+                                                                exSecurity.printStackTrace();
+                                                            } catch(AtomicMoveNotSupportedException exAtomic) {
+                                                                System.err.println(exAtomic.getMessage());
+                                                                exAtomic.printStackTrace();
+                                                            } catch(FileAlreadyExistsException exAlreadyExists) {
+                                                                System.err.println(exAlreadyExists.getMessage());
+                                                                exAlreadyExists.printStackTrace();
+                                                            } catch(UnsupportedOperationException exUnsupported) {
+                                                                System.err.println(exUnsupported.getMessage());
+                                                                exUnsupported.printStackTrace();
+                                                            }
+                                                            volNum++;
+                                                            packetForWriteData = new ConcurrentHashMap<String, String>();
+                                                        }
+                                                    }
+                                                }
+                                            }while( !pollTypeWordTagFileNameData.isEmpty() );
                                         }
                                         
-                                        //isMoveFileReady - -1884096596
-                                        Boolean getIsMoveReady = statusWorkersForKeyPointFlow.get(-1884096596);
-                                        if( getIsMoveReady ){
-                                            continue;
+                                        
+                                        
+                                        Boolean getIsNeedDelete = statusWorkersForKeyPointFlow.get(-1172779240);
+                                        if( getIsNeedDelete ){
+                                            String getOldForDeleteFileName = statusNameForKeyPointFlow.get(2045325664);
+                                            Path deleteFile = fsForWriteData.getPath(getOldForDeleteFileName);
+                                            
+                                            try{
+                                                Files.deleteIfExists(deleteFile);
+                                            } catch (DirectoryNotEmptyException exNotEmptyDir) {
+                                                exNotEmptyDir.printStackTrace();
+                                            } catch (SecurityException exSecurity) {
+                                                exSecurity.printStackTrace();
+                                            } catch (IOException exInOut) {
+                                                exInOut.printStackTrace();
+                                            }
+                                            ConcurrentHashMap<Integer, UUID> removeBadWorkersUUID = typeWordTagFileNameFlowUuids.remove(mainFlowLabel);
+                                            removeBadWorkersUUID = null;
                                         }
                                         
-                                        Path moveToFile = fsForReadData.getPath(newFileName);
-                                        try{
-                                            Files.move(nowWritedFile, moveToFile, StandardCopyOption.ATOMIC_MOVE);
-                                            statusWorkersForKeyPointFlow.put(-1884096596, Boolean.TRUE);
-                                        } catch(SecurityException exSecurity) {
-                                            System.err.println(exSecurity.getMessage());
-                                            exSecurity.printStackTrace();
-                                        } catch(AtomicMoveNotSupportedException exAtomic) {
-                                            System.err.println(exAtomic.getMessage());
-                                            exAtomic.printStackTrace();
-                                        } catch(FileAlreadyExistsException exAlreadyExists) {
-                                            System.err.println(exAlreadyExists.getMessage());
-                                            exAlreadyExists.printStackTrace();
-                                        } catch(UnsupportedOperationException exUnsupported) {
-                                            System.err.println(exUnsupported.getMessage());
-                                            exUnsupported.printStackTrace();
-                                        }
                                         
                                     }
                                 }

@@ -31,6 +31,11 @@ public class ThStorageWordState {
     private ThStorageWordBusWriter busStorageWordRouterJobToWriter;
     private Boolean isSetStorageWordRouterJobToWriter;
     /**
+     * ThStorageWordBusReader
+     */
+    private ThStorageWordBusReader busStorageWordRouterJobToReader;
+    private Boolean isSetStorageWordRouterJobToReader;
+    /**
      * ThStorageWordBusOutput
      */
     private ThStorageWordBusOutput busWordWritedJob;
@@ -46,6 +51,7 @@ public class ThStorageWordState {
         setFalseWordWritedJob();
         setFalseLongWordWritedJob();
         setFalseStorageWordRouterJobToWriter();
+        setFalseStorageWordRouterJobToReader();
     }
     /**
      * 
@@ -83,10 +89,10 @@ public class ThStorageWordState {
         if( !this.isStorageWordRouterJobToWriter() ){
             throw new IllegalArgumentException("Bus jobs for output not set in " + ThStorageWordState.class.getCanonicalName());
         }
-        return this.busStorageWordRouterJobToWriter;
+        return (ThStorageWordBusWriter) this.busStorageWordRouterJobToWriter;
     }
     protected void setBusJobForStorageWordRouterJobToWriter(final ThStorageWordBusWriter busStorageWordRouterJobToWriterOuter){
-        this.busStorageWordRouterJobToWriter = busStorageWordRouterJobToWriterOuter;
+        this.busStorageWordRouterJobToWriter = (ThStorageWordBusWriter) busStorageWordRouterJobToWriterOuter;
         setTrueStorageWordRouterJobToWriter();
     }
     protected void setTrueStorageWordRouterJobToWriter(){
@@ -97,6 +103,33 @@ public class ThStorageWordState {
     }
     protected Boolean isStorageWordRouterJobToWriter(){
         if( this.isSetStorageWordRouterJobToWriter ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * 
+     * @return 
+     * @throws #java.lang.IllegalArgumentException
+     */
+    protected ThStorageWordBusReader getBusJobForStorageWordRouterJobToReader(){
+        if( !this.isStorageWordRouterJobToReader() ){
+            throw new IllegalArgumentException("Bus jobs for output not set in " + ThStorageWordState.class.getCanonicalName());
+        }
+        return (ThStorageWordBusReader) this.busStorageWordRouterJobToReader;
+    }
+    protected void setBusJobForStorageWordRouterJobToReader(final ThStorageWordBusReader busStorageWordRouterJobToReaderOuter){
+        this.busStorageWordRouterJobToReader = (ThStorageWordBusReader) busStorageWordRouterJobToReaderOuter;
+        setTrueStorageWordRouterJobToReader();
+    }
+    protected void setTrueStorageWordRouterJobToReader(){
+        this.isSetStorageWordRouterJobToReader = Boolean.TRUE;
+    }
+    protected void setFalseStorageWordRouterJobToReader(){
+        this.isSetStorageWordRouterJobToReader = Boolean.FALSE;
+    }
+    protected Boolean isStorageWordRouterJobToReader(){
+        if( this.isSetStorageWordRouterJobToReader ){
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
