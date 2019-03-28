@@ -81,8 +81,8 @@ public class ThStorageWordLogicWrite {
 
                 ConcurrentHashMap<Integer, ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>>> maxUsedBusesSet = busJobForWrite.getMaxUsedBusesSet();
 
-                for(Map.Entry<Integer, ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>>> busVal : maxUsedBusesSet.entrySet()){
-                    for(Map.Entry<UUID, ConcurrentHashMap<String, String>> forWriterJobUUID : busVal.getValue().entrySet()){
+                for( Map.Entry<Integer, ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>>> busVal : maxUsedBusesSet.entrySet() ){
+                    for( Map.Entry<UUID, ConcurrentHashMap<String, String>> forWriterJobUUID : busVal.getValue().entrySet() ){
                         /**
                          * @todo get PointFlow for UUID
                          * call write func
@@ -91,7 +91,7 @@ public class ThStorageWordLogicWrite {
                          */
                         UUID mainFlowLabel = forWriterJobUUID.getKey();
 
-                        for(Map.Entry<String, String> itemsTagNames : forWriterJobUUID.getValue().entrySet()){
+                        for( Map.Entry<String, String> itemsTagNames : forWriterJobUUID.getValue().entrySet() ){
                             /**
                              * @todo to do function for return removed data from cache
                              */
@@ -415,7 +415,7 @@ public class ThStorageWordLogicWrite {
                                         } else {
                                             do{
                                                 ConcurrentHashMap<String, String> packetForWriteData = new ConcurrentHashMap<String, String>();
-                                                for(Map.Entry<String, String> valForVolItem : pollTypeWordTagFileNameData.entrySet()){
+                                                for( Map.Entry<String, String> valForVolItem : pollTypeWordTagFileNameData.entrySet() ){
                                                     
                                                     String keyItem = (String) valForVolItem.getKey();
                                                     if( keyItem != null ){
@@ -442,8 +442,8 @@ public class ThStorageWordLogicWrite {
 
                                                             Path nowWritedFile = fsForWriteData.getPath(currentFileName);
 
-                                                            try(ObjectOutputStream oos = 
-                                                                new ObjectOutputStream(Files.newOutputStream(nowWritedFile)))
+                                                            try( ObjectOutputStream oos = 
+                                                                new ObjectOutputStream(Files.newOutputStream(nowWritedFile)) )
                                                             {
                                                                 oos.writeObject(packetForWriteData);
                                                                 System.out.println(ThWordLogicWrite.class.getCanonicalName() 
@@ -507,8 +507,8 @@ public class ThStorageWordLogicWrite {
                                             } catch (IOException exInOut) {
                                                 exInOut.printStackTrace();
                                             }
-                                            ConcurrentHashMap<Integer, UUID> removeBadWorkersUUID = typeWordTagFileNameFlowUuids.remove(mainFlowLabel);
-                                            removeBadWorkersUUID = null;
+                                            Boolean removeAllFlowStatusByUUID = storageWordStatistic.removeAllFlowStatusByUUID(mainFlowLabel);
+                                            removeAllFlowStatusByUUID = null;
                                         }
                                         
                                         
@@ -531,6 +531,9 @@ public class ThStorageWordLogicWrite {
                     
                 }
             } while( outerRuleStorageWord.isRunnedStorageWordWorkRouter() );
+            /**
+             * @todo write all cache data 
+             */
         } catch(FileSystemNotFoundException ex){
             System.err.println(ex.getMessage());
             ex.printStackTrace();

@@ -68,7 +68,34 @@ public class ThStorageWordStatusDataFs {
             getStatusDataFsFormPool = null;
         }
     }
-
+    /**
+     * 
+     * @param keyPointFlowDataFs
+     * @return true if found and delete data
+     */
+    protected Boolean removeStatusDataFsForKeyPointFlow(final UUID keyPointFlowDataFs){
+        UUID inputedVal;
+        ConcurrentHashMap<Integer, Integer> getRemovedStatusDataFsFormPool;
+        try{
+            inputedVal = (UUID) keyPointFlowDataFs;
+            getRemovedStatusDataFsFormPool = (ConcurrentHashMap<Integer, Integer>) this.poolStatusDataFs.remove(inputedVal);
+            if( getRemovedStatusDataFsFormPool == null ){
+                return Boolean.FALSE;
+            }
+            for( Map.Entry<Integer, Integer> itemOfPoint : getRemovedStatusDataFsFormPool.entrySet() ){
+                Integer remove = getRemovedStatusDataFsFormPool.remove(itemOfPoint.getKey());
+                Integer [] remStrVal = {remove};
+                remStrVal = null;
+                Integer [] remIntKey = {itemOfPoint.getKey()};
+                remIntKey = null;
+            }
+            getRemovedStatusDataFsFormPool = null;
+            return Boolean.TRUE;
+        } finally {
+            inputedVal = null;
+            getRemovedStatusDataFsFormPool = null;
+        }
+    }
     /**
      * not exist bus
      * @param typeWordByDetectedCodePoint

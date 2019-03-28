@@ -48,6 +48,40 @@ public class ThStorageWordCache {
     }
     /**
      * 
+     * @return ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>
+     *                          <TypeWord, <TagName, SubString>>
+     */
+    protected ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> getListTypTagSubStr(){
+        ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> forReturnList;
+        try {
+            
+            forReturnList = new ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>();
+            
+            for( Map.Entry<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>>> itemTypeWord : this.cachedData.entrySet() ){
+                Integer keyTypeWord = (Integer) itemTypeWord.getKey();
+                ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>> valueItemTypeWord = itemTypeWord.getValue();
+                for( Map.Entry<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>> itemTagLetter : valueItemTypeWord.entrySet() ){
+                    String keyTagLetter = (String) itemTagLetter.getKey();
+                    ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> valueTagLetter = itemTagLetter.getValue();
+                    for( Map.Entry<Integer, ConcurrentHashMap<String, String>> itemSubStrLength : valueTagLetter.entrySet() ){
+                        Integer keySubStrLength = (Integer) itemSubStrLength.getKey();
+                        ConcurrentHashMap<String, String> valueSubStrLength = (ConcurrentHashMap<String, String>) itemSubStrLength.getValue();
+                        ConcurrentHashMap<String, String> getListForKeyWord = (ConcurrentHashMap<String, String>) forReturnList.get(keyTypeWord);
+                        if( getListForKeyWord == null){
+                            getListForKeyWord = new ConcurrentHashMap<String, String>();
+                            forReturnList.put(keyTypeWord, getListForKeyWord);
+                        }
+                        getListForKeyWord.putAll(valueSubStrLength);
+                    }
+                }
+            }
+            return forReturnList;
+        } finally {
+            forReturnList = null;
+        }
+    }
+    /**
+     * 
      * @param typeWord
      * @param tagName
      * @param strSubString
@@ -481,4 +515,10 @@ public class ThStorageWordCache {
         
         }
     }
+    /**
+     * isCacheEmpty
+     */
+    /**
+     * return CacheDataForFinishedWrite by bus type
+     */
 }

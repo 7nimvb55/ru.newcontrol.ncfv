@@ -86,7 +86,34 @@ public class ThStorageWordStatusWorkers {
             getStatusWorkersFormPool = null;
         }
     }
-
+    /**
+     * 
+     * @param keyPointFlowDataFs
+     * @return true if found and delete data
+     */
+    protected Boolean removeStatusWorkersForKeyPointFlow(final UUID keyPointFlowWorkers){
+        UUID inputedVal;
+        ConcurrentHashMap<Integer, Boolean> getRemovedStatusWorkersFormPool;
+        try{
+            inputedVal = (UUID) keyPointFlowWorkers;
+            getRemovedStatusWorkersFormPool = (ConcurrentHashMap<Integer, Boolean>) this.poolStatusWorkers.remove(inputedVal);
+            if( getRemovedStatusWorkersFormPool == null ){
+                return Boolean.FALSE;
+            }
+            for( Map.Entry<Integer, Boolean> itemOfPoint : getRemovedStatusWorkersFormPool.entrySet() ){
+                Boolean remove = getRemovedStatusWorkersFormPool.remove(itemOfPoint.getKey());
+                Boolean [] remStrVal = {remove};
+                remStrVal = null;
+                Integer [] remIntKey = {itemOfPoint.getKey()};
+                remIntKey = null;
+            }
+            getRemovedStatusWorkersFormPool = null;
+            return Boolean.TRUE;
+        } finally {
+            inputedVal = null;
+            getRemovedStatusWorkersFormPool = null;
+        }
+    }
     /**
      * not exist bus
      * @param typeWordByDetectedCodePoint

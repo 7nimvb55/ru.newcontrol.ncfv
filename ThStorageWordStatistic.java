@@ -128,7 +128,54 @@ public class ThStorageWordStatistic {
         this.thStorageWordStatusDataCache = new ThStorageWordStatusDataCache();
         this.thStorageWordStatusWorkers = new ThStorageWordStatusWorkers();
     }
-    
+    /**
+     * 
+     * @param inputMainFlowUUID
+     * @return true if found and delete data
+     */
+    protected Boolean removeAllFlowStatusByUUID(UUID inputMainFlowUUID){
+        
+        try {
+            if( this.fileStoragesMap == null ){
+                return Boolean.FALSE;
+            }
+            for( Map.Entry<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>>> itemLvlTypeWord : this.fileStoragesMap.entrySet() ){
+                ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>> valueItemLvlTypeWord = itemLvlTypeWord.getValue();
+                for( Map.Entry<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>> itemLvlTagFileNameLetter : valueItemLvlTypeWord.entrySet() ){
+                    ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>> valueItemLvlTagFileNameLetter = itemLvlTagFileNameLetter.getValue();
+                    for( Map.Entry<Integer, ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>> itemLvlSubStrLength : valueItemLvlTagFileNameLetter.entrySet() ){
+                        ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>> valueItemLvlSubStrLength = itemLvlSubStrLength.getValue();
+                        for( Map.Entry<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>> itemLvlTagFileName : valueItemLvlSubStrLength.entrySet() ){
+                            ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> valueItemLvlTagFileName = itemLvlTagFileName.getValue();
+                            for( Map.Entry<UUID, ConcurrentHashMap<Integer, UUID>> itemMainFlowUUID : valueItemLvlTagFileName.entrySet() ){
+                                UUID keyMainFlow = (UUID) itemMainFlowUUID.getKey();
+                                if( itemMainFlowUUID.getValue().size() == 5 ){
+                                    UUID keyDataFs = itemMainFlowUUID.getValue().get("ThStorageWordStatusDataFs".hashCode());
+                                    Boolean removeStatusDataFsForKeyPointFlow = (Boolean) this.thStorageWordStatusDataFs.removeStatusDataFsForKeyPointFlow(keyDataFs);
+                                    UUID keyName = itemMainFlowUUID.getValue().get("ThStorageWordStatusName".hashCode());
+                                    Boolean removeStatusNameForKeyPointFlow = (Boolean) this.thStorageWordStatusName.removeStatusNameForKeyPointFlow(keyName);
+                                    UUID keyActivity = itemMainFlowUUID.getValue().get("ThStorageWordStatusActivity".hashCode());
+                                    Boolean removeStatusActivityForKeyPointFlow = (Boolean) this.thStorageWordStatusActivity.removeStatusActivityForKeyPointFlow(keyActivity);
+                                    UUID keyDataCache = itemMainFlowUUID.getValue().get("ThStorageWordStatusDataCache".hashCode());
+                                    Boolean removeStatusDataCacheForKeyPointFlow = (Boolean) this.thStorageWordStatusDataCache.removeStatusDataCacheForKeyPointFlow(keyDataCache);
+                                    UUID keyWorkers = itemMainFlowUUID.getValue().get("ThStorageWordStatusWorkers".hashCode());
+                                    Boolean removeStatusWorkersForKeyPointFlow = (Boolean) this.thStorageWordStatusWorkers.removeStatusWorkersForKeyPointFlow(keyWorkers);
+                                    ConcurrentHashMap<Integer, UUID> removeMainFlowRec = valueItemLvlTagFileName.remove(keyMainFlow);
+                                    removeMainFlowRec = null;
+                                    keyMainFlow = null;
+                                } else {
+                                    return Boolean.FALSE;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return Boolean.TRUE;
+        } finally {
+        
+        }
+    }
     protected ThStorageWordCache getStorageWordCache(){
         return this.thStorageWordCache;
     }

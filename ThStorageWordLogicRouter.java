@@ -121,6 +121,26 @@ public class ThStorageWordLogicRouter {
         /**
          * @todo procedure for read all caches data and write it
          */
+        ThStorageWordCache storageWordCache = (ThStorageWordCache) storageWordStatistic.getStorageWordCache();
+        
+        ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> listTypTagSubStr = storageWordCache.getListTypTagSubStr();
+        
+        for(Map.Entry<Integer, ConcurrentHashMap<String, String>> itemList : listTypTagSubStr.entrySet()){
+            try {
+                    removeDataForCurrentTypeWordBus(funcRuleStorageWord, 
+                        itemList.getKey(), 
+                        listTypTagSubStr.remove(itemList.getKey()));
+                } catch(IllegalArgumentException exIllArg) {
+                    System.err.println(exIllArg.getMessage());
+                    exIllArg.printStackTrace();
+
+                } catch(NullPointerException exNullReturn) {
+                    System.err.println(exNullReturn.getMessage());
+                    exNullReturn.printStackTrace();
+                    continue;
+                }
+        }
+        
         System.out.println("++++++++++++++++++++++++++++++stop " + ThStorageWordLogicRouter.class.getCanonicalName());
     }
     /**
@@ -710,7 +730,7 @@ public class ThStorageWordLogicRouter {
             /**
              * isWriteProcess = TRUE;
              */
-            thStorageWordCache.printCacheData();
+            //thStorageWordCache.printCacheData();
             
         } catch(IllegalArgumentException exIllArg) {
             System.err.println(exIllArg.getMessage());

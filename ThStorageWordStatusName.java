@@ -57,7 +57,7 @@ public class ThStorageWordStatusName {
         ConcurrentHashMap<Integer, String> getStatusNameFormPool;
         try{
             inputedVal = (UUID) keyPointFlowName;
-            getStatusNameFormPool = this.poolStatusName.get(inputedVal);
+            getStatusNameFormPool = (ConcurrentHashMap<Integer, String>) this.poolStatusName.get(inputedVal);
             if( getStatusNameFormPool == null ){
                 throw new IllegalStateException(ThStorageWordStatusName.class.getCanonicalName()
                 + " not exist record in list for "
@@ -74,7 +74,34 @@ public class ThStorageWordStatusName {
             getStatusNameFormPool = null;
         }
     }
-
+    /**
+     * 
+     * @param keyPointFlowName
+     * @return true if found and delete data
+     */
+    protected Boolean removeStatusNameForKeyPointFlow(final UUID keyPointFlowName){
+        UUID inputedVal;
+        ConcurrentHashMap<Integer, String> getRemovedStatusNameFormPool;
+        try{
+            inputedVal = (UUID) keyPointFlowName;
+            getRemovedStatusNameFormPool = (ConcurrentHashMap<Integer, String>) this.poolStatusName.remove(inputedVal);
+            if( getRemovedStatusNameFormPool == null ){
+                return Boolean.FALSE;
+            }
+            for( Map.Entry<Integer, String> itemOfPoint : getRemovedStatusNameFormPool.entrySet() ){
+                String remove = getRemovedStatusNameFormPool.remove(itemOfPoint.getKey());
+                String [] remStrVal = {remove};
+                remStrVal = null;
+                Integer [] remIntKey = {itemOfPoint.getKey()};
+                remIntKey = null;
+            }
+            getRemovedStatusNameFormPool = null;
+            return Boolean.TRUE;
+        } finally {
+            inputedVal = null;
+            getRemovedStatusNameFormPool = null;
+        }
+    }
     /**
      * not exist bus
      * @param typeWordByDetectedCodePoint

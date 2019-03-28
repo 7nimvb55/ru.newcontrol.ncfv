@@ -89,7 +89,34 @@ public class ThStorageWordStatusDataCache {
             getStatusDataCacheFormPool = null;
         }
     }
-
+    /**
+     * 
+     * @param keyPointFlowDataCache
+     * @return true if found and delete data
+     */
+    protected Boolean removeStatusDataCacheForKeyPointFlow(final UUID keyPointFlowDataCache){
+        UUID inputedVal;
+        ConcurrentHashMap<Integer, Integer> getRemovedStatusDataCacheFormPool;
+        try{
+            inputedVal = (UUID) keyPointFlowDataCache;
+            getRemovedStatusDataCacheFormPool = (ConcurrentHashMap<Integer, Integer>) this.poolStatusDataCache.remove(inputedVal);
+            if( getRemovedStatusDataCacheFormPool == null ){
+                return Boolean.FALSE;
+            }
+            for( Map.Entry<Integer, Integer> itemOfPoint : getRemovedStatusDataCacheFormPool.entrySet() ){
+                Integer remove = getRemovedStatusDataCacheFormPool.remove(itemOfPoint.getKey());
+                Integer [] remStrVal = {remove};
+                remStrVal = null;
+                Integer [] remIntKey = {itemOfPoint.getKey()};
+                remIntKey = null;
+            }
+            getRemovedStatusDataCacheFormPool = null;
+            return Boolean.TRUE;
+        } finally {
+            inputedVal = null;
+            getRemovedStatusDataCacheFormPool = null;
+        }
+    }
     /**
      * not exist bus
      * @param typeWordByDetectedCodePoint
