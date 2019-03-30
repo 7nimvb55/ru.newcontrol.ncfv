@@ -51,6 +51,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author wladimirowichbiaran
  */
 public class ThStorageWordStatusDataCache {
+    private final Long timeCreation;
+    private final UUID objectLabel;
     /**
      * ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Long>>
      * <keyPointFlowDataCache, <lastAccessNanotime.hashCode(), Long Value>>
@@ -59,6 +61,8 @@ public class ThStorageWordStatusDataCache {
     private ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>> poolStatusDataCache;
     
     ThStorageWordStatusDataCache(){
+        this.timeCreation = System.nanoTime();
+        this.objectLabel = UUID.randomUUID();
         this.poolStatusDataCache = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>>();
     }
     /**
@@ -218,6 +222,95 @@ public class ThStorageWordStatusDataCache {
             defaultInCacheReaded = null;
             defaultNeedToFileSystemLimit = null;
             defaultIndexSystemLimitOnStorage = null;
+        }
+    }
+    /**
+     * <ul>
+     * <li>0 - currentInCache
+     * <li>1 - currentInCacheReaded
+     * <li>2 - addNeedToFileSystemLimit
+     * <li>3 - indexSystemLimitOnStorage
+     * </ul>
+     * @return 
+     */
+    private String[] getParamNames(){
+        String[] namesForReturn;
+        try {
+            namesForReturn = new String[] {
+                "currentInCache",
+                "currentInCacheReaded",
+                "addNeedToFileSystemLimit",
+                "indexSystemLimitOnStorage"
+            };
+            return namesForReturn;
+        } finally {
+            namesForReturn = null;
+        }
+    }
+    /**
+     * Return code of parameter by his number, calculeted from some fileds
+     * @param numParam
+     * @return hashCode for Parameter by his number
+     * @see getParamNames()
+     * @throws IllegalArgumentException when inputed number of parameter
+     * out of bounds
+     */
+    protected Integer getParamCodeByNumber(int numParam){
+        String[] paramNames;
+        try {
+            paramNames = getParamNames();
+            if( numParam > (paramNames.length - 1) ){
+                throw new IllegalArgumentException(ThStorageWordStatusDataCache.class.getCanonicalName() 
+                                + " parameters of flow statusDataCache in StorageWord is not valid, "
+                                + "count parameters: " 
+                                + paramNames.length 
+                                + ", need for return " + numParam);
+            } 
+            int codeForParameter = paramNames[numParam]
+                    .concat(String.valueOf(this.timeCreation))
+                    .concat(this.objectLabel.toString()).hashCode();
+            return codeForParameter;
+        } finally {
+            paramNames = null;
+        }
+    }
+    /**
+     * Count records (array.length) returned from {@link #getParamNames }
+     * @return 
+     */
+    protected int getParamCount(){
+        String[] paramNames;
+        try {
+            paramNames = getParamNames();
+            return paramNames.length;
+        } finally {
+            paramNames = null;
+        }
+    }
+    /**
+     * 
+     * @param numParam
+     * @return name of param by his number
+     * @throws IllegalArgumentException when inputed number of parameter
+     * out of bounds
+     */
+    private String getParamNameByNumber(int numParam){
+        String[] paramNames;
+        String paramName;
+        try {
+            paramNames = getParamNames();
+            if( numParam > (paramNames.length - 1) ){
+                throw new IllegalArgumentException(ThStorageWordStatusDataCache.class.getCanonicalName() 
+                                + " parameters of flow statusDataCache in StorageWord is not valid, "
+                                + "count parameters: " 
+                                + paramNames.length 
+                                + ", need for return " + numParam);
+            } 
+            paramName = new String(paramNames[numParam]);
+            return paramName;
+        } finally {
+            paramNames = null;
+            paramName = null;
         }
     }
     /**

@@ -54,9 +54,9 @@ public class ThStorageWordRule {
     private ThStorageWordState currentStorageWordState;
     private Boolean isSetStorageWordState;
     /**
-     * ThStorageWordStatistic
+     * ThStorageWordStatusMainFlow
      */
-    private ThStorageWordStatistic currentStorageWordStatistic;
+    private ThStorageWordStatusMainFlow currentStorageWordStatistic;
     private Boolean isSetStorageWordStatistic;
     /**
      * ThStorageWordFlowReaded thStorageWordFlowRead
@@ -350,16 +350,16 @@ public class ThStorageWordRule {
         return Boolean.FALSE;
     }
     /**
-     * ThStorageWordStatistic
+     * ThStorageWordStatusMainFlow
      * @return 
      */
-    protected ThStorageWordStatistic getStorageWordStatistic(){
+    protected ThStorageWordStatusMainFlow getStorageWordStatistic(){
         if( !this.isStorageWordStatistic() ){
-            throw new IllegalArgumentException(ThStorageWordStatistic.class.getCanonicalName() + " object not set in " + ThWordRule.class.getCanonicalName());
+            throw new IllegalArgumentException(ThStorageWordStatusMainFlow.class.getCanonicalName() + " object not set in " + ThWordRule.class.getCanonicalName());
         }
         return this.currentStorageWordStatistic;
     }
-    protected void setStorageWordStatistic(final ThStorageWordStatistic stateWordOuter){
+    protected void setStorageWordStatistic(final ThStorageWordStatusMainFlow stateWordOuter){
         this.currentStorageWordStatistic = stateWordOuter;
         setTrueStorageWordStatistic();
     }

@@ -30,6 +30,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author wladimirowichbiaran
  */
 public class ThStorageWordStatusDataFs {
+    private final Long timeCreation;
+    private final UUID objectLabel;
     /**
      * ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Long>>
      * <keyPointFlowDataFs, <lastAccessNanotime.hashCode(), Long Value>>
@@ -38,6 +40,8 @@ public class ThStorageWordStatusDataFs {
     private ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>> poolStatusDataFs;
     
     ThStorageWordStatusDataFs(){
+        this.timeCreation = System.nanoTime();
+        this.objectLabel = UUID.randomUUID();
         this.poolStatusDataFs = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>>();
     }
     /**
@@ -174,6 +178,91 @@ public class ThStorageWordStatusDataFs {
         }
     }
     /**
+     * <ul>
+     * <li>0 - countRecordsOnFileSystem
+     * <li>1 - volumeNumber
+     * </ul>
+     * @return 
+     */
+    private String[] getParamNames(){
+        String[] namesForReturn;
+        try {
+            namesForReturn = new String[] {
+                "countRecordsOnFileSystem",
+                "volumeNumber"
+            };
+            return namesForReturn;
+        } finally {
+            namesForReturn = null;
+        }
+    }
+    /**
+     * Return code of parameter by his number, calculeted from some fileds
+     * @param numParam
+     * @return hashCode for Parameter by his number
+     * @see getParamNames()
+     * @throws IllegalArgumentException when inputed number of parameter
+     * out of bounds
+     */
+    protected Integer getParamCodeByNumber(int numParam){
+        String[] paramNames;
+        try {
+            paramNames = getParamNames();
+            if( numParam > (paramNames.length - 1) ){
+                throw new IllegalArgumentException(ThStorageWordStatusDataFs.class.getCanonicalName() 
+                                + " parameters of flow statusDataFs in StorageWord is not valid, "
+                                + "count parameters: " 
+                                + paramNames.length 
+                                + ", need for return " + numParam);
+            } 
+            int codeForParameter = paramNames[numParam]
+                    .concat(String.valueOf(this.timeCreation))
+                    .concat(this.objectLabel.toString()).hashCode();
+            return codeForParameter;
+        } finally {
+            paramNames = null;
+        }
+    }
+    /**
+     * Count records (array.length) returned from {@link #getParamNames }
+     * @return 
+     */
+    protected int getParamCount(){
+        String[] paramNames;
+        try {
+            paramNames = getParamNames();
+            return paramNames.length;
+        } finally {
+            paramNames = null;
+        }
+    }
+    /**
+     * 
+     * @param numParam
+     * @return name of param by his number
+     * @throws IllegalArgumentException when inputed number of parameter
+     * out of bounds
+     */
+    private String getParamNameByNumber(int numParam){
+        String[] paramNames;
+        String paramName;
+        try {
+            paramNames = getParamNames();
+            if( numParam > (paramNames.length - 1) ){
+                throw new IllegalArgumentException(ThStorageWordStatusDataFs.class.getCanonicalName() 
+                                + " parameters of flow statusDataFs in StorageWord is not valid, "
+                                + "count parameters: " 
+                                + paramNames.length 
+                                + ", need for return " + numParam);
+            } 
+            paramName = new String(paramNames[numParam]);
+            return paramName;
+        } finally {
+            paramNames = null;
+            paramName = null;
+        }
+    }
+    /**
      * 
      * @param keyPointFlowDataFs
      * 
@@ -208,17 +297,17 @@ public class ThStorageWordStatusDataFs {
                             + " parameters of flow statusDataFs in StorageWord is not valid, has more values");
                 }
                 if( countSummaryOfParameters != 2 ){
-                    new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
+                    new IllegalArgumentException(ThStorageWordStatusDataFs.class.getCanonicalName() 
                             + " parameters of flow statusDataFs in StorageWord is not valid, "
                             + "count records not equal two");
                 }
                 if( countThStorageWordStatusDataFsCountRecordsOnFileSystem != 1 ){
-                    new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
+                    new IllegalArgumentException(ThStorageWordStatusDataFs.class.getCanonicalName() 
                             + " parameters of flow statusDataFs in StorageWord is not valid, "
                             + "count records for CountRecordsOnFileSystem not equal one");
                 }
                 if( countThStorageWordStatusDataFsVolumeNumber != 1 ){
-                    new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
+                    new IllegalArgumentException(ThStorageWordStatusDataFs.class.getCanonicalName() 
                             + " parameters of flow statusDataFs in StorageWord is not valid, "
                             + "count records for VolumeNumber not equal one");
                 }

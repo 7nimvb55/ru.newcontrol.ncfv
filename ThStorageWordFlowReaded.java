@@ -55,9 +55,9 @@ public class ThStorageWordFlowReaded {
                     ConcurrentHashMap<Integer, 
                         ConcurrentHashMap<String, ConcurrentHashMap<Long, UUID>>>>> uuidReadedFlowMap;
 
-    private ThStorageWordStatistic mainStorageWordFlow;
+    private ThStorageWordStatusMainFlow mainStorageWordFlow;
     
-    public ThStorageWordFlowReaded(ThStorageWordStatistic storageWordStatisticOuter) {
+    public ThStorageWordFlowReaded(ThStorageWordStatusMainFlow storageWordStatisticOuter) {
         this.mainStorageWordFlow = storageWordStatisticOuter;
         this.uuidReadedFlowMap = createNewListStoragesMapEmpty();
 

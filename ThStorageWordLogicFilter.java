@@ -375,7 +375,7 @@ public class ThStorageWordLogicFilter {
              * create data for transfer into LongWord, Word indexes
              */
             /**
-             * tmp comment befor not released StorageWord part
+             * tmp comment before not released StorageWord part
              *
             forLastAddData = new TdataWord(recordId, storagePath, word, prevWordCodeType, heximalWord, startPos, lengthWord);
             if( lengthWord > 25){

@@ -23,14 +23,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * From ThStorageWordBusOutput get data, convert int typeWord to String for 
- * directory, create or add to path, get from bus data, read heximal value,  
- * first four bytes, create or add to sub path, calculate length for subString 
- * value, generate name for list file in format wl-(UUID)-(Size)-(Volume Number)
- * 
- * ThStorageWordStatistic - search directories and list file names
- * ThStorageWordCache - temp storages for data
- * ThStorageWordHelperFileSystem - static functions for create, move, scan 
- * directories and list files
+ directory, create or add to path, get from bus data, read heximal value,  
+ first four bytes, create or add to sub path, calculate length for subString 
+ value, generate name for list file in format wl-(UUID)-(Size)-(Volume Number)
+ 
+ ThStorageWordStatusMainFlow - search directories and list file names
+ ThStorageWordCache - temp storages for data
+ ThStorageWordHelperFileSystem - static functions for create, move, scan 
+ directories and list files
  * 
  * @author wladimirowichbiaran
  */
@@ -40,7 +40,7 @@ public class ThStorageWordLogicRouter {
         ThIndexRule indexRule = funcRuleStorageWord.getIndexRule();
         ThIndexStatistic indexStatistic = indexRule.getIndexStatistic();
         ThStorageWordState storageWordState = funcRuleStorageWord.getStorageWordState();
-        ThStorageWordStatistic storageWordStatistic = funcRuleStorageWord.getStorageWordStatistic();
+        ThStorageWordStatusMainFlow storageWordStatistic = funcRuleStorageWord.getStorageWordStatistic();
         
         System.out.println("++++++++++++++++++++++++++++++start " + ThStorageWordLogicRouter.class.getCanonicalName());
         ThStorageWordBusInput busJobForStorageWordRouter = storageWordState.getBusJobForStorageWordRouterJob();
@@ -215,7 +215,7 @@ public class ThStorageWordLogicRouter {
             final String tagNameInputed, 
             final String strSubStringInputed){
         ThStorageWordRule funcRuleStorageWord;
-        ThStorageWordStatistic currentStorageWordStatistic;
+        ThStorageWordStatusMainFlow currentStorageWordStatistic;
         ThStorageWordFlowReaded storageWordFlowReaded;
         ThStorageWordState storageWordState;
         ThStorageWordBusWriter busJobForStorageWordRouterJobToWriter;
@@ -253,7 +253,7 @@ public class ThStorageWordLogicRouter {
         Boolean isMainFlowExist;
         try{
             funcRuleStorageWord = (ThStorageWordRule) outerRuleStorageWord;
-            currentStorageWordStatistic = (ThStorageWordStatistic) funcRuleStorageWord.getStorageWordStatistic();
+            currentStorageWordStatistic = (ThStorageWordStatusMainFlow) funcRuleStorageWord.getStorageWordStatistic();
             storageWordFlowReaded = (ThStorageWordFlowReaded) funcRuleStorageWord.getStorageWordFlowReaded();
             
             storageWordState = (ThStorageWordState) funcRuleStorageWord.getStorageWordState();
@@ -299,7 +299,7 @@ public class ThStorageWordLogicRouter {
             
             if( typeWordTagFileNameMainFlowUuids == null ){
                 throw new NullPointerException(ThStorageWordLogicRouter.class.getCanonicalName() 
-                            + " return null from " + ThStorageWordStatistic.class.getCanonicalName()
+                            + " return null from " + ThStorageWordStatusMainFlow.class.getCanonicalName()
                             + ".getTypeWordTagFileNameFlowUuids(typeWord, hexTagName, strSubString), for params values:"
                             + " typeWord: "
                             + String.valueOf(typeWordFunc) + ", hexTagName: "

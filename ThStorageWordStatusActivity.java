@@ -29,7 +29,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author wladimirowichbiaran
  */
 public class ThStorageWordStatusActivity {
-
+    private final Long timeCreation;
+    private final UUID objectLabel;
     /**
      * ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Long>>
      * <keyPointFlowActivity, <lastAccessNanotime.hashCode(), Long Value>>
@@ -38,6 +39,8 @@ public class ThStorageWordStatusActivity {
     private ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Long>> poolStatusActivity;
     
     ThStorageWordStatusActivity(){
+        this.timeCreation = System.nanoTime();
+        this.objectLabel = UUID.randomUUID();
         this.poolStatusActivity = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Long>>();
     }
     /**
@@ -179,6 +182,91 @@ public class ThStorageWordStatusActivity {
         } finally {
             returnedHashMap = null;
             countIterations = null;
+        }
+    }
+    /**
+     * <ul>
+     * <li>0 - lastAccessNanotime
+     * <li>1 - countDataUseIterationsSummary
+     * </ul>
+     * @return 
+     */
+    private String[] getParamNames(){
+        String[] namesForReturn;
+        try {
+            namesForReturn = new String[] {
+                "lastAccessNanotime",
+                "countDataUseIterationsSummary"
+            };
+            return namesForReturn;
+        } finally {
+            namesForReturn = null;
+        }
+    }
+    /**
+     * Return code of parameter by his number, calculeted from some fileds
+     * @param numParam
+     * @return hashCode for Parameter by his number
+     * @see getParamNames()
+     * @throws IllegalArgumentException when inputed number of parameter
+     * out of bounds
+     */
+    protected Integer getParamCodeByNumber(int numParam){
+        String[] paramNames;
+        try {
+            paramNames = getParamNames();
+            if( numParam > (paramNames.length - 1) ){
+                throw new IllegalArgumentException(ThStorageWordStatusActivity.class.getCanonicalName() 
+                                + " parameters of flow statusActivity in StorageWord is not valid, "
+                                + "count parameters: " 
+                                + paramNames.length 
+                                + ", need for return " + numParam);
+            } 
+            int codeForParameter = paramNames[numParam]
+                    .concat(String.valueOf(this.timeCreation))
+                    .concat(this.objectLabel.toString()).hashCode();
+            return codeForParameter;
+        } finally {
+            paramNames = null;
+        }
+    }
+    /**
+     * Count records (array.length) returned from {@link #getParamNames }
+     * @return 
+     */
+    protected int getParamCount(){
+        String[] paramNames;
+        try {
+            paramNames = getParamNames();
+            return paramNames.length;
+        } finally {
+            paramNames = null;
+        }
+    }
+    /**
+     * 
+     * @param numParam
+     * @return name of param by his number
+     * @throws IllegalArgumentException when inputed number of parameter
+     * out of bounds
+     */
+    private String getParamNameByNumber(int numParam){
+        String[] paramNames;
+        String paramName;
+        try {
+            paramNames = getParamNames();
+            if( numParam > (paramNames.length - 1) ){
+                throw new IllegalArgumentException(ThStorageWordStatusActivity.class.getCanonicalName() 
+                                + " parameters of flow statusActivity in StorageWord is not valid, "
+                                + "count parameters: " 
+                                + paramNames.length 
+                                + ", need for return " + numParam);
+            } 
+            paramName = new String(paramNames[numParam]);
+            return paramName;
+        } finally {
+            paramNames = null;
+            paramName = null;
         }
     }
     /**

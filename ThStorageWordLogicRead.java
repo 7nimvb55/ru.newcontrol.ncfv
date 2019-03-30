@@ -88,7 +88,7 @@ public class ThStorageWordLogicRead {
                                 String hexTagName = itemsTagNames.getKey();
                                 String subStringValue = itemsTagNames.getValue();
 
-                                ThStorageWordStatistic storageWordStatistic = (ThStorageWordStatistic) outerRuleStorageWord.getStorageWordStatistic();
+                                ThStorageWordStatusMainFlow storageWordStatistic = (ThStorageWordStatusMainFlow) outerRuleStorageWord.getStorageWordStatistic();
 
                                 ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> typeWordTagFileNameFlowUuids = 
                                     (ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>) storageWordStatistic.getTypeWordTagFileNameFlowUuids(
