@@ -16,9 +16,9 @@
 package ru.newcontrol.ncfv;
 
 /**
- * the Raspidalivatel on ze Reshala
+ *
  * @author wladimirowichbiaran
  */
-public class ThWordPedal {
+public class ThWordLogicRouter {
     
 }

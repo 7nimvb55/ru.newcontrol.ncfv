@@ -15,17 +15,10 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.concurrent.ArrayBlockingQueue;
-
 /**
  *
  * @author wladimirowichbiaran
  */
-public class ThWordStateStorage {
-    /**
-     * 
-     */
-    /**/
+public class ThWordWorkRouter {
+    
 }

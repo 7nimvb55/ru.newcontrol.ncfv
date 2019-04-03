@@ -64,11 +64,6 @@ public class Ncfv {
         AppEtcSecurityHelper.createNewSecurity();
         
             //runIndexMakeWordIntoZipByThreads();
-            /**
-             * ThWordLogicFilter.processFilterInputedString("C:\\WINDOWS\\W1ND0W5\\KA6E/\\b\\ЖИЛА\\ЯКОРЬ"
-             *      + "ъъ\\!лэйбэл\\windows\\winDows\\!Новая папка\\Ярлык\\$$$проеКт\\T3\\ПP0EKT\\новая исполнительная"
-             *      + "\\исполнительнаядокументацияпопроектуосвоениятерриториальногофондалесногохозяйствароссийскойфедерациинавпериодсдветысячидевятнадцатогогодаподветысячидвадцатьдевятыйгод");
-             */
             runIndexMakeAndDirList();
             
             //outputToConsoleStrings();

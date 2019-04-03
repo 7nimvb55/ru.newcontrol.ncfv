@@ -50,7 +50,7 @@ public class ThStorageWordLogicRead {
              * Statistic for this index system
              */
             funcRuleStorageWord = (ThStorageWordRule) outerRuleStorageWord;
-            ThStorageWordFlowReaded storageWordFlowReaded = funcRuleStorageWord.getStorageWordFlowReaded();
+            ThStorageWordBusReadedFlow storageWordFlowReaded = funcRuleStorageWord.getStorageWordFlowReaded();
             indexRule = funcRuleStorageWord.getIndexRule();
             indexStatistic = indexRule.getIndexStatistic();
             indexStatistic.updateDataStorages();

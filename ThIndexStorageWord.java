@@ -49,7 +49,7 @@ public class ThIndexStorageWord extends Thread{
         thStorageWordState.setBusJobForStorageWordRouterJobToWriter(thStorageLongWordBusWriter);
         thStorageWordState.setBusJobForStorageWordRouterJobToReader(thStorageLongWordBusReader);
         ThStorageWordStatusMainFlow thStorageWordStatistic = new ThStorageWordStatusMainFlow();
-        ThStorageWordFlowReaded thStorageWordFlowRead = new ThStorageWordFlowReaded(thStorageWordStatistic);
+        ThStorageWordBusReadedFlow thStorageWordFlowRead = new ThStorageWordBusReadedFlow(thStorageWordStatistic);
         //init Rule
         ThStorageWordRule thStorageWordRule = new ThStorageWordRule(this.ruleThIndex);
         thStorageWordRule.setStorageWordState(thStorageWordState);

@@ -376,7 +376,7 @@ public class ThStorageWordLogicWrite {
                                                 new ObjectOutputStream(Files.newOutputStream(nowWritedFile)))
                                             {
                                                 oos.writeObject(pollTypeWordTagFileNameData);
-                                                System.out.println(ThWordLogicWrite.class.getCanonicalName() 
+                                                System.out.println(ThStorageWordLogicWrite.class.getCanonicalName() 
                                                         + " => => =>                                             => => => " 
                                                         + nowWritedFile.toUri().toString() 
                                                         + " writed size " + pollTypeWordTagFileNameData.size());
@@ -446,7 +446,7 @@ public class ThStorageWordLogicWrite {
                                                                 new ObjectOutputStream(Files.newOutputStream(nowWritedFile)) )
                                                             {
                                                                 oos.writeObject(packetForWriteData);
-                                                                System.out.println(ThWordLogicWrite.class.getCanonicalName() 
+                                                                System.out.println(ThStorageWordLogicWrite.class.getCanonicalName() 
                                                                         + " => => =>                                             => => => " 
                                                                         + nowWritedFile.toUri().toString() 
                                                                         + " writed size " + pollTypeWordTagFileNameData.size());

@@ -59,9 +59,9 @@ public class ThStorageWordRule {
     private ThStorageWordStatusMainFlow currentStorageWordStatistic;
     private Boolean isSetStorageWordStatistic;
     /**
-     * ThStorageWordFlowReaded thStorageWordFlowRead
+     * ThStorageWordBusReadedFlow thStorageWordFlowRead
      */
-    private ThStorageWordFlowReaded thStorageWordFlowRead;
+    private ThStorageWordBusReadedFlow thStorageWordFlowRead;
     private Boolean isSetStorageWordFlowReaded;
     
     public ThStorageWordRule(final ThIndexRule outerRuleIndex) {
@@ -376,16 +376,16 @@ public class ThStorageWordRule {
         return Boolean.FALSE;
     }
     /**
-     * ThStorageWordFlowReaded
+     * ThStorageWordBusReadedFlow
      * @return 
      */
-    protected ThStorageWordFlowReaded getStorageWordFlowReaded(){
+    protected ThStorageWordBusReadedFlow getStorageWordFlowReaded(){
         if( !this.isStorageWordFlowReaded() ){
-            throw new IllegalArgumentException(ThStorageWordFlowReaded.class.getCanonicalName() + " object not set in " + ThWordRule.class.getCanonicalName());
+            throw new IllegalArgumentException(ThStorageWordBusReadedFlow.class.getCanonicalName() + " object not set in " + ThWordRule.class.getCanonicalName());
         }
         return this.thStorageWordFlowRead;
     }
-    protected void setStorageWordFlowReaded(final ThStorageWordFlowReaded stateWordOuter){
+    protected void setStorageWordFlowReaded(final ThStorageWordBusReadedFlow stateWordOuter){
         this.thStorageWordFlowRead = stateWordOuter;
         setTrueStorageWordFlowReaded();
     }

@@ -19,24 +19,6 @@ package ru.newcontrol.ncfv;
  *
  * @author wladimirowichbiaran
  */
-public class ThWordWorkWrite implements Runnable{
-    private ThWordRule ruleWordWriteWork;
+public class ThWordWorkWrite {
     
-    ThWordWorkWrite(final ThWordRule outerRuleWriter){
-        this.ruleWordWriteWork = outerRuleWriter;
-    }
-    
-    @Override
-    public void run(){
-        System.out.println(ThWordWorkWrite.class.getCanonicalName() + " run and say " + this.ruleWordWriteWork.toString());
-        this.ruleWordWriteWork.setTrueRunnedWordWorkWriter();
-        ThreadLocal<ThWordLogicWrite> logicWriter = new ThreadLocal<ThWordLogicWrite>();
-        try{
-            logicWriter.set(new ThWordLogicWrite());
-            logicWriter.get().doWriteJobFromBusForWord(this.ruleWordWriteWork);
-        } finally {
-            logicWriter.remove();
-            this.ruleWordWriteWork.setFalseRunnedWordWorkWriter();
-        }
-    }
 }

@@ -16,7 +16,7 @@
 package ru.newcontrol.ncfv;
 
 /**
- * Read data from files in word storage
+ *
  * @author wladimirowichbiaran
  */
 public class ThWordLogicRead {

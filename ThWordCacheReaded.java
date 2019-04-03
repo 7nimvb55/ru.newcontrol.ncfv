@@ -16,21 +16,26 @@
 package ru.newcontrol.ncfv;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *
+ * ConcurrentHashMap<Integer,   - (2) - Type of word index hash value
+ *   ConcurrentHashMap<String,    - (2a) - tagFileName.substring(0,3)
+ *     ConcurrentHashMap<Integer, - (2b) - subString.length                            
+ *     ConcurrentHashMap<String, String> (3) - <hexWord (tagFileName), subString>
  * @author wladimirowichbiaran
  */
-public class ThWordCache {
+public class ThWordCacheReaded {
+    
     private ConcurrentHashMap<Integer, 
             ConcurrentHashMap<String, 
                 ConcurrentHashMap<Integer, 
-                    ConcurrentHashMap<String, String>>>> cachedData;
+                    ConcurrentHashMap<String, String>>>> cachedDataReaded;
     
-    public ThWordCache() {
-        this.cachedData = createNewListStoragesMapEmpty();
+    public ThWordCacheReaded() {
+        this.cachedDataReaded = createNewListStoragesMapEmpty();
     }
     protected ConcurrentHashMap<Integer, 
         ConcurrentHashMap<String, 
@@ -40,40 +45,6 @@ public class ThWordCache {
                         ConcurrentHashMap<String, 
                             ConcurrentHashMap<Integer, 
                                 ConcurrentHashMap<String, String>>>>();
-    }
-    /**
-     * 
-     * @return ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>
-     *                          <TypeWord, <TagName, SubString>>
-     */
-    protected ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> getListTypTagSubStr(){
-        ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> forReturnList;
-        try {
-            
-            forReturnList = new ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>();
-            
-            for( Map.Entry<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>>> itemTypeWord : this.cachedData.entrySet() ){
-                Integer keyTypeWord = (Integer) itemTypeWord.getKey();
-                ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>> valueItemTypeWord = itemTypeWord.getValue();
-                for( Map.Entry<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>> itemTagLetter : valueItemTypeWord.entrySet() ){
-                    String keyTagLetter = (String) itemTagLetter.getKey();
-                    ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> valueTagLetter = itemTagLetter.getValue();
-                    for( Map.Entry<Integer, ConcurrentHashMap<String, String>> itemSubStrLength : valueTagLetter.entrySet() ){
-                        Integer keySubStrLength = (Integer) itemSubStrLength.getKey();
-                        ConcurrentHashMap<String, String> valueSubStrLength = (ConcurrentHashMap<String, String>) itemSubStrLength.getValue();
-                        ConcurrentHashMap<String, String> getListForKeyWord = (ConcurrentHashMap<String, String>) forReturnList.get(keyTypeWord);
-                        if( getListForKeyWord == null){
-                            getListForKeyWord = new ConcurrentHashMap<String, String>();
-                            forReturnList.put(keyTypeWord, getListForKeyWord);
-                        }
-                        getListForKeyWord.putAll(valueSubStrLength);
-                    }
-                }
-            }
-            return forReturnList;
-        } finally {
-            forReturnList = null;
-        }
     }
     /**
      * 
@@ -103,14 +74,14 @@ public class ThWordCache {
             int strSubStringlength = strSubString.length();
             int tagNamelength = tagName.length();
             if( (strSubStringlength * 4) != tagNamelength ){
-                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                throw new IllegalArgumentException(ThStorageWordStatusMainFlow.class.getCanonicalName() 
                         + " illegal length of inputed in index string, hexTagName: "
                         + tagName + " lengthHex: " + tagName.length()
                         + " strSubString: " + strSubString + " lengthStr: " + strSubString.length()
                         + " lengthHex == lengthStr * 4 ");
             }
             if( tagNamelength < 4 ){
-                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                throw new IllegalArgumentException(ThStorageWordStatusMainFlow.class.getCanonicalName() 
                         + " illegal length of inputed in index string, hexTagName: "
                         + tagName + " length: " + tagName.length()
                         + " < 4 ");
@@ -174,14 +145,14 @@ public class ThWordCache {
             int strSubStringlength = strSubStringFunc.length();
             int tagNamelength = tagNameFunc.length();
             if( (strSubStringlength * 4) != tagNamelength ){
-                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                throw new IllegalArgumentException(ThStorageWordStatusMainFlow.class.getCanonicalName() 
                         + " illegal length of inputed in index string, hexTagName: "
                         + tagNameFunc + " lengthHex: " + tagNameFunc.length()
                         + " strSubString: " + strSubStringFunc + " lengthStr: " + strSubStringFunc.length()
                         + " lengthHex == lengthStr * 4 ");
             }
             if( tagNamelength < 4 ){
-                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                throw new IllegalArgumentException(ThStorageWordStatusMainFlow.class.getCanonicalName() 
                         + " illegal length of inputed in index string, hexTagName: "
                         + tagNameFunc + " length: " + tagNameFunc.length()
                         + " < 4 ");
@@ -205,14 +176,14 @@ public class ThWordCache {
                 returnFormCacheNull = Boolean.TRUE;
             }
             if( getListBySubStrLength == null ){
-                throw new NullPointerException(ThWordCache.class.getCanonicalName() 
+                throw new NullPointerException(ThWordCacheReaded.class.getCanonicalName() 
                         + " for word by type " + String.valueOf(typeWordFunc)
                         + " tagName " + tagNameFunc
                         + " subString " + strSubStringFunc
                         + " data in cache is null");
             }
             if( returnFormCacheNull ){
-                throw new NullPointerException(ThWordCache.class.getCanonicalName() 
+                throw new NullPointerException(ThWordCacheReaded.class.getCanonicalName() 
                         + " for word by type " + String.valueOf(typeWordFunc)
                         + " tagName " + tagNameFunc
                         + " subString " + strSubStringFunc
@@ -281,12 +252,12 @@ public class ThWordCache {
                 ConcurrentHashMap<Integer, 
                     ConcurrentHashMap<String, String>>> forListReturn;
         try{
-            forListReturn = this.cachedData.get(typeWordOuter);
+            forListReturn = this.cachedDataReaded.get(typeWordOuter);
             if( forListReturn == null ){
                 forListReturn = new ConcurrentHashMap<String, 
                 ConcurrentHashMap<Integer, 
                     ConcurrentHashMap<String, String>>>();
-                this.cachedData.put(typeWordOuter, forListReturn);
+                this.cachedDataReaded.put(typeWordOuter, forListReturn);
             }
             return forListReturn;
         } finally {
@@ -298,62 +269,15 @@ public class ThWordCache {
      * @param typeWord
      * @param tagName
      * @param strSubString
-     * @param keysPointsFlow ConcurrentHashMap<String, String>
-     *          <ThWordStatusDataFs.hashCode(), recordUUID>
-     *          <ThWordStatusName.hashCode(), recordUUID>
-     *          <ThWordStatusActivity.hashCode(), recordUUID>
-     *          <ThWordStatusDataCache.hashCode(), recordUUID>
-     *          <ThWordStatusWorkers.hashCode(), recordUUID>
-     */
-    protected Boolean setDataIntoCacheFlow(
-            final Integer typeWord, 
-            final String tagName, 
-            final String strSubString){
-        Integer funcTypeWord;
-        String funcSubString;
-        String funcHexTagName;
-        ConcurrentHashMap<String, String> inputedData;
-        ConcurrentHashMap<String, String> typeWordTagFileNameFlowUuids;
-        try {
-            funcTypeWord = (Integer) typeWord;
-            funcSubString = (String) strSubString;
-            funcHexTagName = (String) tagName;
-            try{
-                typeWordTagFileNameFlowUuids = getTypeWordTagFileNameData(
-                        funcTypeWord,
-                        funcHexTagName,
-                        funcSubString);
-            } catch(IllegalArgumentException exSetInCahe) {
-                System.err.println(exSetInCahe.getMessage());
-                return Boolean.FALSE;
-            }
-            inputedData = new ConcurrentHashMap<String, String>();
-            inputedData.put(funcHexTagName, funcSubString);
-            typeWordTagFileNameFlowUuids.putAll(inputedData);
-            return Boolean.TRUE;
-        } finally {
-            typeWordTagFileNameFlowUuids = null;
-            inputedData = null;
-            funcTypeWord = null;
-            funcSubString = null;
-            funcHexTagName = null;
-        }
-    }
-    
-    /**
-     * 
-     * @param typeWord
-     * @param tagName
-     * @param strSubString
      * @param outerInputedData - readed list data for insert into cacheReaded
      * @param keysPointsFlow ConcurrentHashMap<String, String>
-     *          <ThWordStatusDataFs.hashCode(), recordUUID>
-     *          <ThWordStatusName.hashCode(), recordUUID>
-     *          <ThWordStatusActivity.hashCode(), recordUUID>
-     *          <ThWordStatusDataCache.hashCode(), recordUUID>
-     *          <ThWordStatusWorkers.hashCode(), recordUUID>
+     *          <ThStorageWordStatusDataFs.hashCode(), recordUUID>
+     *          <ThStorageWordStatusName.hashCode(), recordUUID>
+     *          <ThStorageWordStatusActivity.hashCode(), recordUUID>
+     *          <ThStorageWordStatusDataCache.hashCode(), recordUUID>
+     *          <ThStorageWordStatusWorkers.hashCode(), recordUUID>
      */
-    protected Boolean addAllDataIntoCache(
+    protected Boolean addAllDataIntoCacheReaded(
             final Integer typeWord, 
             final String tagName, 
             final String strSubString,
@@ -404,13 +328,13 @@ public class ThWordCache {
      * @param tagName
      * @param strSubString
      * @param keysPointsFlow ConcurrentHashMap<String, String>
-     *          <ThWordStatusDataFs.hashCode(), recordUUID>
-     *          <ThWordStatusName.hashCode(), recordUUID>
-     *          <ThWordStatusActivity.hashCode(), recordUUID>
-     *          <ThWordStatusDataCache.hashCode(), recordUUID>
-     *          <ThWordStatusWorkers.hashCode(), recordUUID>
+     *          <ThStorageWordStatusDataFs.hashCode(), recordUUID>
+     *          <ThStorageWordStatusName.hashCode(), recordUUID>
+     *          <ThStorageWordStatusActivity.hashCode(), recordUUID>
+     *          <ThStorageWordStatusDataCache.hashCode(), recordUUID>
+     *          <ThStorageWordStatusWorkers.hashCode(), recordUUID>
      */
-    protected Boolean isCacheHasData(
+    protected Boolean isCacheReadedHasData(
             final Integer typeWord, 
             final String tagName, 
             final String strSubString){
@@ -453,13 +377,13 @@ public class ThWordCache {
      * @param tagName
      * @param strSubString
      * @param keysPointsFlow ConcurrentHashMap<String, String>
-     *          <ThWordStatusDataFs.hashCode(), recordUUID>
-     *          <ThWordStatusName.hashCode(), recordUUID>
-     *          <ThWordStatusActivity.hashCode(), recordUUID>
-     *          <ThWordStatusDataCache.hashCode(), recordUUID>
-     *          <ThWordStatusWorkers.hashCode(), recordUUID>
+     *          <ThStorageWordStatusDataFs.hashCode(), recordUUID>
+     *          <ThStorageWordStatusName.hashCode(), recordUUID>
+     *          <ThStorageWordStatusActivity.hashCode(), recordUUID>
+     *          <ThStorageWordStatusDataCache.hashCode(), recordUUID>
+     *          <ThStorageWordStatusWorkers.hashCode(), recordUUID>
      */
-    protected Integer sizeDataInCache(
+    protected Integer sizeDataInCacheReaded(
             final Integer typeWord, 
             final String tagName, 
             final String strSubString){
@@ -496,7 +420,7 @@ public class ThWordCache {
         }
     }
     protected void printCacheData(){
-        for( Map.Entry<Integer,ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>>> cachedTypes : this.cachedData.entrySet()){
+        for( Map.Entry<Integer,ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>>> cachedTypes : this.cachedDataReaded.entrySet()){
             for(Map.Entry<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>> hexSubByte : cachedTypes.getValue().entrySet()){
                 for(Map.Entry<Integer, ConcurrentHashMap<String, String>> itemLength : hexSubByte.getValue().entrySet()){
                     for(Map.Entry<String, String> itemData : itemLength.getValue().entrySet()){
@@ -510,10 +434,4 @@ public class ThWordCache {
         
         }
     }
-    /**
-     * isCacheEmpty
-     */
-    /**
-     * return CacheDataForFinishedWrite by bus type
-     */
 }

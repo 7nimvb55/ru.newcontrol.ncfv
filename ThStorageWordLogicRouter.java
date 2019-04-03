@@ -216,7 +216,7 @@ public class ThStorageWordLogicRouter {
             final String strSubStringInputed){
         ThStorageWordRule funcRuleStorageWord;
         ThStorageWordStatusMainFlow currentStorageWordStatistic;
-        ThStorageWordFlowReaded storageWordFlowReaded;
+        ThStorageWordBusReadedFlow storageWordFlowReaded;
         ThStorageWordState storageWordState;
         ThStorageWordBusWriter busJobForStorageWordRouterJobToWriter;
         ThStorageWordBusReader busJobForStorageWordRouterJobToReader;
@@ -254,7 +254,7 @@ public class ThStorageWordLogicRouter {
         try{
             funcRuleStorageWord = (ThStorageWordRule) outerRuleStorageWord;
             currentStorageWordStatistic = (ThStorageWordStatusMainFlow) funcRuleStorageWord.getStorageWordStatistic();
-            storageWordFlowReaded = (ThStorageWordFlowReaded) funcRuleStorageWord.getStorageWordFlowReaded();
+            storageWordFlowReaded = (ThStorageWordBusReadedFlow) funcRuleStorageWord.getStorageWordFlowReaded();
             
             storageWordState = (ThStorageWordState) funcRuleStorageWord.getStorageWordState();
             busJobForStorageWordRouterJobToWriter = (ThStorageWordBusWriter) 
@@ -309,7 +309,7 @@ public class ThStorageWordLogicRouter {
             }
             if( typeWordTagFileNameReadedFlowUuids == null ){
                 throw new NullPointerException(ThStorageWordLogicRouter.class.getCanonicalName() 
-                            + " return null from " + ThStorageWordFlowReaded.class.getCanonicalName()
+                            + " return null from " + ThStorageWordBusReadedFlow.class.getCanonicalName()
                             + ".getTypeWordTagFileNameReadedFlowUuids(typeWord, hexTagName, strSubString), for params values:"
                             + " typeWord: "
                             + String.valueOf(typeWordFunc) + ", hexTagName: "
