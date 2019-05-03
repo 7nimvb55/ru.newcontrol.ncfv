@@ -99,7 +99,7 @@ public class ThStorageWordLogicWrite {
                             String hexTagName = itemsTagNames.getKey();
                             String subStringValue = itemsTagNames.getValue();
 
-                            ThStorageWordStatusMainFlow storageWordStatistic = (ThStorageWordStatusMainFlow) outerRuleStorageWord.getStorageWordStatistic();
+                            ThStorageWordStatusMainFlow storageWordStatistic = (ThStorageWordStatusMainFlow) outerRuleStorageWord.getStorageWordStatusMainFlow();
 
                             ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> typeWordTagFileNameFlowUuids = 
                                 (ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>) storageWordStatistic.getTypeWordTagFileNameFlowUuids(
@@ -576,7 +576,7 @@ public class ThStorageWordLogicWrite {
             
             ThStorageWordState wordState = outerRuleStorageWord.getStorageWordState();
             ThStorageWordBusWriter busJobForWrite = wordState.getBusJobForStorageWordRouterJobToWriter();
-            ThStorageWordStatusMainFlow storageWordStatistic = outerRuleStorageWord.getStorageWordStatistic();
+            ThStorageWordStatusMainFlow storageWordStatistic = outerRuleStorageWord.getStorageWordStatusMainFlow();
             ThStorageWordCache storageWordCache = storageWordStatistic.getStorageWordCache();
             ThStorageWordStatusActivity storageWordStatusActivity = storageWordStatistic.getStorageWordStatusActivity();
             ThStorageWordStatusDataCache storageWordStatusDataCache = storageWordStatistic.getStorageWordStatusDataCache();

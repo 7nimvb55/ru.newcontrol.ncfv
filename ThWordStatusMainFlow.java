@@ -111,13 +111,15 @@ public class ThWordStatusMainFlow {
                         ConcurrentHashMap<String, 
                             ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>>> fileStoragesMap;
     
-    private ThWordCache thWordCache;
-    private ThWordCacheReaded thWordCacheReaded;
-    private ThWordStatusDataFs thWordStatusDataFs;
-    private ThWordStatusName thWordStatusName;
-    private ThWordStatusActivity thWordStatusActivity;
-    private ThWordStatusDataCache thWordStatusDataCache;
-    private ThWordStatusWorkers thWordStatusWorkers;
+    private final ThWordCache thWordCache;
+    private final ThWordCacheReaded thWordCacheReaded;
+    
+    private final ThWordStatusActivity thWordStatusActivity;
+    private final ThWordStatusDataCache thWordStatusDataCache;
+    private final ThWordStatusDataFs thWordStatusDataFs;
+    private final ThWordStatusError thWordStatusError;
+    private final ThWordStatusName thWordStatusName;
+    private final ThWordStatusWorkers thWordStatusWorkers;
     /**
      * @todo StatusError
      */
@@ -130,20 +132,34 @@ public class ThWordStatusMainFlow {
         
         this.thWordCache = new ThWordCache();
         this.thWordCacheReaded = new ThWordCacheReaded();
-        
-        this.thWordStatusDataFs = new ThWordStatusDataFs();
-        this.thWordStatusName = new ThWordStatusName();
         this.thWordStatusActivity = new ThWordStatusActivity();
         this.thWordStatusDataCache = new ThWordStatusDataCache();
+        this.thWordStatusDataFs = new ThWordStatusDataFs();
+        this.thWordStatusError = new ThWordStatusError();
+        this.thWordStatusName = new ThWordStatusName();
         this.thWordStatusWorkers = new ThWordStatusWorkers();
+        
+        
     }
     /**
+     * remove from MainFlow UUID, found statusUUIDs in flows and remove it
+     * 
+     * @todo in next iterations of releases
+     *       create objects list HashMap<integer, object>
+     *                          <paramCodeByNumber, object>
+     *       for optimize remove operation, get from list object by code,
+     *       call his remove method with UUID param
      * 
      * @param inputMainFlowUUID
      * @return true if found and delete data
      */
     protected Boolean removeAllFlowStatusByUUID(UUID inputMainFlowUUID){
-        
+        ConcurrentHashMap<Integer, UUID> removeMainFlowRec;
+        UUID keyMainFlow;
+        Integer countParam;
+        Integer paramCodeByNumber;
+        Integer keyRemovedItem;
+        UUID valueRemovedItem;
         try {
             if( this.fileStoragesMap == null ){
                 return Boolean.FALSE;
@@ -157,24 +173,40 @@ public class ThWordStatusMainFlow {
                         for( Map.Entry<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>> itemLvlTagFileName : valueItemLvlSubStrLength.entrySet() ){
                             ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> valueItemLvlTagFileName = itemLvlTagFileName.getValue();
                             for( Map.Entry<UUID, ConcurrentHashMap<Integer, UUID>> itemMainFlowUUID : valueItemLvlTagFileName.entrySet() ){
-                                UUID keyMainFlow = (UUID) itemMainFlowUUID.getKey();
-                                if( itemMainFlowUUID.getValue().size() == 5 ){
-                                    UUID keyDataFs = itemMainFlowUUID.getValue().get("ThWordStatusDataFs".hashCode());
-                                    Boolean removeStatusDataFsForKeyPointFlow = (Boolean) this.thWordStatusDataFs.removeStatusDataFsForKeyPointFlow(keyDataFs);
-                                    UUID keyName = itemMainFlowUUID.getValue().get("ThWordStatusName".hashCode());
-                                    Boolean removeStatusNameForKeyPointFlow = (Boolean) this.thWordStatusName.removeStatusNameForKeyPointFlow(keyName);
-                                    UUID keyActivity = itemMainFlowUUID.getValue().get("ThWordStatusActivity".hashCode());
-                                    Boolean removeStatusActivityForKeyPointFlow = (Boolean) this.thWordStatusActivity.removeStatusActivityForKeyPointFlow(keyActivity);
-                                    UUID keyDataCache = itemMainFlowUUID.getValue().get("ThWordStatusDataCache".hashCode());
-                                    Boolean removeStatusDataCacheForKeyPointFlow = (Boolean) this.thWordStatusDataCache.removeStatusDataCacheForKeyPointFlow(keyDataCache);
-                                    UUID keyWorkers = itemMainFlowUUID.getValue().get("ThWordStatusWorkers".hashCode());
-                                    Boolean removeStatusWorkersForKeyPointFlow = (Boolean) this.thWordStatusWorkers.removeStatusWorkersForKeyPointFlow(keyWorkers);
-                                    ConcurrentHashMap<Integer, UUID> removeMainFlowRec = valueItemLvlTagFileName.remove(keyMainFlow);
-                                    removeMainFlowRec = null;
-                                    keyMainFlow = null;
-                                } else {
-                                    return Boolean.FALSE;
+                                keyMainFlow = (UUID) itemMainFlowUUID.getKey();
+                                removeMainFlowRec = valueItemLvlTagFileName.remove(keyMainFlow);
+                                countParam = getParamCount();
+                                for( int idx = 0 ; idx < countParam ; idx++ ){
+                                    paramCodeByNumber = getParamCodeByNumber(idx);
+                                    UUID removedStatusUUID = removeMainFlowRec.remove(paramCodeByNumber);
+                                    if( this.thWordStatusActivity.removeStatusActivityForKeyPointFlow(removedStatusUUID) ){
+                                        removedStatusUUID = null;
+                                        continue;
+                                    }
+                                    if( this.thWordStatusDataCache.removeStatusDataCacheForKeyPointFlow(removedStatusUUID) ){
+                                        removedStatusUUID = null;
+                                        continue;
+                                    }
+                                    if( this.thWordStatusDataFs.removeStatusDataFsForKeyPointFlow(removedStatusUUID) ){
+                                        removedStatusUUID = null;
+                                        continue;
+                                    }
+                                    if( this.thWordStatusError.removeStatusErrorForKeyPointFlow(removedStatusUUID) ){
+                                        removedStatusUUID = null;
+                                        continue;
+                                    }
+                                    if( this.thWordStatusName.removeStatusNameForKeyPointFlow(removedStatusUUID) ){
+                                        removedStatusUUID = null;
+                                        continue;
+                                    }
+                                    if( this.thWordStatusWorkers.removeStatusWorkersForKeyPointFlow(removedStatusUUID) ){
+                                        removedStatusUUID = null;
+                                        continue;
+                                    }
+                                    paramCodeByNumber = null;
                                 }
+                                removeMainFlowRec = null;
+                                keyMainFlow = null;
                             }
                         }
                     }
@@ -182,7 +214,10 @@ public class ThWordStatusMainFlow {
             }
             return Boolean.TRUE;
         } finally {
-        
+            keyRemovedItem = null;
+            valueRemovedItem = null;
+            removeMainFlowRec = null;
+            keyMainFlow = null;
         }
     }
     protected ThWordCache getWordCache(){
@@ -191,17 +226,20 @@ public class ThWordStatusMainFlow {
     protected ThWordCacheReaded getWordCacheReaded(){
         return this.thWordCacheReaded;
     }
-    protected ThWordStatusDataFs getWordStatusDataFs(){
-        return this.thWordStatusDataFs;
-    }
-    protected ThWordStatusName getWordStatusName(){
-        return this.thWordStatusName;
-    }
     protected ThWordStatusActivity getWordStatusActivity(){
         return this.thWordStatusActivity;
     }
     protected ThWordStatusDataCache getWordStatusDataCache(){
         return this.thWordStatusDataCache;
+    }
+    protected ThWordStatusDataFs getWordStatusDataFs(){
+        return this.thWordStatusDataFs;
+    }
+    protected ThWordStatusError getWordStatusError(){
+        return this.thWordStatusError;
+    }
+    protected ThWordStatusName getWordStatusName(){
+        return this.thWordStatusName;
     }
     protected ThWordStatusWorkers getWordStatusWorkers(){
         return this.thWordStatusWorkers;
@@ -211,7 +249,7 @@ public class ThWordStatusMainFlow {
     //label
     
     
-    protected Integer getGroupIdByNumber(int groupNumber){
+    /*protected Integer getGroupIdByNumber(int groupNumber){
         switch (groupNumber) {
             case 1: //InDirNamesRecordsVolumeNumber.hashCode()
                 return -1160070363;
@@ -225,10 +263,10 @@ public class ThWordStatusMainFlow {
                 return 492307976;
         }
         return "defaultNotDetectedGroupNumber".hashCode();
-    }
-    protected Integer getGroupIdByStringName(String inputedName){
+    }*/
+    /*protected Integer getGroupIdByStringName(String inputedName){
         return inputedName.hashCode();
-    }
+    }*/
     /**
      * > > > > > > > > > this use in router
      * lvl (2a) init params for new itemIndex
@@ -239,9 +277,10 @@ public class ThWordStatusMainFlow {
      * @throws IllegalArgumentException
      */
     protected ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> getTypeWordTagFileNameFlowUuids(
-            final Integer typeWord, 
-            final String tagName, 
-            final String strSubString){
+            final Integer typeWordInputed, 
+            final String tagNameInputed, 
+            final String strSubStringInputed
+    ){
         
         //(3)
         ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> tagFileNameParams;
@@ -257,26 +296,36 @@ public class ThWordStatusMainFlow {
         //(2b)
         ConcurrentHashMap<String, 
                         ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>> getListBySubStrLength;
+        Integer strSubStringlength;
+        Integer tagNamelength;
         
+        Integer typeWordFunc;
+        String tagNameFunc;
+        String strSubStringFunc;
         try{
-            int strSubStringlength = strSubString.length();
-            int tagNamelength = tagName.length();
+            typeWordFunc = (Integer) typeWordInputed;
+            tagNameFunc = (String) tagNameInputed;
+            strSubStringFunc = (String) strSubStringInputed;
+            
+            strSubStringlength = (Integer) strSubStringFunc.length();
+            tagNamelength = (Integer) tagNameFunc.length();
+            
             if( (strSubStringlength * 4) != tagNamelength ){
                 throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
                         + " illegal length of inputed in index string, hexTagName: "
-                        + tagName + " lengthHex: " + tagName.length()
-                        + " strSubString: " + strSubString + " lengthStr: " + strSubString.length()
+                        + tagNameFunc + " lengthHex: " + tagNameFunc.length()
+                        + " strSubString: " + strSubStringFunc + " lengthStr: " + strSubStringFunc.length()
                         + " lengthHex == lengthStr * 4 ");
             }
             if( tagNamelength < 4 ){
                 throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
                         + " illegal length of inputed in index string, hexTagName: "
-                        + tagName + " length: " + tagName.length()
+                        + tagNameFunc + " length: " + tagNameFunc.length()
                         + " < 4 ");
             }
             
-            getListByTypeWord = getListByType(typeWord);
-            String substringTagName = tagName.substring(0, 3);
+            getListByTypeWord = getListByType(typeWordFunc);
+            String substringTagName = tagNameFunc.substring(0, 3);
             getListByTagNameCode = getListByTypeWord.get(substringTagName);
             if( getListByTagNameCode == null ){
                 getListByTagNameCode = new ConcurrentHashMap<Integer, 
@@ -291,13 +340,19 @@ public class ThWordStatusMainFlow {
                                                 ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>();
                 getListByTagNameCode.put(strSubStringlength, getListBySubStrLength);
             }
-            tagFileNameParams = getTagFileNameParams(getListBySubStrLength, tagName);
+            tagFileNameParams = getTagFileNameParams(getListBySubStrLength, tagNameFunc);
             return tagFileNameParams;
         } finally {
             getListByTypeWord = null;
             tagFileNameParams = null;
             getListByTagNameCode = null;
             getListBySubStrLength = null;
+            strSubStringlength = null;
+            tagNamelength = null;
+            
+            typeWordFunc = null;
+            tagNameFunc = null;
+            strSubStringFunc = null;
         }
     }
     /**
@@ -306,31 +361,25 @@ public class ThWordStatusMainFlow {
      * @param tagName
      * @return lvl (3)
      */
-    protected ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> getTagFileNameParams(
-            final ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>> getListByTypeWord,
-            final String tagName){
+    private ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> getTagFileNameParams(
+            final ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>> getListByTypeWordInputed,
+            final String tagNameInputed){
         ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> getListByTagFileName;
+        ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>> getListByTypeWordFunc;
+        String tagNameFunc;
         try{
-            getListByTagFileName = getListByTypeWord.get(tagName);
+            tagNameFunc = (String) tagNameInputed;
+            getListByTypeWordFunc = (ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>) getListByTypeWordInputed;
+            getListByTagFileName = getListByTypeWordFunc.get(tagNameFunc);
             if( getListByTagFileName == null ){
                 getListByTagFileName = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>();
-                getListByTypeWord.put(tagName, getListByTagFileName);
-                /**
-                 * -> get results from: 
-                 * createStructureParamsCountFS
-                 * createStructureParamsNamesFS
-                 * createStructureParamsTimeUSE
-                 * createStructureParamsCountTMP
-                 * createStructureParamsFlagsProc
-                 * -> add to getListByTagFileName
-                 * if null
-                 *  - create defaults from job data - first iteration
-                 *  - need update data from fs - if read old index storage
-                 */
+                getListByTypeWordFunc.put(tagNameFunc, getListByTagFileName);
             }
             return getListByTagFileName;
         } finally {
             getListByTagFileName = null;
+            getListByTypeWordFunc = null;
+            tagNameFunc = null;
         }
     }
     /**
@@ -390,31 +439,38 @@ public class ThWordStatusMainFlow {
      * @throws IllegalArgumentException when count params or name not valid
      */
     protected void validateCountParams(final ConcurrentHashMap<Integer, UUID> checkedMainFlowContentInputed){
-        
+        Integer paramCodeByNumber;
+        String paramNameByNumber;
         ConcurrentHashMap<Integer, UUID> checkedMainFlowContentFunc;
         try {
             checkedMainFlowContentFunc = (ConcurrentHashMap<Integer, UUID>) checkedMainFlowContentInputed;
             if( checkedMainFlowContentFunc.isEmpty() ){
-                    throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() + " parameters of data for set into cache is empty");
+                    throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                            + " parameters of data for set into cache is empty");
                 }
                 int countParam = getParamCount();
-                
-                
                 int countForSet = checkedMainFlowContentFunc.size();
                 if( countForSet != countParam ){
-                    throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() + " parameters of data for set into cache not valid, "
+                    throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                            + " parameters of data for set into cache not valid, "
                             + " base count: " + countParam
                             + ", send for set count: " + countParam);
                 }
                 
                 for( int idx = 0 ; idx < countParam ; idx++ ){
-                    if ( !checkedMainFlowContentFunc.containsKey(getParamCodeByNumber(idx)) ){
-                        throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() + " parameter "
-                                + " for name: " + getParamNameByNumber(idx)
-                                + " in inputed data for set into cache not exist");
+                    paramCodeByNumber = getParamCodeByNumber(idx);
+                    if ( !checkedMainFlowContentFunc.containsKey(paramCodeByNumber) ){
+                        
+                        paramNameByNumber = getParamNameByNumber(idx);
+                        throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                                + " parameter "
+                                + " for name: " + paramNameByNumber
+                                + " in inputed data for set into StatusMain Flow not exist");
                     }
                 }
         } finally {
+            paramCodeByNumber = null;
+            paramNameByNumber = null;
             checkedMainFlowContentFunc = null;
         }
     }
@@ -425,6 +481,7 @@ public class ThWordStatusMainFlow {
      * <li>2 - ThWordStatusActivity
      * <li>3 - ThWordStatusDataCache
      * <li>4 - ThWordStatusWorkers
+     * <li>5 - ThWordStatusError
      * </ul>
      * @return 
      */
@@ -436,7 +493,8 @@ public class ThWordStatusMainFlow {
                 "ThWordStatusName", 
                 "ThWordStatusActivity",
                 "ThWordStatusDataCache",
-                "ThWordStatusWorkers"
+                "ThWordStatusWorkers",
+                "ThWordStatusError"
             };
             return namesForReturn;
         } finally {
@@ -455,9 +513,15 @@ public class ThWordStatusMainFlow {
         String[] paramNames;
         try {
             paramNames = getParamNames();
+            if( numParam < 0 ){
+                throw new IllegalArgumentException(ThWordStatusError.class.getCanonicalName() 
+                                + " parameters of flow statusMainFlow in StorageWord is not valid, "
+                                + " 0 (zero) > , need for return " + numParam + "count parameters: " 
+                                + paramNames.length);
+            }
             if( numParam > (paramNames.length - 1) ){
                 throw new IllegalArgumentException(ThWordStatusError.class.getCanonicalName() 
-                                + " parameters of flow statusError in StorageWord is not valid, "
+                                + " parameters of flow statusMainFlow in StorageWord is not valid, "
                                 + "count parameters: " 
                                 + paramNames.length 
                                 + ", need for return " + numParam);
@@ -474,7 +538,7 @@ public class ThWordStatusMainFlow {
      * Count records (array.length) returned from {@link #getParamNames }
      * @return 
      */
-    protected int getParamCount(){
+    protected Integer getParamCount(){
         String[] paramNames;
         try {
             paramNames = getParamNames();
@@ -495,9 +559,15 @@ public class ThWordStatusMainFlow {
         String paramName;
         try {
             paramNames = getParamNames();
+            if( numParam < 0 ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                                + " parameters of flow statusMainFlow in StorageWord is not valid, "
+                                + " 0 (zero) > , need for return " + numParam + "count parameters: " 
+                                + paramNames.length);
+            }
             if( numParam > (paramNames.length - 1) ){
-                throw new IllegalArgumentException(ThWordStatusError.class.getCanonicalName() 
-                                + " parameters of flow statusError in StorageWord is not valid, "
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                                + " parameters of flow statusMainFlow in StorageWord is not valid, "
                                 + "count parameters: " 
                                 + paramNames.length 
                                 + ", need for return " + numParam);
@@ -519,7 +589,7 @@ public class ThWordStatusMainFlow {
                                 ConcurrentHashMap<String, 
                                     ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>>>();
     }
-    protected Map<String, String> getOperationsFileNames(final int typeWordOuter, final String tagFileNameOuter){
+    /*protected Map<String, String> getOperationsFileNames(final int typeWordOuter, final String tagFileNameOuter){
         Map<String, String> returnedNames;
         try{
             returnedNames = new HashMap<String, String>();
@@ -531,7 +601,7 @@ public class ThWordStatusMainFlow {
         } finally {
             returnedNames = null;
         }
-    }
+    }*/
     /**
      * return list of not limited files from structure
      * @param typeWordOuter

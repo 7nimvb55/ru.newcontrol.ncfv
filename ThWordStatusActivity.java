@@ -49,7 +49,7 @@ public class ThWordStatusActivity {
      * @return 
      * @throws IllegalStateException
      */
-    protected ConcurrentHashMap<Integer, Long> getStatusActivityForKeyPointFlow(final UUID keyPointFlowActivity){
+    private ConcurrentHashMap<Integer, Long> getStatusActivityForKeyPointFlow(final UUID keyPointFlowActivity){
         UUID inputedVal;
         ConcurrentHashMap<Integer, Long> getStatusActivityFormPool;
         try{
@@ -86,11 +86,10 @@ public class ThWordStatusActivity {
                 return Boolean.FALSE;
             }
             for( Map.Entry<Integer, Long> itemOfPoint : getRemovedStatusActivityFormPool.entrySet() ){
-                Long remove = getRemovedStatusActivityFormPool.remove(itemOfPoint.getKey());
-                Long [] remStrVal = {remove};
-                remStrVal = null;
-                Integer [] remIntKey = {itemOfPoint.getKey()};
-                remIntKey = null;
+                Integer removedKey = itemOfPoint.getKey();
+                Long removedVal = getRemovedStatusActivityFormPool.remove(removedKey);
+                removedVal = null;
+                removedKey = null;
             }
             getRemovedStatusActivityFormPool = null;
             return Boolean.TRUE;
@@ -116,72 +115,84 @@ public class ThWordStatusActivity {
             inputedVal = null;
         }
     }
-
     /**
-     * create new record for keyPointFlowActivity, add to list
-     * ThStorageWordStatistic
-     * timeUSE    
-     *     - (3a.3) - Long lastAccessNanotime - update onWrite, before 
-     *                write
-     *     - (3a.3) - Long countDataUseIterationsSummary - update onWrite, 
-     *                before write, count++ sended jobWrite
-     * @param keyPointFlowActivity
-     * @param countDataUseIterationsSummary
-     * @return
-     * ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Long>>
-     * <keyPointFlowActivity, <lastAccessNanotime.hashCode(), Long Value>>
-     *                        <countDataUseIterationsSummary.hashCode(), Long Value>
+     * 
+     * @param keyPointFlowActivityInputed 
      */
-    protected ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Long>> createAddToListParamsTimeUse(
-            final UUID keyPointFlowActivity,
-            final long countDataUseIterationsSummary){
-        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Long>> returnedParams;
-        ConcurrentHashMap<Integer, Long> timeUse;
-        UUID keyPointFlowActivityTimeUse;
+    protected void createStructureParamsActivity(
+                        final UUID keyPointFlowActivityInputed){
+        ConcurrentHashMap<Integer, Long> countActivity;
+        UUID keyPointFlowActivityFunc;
         try{
-            keyPointFlowActivityTimeUse = keyPointFlowActivity;
-            timeUse = setInParamTimeUse(countDataUseIterationsSummary);
-            
-            returnedParams = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Long>>();
-            this.poolStatusActivity.put(keyPointFlowActivityTimeUse, timeUse);
-            returnedParams.put(keyPointFlowActivityTimeUse, timeUse);
-            return returnedParams;
+            keyPointFlowActivityFunc = (UUID) keyPointFlowActivityInputed;
+            if( isStatusActivityNotExist(keyPointFlowActivityFunc) ){
+                countActivity = setInitParamActivity();
+                this.poolStatusActivity.put(keyPointFlowActivityFunc, countActivity);
+            }
         } finally {
-            returnedParams = null;
-            timeUse = null;
-            keyPointFlowActivityTimeUse = null;
+            countActivity = null;
+            keyPointFlowActivityFunc = null;
         }
     }
     /**
-     * used in createStructureParamsTimeUse(
-     *       final UUID keyPointFlowActivity,
-     *       final long countDataUseIterationsSummary)
      * 
-     * @param countDataUseIterationsSummary
-     * @return ThStorageWordStatistic lvl(3a.3)
-     * ConcurrentHashMap<Integer, Long>
-     *      <lastAccessNanotime.hashCode(), Long Value>
-     *      <countDataUseIterationsSummary.hashCode(), Long Value>
+     * @return 
      */
-    protected ConcurrentHashMap<Integer, Long> setInParamTimeUse(
-            final long countDataUseIterationsSummary){
+    private ConcurrentHashMap<Integer, Long> setInitParamActivity(){
         ConcurrentHashMap<Integer, Long> returnedHashMap;
-        Long countIterations;
+        Integer paramCodeByNumber;
+        Integer countParamsActivityForSet;
+        Integer idx;
         try {
             returnedHashMap = new ConcurrentHashMap<Integer, Long>();
-            countIterations = countDataUseIterationsSummary;
-            if( countIterations < 0L ){
-                countIterations = 0L;
+            countParamsActivityForSet = getParamCount();
+            for(idx = 0; idx < countParamsActivityForSet; idx++ ){
+                paramCodeByNumber = getParamCodeByNumber(idx);
+                returnedHashMap.put(paramCodeByNumber, 0L);
+                idx++;
             }
-            //lastAccessNanotime - -1553995461
-            long nanoTime = System.nanoTime();
-            returnedHashMap.put(-1553995461, nanoTime);
-            //countDataUseIterationsSummary - 1445275074
-            returnedHashMap.put(1445275074, countIterations);
+
             return returnedHashMap;
         } finally {
+            idx = null;
+            paramCodeByNumber = null;
+            countParamsActivityForSet = null;
             returnedHashMap = null;
-            countIterations = null;
+        }
+    }
+    /**
+     * <ul>
+     * <li>0 - lastAccessNanotime
+     * <li>1 - countDataUseIterationsSummary
+     * </ul> 
+     * @param changedKeyPointFlowActivity
+     * @param paramNumber
+     * @param changedVal 
+     * 
+     * @throws IllegalArgumentException when inputed number of parameter
+     * out of bounds
+     */
+    protected void changeParamValByNumber(final UUID changedKeyPointFlowActivity, final Integer paramNumber, final Long changedVal){
+        UUID changedKeyPointFlowActivityFunc;
+        Integer paramNumberFunc;
+        Long changedValFunc;
+        Integer paramCodeByNumber;
+        ConcurrentHashMap<Integer, Long> fromCurrentFlow;
+        try{
+            changedKeyPointFlowActivityFunc = (UUID) changedKeyPointFlowActivity;
+            validateCountParams(changedKeyPointFlowActivityFunc);
+            paramNumberFunc = (Integer) paramNumber;
+            changedValFunc = (Long) changedVal;
+            fromCurrentFlow = (ConcurrentHashMap<Integer, Long>) this.poolStatusActivity.get(changedKeyPointFlowActivityFunc);
+            paramCodeByNumber = (Integer) getParamCodeByNumber(paramNumberFunc);
+            fromCurrentFlow.put(paramCodeByNumber, changedValFunc);
+            this.poolStatusActivity.put(changedKeyPointFlowActivityFunc, fromCurrentFlow);
+        } finally {
+            changedKeyPointFlowActivityFunc = null;
+            paramNumberFunc = null;
+            changedValFunc = null;
+            paramCodeByNumber = null;
+            fromCurrentFlow = null;
         }
     }
     /**
@@ -211,10 +222,16 @@ public class ThWordStatusActivity {
      * @throws IllegalArgumentException when inputed number of parameter
      * out of bounds
      */
-    protected Integer getParamCodeByNumber(int numParam){
+    private Integer getParamCodeByNumber(int numParam){
         String[] paramNames;
         try {
             paramNames = getParamNames();
+            if( numParam < 0 ){
+                throw new IllegalArgumentException(ThWordStatusActivity.class.getCanonicalName() 
+                                + " parameters of flow statusActivity in StorageWord is not valid, "
+                                + " negative index sended, 0 (zero) > " + numParam + ", count parameters: " 
+                                + paramNames.length);
+            }
             if( numParam > (paramNames.length - 1) ){
                 throw new IllegalArgumentException(ThWordStatusActivity.class.getCanonicalName() 
                                 + " parameters of flow statusActivity in StorageWord is not valid, "
@@ -234,7 +251,7 @@ public class ThWordStatusActivity {
      * Count records (array.length) returned from {@link #getParamNames }
      * @return 
      */
-    protected int getParamCount(){
+    private int getParamCount(){
         String[] paramNames;
         try {
             paramNames = getParamNames();
@@ -255,6 +272,12 @@ public class ThWordStatusActivity {
         String paramName;
         try {
             paramNames = getParamNames();
+            if( numParam < 0 ){
+                throw new IllegalArgumentException(ThWordStatusActivity.class.getCanonicalName() 
+                                + " parameters of flow statusActivity in StorageWord is not valid, "
+                                + " negative index sended, 0 (zero) > " + numParam + ", count parameters: " 
+                                + paramNames.length);
+            }
             if( numParam > (paramNames.length - 1) ){
                 throw new IllegalArgumentException(ThWordStatusActivity.class.getCanonicalName() 
                                 + " parameters of flow statusActivity in StorageWord is not valid, "
@@ -277,53 +300,51 @@ public class ThWordStatusActivity {
      */
     
     protected void validateCountParams(final UUID keyPointFlowActivity){
-        ConcurrentHashMap<Integer, Long> statusActivityForKeyPointFlow;
         UUID keyPointFlowActivityFunc;
-        Integer countThStorageWordStatusActivityLastAccessNanotime;
-        Integer countThStorageWordStatusActivityDataUseIterationsSummary;
-        Integer countSummaryOfParameters;
+        ConcurrentHashMap<Integer, Long> statusActivityForKeyPointFlow;
+        Integer sizeRec;
+        Integer paramCount;
+        Integer idxParam;
+        Integer paramCodeByNumber;
+        String paramNameByNumber;
+        
         try {
             keyPointFlowActivityFunc = (UUID) keyPointFlowActivity;
             if( !isStatusActivityNotExist(keyPointFlowActivityFunc) ){
-                statusActivityForKeyPointFlow = getStatusActivityForKeyPointFlow(keyPointFlowActivityFunc);
-                countSummaryOfParameters = 0;
-                countThStorageWordStatusActivityLastAccessNanotime = 0;
-                countThStorageWordStatusActivityDataUseIterationsSummary = 0;
-                for(Map.Entry<Integer, Long> itemOfLong: statusActivityForKeyPointFlow.entrySet()){
-                    countSummaryOfParameters++;
-                    switch ( itemOfLong.getKey() ) {
-                        case -1553995461:
-                            countThStorageWordStatusActivityLastAccessNanotime++;
-                            continue;
-                        case 1445275074:
-                            countThStorageWordStatusActivityDataUseIterationsSummary++;
-                            continue;
-                    }
+                
+                statusActivityForKeyPointFlow = (ConcurrentHashMap<Integer, Long>) getStatusActivityForKeyPointFlow(keyPointFlowActivityFunc);
+                sizeRec = (Integer) statusActivityForKeyPointFlow.size();
+                paramCount = (Integer) getParamCount();
+                if( sizeRec != paramCount ){
+                    
                     throw new IllegalArgumentException(ThWordStatusActivity.class.getCanonicalName() 
-                            + " parameters of flow statusActivity in StorageWord is not valid, has more values");
+                            + " parameters of flow statusActivity in Word is not valid, "
+                            + "count records " + sizeRec + " not equal " + paramCount);
                 }
-                if( countSummaryOfParameters != 2 ){
-                    throw new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
-                            + " parameters of flow statusActivity in StorageWord is not valid, "
-                            + "count records not equal two");
-                }
-                if( countThStorageWordStatusActivityLastAccessNanotime != 1 ){
-                    throw new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
-                            + " parameters of flow statusActivity in StorageWord is not valid, "
-                            + "count records for lastAccessNanotime not equal one");
-                }
-                if( countThStorageWordStatusActivityDataUseIterationsSummary != 1 ){
-                    throw new IllegalArgumentException(ThStorageWordLogicWrite.class.getCanonicalName() 
-                            + " parameters of flow statusActivity in StorageWord is not valid, "
-                            + "count records for countDataUseIterationsSummary not equal one");
+                
+                for(idxParam = 0; idxParam < paramCount; idxParam++ ){
+                    
+                    paramCodeByNumber = getParamCodeByNumber(idxParam);
+                    if( !statusActivityForKeyPointFlow.containsKey(paramCodeByNumber) ){
+                        
+                        paramNameByNumber = getParamNameByNumber(idxParam);
+                        throw new IllegalArgumentException(ThWordStatusActivity.class.getCanonicalName() 
+                            + " parameter "
+                            + " for name: " + paramNameByNumber
+                            + " in inputed data for set into flow statusActivity not exist");
+                    }
+                    idxParam++;
                 }
             }
+            
         } finally {
+            sizeRec = null;
+            paramCount = null;
+            idxParam = null;
             statusActivityForKeyPointFlow = null;
             keyPointFlowActivityFunc = null;
-            countThStorageWordStatusActivityLastAccessNanotime = null;
-            countThStorageWordStatusActivityDataUseIterationsSummary = null;
-            countSummaryOfParameters = null;
+            paramCodeByNumber = null;
+            paramNameByNumber = null;
         }
     }
    

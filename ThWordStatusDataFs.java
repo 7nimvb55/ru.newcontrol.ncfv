@@ -50,7 +50,7 @@ public class ThWordStatusDataFs {
      * @return 
      * @throws IllegalStateException
      */
-    protected ConcurrentHashMap<Integer, Integer> getStatusDataFsForKeyPointFlow(final UUID keyPointFlowDataFs){
+    private ConcurrentHashMap<Integer, Integer> getStatusDataFsForKeyPointFlow(final UUID keyPointFlowDataFs){
         UUID inputedVal;
         ConcurrentHashMap<Integer, Integer> getStatusDataFsFormPool;
         try{
@@ -87,11 +87,10 @@ public class ThWordStatusDataFs {
                 return Boolean.FALSE;
             }
             for( Map.Entry<Integer, Integer> itemOfPoint : getRemovedStatusDataFsFormPool.entrySet() ){
-                Integer remove = getRemovedStatusDataFsFormPool.remove(itemOfPoint.getKey());
-                Integer [] remStrVal = {remove};
-                remStrVal = null;
-                Integer [] remIntKey = {itemOfPoint.getKey()};
-                remIntKey = null;
+                Integer removedKey = itemOfPoint.getKey();
+                Integer removedVal = getRemovedStatusDataFsFormPool.remove(removedKey);
+                removedVal = null;
+                removedKey = null;
             }
             getRemovedStatusDataFsFormPool = null;
             return Boolean.TRUE;
@@ -119,62 +118,82 @@ public class ThWordStatusDataFs {
     }
     /**
      * 
-     * @param countRecords
-     * @param volumeNumber
-     * @return lvl(4, 3a.1) ready for put in list lvl(3)
+     * @param keyPointFlowDataFsInputed 
      */
-    protected ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>> createStructureParamsCountFs(
-                        final UUID keyPointFlowDataFs,
-                        final Integer countRecords,
-                        final Integer volumeNumber){
-        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>> returnedParams;
-        ConcurrentHashMap<Integer, Integer> countFs;
-        UUID keyPointFlowDataFsCountFs;
+    protected void createStructureParamsDataFs(
+                        final UUID keyPointFlowDataFsInputed){
+        ConcurrentHashMap<Integer, Integer> countDataFs;
+        UUID keyPointFlowDataFsFunc;
         try{
-            keyPointFlowDataFsCountFs = keyPointFlowDataFs;
-            countFs = setInParamCountFS(countRecords,
-                        volumeNumber);
-            returnedParams = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>>();
-            this.poolStatusDataFs.put(keyPointFlowDataFsCountFs, countFs);
-            returnedParams.put(keyPointFlowDataFsCountFs , countFs);
-            return returnedParams;
+            keyPointFlowDataFsFunc = (UUID) keyPointFlowDataFsInputed;
+            if( isStatusDataFsNotExist(keyPointFlowDataFsFunc) ){
+                countDataFs = setInitParamDataFs();
+                this.poolStatusDataFs.put(keyPointFlowDataFsFunc, countDataFs);
+            }
         } finally {
-            returnedParams = null;
-            countFs = null;
-            keyPointFlowDataFsCountFs = null;
+            countDataFs = null;
+            keyPointFlowDataFsFunc = null;
         }
     }
     /**
      * 
-     * @param countRecords
-     * @param volumeNumber
-     * @return lvl(3a.1)
+     * @return 
      */
-    protected ConcurrentHashMap<Integer, Integer> setInParamCountFS(
-                        final Integer countRecords,
-                        final Integer volumeNumber){
+    private ConcurrentHashMap<Integer, Integer> setInitParamDataFs(){
         ConcurrentHashMap<Integer, Integer> returnedHashMap;
-        Integer funcCountRecords;
-        Integer funcVolumeNumber;
+        Integer paramCodeByNumber;
+        Integer countParamsDataFsForSet;
+        Integer idx;
         try {
-            funcCountRecords = countRecords;
-            if( funcCountRecords < 0 ){
-                funcCountRecords = 0;
-            }
-            funcVolumeNumber = volumeNumber;
-            if( funcVolumeNumber < 0 ){
-                funcVolumeNumber = 0;
-            }
             returnedHashMap = new ConcurrentHashMap<Integer, Integer>();
-            //countRecordsOnFileSystem.hashCode() - -2011092003
-            returnedHashMap.put(-2011092003, funcCountRecords);
-            //volumeNumber.hashCode() - -1832815869
-            returnedHashMap.put(-1832815869, funcVolumeNumber);
+            countParamsDataFsForSet = getParamCount();
+            for(idx = 0; idx < countParamsDataFsForSet; idx++ ){
+                paramCodeByNumber = getParamCodeByNumber(idx);
+                returnedHashMap.put(paramCodeByNumber, 0);
+                idx++;
+            }
+
             return returnedHashMap;
         } finally {
+            idx = null;
+            paramCodeByNumber = null;
+            countParamsDataFsForSet = null;
             returnedHashMap = null;
-            funcCountRecords = null;
-            funcVolumeNumber = null;
+        }
+    }
+    /**
+     * <ul>
+     * <li>0 - countRecordsOnFileSystem
+     * <li>1 - volumeNumber
+     * </ul> 
+     * @param changedKeyPointFlowDataFs
+     * @param paramNumber
+     * @param changedVal 
+     * 
+     * @throws IllegalArgumentException when inputed number of parameter
+     * out of bounds
+     */
+    protected void changeParamValByNumber(final UUID changedKeyPointFlowDataFs, final Integer paramNumber, final Integer changedVal){
+        UUID changedKeyPointFlowDataFsFunc;
+        Integer paramNumberFunc;
+        Integer changedValFunc;
+        Integer paramCodeByNumber;
+        ConcurrentHashMap<Integer, Integer> fromCurrentFlow;
+        try{
+            changedKeyPointFlowDataFsFunc = (UUID) changedKeyPointFlowDataFs;
+            validateCountParams(changedKeyPointFlowDataFsFunc);
+            paramNumberFunc = (Integer) paramNumber;
+            changedValFunc = (Integer) changedVal;
+            fromCurrentFlow = (ConcurrentHashMap<Integer, Integer>) this.poolStatusDataFs.get(changedKeyPointFlowDataFsFunc);
+            paramCodeByNumber = (Integer) getParamCodeByNumber(paramNumberFunc);
+            fromCurrentFlow.put(paramCodeByNumber, changedValFunc);
+            this.poolStatusDataFs.put(changedKeyPointFlowDataFsFunc, fromCurrentFlow);
+        } finally {
+            changedKeyPointFlowDataFsFunc = null;
+            paramNumberFunc = null;
+            changedValFunc = null;
+            paramCodeByNumber = null;
+            fromCurrentFlow = null;
         }
     }
     /**
@@ -204,10 +223,16 @@ public class ThWordStatusDataFs {
      * @throws IllegalArgumentException when inputed number of parameter
      * out of bounds
      */
-    protected Integer getParamCodeByNumber(int numParam){
+    private Integer getParamCodeByNumber(int numParam){
         String[] paramNames;
         try {
             paramNames = getParamNames();
+            if( numParam < 0 ){
+                throw new IllegalArgumentException(ThWordStatusDataFs.class.getCanonicalName() 
+                                + " parameters of flow statusDataFs in StorageWord is not valid, "
+                                + " negative index sended, 0 (zero) > " + numParam + ", count parameters: " 
+                                + paramNames.length);
+            }
             if( numParam > (paramNames.length - 1) ){
                 throw new IllegalArgumentException(ThWordStatusDataFs.class.getCanonicalName() 
                                 + " parameters of flow statusDataFs in StorageWord is not valid, "
@@ -227,7 +252,7 @@ public class ThWordStatusDataFs {
      * Count records (array.length) returned from {@link #getParamNames }
      * @return 
      */
-    protected int getParamCount(){
+    private int getParamCount(){
         String[] paramNames;
         try {
             paramNames = getParamNames();
@@ -248,6 +273,12 @@ public class ThWordStatusDataFs {
         String paramName;
         try {
             paramNames = getParamNames();
+            if( numParam < 0 ){
+                throw new IllegalArgumentException(ThWordStatusDataFs.class.getCanonicalName() 
+                                + " parameters of flow statusDataFs in StorageWord is not valid, "
+                                + " negative index sended, 0 (zero) > " + numParam + ", count parameters: " 
+                                + paramNames.length);
+            }
             if( numParam > (paramNames.length - 1) ){
                 throw new IllegalArgumentException(ThWordStatusDataFs.class.getCanonicalName() 
                                 + " parameters of flow statusDataFs in StorageWord is not valid, "
@@ -271,53 +302,51 @@ public class ThWordStatusDataFs {
      */
     
     protected void validateCountParams(final UUID keyPointFlowDataFs){
-        ConcurrentHashMap<Integer, Integer> statusDataFsForKeyPointFlow;
         UUID keyPointFlowDataFsFunc;
-        Integer countThStorageWordStatusDataFsCountRecordsOnFileSystem;
-        Integer countThStorageWordStatusDataFsVolumeNumber;
-        Integer countSummaryOfParameters;
+        ConcurrentHashMap<Integer, Integer> statusDataFsForKeyPointFlow;
+        Integer sizeRec;
+        Integer paramCount;
+        Integer idxParam;
+        Integer paramCodeByNumber;
+        String paramNameByNumber;
+        
         try {
             keyPointFlowDataFsFunc = (UUID) keyPointFlowDataFs;
             if( !isStatusDataFsNotExist(keyPointFlowDataFsFunc) ){
-                statusDataFsForKeyPointFlow = getStatusDataFsForKeyPointFlow(keyPointFlowDataFsFunc);
-                countSummaryOfParameters = 0;
-                countThStorageWordStatusDataFsCountRecordsOnFileSystem = 0;
-                countThStorageWordStatusDataFsVolumeNumber = 0;
-                for(Map.Entry<Integer, Integer> itemOfLong: statusDataFsForKeyPointFlow.entrySet()){
-                    countSummaryOfParameters++;
-                    switch ( itemOfLong.getKey() ) {
-                        case -2011092003:
-                            countThStorageWordStatusDataFsCountRecordsOnFileSystem++;
-                            continue;
-                        case -1832815869:
-                            countThStorageWordStatusDataFsVolumeNumber++;
-                            continue;
+                
+                statusDataFsForKeyPointFlow = (ConcurrentHashMap<Integer, Integer>) getStatusDataFsForKeyPointFlow(keyPointFlowDataFsFunc);
+                sizeRec = (Integer) statusDataFsForKeyPointFlow.size();
+                paramCount = (Integer) getParamCount();
+                if( sizeRec != paramCount ){
+                    
+                    throw new IllegalArgumentException(ThWordStatusDataFs.class.getCanonicalName() 
+                            + " parameters of flow statusDataFs in Word is not valid, "
+                            + "count records " + sizeRec + " not equal " + paramCount);
+                }
+                
+                for(idxParam = 0; idxParam < paramCount; idxParam++ ){
+                    
+                    paramCodeByNumber = getParamCodeByNumber(idxParam);
+                    if( !statusDataFsForKeyPointFlow.containsKey(paramCodeByNumber) ){
+                        
+                        paramNameByNumber = getParamNameByNumber(idxParam);
+                        throw new IllegalArgumentException(ThWordStatusDataFs.class.getCanonicalName() 
+                            + " parameter "
+                            + " for name: " + paramNameByNumber
+                            + " in inputed data for set into flow statusDataFs not exist");
                     }
-                    throw new IllegalArgumentException(ThWordStatusDataFs.class.getCanonicalName() 
-                            + " parameters of flow statusDataFs in StorageWord is not valid, has more values");
-                }
-                if( countSummaryOfParameters != 2 ){
-                    throw new IllegalArgumentException(ThWordStatusDataFs.class.getCanonicalName() 
-                            + " parameters of flow statusDataFs in StorageWord is not valid, "
-                            + "count records not equal two");
-                }
-                if( countThStorageWordStatusDataFsCountRecordsOnFileSystem != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusDataFs.class.getCanonicalName() 
-                            + " parameters of flow statusDataFs in StorageWord is not valid, "
-                            + "count records for CountRecordsOnFileSystem not equal one");
-                }
-                if( countThStorageWordStatusDataFsVolumeNumber != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusDataFs.class.getCanonicalName() 
-                            + " parameters of flow statusDataFs in StorageWord is not valid, "
-                            + "count records for VolumeNumber not equal one");
+                    idxParam++;
                 }
             }
+            
         } finally {
+            sizeRec = null;
+            paramCount = null;
+            idxParam = null;
             statusDataFsForKeyPointFlow = null;
             keyPointFlowDataFsFunc = null;
-            countThStorageWordStatusDataFsCountRecordsOnFileSystem = null;
-            countThStorageWordStatusDataFsVolumeNumber = null;
-            countSummaryOfParameters = null;
+            paramCodeByNumber = null;
+            paramNameByNumber = null;
         }
     }
 }

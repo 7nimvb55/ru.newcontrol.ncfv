@@ -34,7 +34,7 @@ public class TdataWord implements Serializable {
      */
     public UUID recordUUID;
     /**
-     * 
+     * UUID for this record
      */
     public UUID randomUUID;
     /** 

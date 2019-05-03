@@ -55,7 +55,7 @@ public class ThWordStatusName {
      * @return 
      * @throws IllegalStateException
      */
-    protected ConcurrentHashMap<Integer, String> getStatusNameForKeyPointFlow(final UUID keyPointFlowName){
+    private ConcurrentHashMap<Integer, String> getStatusNameForKeyPointFlow(final UUID keyPointFlowName){
         UUID inputedVal;
         ConcurrentHashMap<Integer, String> getStatusNameFormPool;
         try{
@@ -92,11 +92,10 @@ public class ThWordStatusName {
                 return Boolean.FALSE;
             }
             for( Map.Entry<Integer, String> itemOfPoint : getRemovedStatusNameFormPool.entrySet() ){
-                String remove = getRemovedStatusNameFormPool.remove(itemOfPoint.getKey());
-                String [] remStrVal = {remove};
-                remStrVal = null;
-                Integer [] remIntKey = {itemOfPoint.getKey()};
-                remIntKey = null;
+                Integer removedKey = itemOfPoint.getKey();
+                String removedVal = getRemovedStatusNameFormPool.remove(removedKey);
+                removedVal = null;
+                removedKey = null;
             }
             getRemovedStatusNameFormPool = null;
             return Boolean.TRUE;
@@ -124,105 +123,87 @@ public class ThWordStatusName {
     }
     /**
      * 
-     * @param keyPointFlowName
-     * @param directoryName
-     * @param srcFileName
-     * @param destFileName
-     * @param deletedFileName
-     * @param flowFileNamePrefix
-     * @return lvl(4, 3a.2) ready for put in list lvl(3)
+     * @param keyPointFlowNameInputed 
      */
-    protected ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, String>> createStructureParamsNamesFs(
-                        final UUID keyPointFlowName,
-                        final String directoryName,
-                        final String srcFileName,
-                        final String destFileName,
-                        final String deletedFileName,
-                        final String flowFileNamePrefix){
-        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, String>> returnedParams;
-        ConcurrentHashMap<Integer, String> namesFS;
-        UUID keyPointFlowNamesFs;
+    protected void createStructureParamsName(
+                        final UUID keyPointFlowNameInputed){
+        ConcurrentHashMap<Integer, String> countName;
+        UUID keyPointFlowNameFunc;
         try{
-            keyPointFlowNamesFs = keyPointFlowName;
-            namesFS = setInParamNamesFS(
-                        directoryName,
-                        srcFileName,
-                        destFileName,
-                        deletedFileName,
-                        flowFileNamePrefix);
-            returnedParams = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, String>>();
-            this.poolStatusName.put(keyPointFlowNamesFs, namesFS);
-            returnedParams.put(keyPointFlowNamesFs , namesFS);
-            return returnedParams;
+            keyPointFlowNameFunc = (UUID) keyPointFlowNameInputed;
+            if( isStatusNameNotExist(keyPointFlowNameFunc) ){
+                countName = setInitParamName();
+                this.poolStatusName.put(keyPointFlowNameFunc, countName);
+            }
         } finally {
-            returnedParams = null;
-            namesFS = null;
-            keyPointFlowNamesFs = null;
+            countName = null;
+            keyPointFlowNameFunc = null;
         }
     }
     /**
-     * 
-     * @param directoryName
-     * @param srcFileName
-     * @param destFileName
-     * @param deletedFileName
-     * @param flowFileNamePrefix
-     * @return lvl(3a.2)
+     * Create, set all values to Boolean.FALSE
+     * @return ConcurrentHashMap<Integer, String>
+     *                          <ParamCode, Value>
+     * @see ThWordStatusName#getParamCodeByNumber(int) 
      */
-    protected ConcurrentHashMap<Integer, String> setInParamNamesFS(
-                        final String directoryName,
-                        final String srcFileName,
-                        final String destFileName,
-                        final String deletedFileName,
-                        final String flowFileNamePrefix
-                        ){
+    private ConcurrentHashMap<Integer, String> setInitParamName(){
         ConcurrentHashMap<Integer, String> returnedHashMap;
-        String directoryFuncName;
-        String srcFuncFileName;
-        String destFuncFileName;
-        String deletedFuncFileName;
-        String flowFuncFileNamePrefix;
+        Integer paramCodeByNumber;
+        Integer countParamsNameForSet;
+        Integer idx;
         try {
-            directoryFuncName = (String) directoryName;
-            srcFuncFileName = (String) srcFileName;
-            destFuncFileName = (String) destFileName;
-            deletedFuncFileName = (String) deletedFileName;
-            flowFuncFileNamePrefix = (String) flowFileNamePrefix;
-            if( directoryFuncName.isEmpty() ){
-                directoryFuncName = "undefinedSrcName-0-0";
-            }
-            if( srcFuncFileName.isEmpty() ){
-                srcFuncFileName = "undefinedSrcName-0-0"; // getDafaultNames with current Size and Volume Number
-            }
-            if( destFuncFileName.isEmpty() ){
-                destFuncFileName = "undefinedDestName-0-0";
-            }
-            if( deletedFuncFileName.isEmpty() ){
-                deletedFuncFileName = "undefDelName-0-0";
-            }
-            if( flowFuncFileNamePrefix.isEmpty() ){
-                flowFuncFileNamePrefix = "undefFlowPrefName-0-0";
-            }
             returnedHashMap = new ConcurrentHashMap<Integer, String>();
-            //storageDirectoryName - 1962941405
-            returnedHashMap.put(1962941405, directoryFuncName);
-            //currentFileName - 1517772480
-            returnedHashMap.put(1517772480, srcFuncFileName);
-            //newFileName - 521024487
-            returnedHashMap.put(521024487, destFuncFileName);
-            //deletedFileName - 2045325664
-            returnedHashMap.put(2045325664, deletedFuncFileName);
-            //flowFileNamePrefix - -980152217
-            returnedHashMap.put(-980152217, flowFuncFileNamePrefix);
-            
+            countParamsNameForSet = getParamCount();
+            for(idx = 0; idx < countParamsNameForSet; idx++ ){
+                paramCodeByNumber = getParamCodeByNumber(idx);
+                returnedHashMap.put(paramCodeByNumber, "undefined");
+                idx++;
+            }
+
             return returnedHashMap;
         } finally {
+            idx = null;
+            paramCodeByNumber = null;
+            countParamsNameForSet = null;
             returnedHashMap = null;
-            directoryFuncName = null;
-            srcFuncFileName = null;
-            destFuncFileName = null;
-            deletedFuncFileName = null;
-            flowFuncFileNamePrefix = null;
+        }
+    }
+    /**
+     * <ul>
+     * <li>0 - storageDirectoryName
+     * <li>1 - currentFileName
+     * <li>2 - newFileName
+     * <li>3 - deletedFileName
+     * <li>4 - flowFileNamePrefix
+     * </ul>
+     * @param changedKeyPointFlowName
+     * @param paramNumber
+     * @param changedVal 
+     * 
+     * @throws IllegalArgumentException when inputed number of parameter
+     * out of bounds
+     */
+    protected void changeParamValByNumber(final UUID changedKeyPointFlowName, final Integer paramNumber, final String changedVal){
+        UUID changedKeyPointFlowNameFunc;
+        Integer paramNumberFunc;
+        String changedValFunc;
+        Integer paramCodeByNumber;
+        ConcurrentHashMap<Integer, String> fromCurrentFlow;
+        try{
+            changedKeyPointFlowNameFunc = (UUID) changedKeyPointFlowName;
+            validateCountParams(changedKeyPointFlowNameFunc);
+            paramNumberFunc = (Integer) paramNumber;
+            changedValFunc = (String) changedVal;
+            fromCurrentFlow = (ConcurrentHashMap<Integer, String>) this.poolStatusName.get(changedKeyPointFlowNameFunc);
+            paramCodeByNumber = (Integer) getParamCodeByNumber(paramNumberFunc);
+            fromCurrentFlow.put(paramCodeByNumber, changedValFunc);
+            this.poolStatusName.put(changedKeyPointFlowNameFunc, fromCurrentFlow);
+        } finally {
+            changedKeyPointFlowNameFunc = null;
+            paramNumberFunc = null;
+            changedValFunc = null;
+            paramCodeByNumber = null;
+            fromCurrentFlow = null;
         }
     }
     /**
@@ -258,10 +239,16 @@ public class ThWordStatusName {
      * @throws IllegalArgumentException when inputed number of parameter
      * out of bounds
      */
-    protected Integer getParamCodeByNumber(int numParam){
+    private Integer getParamCodeByNumber(int numParam){
         String[] paramNames;
         try {
             paramNames = getParamNames();
+            if( numParam < 0 ){
+                throw new IllegalArgumentException(ThWordStatusName.class.getCanonicalName() 
+                                + " parameters of flow statusName in StorageWord is not valid, "
+                                + " negative index sended, 0 (zero) > " + numParam + ", count parameters: " 
+                                + paramNames.length);
+            }
             if( numParam > (paramNames.length - 1) ){
                 throw new IllegalArgumentException(ThWordStatusName.class.getCanonicalName() 
                                 + " parameters of flow statusName in StorageWord is not valid, "
@@ -281,7 +268,7 @@ public class ThWordStatusName {
      * Count records (array.length) returned from {@link #getParamNames }
      * @return 
      */
-    protected int getParamCount(){
+    private int getParamCount(){
         String[] paramNames;
         try {
             paramNames = getParamNames();
@@ -302,6 +289,12 @@ public class ThWordStatusName {
         String paramName;
         try {
             paramNames = getParamNames();
+            if( numParam < 0 ){
+                throw new IllegalArgumentException(ThWordStatusName.class.getCanonicalName() 
+                                + " parameters of flow statusName in StorageWord is not valid, "
+                                + " negative index sended, 0 (zero) > " + numParam + ", count parameters: " 
+                                + paramNames.length);
+            }
             if( numParam > (paramNames.length - 1) ){
                 throw new IllegalArgumentException(ThWordStatusName.class.getCanonicalName() 
                                 + " parameters of flow statusName in StorageWord is not valid, "
@@ -324,86 +317,51 @@ public class ThWordStatusName {
      */
     
     protected void validateCountParams(final UUID keyPointFlowName){
-        ConcurrentHashMap<Integer, String> statusNameForKeyPointFlow;
         UUID keyPointFlowNameFunc;
-        Integer countThStorageWordStatusNameStorageDirectoryName;
-        Integer countThStorageWordStatusNameCurrentFileName;
-        Integer countThStorageWordStatusNameNewFileName;
-        Integer countThStorageWordStatusNameDeletedFileName;
-        Integer countThStorageWordStatusNameFlowFileNamePrefix;
-        Integer countSummaryOfParameters;
+        ConcurrentHashMap<Integer, String> statusNameForKeyPointFlow;
+        Integer sizeRec;
+        Integer paramCount;
+        Integer idxParam;
+        Integer paramCodeByNumber;
+        String paramNameByNumber;
+        
         try {
             keyPointFlowNameFunc = (UUID) keyPointFlowName;
             if( !isStatusNameNotExist(keyPointFlowNameFunc) ){
-                statusNameForKeyPointFlow = getStatusNameForKeyPointFlow(keyPointFlowNameFunc);
-                countSummaryOfParameters = 0;
-                countThStorageWordStatusNameStorageDirectoryName = 0;
-                countThStorageWordStatusNameCurrentFileName = 0;
-                countThStorageWordStatusNameNewFileName = 0;
-                countThStorageWordStatusNameDeletedFileName = 0;
-                countThStorageWordStatusNameFlowFileNamePrefix = 0;
-                for(Map.Entry<Integer, String> itemOfLong: statusNameForKeyPointFlow.entrySet()){
-                    countSummaryOfParameters++;
-                    switch ( itemOfLong.getKey() ) {
-                        case 1962941405:
-                            countThStorageWordStatusNameStorageDirectoryName++;
-                            continue;
-                        case 1517772480:
-                            countThStorageWordStatusNameCurrentFileName++;
-                            continue;
-                        case 521024487:
-                            countThStorageWordStatusNameNewFileName++;
-                            continue;
-                        case 2045325664:
-                            countThStorageWordStatusNameDeletedFileName++;
-                            continue;
-                        case -980152217:
-                            countThStorageWordStatusNameFlowFileNamePrefix++;
-                            continue;
+                
+                statusNameForKeyPointFlow = (ConcurrentHashMap<Integer, String>) getStatusNameForKeyPointFlow(keyPointFlowNameFunc);
+                sizeRec = (Integer) statusNameForKeyPointFlow.size();
+                paramCount = (Integer) getParamCount();
+                if( sizeRec != paramCount ){
+                    
+                    throw new IllegalArgumentException(ThWordStatusName.class.getCanonicalName() 
+                            + " parameters of flow statusName in Word is not valid, "
+                            + "count records " + sizeRec + " not equal " + paramCount);
+                }
+                
+                for(idxParam = 0; idxParam < paramCount; idxParam++ ){
+                    
+                    paramCodeByNumber = getParamCodeByNumber(idxParam);
+                    if( !statusNameForKeyPointFlow.containsKey(paramCodeByNumber) ){
+                        
+                        paramNameByNumber = getParamNameByNumber(idxParam);
+                        throw new IllegalArgumentException(ThWordStatusName.class.getCanonicalName() 
+                            + " parameter "
+                            + " for name: " + paramNameByNumber
+                            + " in inputed data for set into flow statusName not exist");
                     }
-                    throw new IllegalArgumentException(ThWordStatusName.class.getCanonicalName() 
-                            + " parameters of flow statusName in StorageWord is not valid, has more values");
-                }
-                if( countSummaryOfParameters != 5 ){
-                    throw new IllegalArgumentException(ThWordStatusName.class.getCanonicalName() 
-                            + " parameters of flow statusName in StorageWord is not valid, "
-                            + "count records not equal three");
-                }
-                if( countThStorageWordStatusNameStorageDirectoryName != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusName.class.getCanonicalName() 
-                            + " parameters of flow statusName in StorageWord is not valid, "
-                            + "count records for StorageDirectoryName not equal one");
-                }
-                if( countThStorageWordStatusNameCurrentFileName != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusName.class.getCanonicalName() 
-                            + " parameters of flow statusName in StorageWord is not valid, "
-                            + "count records for CurrentFileName not equal one");
-                }
-                if( countThStorageWordStatusNameNewFileName != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusName.class.getCanonicalName() 
-                            + " parameters of flow statusName in StorageWord is not valid, "
-                            + "count records for IndexSystemLimitOnStorage not equal one");
-                }
-                if( countThStorageWordStatusNameDeletedFileName != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusName.class.getCanonicalName() 
-                            + " parameters of flow statusName in StorageWord is not valid, "
-                            + "count records for DeletedFileName not equal one");
-                }
-                if( countThStorageWordStatusNameFlowFileNamePrefix != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusName.class.getCanonicalName() 
-                            + " parameters of flow statusName in StorageWord is not valid, "
-                            + "count records for FileNamePrefix not equal one");
+                    idxParam++;
                 }
             }
+            
         } finally {
+            sizeRec = null;
+            paramCount = null;
+            idxParam = null;
             statusNameForKeyPointFlow = null;
             keyPointFlowNameFunc = null;
-            countThStorageWordStatusNameStorageDirectoryName = null;
-            countThStorageWordStatusNameCurrentFileName = null;
-            countThStorageWordStatusNameNewFileName = null;
-            countThStorageWordStatusNameDeletedFileName = null;
-            countThStorageWordStatusNameFlowFileNamePrefix = null;
-            countSummaryOfParameters = null;
+            paramCodeByNumber = null;
+            paramNameByNumber = null;
         }
     }
 }

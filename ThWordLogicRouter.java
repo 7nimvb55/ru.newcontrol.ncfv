@@ -15,10 +15,773 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  *
  * @author wladimirowichbiaran
  */
 public class ThWordLogicRouter {
-    
+    protected void doRouterForIndexWord(final ThWordRule outerRuleWord){
+        /**
+         * @todo ThWordCache objects for cache, cacheReaded, inputBusFromFilter
+         * Status set and read algoritm flags
+         */
+        final ThWordRule funcRuleWord = (ThWordRule) outerRuleWord;
+        ThIndexRule indexRule = funcRuleWord.getIndexRule();
+        ThIndexStatistic indexStatistic = indexRule.getIndexStatistic();
+        ThWordState wordState = funcRuleWord.getWordState();
+        ThWordStatusMainFlow wordStatusMainFlow = funcRuleWord.getWordStatusMainFlow();
+        ThStorageWordRule ruleStorageWord = indexRule.getIndexState().getRuleStorageWord();
+        ThStorageWordState storageWordState = ruleStorageWord.getStorageWordState();
+        System.out.println("++++++++++++++++++++++++++++++start " + ThWordLogicRouter.class.getCanonicalName());
+        ThStorageWordBusOutput busJobForWordRouter = storageWordState.getBusJobForWordWrite();
+        do{
+            Set<Map.Entry<Integer, ArrayBlockingQueue<TdataWord>>> busForTypeWord = busJobForWordRouter.getExistBusEntrySetForTypeWord();
+            for(Map.Entry<Integer, ArrayBlockingQueue<TdataWord>> items : busForTypeWord){
+                /**
+                 * (1) - typeWord - directory in zipfs storage to string
+                 */
+                System.out.println("For bus typeWord " + items.getKey());
+                //for(Map.Entry<String, String> itemsOfBus : items.getValue().entrySet()){
+                    /**
+                     * (2) - hexTagName
+                     * (2a) - itemsOfBus.getKey() - .substring(0,3) - subDirectory into (1)
+                     *          released in ThWordHelperFileSystem
+                     * (3) - subString
+                     * (3a) - items.getValue.remove(itemsOfBus.getKey()) - .length() - subDirectory into (2)
+                     *          released in ThWordHelperFileSystem
+                     * (4) - (2), (3) data into list of Word file, if exist flag in
+                     * WordStatistic structure about existing in list data file than 
+                     * do nothing (remove data, and not create jobs for read and write)
+                     *          released in ThWordRouter, ThWordStatistic
+                     *                  ThWordCache
+                     */
+                    /*System.out.println("For bus hexWord " 
+                            + itemsOfBus.getKey() 
+                            + " subString " 
+                            + items.getValue().remove(itemsOfBus.getKey()));
+
+                }*/
+                /**
+                 * @todo IllegalArgumentException catch
+                 */
+                
+                try {
+                    sendRemovedFromBusDataToFlow(items.getKey(), items.getValue());
+                } catch(IllegalArgumentException exIllArg) {
+                    System.err.println(exIllArg.getMessage());
+                    exIllArg.printStackTrace();
+
+                } catch(NullPointerException exNullReturn) {
+                    System.err.println(exNullReturn.getMessage());
+                    exNullReturn.printStackTrace();
+                    continue;
+                }
+            }
+        } while( ruleStorageWord.isRunnedStorageWordWorkFilter() );
+        
+        Set<Map.Entry<Integer, ArrayBlockingQueue<TdataWord>>> busForTypeWord = busJobForWordRouter.getExistBusEntrySetForTypeWord();
+            for(Map.Entry<Integer, ArrayBlockingQueue<TdataWord>> items : busForTypeWord){
+                System.out.println("From bus typeWord " + items.getKey());
+                /*for(Map.Entry<String, String> itemsOfBus : items.getValue().entrySet()){
+                    System.out.println("For bus hexWord " 
+                            + itemsOfBus.getKey() 
+                            + " subString " 
+                            + items.getValue().remove(itemsOfBus.getKey()));
+
+                }*/
+                /**
+                 * @todo IllegalArgumentException catch
+                 */
+                try {
+                    sendRemovedFromBusDataToFlow(items.getKey(), items.getValue());
+                } catch(IllegalArgumentException exIllArg) {
+                    System.err.println(exIllArg.getMessage());
+                    exIllArg.printStackTrace();
+
+                } catch(NullPointerException exNullReturn) {
+                    System.err.println(exNullReturn.getMessage());
+                    exNullReturn.printStackTrace();
+                    continue;
+                }
+        }
+        /**
+         * @todo procedure for read all caches data and write it
+         */
+        ThWordCache wordCache = (ThWordCache) wordStatusMainFlow.getWordCache();
+        
+        /*ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> listTypTagSubStr = wordCache.pollListTypeTagSubStr();
+        
+        for(Map.Entry<Integer, ConcurrentHashMap<String, String>> itemList : listTypTagSubStr.entrySet()){
+            try {
+                    removeDataForCurrentTypeWordBus(funcRuleWord, 
+                        itemList.getKey(), 
+                        listTypTagSubStr.remove(itemList.getKey()));
+                } catch(IllegalArgumentException exIllArg) {
+                    System.err.println(exIllArg.getMessage());
+                    exIllArg.printStackTrace();
+
+                } catch(NullPointerException exNullReturn) {
+                    System.err.println(exNullReturn.getMessage());
+                    exNullReturn.printStackTrace();
+                    continue;
+                }
+        }*/
+        
+        System.out.println("++++++++++++++++++++++++++++++stop " + ThWordLogicRouter.class.getCanonicalName());
+    }
+    private static void iteratorBusData(){
+        
+    }
+    private static void sendRemovedFromBusDataToFlow(final Integer keyTypeWordInputed, 
+            final ArrayBlockingQueue<TdataWord> valueBusOfTypeWordInputed){
+        Integer keyTypeWordFunc;
+        ArrayBlockingQueue<TdataWord> valueBusOfTypeWordFunc;
+        try {
+            keyTypeWordFunc = (Integer) keyTypeWordInputed;
+            valueBusOfTypeWordFunc = (ArrayBlockingQueue<TdataWord>) valueBusOfTypeWordInputed;
+            if (valueBusOfTypeWordFunc.isEmpty()) {
+                throw new NullPointerException("Empty bus for type of Word number: " + String.valueOf(keyTypeWordFunc));
+            }
+            TdataWord poll = valueBusOfTypeWordFunc.poll();
+            if (poll == null) {
+                throw new NullPointerException("Null returned from bus for type of Word number: " + String.valueOf(keyTypeWordFunc));
+            }
+        } finally {
+            keyTypeWordFunc = null;
+            valueBusOfTypeWordFunc = null;
+        }
+    }
+    /**
+     * 
+     * @param storageWordStatistic
+     * @param fromBusItemKey
+     * @param fromBusItemValue 
+     * @throws IllegalArgumentException
+     */
+    private static void removeDataForCurrentTypeWordBus(
+            final ThWordRule outerRuleWord,
+            final Integer fromBusItemKey, 
+            final ConcurrentHashMap<String, String> fromBusItemValue){
+        Integer typeWord;
+        ConcurrentHashMap<String, String> hexTagNameSubString;
+        ThWordRule funcRuleWord;
+        try {
+            funcRuleWord = (ThWordRule) outerRuleWord;
+            typeWord = fromBusItemKey;
+            hexTagNameSubString = fromBusItemValue;
+            for(Map.Entry<String, String> itemsHexTagSubStr : hexTagNameSubString.entrySet()){
+                String recHexTagName = (String) itemsHexTagSubStr.getKey();
+                String recSubString = (String) itemsHexTagSubStr.getValue();
+                int tagNamelength = (int) recHexTagName.length();
+                int strSubStringlength = (int) recSubString.length();
+                
+                if( (strSubStringlength * 4) != tagNamelength ){
+                    throw new IllegalArgumentException(ThWordLogicRouter.class.getCanonicalName() 
+                            + " illegal length of inputed in index string, hexTagName: "
+                            + recHexTagName + " lengthHex: " + recHexTagName.length()
+                            + " strSubString: " + recSubString + " lengthStr: " + recSubString.length()
+                            + " lengthHex == lengthStr * 4 ");
+                }
+                
+                if( tagNamelength < 4 ){
+                    throw new IllegalArgumentException(ThWordLogicRouter.class.getCanonicalName() 
+                            + " illegal length of inputed in index string, hexTagName: "
+                            + recHexTagName + " length: " + recHexTagName.length()
+                            + " < 4 ");
+                }
+                /**
+                 * (1) - generate directories names
+                 * (2) - statistics flags
+                 * add into statistics lists
+                 * create job for write
+                 * @todo in cache read and write into not limited list data files
+                 */
+                //(1)
+                
+                //(2)
+                setFlagsToStatisticsList(funcRuleWord,
+                        typeWord, 
+                        recHexTagName, 
+                        recSubString);
+                
+                
+                
+                String[] oldRecVal = {recHexTagName, recSubString};
+                oldRecVal = null;
+            }
+            
+        } finally {
+            typeWord = null;
+            hexTagNameSubString = null;
+            funcRuleWord = null;
+        }
+        
+    }
+    private static void setFlagsToStatisticsList(
+            final ThWordRule outerRuleWord,
+            final Integer typeWordInputed, 
+            final String tagNameInputed, 
+            final String strSubStringInputed){
+        ThWordRule funcRuleWord;
+        ThWordStatusMainFlow currentWordStatistic;
+        ThWordBusReadedFlow storageWordFlowReaded;
+        ThWordState storageWordState;
+        ThWordBusWriter busJobForWordRouterJobToWriter;
+        ThWordBusReader busJobForWordRouterJobToReader;
+        
+        ThWordStatusName thWordStatusName;
+        ThWordStatusActivity thWordStatusActivity;
+        ThWordStatusDataCache thWordStatusDataCache;
+        ThWordCache thWordCache;
+        ThWordCacheReaded thWordCacheReaded;
+        ThWordStatusWorkers thWordStatusWorkers;
+        ThWordStatusDataFs thWordStatusDataFs;
+        
+        Integer typeWordFunc;
+        String tagNameFunc;
+        String strSubStringFunc;
+        String buildTypeWordStoreSubDirictoriesFunc;
+        
+        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> typeWordTagFileNameMainFlowUuids;
+        ConcurrentHashMap<String, ConcurrentHashMap<Long, UUID>> typeWordTagFileNameReadedFlowUuids;
+        
+        UUID mainFlowLabel;
+        UUID keyFlowStatusDataFs;
+        UUID keyFlowStatusName;
+        UUID keyFlowStatusActivity;
+        UUID keyFlowStatusDataCache;
+        UUID keyFlowStatusWorkers;
+        
+        
+        ConcurrentHashMap<Integer, UUID> keysPointsFlow;
+        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> mainFlowContent;
+        String storageWordFileNameSrc;
+        String namesFsFileNameDestMoveTo;
+        
+        Boolean isMainFlowExist;
+        try{
+            funcRuleWord = (ThWordRule) outerRuleWord;
+            currentWordStatistic = (ThWordStatusMainFlow) funcRuleWord.getWordStatusMainFlow();
+            storageWordFlowReaded = (ThWordBusReadedFlow) funcRuleWord.getWordState().getWordFlowReaded();
+            
+            storageWordState = (ThWordState) funcRuleWord.getWordState();
+            busJobForWordRouterJobToWriter = (ThWordBusWriter) 
+                    storageWordState.getBusJobForWordRouterJobToWriter();
+            
+            busJobForWordRouterJobToReader = (ThWordBusReader) 
+                    storageWordState.getBusJobForWordRouterJobToReader();
+            
+            typeWordFunc = (Integer) typeWordInputed;
+            tagNameFunc = (String) tagNameInputed;
+            strSubStringFunc = (String) strSubStringInputed;
+            
+            Integer fromCacheCountFsCountRecordsSrc = 0;
+            Integer fromCacheCountFsCountRecordsDestMoveTo = 1;
+            Integer fromCacheCountFsVolumeNumberSrc = 0;
+            Integer fromCacheCountFsVolumeNumberDestMoveTo = 0;
+            
+            /**
+             * check current flow process
+             * sendToCacheData | waitForReadQueue | waitForWriteQueue
+             * isNeedReadData
+             * isWriteInProcess
+             * isReadInProcess
+             *
+             * 
+             * isCachedReadedData
+             *
+             * newFileName equal currentFileName and isMoved then only writed
+             * 
+             */
+            
+            
+            typeWordTagFileNameMainFlowUuids = 
+                currentWordStatistic.getTypeWordTagFileNameFlowUuids(typeWordFunc, tagNameFunc, strSubStringFunc);
+            
+            /**
+             * read from readed jobs UUIDs, get data from cache and write it
+             */
+            
+            typeWordTagFileNameReadedFlowUuids = 
+                storageWordFlowReaded.getTypeWordTagFileNameReadedFlowUuids(typeWordFunc, tagNameFunc, strSubStringFunc);
+            
+            if( typeWordTagFileNameMainFlowUuids == null ){
+                throw new NullPointerException(ThWordLogicRouter.class.getCanonicalName() 
+                            + " return null from " + ThWordStatusMainFlow.class.getCanonicalName()
+                            + ".getTypeWordTagFileNameFlowUuids(typeWord, hexTagName, strSubString), for params values:"
+                            + " typeWord: "
+                            + String.valueOf(typeWordFunc) + ", hexTagName: "
+                            + tagNameFunc + " lengthHex: " + tagNameFunc.length()
+                            + " strSubString: " + strSubStringFunc + " lengthStr: " + strSubStringFunc.length()
+                            + " lengthStr * 4: " + strSubStringFunc.length());
+            }
+            if( typeWordTagFileNameReadedFlowUuids == null ){
+                throw new NullPointerException(ThWordLogicRouter.class.getCanonicalName() 
+                            + " return null from " + ThWordBusReadedFlow.class.getCanonicalName()
+                            + ".getTypeWordTagFileNameReadedFlowUuids(typeWord, hexTagName, strSubString), for params values:"
+                            + " typeWord: "
+                            + String.valueOf(typeWordFunc) + ", hexTagName: "
+                            + tagNameFunc + " lengthHex: " + tagNameFunc.length()
+                            + " strSubString: " + strSubStringFunc + " lengthStr: " + strSubStringFunc.length()
+                            + " lengthStr * 4: " + strSubStringFunc.length());
+            }
+            
+            isMainFlowExist = Boolean.FALSE;
+            //this is a jobWrite UUID, to fix create jobListsStatus
+            mainFlowLabel = UUID.randomUUID();
+            
+            Integer volNumSettedInFlow = 0;
+            
+            String fileDataListPrefix = mainFlowLabel.toString();
+            
+            thWordCache = currentWordStatistic.getWordCache();
+            thWordCacheReaded = currentWordStatistic.getWordCacheReaded();
+            
+            thWordStatusDataFs = currentWordStatistic.getWordStatusDataFs();
+            thWordStatusName = currentWordStatistic.getWordStatusName();
+            thWordStatusActivity = currentWordStatistic.getWordStatusActivity();
+            thWordStatusDataCache = currentWordStatistic.getWordStatusDataCache();
+            thWordStatusWorkers = currentWordStatistic.getWordStatusWorkers();
+            
+            if( !typeWordTagFileNameMainFlowUuids.isEmpty() ){
+                isMainFlowExist = Boolean.TRUE;
+                //set not default values
+                for( Map.Entry<UUID, ConcurrentHashMap<Integer, UUID>> itemMainFlow : typeWordTagFileNameMainFlowUuids.entrySet() ) {
+                    UUID keyMainFlow = itemMainFlow.getKey();
+                    if( itemMainFlow.getValue().size() == 5 ){
+                        UUID keyDataFs = itemMainFlow.getValue().get("ThWordStatusDataFs".hashCode());
+                        UUID keyName = itemMainFlow.getValue().get("ThWordStatusName".hashCode());
+                        UUID keyActivity = itemMainFlow.getValue().get("ThWordStatusActivity".hashCode());
+                        UUID keyDataCache = itemMainFlow.getValue().get("ThWordStatusDataCache".hashCode());
+                        UUID keyWorkers = itemMainFlow.getValue().get("ThWordStatusWorkers".hashCode());
+
+                        /**
+                         * validate, catch, remove not valide
+                         */
+                        try{
+                            thWordStatusDataFs.validateCountParams(keyDataFs);
+                        } catch (IllegalArgumentException exDataFs) {
+                            System.err.println(exDataFs.getMessage());
+                            ConcurrentHashMap<Integer, UUID> removeNotValidDataFsFlowUUID = 
+                                    typeWordTagFileNameMainFlowUuids.remove(keyMainFlow);
+                            removeNotValidDataFsFlowUUID = null;
+                            System.err.println("-----------------"
+                                    + "||||||||||||||||||"
+                                    + "-----------------"
+                                    + "||||||||||||||||||"
+                                    + "----------------- data in flow key not valid, removed, "
+                                    + "reason not set ThWordStatusDataFs for UUID "
+                                    + keyMainFlow.toString());
+                            continue;
+                        }
+                        try{
+                            thWordStatusName.validateCountParams(keyName);
+                        } catch (IllegalArgumentException exName) {
+                            System.err.println(exName.getMessage());
+                            ConcurrentHashMap<Integer, UUID> removeNotValidNameFlowUUID = 
+                                    typeWordTagFileNameMainFlowUuids.remove(keyMainFlow);
+                            removeNotValidNameFlowUUID = null;
+                            System.err.println("-----------------"
+                                    + "||||||||||||||||||"
+                                    + "-----------------"
+                                    + "||||||||||||||||||"
+                                    + "----------------- data in flow key not valid, removed, "
+                                    + "reason not set ThWordStatusName for UUID "
+                                    + keyMainFlow.toString());
+                            continue;
+                        }
+                        try{
+                            thWordStatusActivity.validateCountParams(keyActivity);
+                        } catch (IllegalArgumentException exActiv) {
+                            System.err.println(exActiv.getMessage());
+                            ConcurrentHashMap<Integer, UUID> removeNotValidActivityFlowUUID = 
+                                    typeWordTagFileNameMainFlowUuids.remove(keyMainFlow);
+                            removeNotValidActivityFlowUUID = null;
+                            System.err.println("-----------------"
+                                    + "||||||||||||||||||"
+                                    + "-----------------"
+                                    + "||||||||||||||||||"
+                                    + "----------------- data in flow key not valid, removed, "
+                                    + "reason not set ThWordStatusActivity for UUID "
+                                    + keyMainFlow.toString());
+                            continue;
+                        }
+                        try{
+                            thWordStatusDataCache.validateCountParams(keyDataCache);
+                        } catch (IllegalArgumentException exDataCache) {
+                            System.err.println(exDataCache.getMessage());
+                            ConcurrentHashMap<Integer, UUID> removeNotValidDataCacheFlowUUID = 
+                                    typeWordTagFileNameMainFlowUuids.remove(keyMainFlow);
+                            removeNotValidDataCacheFlowUUID = null;
+                            System.err.println("-----------------"
+                                    + "||||||||||||||||||"
+                                    + "-----------------"
+                                    + "||||||||||||||||||"
+                                    + "----------------- data in flow key not valid, removed, "
+                                    + "reason not set ThWordStatusDataCache for UUID "
+                                    + keyMainFlow.toString());
+                            continue;
+                        }
+                        try{
+                            thWordStatusWorkers.validateCountParams(keyWorkers);
+                        } catch (IllegalArgumentException exWorkers) {
+                            System.err.println(exWorkers.getMessage());
+                            ConcurrentHashMap<Integer, UUID> removeNotValidWorkersFlowUUID = 
+                                    typeWordTagFileNameMainFlowUuids.remove(keyMainFlow);
+                            removeNotValidWorkersFlowUUID = null;
+                            System.err.println("-----------------"
+                                    + "||||||||||||||||||"
+                                    + "-----------------"
+                                    + "||||||||||||||||||"
+                                    + "----------------- data in flow key not valid, removed, "
+                                    + "reason not set ThWordStatusWorkers for UUID "
+                                    + keyMainFlow.toString());
+                            continue;
+                        }
+                        ConcurrentHashMap<Integer, String> statusNameForKeyPointFlow = thWordStatusName.getStatusNameForKeyPointFlow(keyName);
+                        /**
+                         * list for writed, not readed UUID check with readed list
+                         * list for writed and readed
+                         * list for writed
+                         */
+                        ConcurrentHashMap<Integer, Boolean> statusWorkersForKeyPointFlow = thWordStatusWorkers.getStatusWorkersForKeyPointFlow(keyWorkers);
+                        Boolean isWriteProcess = statusWorkersForKeyPointFlow.get(1640531930);
+                        if( isWriteProcess ){
+                            /**
+                             * 
+                             */
+                        }
+                        Boolean isReadProcess = statusWorkersForKeyPointFlow.get(1836000367);
+                        if( isReadProcess ){
+                            /**
+                             * then isWrited, isNeedRead, isMoveFileReady for FileNames
+                             */
+                        }
+                        Boolean isNeedReadData = statusWorkersForKeyPointFlow.get(-83825824);
+                        if( isNeedReadData ){
+                            /**
+                             * set job for reader
+                             */
+                        }
+                        Boolean isCachedData = statusWorkersForKeyPointFlow.get(-2091433802);
+                        if( isCachedData ){
+                            
+                        }
+                        Boolean isCachedReadedData = statusWorkersForKeyPointFlow.get(-660426229);
+                        if( isCachedReadedData ){
+                            /**
+                             * poll for cacheReaded and insert into cache
+                             * calculate flow data for new job write
+                             * set job for new write
+                             * set isNeedDeleteOldFile
+                             * set deleteFileNameAfterWrite
+                             */
+                        }
+                        Boolean isCalculatedData = statusWorkersForKeyPointFlow.get(1804093010);
+                        Boolean isUdatedDataInHashMap = statusWorkersForKeyPointFlow.get(-2092233516);
+                        //check before set reader job
+                        Boolean isMoveFileReady = statusWorkersForKeyPointFlow.get(-1884096596);
+                        if( isMoveFileReady ) {
+                            /**
+                             * check for isNeedRead, isReaded
+                             */
+                            if( isNeedReadData ) {
+                                if( isWriteProcess ) {
+                                    if( !isCachedReadedData ) {
+                                        if( !isReadProcess ) {
+                                            ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>> busForTypeWord = 
+                                                    busJobForWordRouterJobToReader.getBusForTypeWord(typeWordFunc);
+                                            ConcurrentHashMap<String, String> newReaderJob = new ConcurrentHashMap<String, String>();
+                                            newReaderJob.put(tagNameFunc, strSubStringFunc);
+                                            busForTypeWord.put(keyMainFlow, newReaderJob);
+                                            isReadProcess = Boolean.TRUE;
+                                            statusWorkersForKeyPointFlow.put(1836000367, isReadProcess);
+                                            fileDataListPrefix = (String) statusNameForKeyPointFlow.get(-980152217);
+                                        }
+                                    } else {
+                                        if( isReadProcess ) {
+                                            ConcurrentHashMap<String, String> pollTypeWordTagFileNameData = 
+                                                    thWordCacheReaded.pollTypeWordTagFileNameData(typeWordFunc, tagNameFunc, strSubStringFunc);
+                                            Boolean addAllDataIntoCache = 
+                                                    thWordCache.addAllDataIntoCache(typeWordFunc, tagNameFunc, strSubStringFunc, pollTypeWordTagFileNameData);
+                                            for( Map.Entry<String, ConcurrentHashMap<Long, UUID>> itemReadedMainFlow : typeWordTagFileNameReadedFlowUuids.entrySet() ) {
+                                                if( itemReadedMainFlow.getValue().equals(keyMainFlow) ){
+                                                    ConcurrentHashMap<Long, UUID> removeReadedFlowUUID = typeWordTagFileNameReadedFlowUuids.remove(itemReadedMainFlow.getKey());
+                                                    removeReadedFlowUUID = null;
+                                                }
+                                            }
+                                            //07 - isUdatedDataInHashMap - -2092233516
+                                            statusWorkersForKeyPointFlow.put(-2091433802, addAllDataIntoCache);
+                                            /**
+                                             * calculate cached data
+                                             * delete oldFlow, oldFile
+                                             */
+                                            //11 - isNeedDeleteOldFile - -1172779240
+                                            statusWorkersForKeyPointFlow.put(-1172779240, Boolean.TRUE);
+                                            String fileCurrentName = statusNameForKeyPointFlow.get(1517772480);
+                                            statusNameForKeyPointFlow.put(2045325664, fileCurrentName);
+                                            fileDataListPrefix = (String) statusNameForKeyPointFlow.get(-980152217);
+                                            
+                                            ConcurrentHashMap<Integer, Integer> statusDataFsForKeyPointFlow = thWordStatusDataFs.getStatusDataFsForKeyPointFlow(keyDataFs);
+                                            volNumSettedInFlow = statusDataFsForKeyPointFlow.get(-1832815869);
+                                            
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                }
+                
+                
+                if( !typeWordTagFileNameReadedFlowUuids.isEmpty() ){
+                    //exist readed data
+                    /**
+                     * add readed data from readed cache into datacache
+                     * generate new names
+                     * send data to write
+                     * mark readed file name to delete
+                     * impotant!!!
+                     * when writer get data from data cache, calculate data size
+                     * and check with limits and file name for move operation
+                     * rebuild moveto name...
+                     * 
+                     * router send data into cache --- size N
+                     * ----- may be router send data into cache --- size M
+                     * writer read data from cache for write to fs --- size N
+                     * ----- in file names file size not set into N+M...
+                     * Word index System change data in HashMap by keyWords
+                     * size not N+M, size is [arrayN]*[arrayM] --- sizeIs K
+                     */
+                    for( Map.Entry<String, ConcurrentHashMap<Long, UUID>> itemReadedMainFlow : typeWordTagFileNameReadedFlowUuids.entrySet() ) {
+                    
+                    }
+                }
+            }
+                
+            if( !typeWordTagFileNameReadedFlowUuids.isEmpty() ){
+                if( !isMainFlowExist ){
+                    /**
+                     * set special params
+                     */
+                    typeWordTagFileNameReadedFlowUuids.clear();
+                }
+            }
+
+            
+            /**
+             * @todo
+             * in index system Word data fields if not save in UUID key
+             * for distinct fields
+             */
+            
+            Boolean isCachedData = Boolean.FALSE;
+            
+            isCachedData = thWordCache.setDataIntoCacheFlow(typeWordFunc, tagNameFunc, strSubStringFunc);
+            
+            Boolean isCachedReadedData = Boolean.FALSE;
+            
+            isCachedReadedData = thWordCacheReaded.isCacheReadedHasData(
+                                                typeWordFunc, 
+                                                tagNameFunc, 
+                                                strSubStringFunc);
+            /**
+             * @todo if isCachedReadedData true, get from cache, add to list for
+             * write
+             */
+            
+            
+            buildTypeWordStoreSubDirictoriesFunc = (String) ThWordHelper.buildTypeWordStoreSubDirictories(
+                        typeWordFunc,
+                        tagNameFunc.substring(0, 3), 
+                        strSubStringFunc.length());
+            
+            /**
+             * Read flags, isNeedReadData 
+             *  - insert into DataCache
+             * isReadInProcess read next readed UUID
+             * isWriteInProcess read next need read UUID
+             *  - get currentFileName, newFileName if equal, create job for Read
+             * isCachedReadedData
+             *  - get data from readed jobBus, add from DataCache
+             * generate fileNames, write it
+             */
+            
+            keysPointsFlow = new ConcurrentHashMap<Integer, UUID>();
+            
+            Integer countFsCountRecordsSrc = 0;
+            Integer countFsCountRecordsDestMoveTo = (int) thWordCache.sizeDataInCache(typeWordFunc, tagNameFunc, strSubStringFunc);
+            Integer countFsVolumeNumberSrc = volNumSettedInFlow;
+            Integer countFsVolumeNumberDestMoveTo = volNumSettedInFlow;
+            
+            keyFlowStatusDataFs = UUID.randomUUID();
+            keysPointsFlow.put("ThWordStatusDataFs".hashCode(), keyFlowStatusDataFs);
+            
+            
+            thWordStatusDataFs.createStructureParamsCountFs(
+                    keyFlowStatusDataFs,
+                    countFsCountRecordsSrc, 
+                    countFsVolumeNumberSrc);
+            
+            
+            storageWordFileNameSrc = new String()
+                    .concat(AppFileNamesConstants.SZFS_STORAGE_WORD_FILE_PREFIX)
+                    .concat(fileDataListPrefix.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
+                    .concat(String.valueOf(countFsCountRecordsSrc))
+                    .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
+                    .concat(String.valueOf(countFsVolumeNumberSrc));
+            /**
+             * @todo isOnFileSystem exist data
+             * put job for read, read for readed bus data
+             */
+            Path getNamesFsFileNameSrc = Paths.get(buildTypeWordStoreSubDirictoriesFunc, storageWordFileNameSrc);
+            String namesFsFileNameSrc = getNamesFsFileNameSrc.toString();
+            
+            String storageWordFileNameDestMoveTo = new String()
+                    .concat(AppFileNamesConstants.SZFS_STORAGE_WORD_FILE_PREFIX)
+                    .concat(fileDataListPrefix.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
+                    .concat(String.valueOf(countFsCountRecordsDestMoveTo))
+                    .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
+                    .concat(String.valueOf(countFsVolumeNumberDestMoveTo));
+            Path getNamesFsFileNameDestMoveTo = Paths.get(buildTypeWordStoreSubDirictoriesFunc, storageWordFileNameDestMoveTo);
+            namesFsFileNameDestMoveTo = getNamesFsFileNameDestMoveTo.toString();
+            
+            keyFlowStatusName = UUID.randomUUID();
+            keysPointsFlow.put("ThWordStatusName".hashCode(), keyFlowStatusName);
+            
+            
+            thWordStatusName.createStructureParamsNamesFs(
+                    keyFlowStatusName,
+                    buildTypeWordStoreSubDirictoriesFunc,
+                    namesFsFileNameSrc, 
+                    namesFsFileNameDestMoveTo,
+                    namesFsFileNameDestMoveTo,
+                    fileDataListPrefix);
+            Integer timeUSEIterationIncrement = 0;
+            
+            keyFlowStatusActivity = UUID.randomUUID();
+            keysPointsFlow.put("ThWordStatusActivity".hashCode(), keyFlowStatusActivity);
+            
+            
+            thWordStatusActivity.createAddToListParamsTimeUse(
+                    keyFlowStatusActivity, 
+                    timeUSEIterationIncrement);
+            /**
+             * get params from structures
+             */
+            Integer countTmpCurrentInCache = 0;
+            Integer countTmpCurrentInCacheReaded = 0;
+            
+            Integer countTmpAddNeedToFileSystemLimit = AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT - countFsCountRecordsDestMoveTo;
+            Integer countTmpIndexSystemLimitOnStorage = AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT;
+            
+            keyFlowStatusDataCache = UUID.randomUUID();
+            keysPointsFlow.put("ThWordStatusDataCache".hashCode(), keyFlowStatusDataCache);
+            
+            
+            thWordStatusDataCache.createStructureParamsCountTmp(
+                    keyFlowStatusDataCache,
+                    countTmpCurrentInCache, 
+                    countTmpCurrentInCacheReaded,
+                    countTmpAddNeedToFileSystemLimit, 
+                    countTmpIndexSystemLimitOnStorage);
+            
+            Boolean isWriteProcess = Boolean.FALSE;
+            Boolean isReadProcess = Boolean.FALSE;
+            Boolean isNeedReadData = Boolean.FALSE;
+            
+            Boolean isCalculatedData = Boolean.FALSE;
+            Boolean isUdatedDataInHashMap = Boolean.FALSE;
+            Boolean isMoveFileReady = Boolean.FALSE;
+            
+            Boolean isFlowInWriteBus = Boolean.FALSE;
+            Boolean isFlowInReadBus = Boolean.FALSE;
+            Boolean isNeedDeleteOldFile = Boolean.FALSE;
+            Boolean isOldFileDeleted = Boolean.FALSE;
+            
+            keyFlowStatusWorkers = UUID.randomUUID();
+            keysPointsFlow.put("ThWordStatusWorkers".hashCode(), keyFlowStatusWorkers);
+            
+            mainFlowContent = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>();
+            mainFlowContent.put(mainFlowLabel, keysPointsFlow);
+            thWordStatusWorkers.createStructureParamsFlagsProc(
+                    keyFlowStatusWorkers,
+                    isWriteProcess, 
+                    isReadProcess, 
+                    isNeedReadData,
+                    isCachedData,
+                    isCachedReadedData,  
+                    isCalculatedData, 
+                    isUdatedDataInHashMap, 
+                    isMoveFileReady,
+                    isFlowInWriteBus,
+                    isFlowInReadBus,
+                    isNeedDeleteOldFile,
+                    isOldFileDeleted);
+            
+            currentWordStatistic.setParamsPointsFlow(
+                            typeWordFunc, 
+                            tagNameFunc, 
+                            strSubStringFunc,
+                            mainFlowContent);
+            
+            ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>> busForTypeWord 
+                    = busJobForWordRouterJobToWriter.getBusForTypeWord(typeWordFunc);
+            
+            ConcurrentHashMap<String, String> dataForOutput = new ConcurrentHashMap<String, String>();
+            dataForOutput.put(tagNameFunc, strSubStringFunc);
+            /**
+             * ... so part for job data hash..., readed hash, restructure cash on parts readed and write
+             */
+            busForTypeWord.put(mainFlowLabel, dataForOutput);
+            /**
+             * isWriteProcess = TRUE;
+             */
+            //thWordCache.printCacheData();
+            
+        } catch(IllegalArgumentException exIllArg) {
+            System.err.println(exIllArg.getMessage());
+            exIllArg.printStackTrace();
+            
+        } finally {
+            currentWordStatistic = null;
+            storageWordFlowReaded = null;
+            typeWordFunc =  null;
+            tagNameFunc =  null;
+            strSubStringFunc =  null;
+            buildTypeWordStoreSubDirictoriesFunc =  null;
+            
+            funcRuleWord = null;
+            currentWordStatistic = null;
+            storageWordState = null;
+            busJobForWordRouterJobToWriter = null;
+            
+            thWordStatusName = null;
+            thWordStatusActivity = null;
+            thWordStatusDataCache = null;
+            thWordCache = null;
+            thWordStatusWorkers = null;
+            thWordStatusDataFs = null;
+            
+            typeWordTagFileNameMainFlowUuids = null;
+            typeWordTagFileNameReadedFlowUuids = null;
+            
+            mainFlowLabel = null;
+            keyFlowStatusDataFs = null;
+            keyFlowStatusName = null;
+            keyFlowStatusActivity = null;
+            keyFlowStatusDataCache = null;
+            keyFlowStatusWorkers = null;
+            
+        }
+    }
 }

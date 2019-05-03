@@ -19,6 +19,27 @@ package ru.newcontrol.ncfv;
  *
  * @author wladimirowichbiaran
  */
-public class ThWordWorkRead {
+public class ThWordWorkRead implements Runnable {
+    private ThWordRule ruleWordRead;
     
+    ThWordWorkRead(final ThWordRule outerRuleWordRead){
+        this.ruleWordRead = outerRuleWordRead;
+    }
+    
+    @Override
+    public void run(){
+        System.out.println(ThWordWorkRead.class.getCanonicalName() 
+                + " run and say " 
+                + this.ruleWordRead.toString());
+        this.ruleWordRead.setTrueRunnedWordWorkRead();
+        ThreadLocal<ThWordLogicRead> logicWordWorkRead = new ThreadLocal<ThWordLogicRead>();
+        try{
+            logicWordWorkRead.set(new ThWordLogicRead());
+            logicWordWorkRead.get().doReadFromIndexWord(this.ruleWordRead);
+        } finally {
+            logicWordWorkRead.remove();
+            logicWordWorkRead = null;
+            this.ruleWordRead.setFalseRunnedWordWorkRead();
+        }
+    }
 }

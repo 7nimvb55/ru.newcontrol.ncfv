@@ -323,9 +323,9 @@ public class ThStorageWordLogicFilter {
                     
                     /**
                      * create data for transfer into LongWord, Word indexes
-                     *
-                    forAddData= new TdataWord(recordId, storagePath, word, prevWordCodeType, heximalWord, startPos, lengthWord);
-                    **
+                     */
+                    //forAddData= new TdataWord(recordId, storagePath, word, prevWordCodeType, heximalWord, startPos, lengthWord);
+                    /**
                      * put job to Bus by type ThWordState
                      */
                     

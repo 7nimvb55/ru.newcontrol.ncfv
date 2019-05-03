@@ -19,6 +19,28 @@ package ru.newcontrol.ncfv;
  *
  * @author wladimirowichbiaran
  */
-public class ThWordWorkRouter {
+public class ThWordWorkRouter implements Runnable{
+    private ThWordRule ruleWordRouter;
+    
+    ThWordWorkRouter(final ThWordRule outerRuleWordRouter){
+        this.ruleWordRouter = outerRuleWordRouter;
+    }
+    
+    @Override
+    public void run(){
+        System.out.println(ThWordWorkRouter.class.getCanonicalName() 
+                + " run and say " 
+                + this.ruleWordRouter.toString());
+        this.ruleWordRouter.setTrueRunnedWordWorkRouter();
+        ThreadLocal<ThWordLogicRouter> logicWordWorkRouter = new ThreadLocal<ThWordLogicRouter>();
+        try{
+            logicWordWorkRouter.set(new ThWordLogicRouter());
+            logicWordWorkRouter.get().doRouterForIndexWord(this.ruleWordRouter);
+        } finally {
+            logicWordWorkRouter.remove();
+            logicWordWorkRouter = null;
+            this.ruleWordRouter.setFalseRunnedWordWorkRouter();
+        }
+    }
     
 }

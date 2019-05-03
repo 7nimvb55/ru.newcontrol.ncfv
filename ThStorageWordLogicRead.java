@@ -50,7 +50,7 @@ public class ThStorageWordLogicRead {
              * Statistic for this index system
              */
             funcRuleStorageWord = (ThStorageWordRule) outerRuleStorageWord;
-            ThStorageWordBusReadedFlow storageWordFlowReaded = funcRuleStorageWord.getStorageWordFlowReaded();
+            ThStorageWordBusReadedFlow storageWordFlowReaded = funcRuleStorageWord.getStorageWordState().getStorageWordFlowReaded();
             indexRule = funcRuleStorageWord.getIndexRule();
             indexStatistic = indexRule.getIndexStatistic();
             indexStatistic.updateDataStorages();
@@ -88,7 +88,7 @@ public class ThStorageWordLogicRead {
                                 String hexTagName = itemsTagNames.getKey();
                                 String subStringValue = itemsTagNames.getValue();
 
-                                ThStorageWordStatusMainFlow storageWordStatistic = (ThStorageWordStatusMainFlow) outerRuleStorageWord.getStorageWordStatistic();
+                                ThStorageWordStatusMainFlow storageWordStatistic = (ThStorageWordStatusMainFlow) outerRuleStorageWord.getStorageWordStatusMainFlow();
 
                                 ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> typeWordTagFileNameFlowUuids = 
                                     (ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>) storageWordStatistic.getTypeWordTagFileNameFlowUuids(

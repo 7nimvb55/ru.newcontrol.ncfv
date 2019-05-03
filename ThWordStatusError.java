@@ -41,11 +41,11 @@ public class ThWordStatusError {
     }
     /**
      * 
-     * @param keyPointFlowActivity
+     * @param keyPointFlowError
      * @return 
-     * @throws IllegalStateException
+     * @throws IllegalStateException when UUID not exist
      */
-    protected ConcurrentHashMap<Integer, Integer> getStatusErrorForKeyPointFlow(final UUID keyPointFlowError){
+    private ConcurrentHashMap<Integer, Integer> getStatusErrorForKeyPointFlow(final UUID keyPointFlowError){
         UUID inputedVal;
         ConcurrentHashMap<Integer, Integer> getStatusErrorFormPool;
         try{
@@ -82,11 +82,10 @@ public class ThWordStatusError {
                 return Boolean.FALSE;
             }
             for( Map.Entry<Integer, Integer> itemOfPoint : getRemovedStatusErrorFormPool.entrySet() ){
-                Integer remove = getRemovedStatusErrorFormPool.remove(itemOfPoint.getKey());
-                Integer [] remStrVal = {remove};
-                remStrVal = null;
-                Integer [] remIntKey = {itemOfPoint.getKey()};
-                remIntKey = null;
+                Integer removedKey = itemOfPoint.getKey();
+                Integer removedVal = getRemovedStatusErrorFormPool.remove(removedKey);
+                removedVal = null;
+                removedKey = null;
             }
             getRemovedStatusErrorFormPool = null;
             return Boolean.TRUE;
@@ -96,9 +95,9 @@ public class ThWordStatusError {
         }
     }
     /**
-     * not exist bus
+     * not exist UUID in flow
      * @param typeWordByDetectedCodePoint
-     * @return 
+     * @return true if key not exist (not contains in flow)
      */
     protected Boolean isStatusErrorNotExist(final UUID keyPointFlowError){
         UUID inputedVal;
@@ -113,50 +112,86 @@ public class ThWordStatusError {
         }
     }
     /**
-     * 
-     * @param countRecords
-     * @param volumeNumber
-     * @return lvl(4, 3a.1) ready for put in list lvl(3)
+     * create new structure for UUID, and set all values to 0 (zero)
+     * @param keyPointFlowErrorInputed
+     * @see setInitParamError()
      */
-    protected ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>> createStructureParamsError(
-                        final UUID keyPointFlowError){
-        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>> returnedParams;
-        ConcurrentHashMap<Integer, Integer> countFs;
-        UUID keyPointFlowErrorCountFs;
+    protected void createStructureParamsError(
+                        final UUID keyPointFlowErrorInputed){
+        ConcurrentHashMap<Integer, Integer> countError;
+        UUID keyPointFlowErrorFunc;
         try{
-            keyPointFlowErrorCountFs = keyPointFlowError;
-            countFs = setInParamError();
-            returnedParams = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>>();
-            this.poolStatusError.put(keyPointFlowErrorCountFs, countFs);
-            returnedParams.put(keyPointFlowErrorCountFs , countFs);
-            return returnedParams;
+            keyPointFlowErrorFunc = (UUID) keyPointFlowErrorInputed;
+            if( isStatusErrorNotExist(keyPointFlowErrorFunc) ){
+                countError = setInitParamError();
+                this.poolStatusError.put(keyPointFlowErrorFunc, countError);
+            }
         } finally {
-            returnedParams = null;
-            countFs = null;
-            keyPointFlowErrorCountFs = null;
+            countError = null;
+            keyPointFlowErrorFunc = null;
         }
     }
     /**
-     * @todo on init set to 0
-     * @param countRecords
-     * @param volumeNumber
-     * @return lvl(3a.1)
+     * 
+     * @return 
      */
-    protected ConcurrentHashMap<Integer, Integer> setInParamError(){
+    private ConcurrentHashMap<Integer, Integer> setInitParamError(){
         ConcurrentHashMap<Integer, Integer> returnedHashMap;
+        Integer paramCodeByNumber;
+        Integer countParamsErrorForSet;
+        Integer idx;
         try {
             returnedHashMap = new ConcurrentHashMap<Integer, Integer>();
-            String[] paramNames = getParamNames();
-            int idx = 0;
-            for(String itemError : paramNames){
-                Integer paramCodeByNumber = getParamCodeByNumber(idx);
+            countParamsErrorForSet = getParamCount();
+            for(idx = 0; idx < countParamsErrorForSet; idx++ ){
+                paramCodeByNumber = getParamCodeByNumber(idx);
                 returnedHashMap.put(paramCodeByNumber, 0);
                 idx++;
             }
 
             return returnedHashMap;
         } finally {
+            idx = null;
+            paramCodeByNumber = null;
+            countParamsErrorForSet = null;
             returnedHashMap = null;
+        }
+    }
+    /**
+     * <ul>
+     * <li>0 - isErrorOnWrite
+     * <li>1 - isErrorOnMove
+     * <li>2 - isNullOnDataInCache
+     * <li>3 - isErrorOnDataInCache
+     * </ul>
+     * @param changedKeyPointFlowError
+     * @param paramNumber
+     * @param changedVal
+     * 
+     * @throws IllegalArgumentException when inputed number of parameter
+     * out of bounds
+     */
+    protected void changeParamValByNumber(final UUID changedKeyPointFlowError, final Integer paramNumber, final Integer changedVal){
+        UUID changedKeyPointFlowErrorFunc;
+        Integer paramNumberFunc;
+        Integer changedValFunc;
+        Integer paramCodeByNumber;
+        ConcurrentHashMap<Integer, Integer> fromCurrentFlow;
+        try{
+            changedKeyPointFlowErrorFunc = (UUID) changedKeyPointFlowError;
+            validateCountParams(changedKeyPointFlowErrorFunc);
+            paramNumberFunc = (Integer) paramNumber;
+            changedValFunc = (Integer) changedVal;
+            fromCurrentFlow = (ConcurrentHashMap<Integer, Integer>) this.poolStatusError.get(changedKeyPointFlowErrorFunc);
+            paramCodeByNumber = (Integer) getParamCodeByNumber(paramNumberFunc);
+            fromCurrentFlow.put(paramCodeByNumber, changedValFunc);
+            this.poolStatusError.put(changedKeyPointFlowErrorFunc, fromCurrentFlow);
+        } finally {
+            changedKeyPointFlowErrorFunc = null;
+            paramNumberFunc = null;
+            changedValFunc = null;
+            paramCodeByNumber = null;
+            fromCurrentFlow = null;
         }
     }
     /**
@@ -190,10 +225,16 @@ public class ThWordStatusError {
      * @throws IllegalArgumentException when inputed number of parameter
      * out of bounds
      */
-    protected Integer getParamCodeByNumber(int numParam){
+    private Integer getParamCodeByNumber(int numParam){
         String[] paramNames;
         try {
             paramNames = getParamNames();
+            if( numParam < 0 ){
+                throw new IllegalArgumentException(ThWordStatusError.class.getCanonicalName() 
+                                + " parameters of flow statusError in StorageWord is not valid, "
+                                + " negative index sended, 0 (zero) > " + numParam + ", count parameters: " 
+                                + paramNames.length);
+            }
             if( numParam > (paramNames.length - 1) ){
                 throw new IllegalArgumentException(ThWordStatusError.class.getCanonicalName() 
                                 + " parameters of flow statusError in StorageWord is not valid, "
@@ -213,7 +254,7 @@ public class ThWordStatusError {
      * Count records (array.length) returned from {@link #getParamNames }
      * @return 
      */
-    protected int getParamCount(){
+    private int getParamCount(){
         String[] paramNames;
         try {
             paramNames = getParamNames();
@@ -234,6 +275,12 @@ public class ThWordStatusError {
         String paramName;
         try {
             paramNames = getParamNames();
+            if( numParam < 0 ){
+                throw new IllegalArgumentException(ThWordStatusError.class.getCanonicalName() 
+                                + " parameters of flow statusError in StorageWord is not valid, "
+                                + " negative index sended, 0 (zero) > " + numParam + ", count parameters: " 
+                                + paramNames.length);
+            }
             if( numParam > (paramNames.length - 1) ){
                 throw new IllegalArgumentException(ThWordStatusError.class.getCanonicalName() 
                                 + " parameters of flow statusError in StorageWord is not valid, "
@@ -249,7 +296,8 @@ public class ThWordStatusError {
         }
     }
     /**
-     * 
+     * create, set, validate -do- for change
+     * change -do- for add
      * @param keyPointFlowError
      * 
      * @throw IllegalArgumentException if count of parameters or his
@@ -257,36 +305,50 @@ public class ThWordStatusError {
      */
     
     protected void validateCountParams(final UUID keyPointFlowError){
-        ConcurrentHashMap<Integer, Integer> statusErrorForKeyPointFlow;
         UUID keyPointFlowErrorFunc;
+        ConcurrentHashMap<Integer, Integer> statusErrorForKeyPointFlow;
+        Integer sizeRec;
+        Integer paramCount;
+        Integer idxParam;
+        Integer paramCodeByNumber;
         String paramNameByNumber;
+        
         try {
             keyPointFlowErrorFunc = (UUID) keyPointFlowError;
             if( !isStatusErrorNotExist(keyPointFlowErrorFunc) ){
-                statusErrorForKeyPointFlow = getStatusErrorForKeyPointFlow(keyPointFlowErrorFunc);
-                int sizeRec = statusErrorForKeyPointFlow.size();
-                int paramCount = getParamCount();
+                
+                statusErrorForKeyPointFlow = (ConcurrentHashMap<Integer, Integer>) getStatusErrorForKeyPointFlow(keyPointFlowErrorFunc);
+                sizeRec = (Integer) statusErrorForKeyPointFlow.size();
+                paramCount = (Integer) getParamCount();
                 if( sizeRec != paramCount ){
+                    
                     throw new IllegalArgumentException(ThWordStatusError.class.getCanonicalName() 
-                            + " parameters of flow statusError in StorageWord is not valid, "
+                            + " parameters of flow statusError in Word is not valid, "
                             + "count records " + sizeRec + " not equal " + paramCount);
                 }
-                int idxParam = 0;
-                while( idxParam < paramCount ){
-                    int paramCodeByNumber = getParamCodeByNumber(idxParam);
+                
+                for(idxParam = 0; idxParam < paramCount; idxParam++ ){
+                    
+                    paramCodeByNumber = getParamCodeByNumber(idxParam);
                     if( !statusErrorForKeyPointFlow.containsKey(paramCodeByNumber) ){
+                        
                         paramNameByNumber = getParamNameByNumber(idxParam);
                         throw new IllegalArgumentException(ThWordStatusError.class.getCanonicalName() 
-                            + " parameters of flow statusError in StorageWord is not valid, "
-                            + "count records for " + paramNameByNumber + " not equal one");
+                            + " parameter "
+                            + " for name: " + paramNameByNumber
+                            + " in inputed data for set into flow statusError not exist");
                     }
                     idxParam++;
                 }
-                
             }
+            
         } finally {
+            sizeRec = null;
+            paramCount = null;
+            idxParam = null;
             statusErrorForKeyPointFlow = null;
             keyPointFlowErrorFunc = null;
+            paramCodeByNumber = null;
             paramNameByNumber = null;
         }
     }

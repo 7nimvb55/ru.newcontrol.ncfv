@@ -68,7 +68,7 @@ public class ThWordStatusWorkers {
      * @return 
      * @throws IllegalStateException
      */
-    protected ConcurrentHashMap<Integer, Boolean> getStatusWorkersForKeyPointFlow(final UUID keyPointFlowWorkers){
+    private ConcurrentHashMap<Integer, Boolean> getStatusWorkersForKeyPointFlow(final UUID keyPointFlowWorkers){
         UUID inputedVal;
         ConcurrentHashMap<Integer, Boolean> getStatusWorkersFormPool;
         try{
@@ -105,11 +105,10 @@ public class ThWordStatusWorkers {
                 return Boolean.FALSE;
             }
             for( Map.Entry<Integer, Boolean> itemOfPoint : getRemovedStatusWorkersFormPool.entrySet() ){
-                Boolean remove = getRemovedStatusWorkersFormPool.remove(itemOfPoint.getKey());
-                Boolean [] remStrVal = {remove};
-                remStrVal = null;
-                Integer [] remIntKey = {itemOfPoint.getKey()};
-                remIntKey = null;
+                Integer removedKey = itemOfPoint.getKey();
+                Boolean removedVal = getRemovedStatusWorkersFormPool.remove(removedKey);
+                removedVal = null;
+                removedKey = null;
             }
             getRemovedStatusWorkersFormPool = null;
             return Boolean.TRUE;
@@ -136,154 +135,96 @@ public class ThWordStatusWorkers {
         }
     }
     /**
-     * 
-     * @param isWriteProcess
-     * @param isReadProcess
-     * @param isNeedReadData
-     * @param isCachedData
-     * @param isCachedReadedData
-     * @param isCalculatedData
-     * @param isUdatedDataInHashMap
-     * @param isMoveFileReady
-     * @return lvl(4, 3a.5) ready for put in list lvl(3)
+     * create new structure for UUID, and set all values to Boolean.FALSE
+     * @param keyPointFlowWorkersInputed 
+     * @see setInitParamWorkers()
      */
-    protected ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Boolean>> createStructureParamsFlagsProc(
-                        final UUID keyPointFlowWorkers,
-                        final Boolean isWriteProcess,
-                        final Boolean isReadProcess,
-                        final Boolean isNeedReadData,
-                        final Boolean isCachedData,
-                        final Boolean isCachedReadedData,
-                        final Boolean isCalculatedData,
-                        final Boolean isUdatedDataInHashMap,
-                        final Boolean isMoveFileReady,
-                        final Boolean isFlowInWriteBus,
-                        final Boolean isFlowInReadBus,
-                        final Boolean isNeedDeleteOldFile,
-                        final Boolean isOldFileDeleted){
-        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Boolean>> returnedParams;
-        ConcurrentHashMap<Integer, Boolean> flagsProc;
-        UUID keyPointFlowWorkersFlagsProc;
+    protected void createStructureParamsWorkers(
+                        final UUID keyPointFlowWorkersInputed){
+        ConcurrentHashMap<Integer, Boolean> countWorkers;
+        UUID keyPointFlowWorkersFunc;
         try{
-            keyPointFlowWorkersFlagsProc = keyPointFlowWorkers;
-            flagsProc = setInParamFlagsProc(
-                        isWriteProcess,
-                        isReadProcess,
-                        isNeedReadData,
-                        isCachedData,
-                        isCachedReadedData,
-                        isCalculatedData,
-                        isUdatedDataInHashMap,
-                        isMoveFileReady,
-                        isFlowInWriteBus,
-                        isFlowInReadBus,
-                        isNeedDeleteOldFile,
-                        isOldFileDeleted);
-            returnedParams = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Boolean>>();
-            this.poolStatusWorkers.put(keyPointFlowWorkersFlagsProc, flagsProc);
-            returnedParams.put(keyPointFlowWorkersFlagsProc , flagsProc);
-            return returnedParams;
+            keyPointFlowWorkersFunc = (UUID) keyPointFlowWorkersInputed;
+            if( isStatusWorkersNotExist(keyPointFlowWorkersFunc) ){
+                countWorkers = setInitParamWorkers();
+                this.poolStatusWorkers.put(keyPointFlowWorkersFunc, countWorkers);
+            }
         } finally {
-            returnedParams = null;
-            flagsProc = null;
+            countWorkers = null;
+            keyPointFlowWorkersFunc = null;
         }
     }
     /**
-     * 
-     * @param isWriteProcess
-     * @param isReadProcess
-     * @param isNeedReadData
-     * @param isCachedData
-     * @param isCachedReadedData
-     * @param isCalculatedData
-     * @param isUdatedDataInHashMap
-     * @param isMoveFileReady
-     * @param isFlowInWriteBus
-     * @param isFlowInReadBus
-     * @param isNeedDeleteOldFile
-     * @param isOldFileDeleted
-     * @return lvl(4, 3a.5) ready for put in list lvl(3)
+     * Create, set all values to Boolean.FALSE
+     * @return ConcurrentHashMap<Integer, Boolean>
+     *                          <ParamCode, Value>
+     * @see ThWordStatusWorkers#getParamCodeByNumber(int) 
      */
-    protected ConcurrentHashMap<Integer, Boolean> setInParamFlagsProc(
-                        final Boolean isWriteProcess,
-                        final Boolean isReadProcess,
-                        final Boolean isNeedReadData,
-                        final Boolean isCachedData,
-                        final Boolean isCachedReadedData,
-                        final Boolean isCalculatedData,
-                        final Boolean isUdatedDataInHashMap,
-                        final Boolean isMoveFileReady,
-                        final Boolean isFlowInWriteBus,
-                        final Boolean isFlowInReadBus,
-                        final Boolean isNeedDeleteOldFile,
-                        final Boolean isOldFileDeleted
-    ){
+    private ConcurrentHashMap<Integer, Boolean> setInitParamWorkers(){
         ConcurrentHashMap<Integer, Boolean> returnedHashMap;
-        Boolean funcWriteProcess;
-        Boolean funcReadProcess;
-        Boolean funcNeedReadData;
-        Boolean funcCachedData;
-        Boolean funcCachedReadedData;
-        Boolean funcCalculatedData;
-        Boolean funcUdatedDataInHashMap;
-        Boolean funcMoveFileReady;
-        Boolean funcFlowInWriteBus;
-        Boolean funcFlowInReadBus;
-        Boolean funcNeedDeleteOldFile;
-        Boolean funcOldFileDeleted;
+        Integer paramCodeByNumber;
+        Integer countParamsWorkersForSet;
+        Integer idx;
         try {
-            funcWriteProcess = (Boolean) isWriteProcess;
-            funcReadProcess = (Boolean) isReadProcess;
-            funcNeedReadData = (Boolean) isNeedReadData;
-            funcCachedData = (Boolean) isCachedData;
-            funcCachedReadedData = (Boolean) isCachedReadedData;
-            funcCalculatedData = (Boolean) isCalculatedData;
-            funcUdatedDataInHashMap = (Boolean) isUdatedDataInHashMap;
-            funcMoveFileReady = (Boolean) isMoveFileReady;
-            funcFlowInWriteBus = (Boolean) isFlowInWriteBus;
-            funcFlowInReadBus = (Boolean) isFlowInReadBus;
-            funcNeedDeleteOldFile = (Boolean) isNeedDeleteOldFile;
-            funcOldFileDeleted = (Boolean) isOldFileDeleted;
             returnedHashMap = new ConcurrentHashMap<Integer, Boolean>();
-            //01 - isWriteProcess - 1640531930
-            returnedHashMap.put(1640531930, funcWriteProcess);
-            //02 - isReadProcess - 1836000367
-            returnedHashMap.put(1836000367, funcReadProcess);
-            //03 - isNeedReadData - -83825824
-            returnedHashMap.put(-83825824, funcNeedReadData);
-            //04 - isCachedData - -2091433802
-            returnedHashMap.put(-2091433802, funcCachedData);
-            //05 - isCachedReadedData - -660426229
-            returnedHashMap.put(-660426229, funcCachedReadedData);
-            //06 - isCalculatedData - 1804093010
-            returnedHashMap.put(1804093010, funcCalculatedData);
-            //07 - isUdatedDataInHashMap - -2092233516
-            returnedHashMap.put(-2092233516, funcUdatedDataInHashMap);
-            //08 - isMoveFileReady - -1884096596
-            returnedHashMap.put(-1884096596, funcMoveFileReady);
-            //09 - isFlowInWriteBus - -993366530
-            returnedHashMap.put(-993366530, funcFlowInWriteBus);
-            //10 - isFlowInReadBus - 1939180941
-            returnedHashMap.put(1939180941, funcFlowInReadBus);
-            //11 - isNeedDeleteOldFile - -1172779240
-            returnedHashMap.put(-1172779240, funcNeedDeleteOldFile);
-            //12 - isOldFileDeleted - 1736565280
-            returnedHashMap.put(1736565280, funcOldFileDeleted);
+            countParamsWorkersForSet = getParamCount();
+            for(idx = 0; idx < countParamsWorkersForSet; idx++ ){
+                paramCodeByNumber = getParamCodeByNumber(idx);
+                returnedHashMap.put(paramCodeByNumber, Boolean.FALSE);
+                idx++;
+            }
+
             return returnedHashMap;
         } finally {
+            idx = null;
+            paramCodeByNumber = null;
+            countParamsWorkersForSet = null;
             returnedHashMap = null;
-            funcWriteProcess = null;
-            funcReadProcess = null;
-            funcNeedReadData = null;
-            funcCachedData = null;
-            funcCachedReadedData = null;
-            funcCalculatedData = null;
-            funcUdatedDataInHashMap = null;
-            funcMoveFileReady = null;
-            funcFlowInWriteBus = null;
-            funcFlowInReadBus = null;
-            funcNeedDeleteOldFile = null;
-            funcOldFileDeleted = null;
+        }
+    }
+    /**
+     * <ul>
+     * <li>0 - isWriteProcess
+     * <li>1 - isReadProcess
+     * <li>2 - isNeedReadData
+     * <li>3 - isCachedData
+     * <li>4 - isCachedReadedData
+     * <li>5 - isCalculatedData
+     * <li>6 - isUdatedDataInHashMap
+     * <li>7 - isMoveFileReady
+     * <li>8 - isFlowInWriteBus
+     * <li>9 - isFlowInReadBus
+     * <li>10 - isNeedDeleteOldFile
+     * <li>11 - isOldFileDeleted
+     * </ul> 
+     * @param changedKeyPointFlowWorkers
+     * @param paramNumber
+     * @param changedVal 
+     * 
+     * @throws IllegalArgumentException when inputed number of parameter
+     * out of bounds
+     */
+    protected void changeParamValByNumber(final UUID changedKeyPointFlowWorkers, final Integer paramNumber, final Boolean changedVal){
+        UUID changedKeyPointFlowWorkersFunc;
+        Integer paramNumberFunc;
+        Boolean changedValFunc;
+        Integer paramCodeByNumber;
+        ConcurrentHashMap<Integer, Boolean> fromCurrentFlow;
+        try{
+            changedKeyPointFlowWorkersFunc = (UUID) changedKeyPointFlowWorkers;
+            validateCountParams(changedKeyPointFlowWorkersFunc);
+            paramNumberFunc = (Integer) paramNumber;
+            changedValFunc = (Boolean) changedVal;
+            fromCurrentFlow = (ConcurrentHashMap<Integer, Boolean>) this.poolStatusWorkers.get(changedKeyPointFlowWorkersFunc);
+            paramCodeByNumber = (Integer) getParamCodeByNumber(paramNumberFunc);
+            fromCurrentFlow.put(paramCodeByNumber, changedValFunc);
+            this.poolStatusWorkers.put(changedKeyPointFlowWorkersFunc, fromCurrentFlow);
+        } finally {
+            changedKeyPointFlowWorkersFunc = null;
+            paramNumberFunc = null;
+            changedValFunc = null;
+            paramCodeByNumber = null;
+            fromCurrentFlow = null;
         }
     }
     /**
@@ -333,10 +274,16 @@ public class ThWordStatusWorkers {
      * @throws IllegalArgumentException when inputed number of parameter
      * out of bounds
      */
-    protected Integer getParamCodeByNumber(int numParam){
+    private Integer getParamCodeByNumber(int numParam){
         String[] paramNames;
         try {
             paramNames = getParamNames();
+            if( numParam < 0 ){
+                throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
+                                + " parameters of flow statusWorkers in StorageWord is not valid, "
+                                + " negative index sended, 0 (zero) > " + numParam + ", count parameters: " 
+                                + paramNames.length);
+            }
             if( numParam > (paramNames.length - 1) ){
                 throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
                                 + " parameters of flow statusWorkers in StorageWord is not valid, "
@@ -356,7 +303,7 @@ public class ThWordStatusWorkers {
      * Count records (array.length) returned from {@link #getParamNames }
      * @return 
      */
-    protected int getParamCount(){
+    private int getParamCount(){
         String[] paramNames;
         try {
             paramNames = getParamNames();
@@ -377,6 +324,12 @@ public class ThWordStatusWorkers {
         String paramName;
         try {
             paramNames = getParamNames();
+            if( numParam < 0 ){
+                throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
+                                + " parameters of flow statusWorkers in StorageWord is not valid, "
+                                + " negative index sended, 0 (zero) > " + numParam + ", count parameters: " 
+                                + paramNames.length);
+            }
             if( numParam > (paramNames.length - 1) ){
                 throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
                                 + " parameters of flow statusWorkers in StorageWord is not valid, "
@@ -399,172 +352,51 @@ public class ThWordStatusWorkers {
      */
     
     protected void validateCountParams(final UUID keyPointFlowWorkers){
-        ConcurrentHashMap<Integer, Boolean> statusWorkersForKeyPointFlow;
         UUID keyPointFlowWorkersFunc;
-        Integer countThStorageWordStatusWorkersStorageWriteProcess;
-        Integer countThStorageWordStatusWorkersStorageReadProcess;
-        Integer countThStorageWordStatusWorkersStorageNeedReadData;
-        Integer countThStorageWordStatusWorkersStorageCachedData;
-        Integer countThStorageWordStatusWorkersStorageCachedReadedData;
-        Integer countThStorageWordStatusWorkersStorageCalculatedData;
-        Integer countThStorageWordStatusWorkersStorageUdatedDataInHashMap;
-        Integer countThStorageWordStatusWorkersStorageMoveFileReady;
-        Integer countThStorageWordStatusWorkersStorageFlowInWriteBus;
-        Integer countThStorageWordStatusWorkersStorageFlowInReadBus;
-        Integer countThStorageWordStatusWorkersStorageNeedDeleteOldFile;
-        Integer countThStorageWordStatusWorkersStorageOldFileDeleted;
-        Integer countSummaryOfParameters;
+        ConcurrentHashMap<Integer, Boolean> statusWorkersForKeyPointFlow;
+        Integer sizeRec;
+        Integer paramCount;
+        Integer idxParam;
+        Integer paramCodeByNumber;
+        String paramNameByNumber;
+        
         try {
             keyPointFlowWorkersFunc = (UUID) keyPointFlowWorkers;
             if( !isStatusWorkersNotExist(keyPointFlowWorkersFunc) ){
-                statusWorkersForKeyPointFlow = getStatusWorkersForKeyPointFlow(keyPointFlowWorkersFunc);
-                countSummaryOfParameters = 0;
                 
-                countThStorageWordStatusWorkersStorageWriteProcess = 0;
-                countThStorageWordStatusWorkersStorageReadProcess = 0;
-                countThStorageWordStatusWorkersStorageNeedReadData = 0;
-                countThStorageWordStatusWorkersStorageCachedData = 0;
-                countThStorageWordStatusWorkersStorageCachedReadedData = 0;
+                statusWorkersForKeyPointFlow = (ConcurrentHashMap<Integer, Boolean>) getStatusWorkersForKeyPointFlow(keyPointFlowWorkersFunc);
+                sizeRec = (Integer) statusWorkersForKeyPointFlow.size();
+                paramCount = (Integer) getParamCount();
+                if( sizeRec != paramCount ){
+                    
+                    throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
+                            + " parameters of flow statusWorkers in Word is not valid, "
+                            + "count records " + sizeRec + " not equal " + paramCount);
+                }
                 
-                countThStorageWordStatusWorkersStorageCalculatedData = 0;
-                countThStorageWordStatusWorkersStorageUdatedDataInHashMap = 0;
-                countThStorageWordStatusWorkersStorageMoveFileReady = 0;
-                
-                countThStorageWordStatusWorkersStorageFlowInWriteBus = 0;
-                countThStorageWordStatusWorkersStorageFlowInReadBus = 0;
-                countThStorageWordStatusWorkersStorageNeedDeleteOldFile = 0;
-                countThStorageWordStatusWorkersStorageOldFileDeleted = 0;
-                
-                for(Map.Entry<Integer, Boolean> itemOfLong: statusWorkersForKeyPointFlow.entrySet()){
-                    countSummaryOfParameters++;
-                    switch ( itemOfLong.getKey() ) {
-                        case 1640531930:
-                            countThStorageWordStatusWorkersStorageWriteProcess++;
-                            continue;
-                        case 1836000367:
-                            countThStorageWordStatusWorkersStorageReadProcess++;
-                            continue;
-                        case -83825824:
-                            countThStorageWordStatusWorkersStorageNeedReadData++;
-                            continue;
-                        case -2091433802:
-                            countThStorageWordStatusWorkersStorageCachedData++;
-                            continue;
-                        case -660426229:
-                            countThStorageWordStatusWorkersStorageCachedReadedData++;
-                            continue;    
-                        case 1804093010:
-                            countThStorageWordStatusWorkersStorageCalculatedData++;
-                            continue;
-                        case -2092233516:
-                            countThStorageWordStatusWorkersStorageUdatedDataInHashMap++;
-                            continue;
-                        case -1884096596:
-                            countThStorageWordStatusWorkersStorageMoveFileReady++;
-                            continue;
-                        case -993366530:
-                            countThStorageWordStatusWorkersStorageFlowInWriteBus++;
-                            continue;
-                        case 1939180941:
-                            countThStorageWordStatusWorkersStorageFlowInReadBus++;
-                            continue;
-                        case -1172779240:
-                            countThStorageWordStatusWorkersStorageNeedDeleteOldFile++;
-                            continue;
-                        case 1736565280:
-                            countThStorageWordStatusWorkersStorageOldFileDeleted++;
-                            continue;
+                for(idxParam = 0; idxParam < paramCount; idxParam++ ){
+                    
+                    paramCodeByNumber = getParamCodeByNumber(idxParam);
+                    if( !statusWorkersForKeyPointFlow.containsKey(paramCodeByNumber) ){
+                        
+                        paramNameByNumber = getParamNameByNumber(idxParam);
+                        throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
+                            + " parameter "
+                            + " for name: " + paramNameByNumber
+                            + " in inputed data for set into flow statusWorkers not exist");
                     }
-                    throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
-                            + " parameters of flow statusWorkers in StorageWord is not valid, has more values");
-                }
-                if( countSummaryOfParameters != 12 ){
-                    throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
-                            + " parameters of flow statusWorkers in StorageWord is not valid, "
-                            + "count records not equal six");
-                }
-                if( countThStorageWordStatusWorkersStorageWriteProcess != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
-                            + " parameters of flow statusWorkers in StorageWord is not valid, "
-                            + "count records for WriteProcess not equal one");
-                }
-                if( countThStorageWordStatusWorkersStorageReadProcess != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
-                            + " parameters of flow statusWorkers in StorageWord is not valid, "
-                            + "count records for ReadProcess not equal one");
-                }
-                if( countThStorageWordStatusWorkersStorageNeedReadData != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
-                            + " parameters of flow statusWorkers in StorageWord is not valid, "
-                            + "count records for NeedReadData not equal one");
-                }
-                if( countThStorageWordStatusWorkersStorageCachedData != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
-                            + " parameters of flow statusWorkers in StorageWord is not valid, "
-                            + "count records for CachedData not equal one");
-                }
-                if( countThStorageWordStatusWorkersStorageCachedReadedData != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
-                            + " parameters of flow statusWorkers in StorageWord is not valid, "
-                            + "count records for CachedReadedData not equal one");
-                }
-                if( countThStorageWordStatusWorkersStorageCalculatedData != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
-                            + " parameters of flow statusWorkers in StorageWord is not valid, "
-                            + "count records for CalculatedData not equal one");
-                }
-                if( countThStorageWordStatusWorkersStorageUdatedDataInHashMap != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
-                            + " parameters of flow statusWorkers in StorageWord is not valid, "
-                            + "count records for UdatedDataInHashMap not equal one");
-                }
-                if( countThStorageWordStatusWorkersStorageMoveFileReady != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
-                            + " parameters of flow statusWorkers in StorageWord is not valid, "
-                            + "count records for MoveFileReady not equal one");
-                }
-                
-                if( countThStorageWordStatusWorkersStorageFlowInWriteBus != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
-                            + " parameters of flow statusWorkers in StorageWord is not valid, "
-                            + "count records for FlowInWriteBus not equal one");
-                }
-                if( countThStorageWordStatusWorkersStorageFlowInReadBus != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
-                            + " parameters of flow statusWorkers in StorageWord is not valid, "
-                            + "count records for FlowInReadBus not equal one");
-                }
-                if( countThStorageWordStatusWorkersStorageNeedDeleteOldFile != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
-                            + " parameters of flow statusWorkers in StorageWord is not valid, "
-                            + "count records for NeedDeleteOldFile not equal one");
-                }
-                if( countThStorageWordStatusWorkersStorageOldFileDeleted != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusWorkers.class.getCanonicalName() 
-                            + " parameters of flow statusWorkers in StorageWord is not valid, "
-                            + "count records for OldFileDeleted not equal one");
+                    idxParam++;
                 }
             }
+            
         } finally {
+            sizeRec = null;
+            paramCount = null;
+            idxParam = null;
             statusWorkersForKeyPointFlow = null;
             keyPointFlowWorkersFunc = null;
-            
-            countThStorageWordStatusWorkersStorageWriteProcess = null;
-            countThStorageWordStatusWorkersStorageReadProcess = null;
-            countThStorageWordStatusWorkersStorageNeedReadData = null;
-            countThStorageWordStatusWorkersStorageCachedData = null;
-            countThStorageWordStatusWorkersStorageCachedReadedData = null;
-            
-            countThStorageWordStatusWorkersStorageCalculatedData = null;
-            countThStorageWordStatusWorkersStorageUdatedDataInHashMap = null;
-            countThStorageWordStatusWorkersStorageMoveFileReady = null;
-            
-            countThStorageWordStatusWorkersStorageFlowInWriteBus = null;
-            countThStorageWordStatusWorkersStorageFlowInReadBus = null;
-            countThStorageWordStatusWorkersStorageNeedDeleteOldFile = null;
-            countThStorageWordStatusWorkersStorageOldFileDeleted = null;
-            
-            countSummaryOfParameters = null;
+            paramCodeByNumber = null;
+            paramNameByNumber = null;
         }
     }
 }

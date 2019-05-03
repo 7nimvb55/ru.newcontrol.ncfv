@@ -15,16 +15,16 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *
+ * Transfered data structure:
+ * ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>>
+ * <mainFlowContentFunc, <String.hashCode(), String.Value>>
  * @author wladimirowichbiaran
  */
-public class ThStorageWordBusOutput {
+public class ThWordBusReader {
     /**
      * ConcurrentHashMap<Integer, Long>
      * <typeWordBus, System.nanoTime>
@@ -32,14 +32,13 @@ public class ThStorageWordBusOutput {
      */
     private ConcurrentHashMap<Integer, Long> lastLastAccessUsedBusNanoTime;
     /**
-     * ConcurrentHashMap<Integer, ArrayBlockingQueue<TdataStorageWord>>
-     * <typeWordBus, <TdataStorageWord>>
-     * ThWordLogicFilter.getWordCode(inputedPath.codePointAt(int idexCharCodePoint))
+     * ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>>
+     * <mainFlowContentFunc, <String.hashCode(), String.Value>>
      */
-    private ConcurrentHashMap<Integer, ArrayBlockingQueue<TdataWord>> poolBusWordData;
+    private ConcurrentHashMap<Integer, ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>>> poolBusWordData;
     
-    ThStorageWordBusOutput(){
-        this.poolBusWordData = new ConcurrentHashMap<Integer, ArrayBlockingQueue<TdataWord>>();
+    ThWordBusReader(){
+        this.poolBusWordData = new ConcurrentHashMap<Integer, ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>>>();
         this.lastLastAccessUsedBusNanoTime = new ConcurrentHashMap<Integer, Long>();
     }
     /**
@@ -47,29 +46,20 @@ public class ThStorageWordBusOutput {
      * @param typeWordByDetectedCodePoint
      * @return 
      */
-    protected ArrayBlockingQueue<TdataWord> getBusForTypeWord(final int typeWordByDetectedCodePoint){
+    protected ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>> getBusForTypeWord(final int typeWordByDetectedCodePoint){
         int inputedVal;
-        ArrayBlockingQueue<TdataWord> getBusFormPool;
+        ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>> getBusFormPool;
         try{
             inputedVal = (int) typeWordByDetectedCodePoint;
             getBusFormPool = this.poolBusWordData.get(inputedVal);
             if( getBusFormPool == null ){
-                getBusFormPool = new ArrayBlockingQueue<TdataWord>(AppConstants.FILTER_STORAGE_WORD_MESSAGES_QUEUE_SIZE);
+                getBusFormPool = new ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>>();
                 this.poolBusWordData.put(inputedVal, getBusFormPool);
             }
             setLastAccessForUseTime(inputedVal);
             return getBusFormPool;
         } finally {
             getBusFormPool = null;
-        }
-    }
-    protected Set<Entry<Integer, ArrayBlockingQueue<TdataWord>>> getExistBusEntrySetForTypeWord(){
-        Set<Entry<Integer, ArrayBlockingQueue<TdataWord>>> entrySet;
-        try{
-            entrySet = this.poolBusWordData.entrySet();
-        return entrySet;
-        } finally {
-            entrySet = null;
         }
     }
     /**
@@ -134,7 +124,7 @@ public class ThStorageWordBusOutput {
      */
     protected Boolean isBusNotEmpty(final int typeWordByDetectedCodePoint){
         int inputedTypBusValue;
-        ArrayBlockingQueue<TdataWord> testedBusForTypeWord;
+        ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>> testedBusForTypeWord;
         try{
             inputedTypBusValue = typeWordByDetectedCodePoint;
             
@@ -156,7 +146,7 @@ public class ThStorageWordBusOutput {
      */
     protected Boolean isBusNotExist(final int typeWordByDetectedCodePoint){
         int inputedTypBusValue;
-        ArrayBlockingQueue<TdataWord> testedBusForTypeWord;
+        ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>> testedBusForTypeWord;
         try{
             inputedTypBusValue = typeWordByDetectedCodePoint;
             
@@ -167,6 +157,27 @@ public class ThStorageWordBusOutput {
             return Boolean.FALSE;
         } finally {
             testedBusForTypeWord = null;
+        }
+    }
+    protected ConcurrentHashMap<Integer, ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>>> getMaxUsedBusesSet(){
+        Long nowNanoTime;
+        ConcurrentHashMap.KeySetView<Integer, ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>>> keySet;
+        ConcurrentHashMap<Integer, ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>>> keySetReturnedNotEmpty;
+        Long usedSize;
+        try{
+            keySetReturnedNotEmpty = new ConcurrentHashMap<Integer, ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>>>();
+            keySet = this.poolBusWordData.keySet();
+            for(Integer itemKey : keySet){
+                ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>> getItemBus = this.poolBusWordData.get(itemKey);
+                if( !getItemBus.isEmpty() ){
+                    keySetReturnedNotEmpty.put(itemKey, getItemBus);
+                }
+            }
+            return keySetReturnedNotEmpty;
+        } finally {
+            nowNanoTime = null;
+            keySet = null;
+            keySetReturnedNotEmpty = null;
         }
     }
 }

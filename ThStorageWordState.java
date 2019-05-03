@@ -45,6 +45,12 @@ public class ThStorageWordState {
      */
     private ThStorageWordBusOutput busLongWordWritedJob;
     private Boolean isSetLongWordWritedJob;
+    /**
+     * ThStorageWordBusReadedFlow thStorageWordFlowRead
+     * @todo Bus into State
+     */
+    private ThStorageWordBusReadedFlow thStorageWordFlowRead;
+    private Boolean isSetStorageWordFlowReaded;
     
     public ThStorageWordState() {
         setFalseStorageWordRouterJob();
@@ -52,6 +58,10 @@ public class ThStorageWordState {
         setFalseLongWordWritedJob();
         setFalseStorageWordRouterJobToWriter();
         setFalseStorageWordRouterJobToReader();
+        /**
+         * ThStorageWordFlowReaded
+         */
+        setFalseStorageWordFlowReaded();
     }
     /**
      * 
@@ -184,6 +194,32 @@ public class ThStorageWordState {
     }
     protected Boolean isLongWordWritedJob(){
         if( this.isSetLongWordWritedJob ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+     /**
+     * ThStorageWordBusReadedFlow
+     * @return 
+     */
+    protected ThStorageWordBusReadedFlow getStorageWordFlowReaded(){
+        if( !this.isStorageWordFlowReaded() ){
+            throw new IllegalArgumentException(ThStorageWordBusReadedFlow.class.getCanonicalName() + " object not set in " + ThWordRule.class.getCanonicalName());
+        }
+        return this.thStorageWordFlowRead;
+    }
+    protected void setStorageWordFlowReaded(final ThStorageWordBusReadedFlow stateWordOuter){
+        this.thStorageWordFlowRead = stateWordOuter;
+        setTrueStorageWordFlowReaded();
+    }
+    protected void setTrueStorageWordFlowReaded(){
+        this.isSetStorageWordFlowReaded = Boolean.TRUE;
+    }
+    protected void setFalseStorageWordFlowReaded(){
+        this.isSetStorageWordFlowReaded = Boolean.FALSE;
+    }
+    protected Boolean isStorageWordFlowReaded(){
+        if( this.isSetStorageWordFlowReaded ){
             return Boolean.TRUE;
         }
         return Boolean.FALSE;

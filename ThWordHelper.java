@@ -23,7 +23,7 @@ import java.nio.file.Paths;
  * from word index folder
  * @author wladimirowichbiaran
  */
-public class ThWordHelperFileSystem {
+public class ThWordHelper {
     /**
      * create strinc for directory by typeWord
      * buildName for word Store in format:
@@ -38,19 +38,50 @@ public class ThWordHelperFileSystem {
      * @param lengSubString 
      */
     protected static String buildTypeWordStoreSubDirictories(
-            int inputCodePoinType,
+            int inputCodePointType,
             final String partHexTagName,
             final int lengSubString){
         Path toReturnSubDirictoriesName;
         try {
             toReturnSubDirictoriesName = Paths.get(
                     AppFileNamesConstants.DIR_IDX_ROOT, 
-                    String.valueOf(inputCodePoinType), 
+                    String.valueOf(inputCodePointType), 
                     partHexTagName, String.valueOf(lengSubString));
             return toReturnSubDirictoriesName.toString();
         } finally {
             toReturnSubDirictoriesName = null;
         }
         
+    }
+    protected static Boolean isTdataWordValid(final TdataWord forValidateInputed){
+        TdataWord forValidateFunction;
+        Integer recordHash;
+        Integer calculatedHash;
+        try {
+            forValidateFunction = (TdataWord) forValidateInputed;
+            recordHash = (Integer) forValidateFunction.recordHash;
+            calculatedHash = (
+                new String("")
+                .concat(forValidateFunction.randomUUID.toString())
+                .concat(forValidateFunction.recordUUID.toString())
+                .concat(forValidateFunction.dirListFile)
+                .concat(forValidateFunction.strSubString)
+                .concat(String.valueOf(forValidateFunction.strSubStringHash))
+                .concat(forValidateFunction.hexSubString)
+                .concat(String.valueOf(forValidateFunction.typeWord))
+                .concat(String.valueOf(forValidateFunction.hexSubStringHash))
+                .concat(String.valueOf(forValidateFunction.positionSubString))
+                .concat(String.valueOf(forValidateFunction.lengthSubString))
+                .concat(String.valueOf(forValidateFunction.recordTime))).hashCode();
+            if( recordHash == calculatedHash ){
+                return Boolean.TRUE;
+            }
+            return Boolean.FALSE;
+        }
+        finally {
+            forValidateFunction = null;
+            recordHash = null;
+            calculatedHash = null;
+        }
     }
 }

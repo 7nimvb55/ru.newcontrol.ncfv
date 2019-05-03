@@ -71,7 +71,7 @@ public class ThWordStatusDataCache {
      * @return 
      * @throws IllegalStateException
      */
-    protected ConcurrentHashMap<Integer, Integer> getStatusDataCacheForKeyPointFlow(final UUID keyPointFlowDataCache){
+    private ConcurrentHashMap<Integer, Integer> getStatusDataCacheForKeyPointFlow(final UUID keyPointFlowDataCache){
         UUID inputedVal;
         ConcurrentHashMap<Integer, Integer> getStatusDataCacheFormPool;
         try{
@@ -108,11 +108,10 @@ public class ThWordStatusDataCache {
                 return Boolean.FALSE;
             }
             for( Map.Entry<Integer, Integer> itemOfPoint : getRemovedStatusDataCacheFormPool.entrySet() ){
-                Integer remove = getRemovedStatusDataCacheFormPool.remove(itemOfPoint.getKey());
-                Integer [] remStrVal = {remove};
-                remStrVal = null;
-                Integer [] remIntKey = {itemOfPoint.getKey()};
-                remIntKey = null;
+                Integer removedKey = itemOfPoint.getKey();
+                Integer removedVal = getRemovedStatusDataCacheFormPool.remove(removedKey);
+                removedVal = null;
+                removedKey = null;
             }
             getRemovedStatusDataCacheFormPool = null;
             return Boolean.TRUE;
@@ -139,89 +138,86 @@ public class ThWordStatusDataCache {
         }
     }
     /**
-     * 
-     * @param currentInCache
-     * @param addNeedToFileSystemLimit
-     * @param indexSystemLimitOnStorage
-     * @return lvl(4, 3a.4) ready for put in list lvl(3)
+     * create new structure for UUID, and set all values to 0 (zero)
+     * @param keyPointFlowDataCacheInputed
+     * @see setInitParamDataCache()
      */
-    protected ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>> createStructureParamsCountTmp(
-                        final UUID keyPointFlowDataCache,
-                        final Integer currentInCache,
-                        final Integer currentInCacheReaded,
-                        final Integer addNeedToFileSystemLimit,
-                        final Integer indexSystemLimitOnStorage){
-        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>> returnedParams;
-        ConcurrentHashMap<Integer, Integer> countTmp;
-        UUID keyPointFlowDataCacheCountTmp;
+    protected void createStructureParamsDataCache(
+                        final UUID keyPointFlowDataCacheInputed){
+        ConcurrentHashMap<Integer, Integer> countDataCache;
+        UUID keyPointFlowDataCacheFunc;
         try{
-            keyPointFlowDataCacheCountTmp = keyPointFlowDataCache;
-            countTmp = setInParamCountTMP(
-                        currentInCache,
-                        currentInCacheReaded,
-                        addNeedToFileSystemLimit,
-                        indexSystemLimitOnStorage);
-            returnedParams = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>>();
-            this.poolStatusDataCache.put(keyPointFlowDataCacheCountTmp, countTmp);
-            returnedParams.put(keyPointFlowDataCacheCountTmp , countTmp);
-            return returnedParams;
+            keyPointFlowDataCacheFunc = (UUID) keyPointFlowDataCacheInputed;
+            if( isStatusDataCacheNotExist(keyPointFlowDataCacheFunc) ){
+                countDataCache = setInitParamDataCache();
+                this.poolStatusDataCache.put(keyPointFlowDataCacheFunc, countDataCache);
+            }
         } finally {
-            returnedParams = null;
-            countTmp = null;
-            keyPointFlowDataCacheCountTmp = null;
+            countDataCache = null;
+            keyPointFlowDataCacheFunc = null;
         }
     }
     /**
      * 
-     * @param currentInCache
-     * @param currentInCacheReaded
-     * @param addNeedToFileSystemLimit
-     * @param indexSystemLimitOnStorage
-     * @return lvl(3a.4)
+     * @return 
      */
-    protected ConcurrentHashMap<Integer, Integer> setInParamCountTMP(
-                        final Integer currentInCache,
-                        final Integer currentInCacheReaded,
-                        final Integer addNeedToFileSystemLimit,
-                        final Integer indexSystemLimitOnStorage){
+    private ConcurrentHashMap<Integer, Integer> setInitParamDataCache(){
         ConcurrentHashMap<Integer, Integer> returnedHashMap;
-        Integer defaultInCache;
-        Integer defaultInCacheReaded;
-        Integer defaultNeedToFileSystemLimit;
-        Integer defaultIndexSystemLimitOnStorage;
+        Integer paramCodeByNumber;
+        Integer countParamsDataCacheForSet;
+        Integer idx;
         try {
-            defaultInCache = currentInCache;
-            if( defaultInCache < 0 ){
-                defaultInCache = 0;
-            }
-            defaultInCacheReaded = currentInCacheReaded;
-            if( defaultInCacheReaded < 0 ){
-                defaultInCacheReaded = 0;
-            }
-            defaultNeedToFileSystemLimit = addNeedToFileSystemLimit;
-            if( defaultNeedToFileSystemLimit < 0 ){
-                defaultNeedToFileSystemLimit = 0;
-            }
-            defaultIndexSystemLimitOnStorage = indexSystemLimitOnStorage;
-            if( defaultIndexSystemLimitOnStorage < 0 ){
-                defaultIndexSystemLimitOnStorage = 0;
-            }
             returnedHashMap = new ConcurrentHashMap<Integer, Integer>();
-            //currentInCache - 322802084
-            returnedHashMap.put(322802084, defaultInCache);
-            //currentInCacheReaded - -835384455
-            returnedHashMap.put(-835384455, defaultInCacheReaded);
-            //addNeedToFileSystemLimit - 1443203998
-            returnedHashMap.put(1443203998, defaultNeedToFileSystemLimit);
-            //indexSystemLimitOnStorage - 585177634
-            returnedHashMap.put(585177634, defaultIndexSystemLimitOnStorage);
+            countParamsDataCacheForSet = getParamCount();
+            for(idx = 0; idx < countParamsDataCacheForSet; idx++ ){
+                paramCodeByNumber = getParamCodeByNumber(idx);
+                returnedHashMap.put(paramCodeByNumber, 0);
+                idx++;
+            }
+
             return returnedHashMap;
         } finally {
+            idx = null;
+            paramCodeByNumber = null;
+            countParamsDataCacheForSet = null;
             returnedHashMap = null;
-            defaultInCache = null;
-            defaultInCacheReaded = null;
-            defaultNeedToFileSystemLimit = null;
-            defaultIndexSystemLimitOnStorage = null;
+        }
+    }
+    /**
+     * <ul>
+     * <li>0 - currentInCache
+     * <li>1 - currentInCacheReaded
+     * <li>2 - addNeedToFileSystemLimit
+     * <li>3 - indexSystemLimitOnStorage
+     * </ul> 
+     * @param changedKeyPointFlowDataCache
+     * @param paramNumber
+     * @param changedVal 
+     * 
+     * @throws IllegalArgumentException when inputed number of parameter
+     * out of bounds
+     */
+    protected void changeParamValByNumber(final UUID changedKeyPointFlowDataCache, final Integer paramNumber, final Integer changedVal){
+        UUID changedKeyPointFlowDataCacheFunc;
+        Integer paramNumberFunc;
+        Integer changedValFunc;
+        Integer paramCodeByNumber;
+        ConcurrentHashMap<Integer, Integer> fromCurrentFlow;
+        try{
+            changedKeyPointFlowDataCacheFunc = (UUID) changedKeyPointFlowDataCache;
+            validateCountParams(changedKeyPointFlowDataCacheFunc);
+            paramNumberFunc = (Integer) paramNumber;
+            changedValFunc = (Integer) changedVal;
+            fromCurrentFlow = (ConcurrentHashMap<Integer, Integer>) this.poolStatusDataCache.get(changedKeyPointFlowDataCacheFunc);
+            paramCodeByNumber = (Integer) getParamCodeByNumber(paramNumberFunc);
+            fromCurrentFlow.put(paramCodeByNumber, changedValFunc);
+            this.poolStatusDataCache.put(changedKeyPointFlowDataCacheFunc, fromCurrentFlow);
+        } finally {
+            changedKeyPointFlowDataCacheFunc = null;
+            paramNumberFunc = null;
+            changedValFunc = null;
+            paramCodeByNumber = null;
+            fromCurrentFlow = null;
         }
     }
     /**
@@ -255,10 +251,16 @@ public class ThWordStatusDataCache {
      * @throws IllegalArgumentException when inputed number of parameter
      * out of bounds
      */
-    protected Integer getParamCodeByNumber(int numParam){
+    private Integer getParamCodeByNumber(int numParam){
         String[] paramNames;
         try {
             paramNames = getParamNames();
+            if( numParam < 0 ){
+                throw new IllegalArgumentException(ThWordStatusDataCache.class.getCanonicalName() 
+                                + " parameters of flow statusDataCache in StorageWord is not valid, "
+                                + " negative index sended, 0 (zero) > " + numParam + ", count parameters: " 
+                                + paramNames.length);
+            }
             if( numParam > (paramNames.length - 1) ){
                 throw new IllegalArgumentException(ThWordStatusDataCache.class.getCanonicalName() 
                                 + " parameters of flow statusDataCache in StorageWord is not valid, "
@@ -278,7 +280,7 @@ public class ThWordStatusDataCache {
      * Count records (array.length) returned from {@link #getParamNames }
      * @return 
      */
-    protected int getParamCount(){
+    private int getParamCount(){
         String[] paramNames;
         try {
             paramNames = getParamNames();
@@ -299,6 +301,12 @@ public class ThWordStatusDataCache {
         String paramName;
         try {
             paramNames = getParamNames();
+            if( numParam < 0 ){
+                throw new IllegalArgumentException(ThWordStatusDataCache.class.getCanonicalName() 
+                                + " parameters of flow statusDataCache in StorageWord is not valid, "
+                                + " negative index sended, 0 (zero) > " + numParam + ", count parameters: " 
+                                + paramNames.length);
+            }
             if( numParam > (paramNames.length - 1) ){
                 throw new IllegalArgumentException(ThWordStatusDataCache.class.getCanonicalName() 
                                 + " parameters of flow statusDataCache in StorageWord is not valid, "
@@ -321,75 +329,51 @@ public class ThWordStatusDataCache {
      */
     
     protected void validateCountParams(final UUID keyPointFlowDataCache){
-        ConcurrentHashMap<Integer, Integer> statusDataCacheForKeyPointFlow;
         UUID keyPointFlowDataCacheFunc;
-        Integer countThStorageWordStatusDataCacheCurrentInCache;
-        Integer countThStorageWordStatusDataCacheCurrentInCacheReaded;
-        Integer countThStorageWordStatusAddNeedToFileSystemLimit;
-        Integer countThStorageWordStatusIndexSystemLimitOnStorage;
-        Integer countSummaryOfParameters;
+        ConcurrentHashMap<Integer, Integer> statusDataCacheForKeyPointFlow;
+        Integer sizeRec;
+        Integer paramCount;
+        Integer idxParam;
+        Integer paramCodeByNumber;
+        String paramNameByNumber;
+        
         try {
             keyPointFlowDataCacheFunc = (UUID) keyPointFlowDataCache;
             if( !isStatusDataCacheNotExist(keyPointFlowDataCacheFunc) ){
-                statusDataCacheForKeyPointFlow = getStatusDataCacheForKeyPointFlow(keyPointFlowDataCacheFunc);
-                countSummaryOfParameters = 0;
-                countThStorageWordStatusDataCacheCurrentInCache = 0;
-                countThStorageWordStatusDataCacheCurrentInCacheReaded = 0;
-                countThStorageWordStatusAddNeedToFileSystemLimit = 0;
-                countThStorageWordStatusIndexSystemLimitOnStorage = 0;
-                for(Map.Entry<Integer, Integer> itemOfLong: statusDataCacheForKeyPointFlow.entrySet()){
-                    countSummaryOfParameters++;
-                    switch ( itemOfLong.getKey() ) {
-                        case 322802084:
-                            countThStorageWordStatusDataCacheCurrentInCache++;
-                            continue;
-                        case -835384455:
-                            countThStorageWordStatusDataCacheCurrentInCacheReaded++;
-                            continue;    
-                        case 1443203998:
-                            countThStorageWordStatusAddNeedToFileSystemLimit++;
-                            continue;
-                        case 585177634:
-                            countThStorageWordStatusIndexSystemLimitOnStorage++;
-                            continue;
+                
+                statusDataCacheForKeyPointFlow = (ConcurrentHashMap<Integer, Integer>) getStatusDataCacheForKeyPointFlow(keyPointFlowDataCacheFunc);
+                sizeRec = (Integer) statusDataCacheForKeyPointFlow.size();
+                paramCount = (Integer) getParamCount();
+                if( sizeRec != paramCount ){
+                    
+                    throw new IllegalArgumentException(ThWordStatusDataCache.class.getCanonicalName() 
+                            + " parameters of flow statusDataCache in Word is not valid, "
+                            + "count records " + sizeRec + " not equal " + paramCount);
+                }
+                
+                for(idxParam = 0; idxParam < paramCount; idxParam++ ){
+                    
+                    paramCodeByNumber = getParamCodeByNumber(idxParam);
+                    if( !statusDataCacheForKeyPointFlow.containsKey(paramCodeByNumber) ){
+                        
+                        paramNameByNumber = getParamNameByNumber(idxParam);
+                        throw new IllegalArgumentException(ThWordStatusDataCache.class.getCanonicalName() 
+                            + " parameter "
+                            + " for name: " + paramNameByNumber
+                            + " in inputed data for set into flow statusDataCache not exist");
                     }
-                    throw new IllegalArgumentException(ThWordStatusDataCache.class.getCanonicalName() 
-                            + " parameters of flow statusDataCache in StorageWord is not valid, has more values");
-                }
-                if( countSummaryOfParameters != 4 ){
-                    throw new IllegalArgumentException(ThWordStatusDataCache.class.getCanonicalName() 
-                            + " parameters of flow statusDataCache in StorageWord is not valid, "
-                            + "count records not equal three");
-                }
-                if( countThStorageWordStatusDataCacheCurrentInCache != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusDataCache.class.getCanonicalName() 
-                            + " parameters of flow statusDataCache in StorageWord is not valid, "
-                            + "count records for CurrentInCache not equal one");
-                }
-                if( countThStorageWordStatusDataCacheCurrentInCacheReaded != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusDataCache.class.getCanonicalName() 
-                            + " parameters of flow statusDataCache in StorageWord is not valid, "
-                            + "count records for CurrentInCacheReaded not equal one");
-                }
-                if( countThStorageWordStatusAddNeedToFileSystemLimit != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusDataCache.class.getCanonicalName() 
-                            + " parameters of flow statusDataCache in StorageWord is not valid, "
-                            + "count records for AddNeedToFileSystemLimit not equal one");
-                }
-                if( countThStorageWordStatusIndexSystemLimitOnStorage != 1 ){
-                    throw new IllegalArgumentException(ThWordStatusDataCache.class.getCanonicalName() 
-                            + " parameters of flow statusDataCache in StorageWord is not valid, "
-                            + "count records for IndexSystemLimitOnStorage not equal one");
+                    idxParam++;
                 }
             }
+            
         } finally {
+            sizeRec = null;
+            paramCount = null;
+            idxParam = null;
             statusDataCacheForKeyPointFlow = null;
             keyPointFlowDataCacheFunc = null;
-            countThStorageWordStatusDataCacheCurrentInCache = null;
-            countThStorageWordStatusDataCacheCurrentInCacheReaded = null;
-            countThStorageWordStatusAddNeedToFileSystemLimit = null;
-            countThStorageWordStatusIndexSystemLimitOnStorage = null;
-            countSummaryOfParameters = null;
+            paramCodeByNumber = null;
+            paramNameByNumber = null;
         }
     }
 }

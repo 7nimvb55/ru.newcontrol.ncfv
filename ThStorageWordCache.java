@@ -47,37 +47,114 @@ public class ThStorageWordCache {
                                 ConcurrentHashMap<String, String>>>>();
     }
     /**
+     * When router read all data from filter, need save all cached data into
+     * storage, ths function rebuild all cache data in bus format, for save
+     * it into storages in next step
+     * 
+     * @todo need delete data froom cache in this function, and iterate this, ahile
+     *       all data no saved
      * 
      * @return ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>
      *                          <TypeWord, <TagName, SubString>>
      */
-    protected ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> getListTypTagSubStr(){
+    protected ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> pollListTypeTagSubStr(){
         ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> forReturnList;
+        Boolean hasDataForReturn;
+        ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>> valueItemTypeWord;
+        ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> valueTagLetter;
+        ConcurrentHashMap<String, String> getListForKeyWord;
+        ConcurrentHashMap<String, String> valueSubStrLength;
+        ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>> getForFinishCheck;
+        ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>> removedFromCache;
+        ConcurrentHashMap<String, String> removeSubStrList;
+        
+        ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> valueCheckSubStrLength;
+        Integer keyList;
+        ConcurrentHashMap<String, String> valueList;
+        ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> removeCacheFinishCheck;
+        
+        ConcurrentHashMap<String, String> removeFromForReturnList;
+        
+        Integer keySubStrLength;
+        Integer keyTypeWord;
+        String keyTagLetter;
         try {
             
             forReturnList = new ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>();
-            
+            // remove data from cache, for empty tree, remove his key
             for( Map.Entry<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>>> itemTypeWord : this.cachedData.entrySet() ){
-                Integer keyTypeWord = (Integer) itemTypeWord.getKey();
-                ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>> valueItemTypeWord = itemTypeWord.getValue();
+                keyTypeWord = (Integer) itemTypeWord.getKey();
+                valueItemTypeWord = itemTypeWord.getValue();
                 for( Map.Entry<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>> itemTagLetter : valueItemTypeWord.entrySet() ){
-                    String keyTagLetter = (String) itemTagLetter.getKey();
-                    ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> valueTagLetter = itemTagLetter.getValue();
+                    keyTagLetter = (String) itemTagLetter.getKey();
+                    valueTagLetter = itemTagLetter.getValue();
                     for( Map.Entry<Integer, ConcurrentHashMap<String, String>> itemSubStrLength : valueTagLetter.entrySet() ){
-                        Integer keySubStrLength = (Integer) itemSubStrLength.getKey();
-                        ConcurrentHashMap<String, String> valueSubStrLength = (ConcurrentHashMap<String, String>) itemSubStrLength.getValue();
-                        ConcurrentHashMap<String, String> getListForKeyWord = (ConcurrentHashMap<String, String>) forReturnList.get(keyTypeWord);
+                        keySubStrLength = (Integer) itemSubStrLength.getKey();
+                        valueSubStrLength = (ConcurrentHashMap<String, String>) valueTagLetter.remove(keySubStrLength);
+                        getListForKeyWord = (ConcurrentHashMap<String, String>) forReturnList.get(keyTypeWord);
                         if( getListForKeyWord == null){
                             getListForKeyWord = new ConcurrentHashMap<String, String>();
-                            forReturnList.put(keyTypeWord, getListForKeyWord);
                         }
                         getListForKeyWord.putAll(valueSubStrLength);
+                        forReturnList.put(keyTypeWord, getListForKeyWord);
                     }
                 }
             }
+            hasDataForReturn = Boolean.FALSE;
+            for(Map.Entry<Integer, ConcurrentHashMap<String, String>> itemReturnedList : forReturnList.entrySet()){
+                if( !itemReturnedList.getValue().isEmpty() ){
+                    hasDataForReturn = Boolean.TRUE;
+                } else {
+                    getForFinishCheck = this.cachedData.get(itemReturnedList.getKey());
+                    for( Map.Entry<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>> entrySetCheckTagName : getForFinishCheck.entrySet() ){
+                        valueCheckSubStrLength = entrySetCheckTagName.getValue();
+                        for( Map.Entry<Integer, ConcurrentHashMap<String, String>> entrySetCheckSubStrLength : valueCheckSubStrLength.entrySet() ){
+                            keyList = entrySetCheckSubStrLength.getKey();
+                            valueList = entrySetCheckSubStrLength.getValue();
+                            if( valueList.isEmpty() ){
+                                removeSubStrList = valueCheckSubStrLength.remove(keyList);
+                                removeSubStrList = null;
+                            }
+                        }
+                        valueCheckSubStrLength = entrySetCheckTagName.getValue();
+                        if( valueCheckSubStrLength.isEmpty() ){
+                            removeCacheFinishCheck = getForFinishCheck.remove(entrySetCheckTagName.getKey());
+                            removeCacheFinishCheck = null;
+                        }
+                        
+                    }
+                    getForFinishCheck = this.cachedData.get(itemReturnedList.getKey());
+                    if( getForFinishCheck.isEmpty() ){
+                        removedFromCache = this.cachedData.remove(itemReturnedList.getKey());
+                        removedFromCache = null;
+                    }
+                    
+                    removeFromForReturnList = forReturnList.remove(itemReturnedList.getKey());
+                    removeFromForReturnList = null;
+                }
+            }
+            if( !hasDataForReturn ){
+                return null;
+            }
             return forReturnList;
         } finally {
+            valueItemTypeWord = null;
+            valueSubStrLength = null;
+            valueTagLetter = null;
+            getListForKeyWord = null;
             forReturnList = null;
+            hasDataForReturn = null;
+            getForFinishCheck = null;
+            removedFromCache = null;
+            removeSubStrList = null;
+            valueCheckSubStrLength = null;
+            keyList = null;
+            valueList = null;
+            removeCacheFinishCheck = null;
+            removeFromForReturnList = null;
+            keySubStrLength = null;
+            keyTypeWord = null;
+            keyTagLetter = null;
         }
     }
     /**

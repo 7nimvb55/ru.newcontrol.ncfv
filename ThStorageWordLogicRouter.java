@@ -40,7 +40,7 @@ public class ThStorageWordLogicRouter {
         ThIndexRule indexRule = funcRuleStorageWord.getIndexRule();
         ThIndexStatistic indexStatistic = indexRule.getIndexStatistic();
         ThStorageWordState storageWordState = funcRuleStorageWord.getStorageWordState();
-        ThStorageWordStatusMainFlow storageWordStatistic = funcRuleStorageWord.getStorageWordStatistic();
+        ThStorageWordStatusMainFlow storageWordStatusMainFlow = funcRuleStorageWord.getStorageWordStatusMainFlow();
         
         System.out.println("++++++++++++++++++++++++++++++start " + ThStorageWordLogicRouter.class.getCanonicalName());
         ThStorageWordBusInput busJobForStorageWordRouter = storageWordState.getBusJobForStorageWordRouterJob();
@@ -121,26 +121,28 @@ public class ThStorageWordLogicRouter {
         /**
          * @todo procedure for read all caches data and write it
          */
-        ThStorageWordCache storageWordCache = (ThStorageWordCache) storageWordStatistic.getStorageWordCache();
+        ThStorageWordCache storageWordCache = (ThStorageWordCache) storageWordStatusMainFlow.getStorageWordCache();
         
-        ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> listTypTagSubStr = storageWordCache.getListTypTagSubStr();
-        
-        for(Map.Entry<Integer, ConcurrentHashMap<String, String>> itemList : listTypTagSubStr.entrySet()){
-            try {
-                    removeDataForCurrentTypeWordBus(funcRuleStorageWord, 
-                        itemList.getKey(), 
-                        listTypTagSubStr.remove(itemList.getKey()));
-                } catch(IllegalArgumentException exIllArg) {
-                    System.err.println(exIllArg.getMessage());
-                    exIllArg.printStackTrace();
+        ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> listTypTagSubStr = storageWordCache.pollListTypeTagSubStr();
+        do{
+            for(Map.Entry<Integer, ConcurrentHashMap<String, String>> itemList : listTypTagSubStr.entrySet()){
+                try {
+                        removeDataForCurrentTypeWordBus(funcRuleStorageWord, 
+                            itemList.getKey(), 
+                            listTypTagSubStr.remove(itemList.getKey()));
+                    } catch(IllegalArgumentException exIllArg) {
+                        System.err.println(exIllArg.getMessage());
+                        exIllArg.printStackTrace();
 
-                } catch(NullPointerException exNullReturn) {
-                    System.err.println(exNullReturn.getMessage());
-                    exNullReturn.printStackTrace();
-                    continue;
-                }
+                    } catch(NullPointerException exNullReturn) {
+                        System.err.println(exNullReturn.getMessage());
+                        exNullReturn.printStackTrace();
+                        continue;
+                    }
+            }
+            listTypTagSubStr = storageWordCache.pollListTypeTagSubStr();
         }
-        
+        while( listTypTagSubStr != null );
         System.out.println("++++++++++++++++++++++++++++++stop " + ThStorageWordLogicRouter.class.getCanonicalName());
     }
     /**
@@ -253,8 +255,8 @@ public class ThStorageWordLogicRouter {
         Boolean isMainFlowExist;
         try{
             funcRuleStorageWord = (ThStorageWordRule) outerRuleStorageWord;
-            currentStorageWordStatistic = (ThStorageWordStatusMainFlow) funcRuleStorageWord.getStorageWordStatistic();
-            storageWordFlowReaded = (ThStorageWordBusReadedFlow) funcRuleStorageWord.getStorageWordFlowReaded();
+            currentStorageWordStatistic = (ThStorageWordStatusMainFlow) funcRuleStorageWord.getStorageWordStatusMainFlow();
+            storageWordFlowReaded = (ThStorageWordBusReadedFlow) funcRuleStorageWord.getStorageWordState().getStorageWordFlowReaded();
             
             storageWordState = (ThStorageWordState) funcRuleStorageWord.getStorageWordState();
             busJobForStorageWordRouterJobToWriter = (ThStorageWordBusWriter) 

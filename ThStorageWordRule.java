@@ -56,13 +56,9 @@ public class ThStorageWordRule {
     /**
      * ThStorageWordStatusMainFlow
      */
-    private ThStorageWordStatusMainFlow currentStorageWordStatistic;
-    private Boolean isSetStorageWordStatistic;
-    /**
-     * ThStorageWordBusReadedFlow thStorageWordFlowRead
-     */
-    private ThStorageWordBusReadedFlow thStorageWordFlowRead;
-    private Boolean isSetStorageWordFlowReaded;
+    private ThStorageWordStatusMainFlow currentStorageWordStatusMainFlow;
+    private Boolean isSetStorageWordStatusMainFlow;
+    
     
     public ThStorageWordRule(final ThIndexRule outerRuleIndex) {
         this.indexRule = (ThIndexRule) outerRuleIndex;
@@ -74,11 +70,8 @@ public class ThStorageWordRule {
         /**
          * ThStorageWordStatistic
          */
-        setFalseStorageWordStatistic();
-        /**
-         * ThStorageWordFlowReaded
-         */
-        setFalseStorageWordFlowReaded();
+        setFalseStorageWordStatusMainFlow();
+        
         /**
          * ThStorageWordWorkFilter
          */
@@ -153,6 +146,10 @@ public class ThStorageWordRule {
             /**
              * @todo release workWriter Bus names for runned threads names threads
              * for release wait him finish functions
+             * 
+             * setPriority for groupThreads than need threads grouping in the
+             * writers, readers, routing, filters, for manage his work priorities
+             * 
              */
             String toStringStorageWordWorkFilter = UUID.randomUUID().toString();
             this.indexRule.addThredNameInQueue(toStringStorageWordWorkFilter);
@@ -353,52 +350,27 @@ public class ThStorageWordRule {
      * ThStorageWordStatusMainFlow
      * @return 
      */
-    protected ThStorageWordStatusMainFlow getStorageWordStatistic(){
-        if( !this.isStorageWordStatistic() ){
+    protected ThStorageWordStatusMainFlow getStorageWordStatusMainFlow(){
+        if( !this.isStorageWordStatusMainFlow() ){
             throw new IllegalArgumentException(ThStorageWordStatusMainFlow.class.getCanonicalName() + " object not set in " + ThWordRule.class.getCanonicalName());
         }
-        return this.currentStorageWordStatistic;
+        return this.currentStorageWordStatusMainFlow;
     }
-    protected void setStorageWordStatistic(final ThStorageWordStatusMainFlow stateWordOuter){
-        this.currentStorageWordStatistic = stateWordOuter;
-        setTrueStorageWordStatistic();
+    protected void setStorageWordStatusMainFlow(final ThStorageWordStatusMainFlow stateWordOuter){
+        this.currentStorageWordStatusMainFlow = stateWordOuter;
+        setTrueStorageWordStatusMainFlow();
     }
-    protected void setTrueStorageWordStatistic(){
-        this.isSetStorageWordStatistic = Boolean.TRUE;
+    protected void setTrueStorageWordStatusMainFlow(){
+        this.isSetStorageWordStatusMainFlow = Boolean.TRUE;
     }
-    protected void setFalseStorageWordStatistic(){
-        this.isSetStorageWordStatistic = Boolean.FALSE;
+    protected void setFalseStorageWordStatusMainFlow(){
+        this.isSetStorageWordStatusMainFlow = Boolean.FALSE;
     }
-    protected Boolean isStorageWordStatistic(){
-        if( this.isSetStorageWordStatistic ){
+    protected Boolean isStorageWordStatusMainFlow(){
+        if( this.isSetStorageWordStatusMainFlow ){
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
     }
-    /**
-     * ThStorageWordBusReadedFlow
-     * @return 
-     */
-    protected ThStorageWordBusReadedFlow getStorageWordFlowReaded(){
-        if( !this.isStorageWordFlowReaded() ){
-            throw new IllegalArgumentException(ThStorageWordBusReadedFlow.class.getCanonicalName() + " object not set in " + ThWordRule.class.getCanonicalName());
-        }
-        return this.thStorageWordFlowRead;
-    }
-    protected void setStorageWordFlowReaded(final ThStorageWordBusReadedFlow stateWordOuter){
-        this.thStorageWordFlowRead = stateWordOuter;
-        setTrueStorageWordFlowReaded();
-    }
-    protected void setTrueStorageWordFlowReaded(){
-        this.isSetStorageWordFlowReaded = Boolean.TRUE;
-    }
-    protected void setFalseStorageWordFlowReaded(){
-        this.isSetStorageWordFlowReaded = Boolean.FALSE;
-    }
-    protected Boolean isStorageWordFlowReaded(){
-        if( this.isSetStorageWordFlowReaded ){
-            return Boolean.TRUE;
-        }
-        return Boolean.FALSE;
-    }
+   
 }
