@@ -309,6 +309,7 @@ public class ThStorageWordLogicWrite {
                                         //set into flow
                                         ConcurrentHashMap<Integer, Integer> statusDataFsForKeyPointFlow = storageWordStatusDataFs.getStatusDataFsForKeyPointFlow(getKeyDataFs);
                                         Integer volNum = statusDataFsForKeyPointFlow.get(-1832815869);
+                                        Integer sizeDataSrc = 0;
                                         Integer sizeDataDest = 0;
                                         
                                         
@@ -320,7 +321,7 @@ public class ThStorageWordLogicWrite {
                                         String currentFileName = new String()
                                             .concat(AppFileNamesConstants.SZFS_STORAGE_WORD_FILE_PREFIX)
                                             .concat(prefixFileName.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
-                                            .concat(String.valueOf(0))
+                                            .concat(String.valueOf(sizeDataSrc))
                                             .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
                                             .concat(String.valueOf(volNum));
                                         //newFileName - 521024487
@@ -342,6 +343,7 @@ public class ThStorageWordLogicWrite {
                                          * @todo function for removed return cache data for write
                                          */
                                         if( pollTypeWordTagFileNameData == null ){
+                                            System.err.println("poll data from cache is null");
                                             continue;
                                         }
                                         Boolean isDataToVol = Boolean.FALSE;
@@ -370,7 +372,7 @@ public class ThStorageWordLogicWrite {
                                          * isErrorOnDataInCache,
                                          */
                                         if( !isDataToVol ){
-                                            Path nowWritedFile = fsForWriteData.getPath(currentFileName);
+                                            Path nowWritedFile = fsForWriteData.getPath(storageDirectoryName, currentFileName);
 
                                             try(ObjectOutputStream oos = 
                                                 new ObjectOutputStream(Files.newOutputStream(nowWritedFile)))
@@ -390,7 +392,7 @@ public class ThStorageWordLogicWrite {
                                                 continue;
                                             }
 
-                                            Path moveToFile = fsForWriteData.getPath(newFileName);
+                                            Path moveToFile = fsForWriteData.getPath(storageDirectoryName, newFileName);
                                             try{
                                                 Files.move(nowWritedFile, moveToFile, StandardCopyOption.ATOMIC_MOVE);
                                                 statusWorkersForKeyPointFlow.put(-1884096596, Boolean.TRUE);
@@ -440,7 +442,7 @@ public class ThStorageWordLogicWrite {
                                                                 .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
                                                                 .concat(String.valueOf(volNum));
 
-                                                            Path nowWritedFile = fsForWriteData.getPath(currentFileName);
+                                                            Path nowWritedFile = fsForWriteData.getPath(storageDirectoryName, currentFileName);
 
                                                             try( ObjectOutputStream oos = 
                                                                 new ObjectOutputStream(Files.newOutputStream(nowWritedFile)) )
@@ -460,7 +462,7 @@ public class ThStorageWordLogicWrite {
                                                                 continue;
                                                             }
 
-                                                            Path moveToFile = fsForWriteData.getPath(newFileName);
+                                                            Path moveToFile = fsForWriteData.getPath(storageDirectoryName, newFileName);
                                                             try{
                                                                 Files.move(nowWritedFile, moveToFile, StandardCopyOption.ATOMIC_MOVE);
                                                                 statusWorkersForKeyPointFlow.put(-1884096596, Boolean.TRUE);

@@ -268,7 +268,9 @@ public class ThStorageWordCache {
                         + tagNameFunc + " length: " + tagNameFunc.length()
                         + " < 4 ");
             }
-            
+            /**
+             * @todo fix for ... not new create, throw NullPointer...
+             */
             getListByTypeWord = getListByType(typeWordFunc);
             String substringTagName = tagNameFunc.substring(0, 3);
             getListByTagNameCode = getListByTypeWord.get(substringTagName);

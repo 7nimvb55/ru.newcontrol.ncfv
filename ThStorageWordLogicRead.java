@@ -293,7 +293,7 @@ public class ThStorageWordLogicRead {
                                                 continue;
                                             }
 
-                                            Path forReadFileName = fsForReadData.getPath(currentFileName);
+                                            Path forReadFileName = fsForReadData.getPath(storageDirectoryName, currentFileName);
 
                                             ConcurrentHashMap<String, String> readedFormData = 
                                                     new ConcurrentHashMap<String, String>();
