@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Cached data from Bus
  * @author wladimirowichbiaran
  */
-public class ThWordCache {
+public class ThWordCacheHa {
     /**
      * @todo
      * <typeWord, <tagName.substring(0,3), strName.length, <tagName, <UUID, TdataWord>>>>
@@ -36,10 +36,10 @@ public class ThWordCache {
                 ConcurrentHashMap<Integer, 
                     ConcurrentHashMap<String, ConcurrentHashMap<UUID, TdataWord>>>>> cachedData;
     
-    public ThWordCache() {
+    public ThWordCacheHa() {
         this.cachedData = createNewListStoragesMapEmpty();
     }
-    protected ConcurrentHashMap<Integer, 
+    private ConcurrentHashMap<Integer, 
         ConcurrentHashMap<String, 
             ConcurrentHashMap<Integer, 
                 ConcurrentHashMap<String, ConcurrentHashMap<UUID, TdataWord>>>>> createNewListStoragesMapEmpty(){
@@ -418,7 +418,7 @@ public class ThWordCache {
             
             tdataWordValid = ThWordHelper.isTdataWordValid(dataFunc);
             if( !tdataWordValid ){
-                throw new IllegalArgumentException(ThWordCache.class.getCanonicalName() 
+                throw new IllegalArgumentException(ThWordCacheHa.class.getCanonicalName() 
                         + " not valid data for get from cache object class " + TdataWord.class.getCanonicalName() 
                         + " object data " + dataFunc.toString());
             }
@@ -472,14 +472,14 @@ public class ThWordCache {
             int strSubStringlength = strSubStringFunction.length();
             int tagNamelength = tagNameFunction.length();
             if( (strSubStringlength * 4) != tagNamelength ){
-                throw new IllegalArgumentException(ThWordCache.class.getCanonicalName() 
+                throw new IllegalArgumentException(ThWordCacheHa.class.getCanonicalName() 
                         + " illegal length of inputed in index string, hexTagName: "
                         + tagNameFunction + " lengthHex: " + tagNameFunction.length()
                         + " strSubString: " + strSubStringFunction + " lengthStr: " + strSubStringFunction.length()
                         + " lengthHex == lengthStr * 4 ");
             }
             if( tagNamelength < 4 ){
-                throw new IllegalArgumentException(ThWordCache.class.getCanonicalName() 
+                throw new IllegalArgumentException(ThWordCacheHa.class.getCanonicalName() 
                         + " illegal length of inputed in index string, hexTagName: "
                         + tagNameFunction + " length: " + tagNameFunction.length()
                         + " < 4 ");
@@ -531,7 +531,7 @@ public class ThWordCache {
             dataFunc = (TdataWord) dataInputed;
             tdataWordValid = ThWordHelper.isTdataWordValid(dataFunc);
             if( !tdataWordValid ){
-                throw new IllegalArgumentException(ThWordCache.class.getCanonicalName() 
+                throw new IllegalArgumentException(ThWordCacheHa.class.getCanonicalName() 
                         + " inputed not valid data for poll from cache object class " 
                         + TdataWord.class.getCanonicalName() 
                         + " object data " + dataFunc.toString());
@@ -548,7 +548,7 @@ public class ThWordCache {
                 throw new NullPointerException(exNull.getMessage());
             }
             if( dataTypeWordTagNameSubStr == null ){
-                throw new NullPointerException(ThWordCache.class.getCanonicalName() 
+                throw new NullPointerException(ThWordCacheHa.class.getCanonicalName() 
                         + " for word by type " + String.valueOf(typeWordFunc)
                         + " tagName " + tagNameFunc
                         + " subString " + strSubStringFunc
@@ -610,14 +610,14 @@ public class ThWordCache {
             int strSubStringlength = strSubStringFunc.length();
             int tagNamelength = tagNameFunc.length();
             if( (strSubStringlength * 4) != tagNamelength ){
-                throw new IllegalArgumentException(ThWordCache.class.getCanonicalName() 
+                throw new IllegalArgumentException(ThWordCacheHa.class.getCanonicalName() 
                         + " illegal length of inputed in index string, hexTagName: "
                         + tagNameFunc + " lengthHex: " + tagNameFunc.length()
                         + " strSubString: " + strSubStringFunc + " lengthStr: " + strSubStringFunc.length()
                         + " lengthHex == lengthStr * 4 ");
             }
             if( tagNamelength < 4 ){
-                throw new IllegalArgumentException(ThWordCache.class.getCanonicalName() 
+                throw new IllegalArgumentException(ThWordCacheHa.class.getCanonicalName() 
                         + " illegal length of inputed in index string, hexTagName: "
                         + tagNameFunc + " length: " + tagNameFunc.length()
                         + " < 4 ");
@@ -626,7 +626,7 @@ public class ThWordCache {
             String substringTagName = tagNameFunc.substring(0, 3);
             valListByTagNameCode = valListByTypeWord.get(substringTagName);
             if( valListByTagNameCode == null ){
-                throw new NullPointerException(ThWordCache.class.getCanonicalName() 
+                throw new NullPointerException(ThWordCacheHa.class.getCanonicalName() 
                         + " for word by type " + String.valueOf(typeWordFunc)
                         + " tagName " + tagNameFunc
                         + " subString " + strSubStringFunc
@@ -634,7 +634,7 @@ public class ThWordCache {
             }
             valListBySubStrLength = valListByTagNameCode.get(strSubStringlength);
             if( valListBySubStrLength == null ){
-                throw new NullPointerException(ThWordCache.class.getCanonicalName() 
+                throw new NullPointerException(ThWordCacheHa.class.getCanonicalName() 
                         + " for word by type " + String.valueOf(typeWordFunc)
                         + " tagName " + tagNameFunc
                         + " subString " + strSubStringFunc
@@ -642,7 +642,7 @@ public class ThWordCache {
             }
             valTagNameListData = valListBySubStrLength.remove(tagNameFunc);
             if( valTagNameListData == null ){
-                throw new NullPointerException(ThWordCache.class.getCanonicalName() 
+                throw new NullPointerException(ThWordCacheHa.class.getCanonicalName() 
                         + " for word by type " + String.valueOf(typeWordFunc)
                         + " tagName " + tagNameFunc
                         + " subString " + strSubStringFunc
@@ -738,7 +738,7 @@ public class ThWordCache {
             funcData = (TdataWord) dataForSet;
             tdataWordValid = ThWordHelper.isTdataWordValid(funcData);
             if( !tdataWordValid ){
-                throw new IllegalArgumentException(ThWordCache.class.getCanonicalName() 
+                throw new IllegalArgumentException(ThWordCacheHa.class.getCanonicalName() 
                         + " inputed not valid data for set into cache object class " 
                         + TdataWord.class.getCanonicalName() 
                         + " object data " + funcData.toString());

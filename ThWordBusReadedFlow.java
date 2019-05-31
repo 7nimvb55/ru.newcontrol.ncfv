@@ -18,7 +18,7 @@ package ru.newcontrol.ncfv;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  *
@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ThWordBusReadedFlow {
     /**
-     * ConcurrentHashMap<Integer, Integer> (<hashFieldCode, Value>)
+     * ConcurrentSkipListMap<Integer, Integer> (<hashFieldCode, Value>)
      * hashFieldCode:
      * - Size
      * - VolumeNum
@@ -39,30 +39,77 @@ public class ThWordBusReadedFlow {
      * 
      * This structure also for distinct word index need...
      * 
-     * ConcurrentHashMap<Integer,     - (1) - Strorage hash value 
+     * ConcurrentSkipListMap<Integer,     - (1) - Strorage hash value 
      * * * * * - (1) In release only for storage of StorageWord index not apply
-     * > ConcurrentHashMap<Integer,   - (2) - Type of word index hash value
-     *   ConcurrentHashMap<String,    - (2a) - tagFileName.substring(0,3)
-     *     ConcurrentHashMap<Integer, - (2b) - subString.length                            
-     *     ConcurrentHashMap<String, UUID> - (3) - tagFileName subString with hex view
+     * > ConcurrentSkipListMap<Integer,   - (2) - Type of word index hash value
+     *   ConcurrentSkipListMap<String,    - (2a) - tagFileName.substring(0,3)
+     *     ConcurrentSkipListMap<Integer, - (2b) - subString.length                            
+     *     ConcurrentSkipListMap<String, UUID> - (3) - tagFileName subString with hex view
      * list of uuids
-     * > >   ConcurrentHashMap<tagFileName, 
-     *          ConcurrentHashMap<recordUUIDNanoTime, UUIDMainFlow>>
+     * > >   ConcurrentSkipListMap<tagFileName, 
+     *          ConcurrentSkipListMap<recordUUIDNanoTime, UUIDMainFlow>>
      *          UUIDMainFlow - contains UUID for ready jobs from WorkRead flow
      */
-    private ConcurrentHashMap<Integer, 
-                ConcurrentHashMap<String, 
-                    ConcurrentHashMap<Integer, 
-                        ConcurrentHashMap<String, ConcurrentHashMap<Long, UUID>>>>> uuidReadedFlowMap;
+    private ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<Integer, 
+                        ConcurrentSkipListMap<String, ConcurrentSkipListMap<Long, UUID>>>>> uuidReadedFlowMap;
 
-    private ThStorageWordStatusMainFlow mainStorageWordFlow;
+    private ThWordStatusMainFlow mainWordFlow;
     
-    public ThWordBusReadedFlow(ThStorageWordStatusMainFlow storageWordStatisticOuter) {
-        this.mainStorageWordFlow = storageWordStatisticOuter;
+    public ThWordBusReadedFlow(ThWordStatusMainFlow storageWordStatisticOuter) {
+        this.mainWordFlow = storageWordStatisticOuter;
         this.uuidReadedFlowMap = createNewListStoragesMapEmpty();
 
     }
-
+    /**
+     * 
+     * @param dataInputed
+     * @return 
+     * @throws IllegalArgumentException when inputed data not valid
+     */
+    protected ConcurrentSkipListMap<String, ConcurrentSkipListMap<Long, UUID>> getDataReadedFlowUuidsByDataWord(final TdataWord dataInputed){
+        ConcurrentSkipListMap<String, ConcurrentSkipListMap<Long, UUID>> dataTypeWordTagNameSubStr;
+        TdataWord dataFunc;
+        String tagNameFunc;
+        String strSubStringFunc;
+        Integer typeWordFunc;
+        Boolean tdataWordValid;
+        try {
+            dataFunc = (TdataWord) dataInputed;
+            
+            tdataWordValid = ThWordHelper.isTdataWordValid(dataFunc);
+            if( !tdataWordValid ){
+                throw new IllegalArgumentException(ThWordBusReadedFlow.class.getCanonicalName() 
+                        + " not valid data for get from cache object class " + TdataWord.class.getCanonicalName() 
+                        + " object data " + dataFunc.toString());
+            }
+            tagNameFunc = dataFunc.hexSubString;
+            strSubStringFunc = dataFunc.strSubString;
+            typeWordFunc = dataFunc.typeWord;
+            
+            dataTypeWordTagNameSubStr = getTypeWordTagFileNameReadedFlowUuids(typeWordFunc, strSubStringFunc, tagNameFunc);
+            if( dataTypeWordTagNameSubStr == null ){
+                throw new NullPointerException(ThWordBusReadedFlow.class.getCanonicalName() 
+                        + " not have UUIDs in ReadedFlow for key type " + TdataWord.class.getCanonicalName() 
+                        + " object data " + dataFunc.toString());
+            }
+            if( dataTypeWordTagNameSubStr.isEmpty() ){
+                throw new NullPointerException(ThWordBusReadedFlow.class.getCanonicalName() 
+                        + " not have UUIDs in ReadedFlow for key type " + TdataWord.class.getCanonicalName() 
+                        + " object data " + dataFunc.toString());
+            }
+            return dataTypeWordTagNameSubStr;
+        }
+        finally {
+            dataFunc = null;
+            tagNameFunc = null;
+            strSubStringFunc = null;
+            typeWordFunc = null;
+            dataTypeWordTagNameSubStr = null;
+            tdataWordValid = null;
+        }
+    }
     /**
      * > > > > > > > > > this use in router
      * lvl (2a) init params for new itemIndex
@@ -70,55 +117,66 @@ public class ThWordBusReadedFlow {
      * @param tagName
      * @param strSubString
      * @return lvl (2b)
-     * ConcurrentHashMap<tagFileName, UUIDMainFlow>
+     * ConcurrentSkipListMap<tagFileName, UUIDMainFlow>
      *          UUIDMainFlow - contains UUID for ready jobs from WorkRead flow
      * @throws IllegalArgumentException
      */
-    protected ConcurrentHashMap<String, ConcurrentHashMap<Long, UUID>> getTypeWordTagFileNameReadedFlowUuids(
+    protected ConcurrentSkipListMap<String, ConcurrentSkipListMap<Long, UUID>> getTypeWordTagFileNameReadedFlowUuids(
             final Integer typeWord, 
-            final String tagName, 
-            final String strSubString){
+            final String strSubString,
+            final String tagName ){
         
         //(1)
-        ConcurrentHashMap<String, 
-                ConcurrentHashMap<Integer, 
-                    ConcurrentHashMap<String, ConcurrentHashMap<Long, UUID>>>> getListByTypeWord;
+        ConcurrentSkipListMap<String, 
+                ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, ConcurrentSkipListMap<Long, UUID>>>> getListByTypeWord;
         //(2a)
-        ConcurrentHashMap<Integer, 
-                ConcurrentHashMap<String, ConcurrentHashMap<Long, UUID>>> getListByTagNameCode;
+        ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, ConcurrentSkipListMap<Long, UUID>>> getListByTagNameCode;
         //(2b)
-        ConcurrentHashMap<String, ConcurrentHashMap<Long, UUID>> getListBySubStrLength;
+        ConcurrentSkipListMap<String, ConcurrentSkipListMap<Long, UUID>> getListBySubStrLength;
         
+        Integer typeWordFunc;
+        String strSubStringFunc;
+        String tagNameFunc;
+        
+        String substringTagName;
+        Integer strSubStringlength;
+        Integer tagNamelength;
         try{
-            int strSubStringlength = strSubString.length();
-            int tagNamelength = tagName.length();
+            typeWordFunc = (Integer) typeWord;
+            strSubStringFunc = (String) strSubString;
+            tagNameFunc = (String) tagName;
+            strSubStringlength = strSubString.length();
+            tagNamelength = tagName.length();
+            substringTagName = tagName.substring(0, 3);
+            
             if( (strSubStringlength * 4) != tagNamelength ){
                 throw new IllegalArgumentException(ThWordBusReadedFlow.class.getCanonicalName() 
                         + " illegal length of inputed in index string, hexTagName: "
-                        + tagName + " lengthHex: " + tagName.length()
-                        + " strSubString: " + strSubString + " lengthStr: " + strSubString.length()
+                        + tagNameFunc + " lengthHex: " + tagNamelength
+                        + " strSubString: " + strSubStringFunc + " lengthStr: " + strSubStringlength
                         + " lengthHex == lengthStr * 4 ");
             }
             if( tagNamelength < 4 ){
                 throw new IllegalArgumentException(ThWordBusReadedFlow.class.getCanonicalName() 
                         + " illegal length of inputed in index string, hexTagName: "
-                        + tagName + " length: " + tagName.length()
+                        + tagNameFunc + " length: " + tagNamelength
                         + " < 4 ");
             }
             
-            getListByTypeWord = getListByType(typeWord);
-            String substringTagName = tagName.substring(0, 3);
+            getListByTypeWord = getListByType(typeWordFunc);
             getListByTagNameCode = getListByTypeWord.get(substringTagName);
             if( getListByTagNameCode == null ){
-                getListByTagNameCode = new ConcurrentHashMap<Integer, 
-                                ConcurrentHashMap<String, ConcurrentHashMap<Long, UUID>>>();
+                getListByTagNameCode = new ConcurrentSkipListMap<Integer, 
+                                ConcurrentSkipListMap<String, ConcurrentSkipListMap<Long, UUID>>>();
                 getListByTypeWord.put(substringTagName, getListByTagNameCode);
                 
             }
             getListBySubStrLength = getListByTagNameCode.get(strSubStringlength);
             if( getListBySubStrLength == null ){
-                getListBySubStrLength = new ConcurrentHashMap<String, ConcurrentHashMap<Long, UUID>>();
-                getListBySubStrLength.put(tagName, new ConcurrentHashMap<Long, UUID>());
+                getListBySubStrLength = new ConcurrentSkipListMap<String, ConcurrentSkipListMap<Long, UUID>>();
+                getListBySubStrLength.put(tagNameFunc, new ConcurrentSkipListMap<Long, UUID>());
                 getListByTagNameCode.put(strSubStringlength, getListBySubStrLength);
             }
             return getListBySubStrLength;
@@ -126,6 +184,12 @@ public class ThWordBusReadedFlow {
             getListByTypeWord = null;
             getListByTagNameCode = null;
             getListBySubStrLength = null;
+            substringTagName = null;
+            strSubStringlength = null;
+            tagNamelength = null;
+            typeWordFunc = null;
+            strSubStringFunc = null;
+            tagNameFunc = null;
         }
     }
     /**
@@ -134,14 +198,14 @@ public class ThWordBusReadedFlow {
      * @param tagName
      * @return lvl (3)
      */
-    /*protected ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> getTagFileNameParams(
-            final ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>> getListByTypeWord,
+    /*protected ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> getTagFileNameParams(
+            final ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>> getListByTypeWord,
             final String tagName){
-        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> getListByTagFileName;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> getListByTagFileName;
         try{
             getListByTagFileName = getListByTypeWord.get(tagName);
             if( getListByTagFileName == null ){
-                getListByTagFileName = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>();
+                getListByTagFileName = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>();
                 getListByTypeWord.put(tagName, getListByTagFileName);
 
             }
@@ -163,12 +227,15 @@ public class ThWordBusReadedFlow {
             final String tagName, 
             final String strSubString,
             final UUID mainFlowContentInputed){
-        ConcurrentHashMap<Long, UUID> mainFlowContentFunc;
-        ConcurrentHashMap<String, ConcurrentHashMap<Long, UUID>> typeWordTagFileNameFlowUuids;
+        ConcurrentSkipListMap<Long, UUID> mainFlowContentFunc;
+        ConcurrentSkipListMap<String, ConcurrentSkipListMap<Long, UUID>> typeWordTagFileNameFlowUuids;
+        ConcurrentSkipListMap<UUID, 
+                    ConcurrentSkipListMap<Integer, UUID>> typeWordTagFileNameFlowUuidsFromMain;
         try {
 
-            ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> typeWordTagFileNameFlowUuids1 = this.mainStorageWordFlow.getTypeWordTagFileNameFlowUuids(typeWord, tagName, strSubString);
-            if( !typeWordTagFileNameFlowUuids1.containsKey(mainFlowContentInputed) ){
+            
+            typeWordTagFileNameFlowUuidsFromMain = this.mainWordFlow.getTypeWordTagFileNameFlowUuids(typeWord, tagName, strSubString);
+            if( !typeWordTagFileNameFlowUuidsFromMain.containsKey(mainFlowContentInputed) ){
                 throw new IllegalArgumentException(ThWordBusReadedFlow.class.getCanonicalName() 
                         + " UUID: "
                         + mainFlowContentInputed.toString() 
@@ -184,7 +251,7 @@ public class ThWordBusReadedFlow {
                     strSubString);
             mainFlowContentFunc = typeWordTagFileNameFlowUuids.get(tagName);
             if( mainFlowContentFunc == null ){
-                mainFlowContentFunc = new ConcurrentHashMap<Long, UUID>();
+                mainFlowContentFunc = new ConcurrentSkipListMap<Long, UUID>();
             }
             Long nowTime = System.nanoTime();
             mainFlowContentFunc.put(nowTime, mainFlowContentInputed);
@@ -196,32 +263,32 @@ public class ThWordBusReadedFlow {
     
     
     
-    protected ConcurrentHashMap<Integer, 
-                ConcurrentHashMap<String, 
-                    ConcurrentHashMap<Integer, 
-                        ConcurrentHashMap<String, ConcurrentHashMap<Long, UUID>>>>> createNewListStoragesMapEmpty(){
-        return new ConcurrentHashMap<Integer, 
-                ConcurrentHashMap<String, 
-                    ConcurrentHashMap<Integer, 
-                        ConcurrentHashMap<String, ConcurrentHashMap<Long, UUID>>>>>();
+    protected ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<Integer, 
+                        ConcurrentSkipListMap<String, ConcurrentSkipListMap<Long, UUID>>>>> createNewListStoragesMapEmpty(){
+        return new ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<Integer, 
+                        ConcurrentSkipListMap<String, ConcurrentSkipListMap<Long, UUID>>>>>();
     }
     /**
      * return list of not limited files from structure
      * @param typeWordOuter
      * @return 
      */
-    protected ConcurrentHashMap<String, 
-                ConcurrentHashMap<Integer, 
-                    ConcurrentHashMap<String, ConcurrentHashMap<Long, UUID>>>> getListByType(final int typeWordOuter){
-        ConcurrentHashMap<String, 
-                ConcurrentHashMap<Integer, 
-                    ConcurrentHashMap<String, ConcurrentHashMap<Long, UUID>>>> forListReturn;
+    protected ConcurrentSkipListMap<String, 
+                ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, ConcurrentSkipListMap<Long, UUID>>>> getListByType(final int typeWordOuter){
+        ConcurrentSkipListMap<String, 
+                ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, ConcurrentSkipListMap<Long, UUID>>>> forListReturn;
         try{
             forListReturn = this.uuidReadedFlowMap.get((int) typeWordOuter);
             if( forListReturn == null ){
-                forListReturn = new ConcurrentHashMap<String, 
-                        ConcurrentHashMap<Integer, 
-                            ConcurrentHashMap<String, ConcurrentHashMap<Long, UUID>>>>();
+                forListReturn = new ConcurrentSkipListMap<String, 
+                        ConcurrentSkipListMap<Integer, 
+                            ConcurrentSkipListMap<String, ConcurrentSkipListMap<Long, UUID>>>>();
                 this.uuidReadedFlowMap.put((int) typeWordOuter, forListReturn);
             }
             return forListReturn;

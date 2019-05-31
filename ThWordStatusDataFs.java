@@ -17,7 +17,7 @@ package ru.newcontrol.ncfv;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * ThStorageWordStatusDataFs
@@ -33,16 +33,16 @@ public class ThWordStatusDataFs {
     private final Long timeCreation;
     private final UUID objectLabel;
     /**
-     * ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Long>>
+     * ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Long>>
      * <keyPointFlowDataFs, <lastAccessNanotime.hashCode(), Long Value>>
      *                        <countDataUseIterationsSummary.hashCode(), Long Value>
      */
-    private ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>> poolStatusDataFs;
+    private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Integer>> poolStatusDataFs;
     
     ThWordStatusDataFs(){
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
-        this.poolStatusDataFs = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>>();
+        this.poolStatusDataFs = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Integer>>();
     }
     /**
      * 
@@ -50,9 +50,9 @@ public class ThWordStatusDataFs {
      * @return 
      * @throws IllegalStateException
      */
-    private ConcurrentHashMap<Integer, Integer> getStatusDataFsForKeyPointFlow(final UUID keyPointFlowDataFs){
+    private ConcurrentSkipListMap<Integer, Integer> getStatusDataFsForKeyPointFlow(final UUID keyPointFlowDataFs){
         UUID inputedVal;
-        ConcurrentHashMap<Integer, Integer> getStatusDataFsFormPool;
+        ConcurrentSkipListMap<Integer, Integer> getStatusDataFsFormPool;
         try{
             inputedVal = (UUID) keyPointFlowDataFs;
             getStatusDataFsFormPool = this.poolStatusDataFs.get(inputedVal);
@@ -79,10 +79,10 @@ public class ThWordStatusDataFs {
      */
     protected Boolean removeStatusDataFsForKeyPointFlow(final UUID keyPointFlowDataFs){
         UUID inputedVal;
-        ConcurrentHashMap<Integer, Integer> getRemovedStatusDataFsFormPool;
+        ConcurrentSkipListMap<Integer, Integer> getRemovedStatusDataFsFormPool;
         try{
             inputedVal = (UUID) keyPointFlowDataFs;
-            getRemovedStatusDataFsFormPool = (ConcurrentHashMap<Integer, Integer>) this.poolStatusDataFs.remove(inputedVal);
+            getRemovedStatusDataFsFormPool = (ConcurrentSkipListMap<Integer, Integer>) this.poolStatusDataFs.remove(inputedVal);
             if( getRemovedStatusDataFsFormPool == null ){
                 return Boolean.FALSE;
             }
@@ -122,7 +122,7 @@ public class ThWordStatusDataFs {
      */
     protected void createStructureParamsDataFs(
                         final UUID keyPointFlowDataFsInputed){
-        ConcurrentHashMap<Integer, Integer> countDataFs;
+        ConcurrentSkipListMap<Integer, Integer> countDataFs;
         UUID keyPointFlowDataFsFunc;
         try{
             keyPointFlowDataFsFunc = (UUID) keyPointFlowDataFsInputed;
@@ -139,20 +139,20 @@ public class ThWordStatusDataFs {
      * 
      * @return 
      */
-    private ConcurrentHashMap<Integer, Integer> setInitParamDataFs(){
-        ConcurrentHashMap<Integer, Integer> returnedHashMap;
+    private ConcurrentSkipListMap<Integer, Integer> setInitParamDataFs(){
+        ConcurrentSkipListMap<Integer, Integer> returnedHashMap;
         Integer paramCodeByNumber;
         Integer countParamsDataFsForSet;
         Integer idx;
         try {
-            returnedHashMap = new ConcurrentHashMap<Integer, Integer>();
+            returnedHashMap = new ConcurrentSkipListMap<Integer, Integer>();
             countParamsDataFsForSet = getParamCount();
             for(idx = 0; idx < countParamsDataFsForSet; idx++ ){
                 paramCodeByNumber = getParamCodeByNumber(idx);
                 returnedHashMap.put(paramCodeByNumber, 0);
                 idx++;
             }
-
+            
             return returnedHashMap;
         } finally {
             idx = null;
@@ -178,13 +178,13 @@ public class ThWordStatusDataFs {
         Integer paramNumberFunc;
         Integer changedValFunc;
         Integer paramCodeByNumber;
-        ConcurrentHashMap<Integer, Integer> fromCurrentFlow;
+        ConcurrentSkipListMap<Integer, Integer> fromCurrentFlow;
         try{
             changedKeyPointFlowDataFsFunc = (UUID) changedKeyPointFlowDataFs;
             validateCountParams(changedKeyPointFlowDataFsFunc);
             paramNumberFunc = (Integer) paramNumber;
             changedValFunc = (Integer) changedVal;
-            fromCurrentFlow = (ConcurrentHashMap<Integer, Integer>) this.poolStatusDataFs.get(changedKeyPointFlowDataFsFunc);
+            fromCurrentFlow = (ConcurrentSkipListMap<Integer, Integer>) this.poolStatusDataFs.get(changedKeyPointFlowDataFsFunc);
             paramCodeByNumber = (Integer) getParamCodeByNumber(paramNumberFunc);
             fromCurrentFlow.put(paramCodeByNumber, changedValFunc);
             this.poolStatusDataFs.put(changedKeyPointFlowDataFsFunc, fromCurrentFlow);
@@ -303,7 +303,7 @@ public class ThWordStatusDataFs {
     
     protected void validateCountParams(final UUID keyPointFlowDataFs){
         UUID keyPointFlowDataFsFunc;
-        ConcurrentHashMap<Integer, Integer> statusDataFsForKeyPointFlow;
+        ConcurrentSkipListMap<Integer, Integer> statusDataFsForKeyPointFlow;
         Integer sizeRec;
         Integer paramCount;
         Integer idxParam;
@@ -314,7 +314,7 @@ public class ThWordStatusDataFs {
             keyPointFlowDataFsFunc = (UUID) keyPointFlowDataFs;
             if( !isStatusDataFsNotExist(keyPointFlowDataFsFunc) ){
                 
-                statusDataFsForKeyPointFlow = (ConcurrentHashMap<Integer, Integer>) getStatusDataFsForKeyPointFlow(keyPointFlowDataFsFunc);
+                statusDataFsForKeyPointFlow = (ConcurrentSkipListMap<Integer, Integer>) getStatusDataFsForKeyPointFlow(keyPointFlowDataFsFunc);
                 sizeRec = (Integer) statusDataFsForKeyPointFlow.size();
                 paramCount = (Integer) getParamCount();
                 if( sizeRec != paramCount ){

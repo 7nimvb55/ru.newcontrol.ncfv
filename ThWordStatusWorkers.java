@@ -17,7 +17,7 @@ package ru.newcontrol.ncfv;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * ThStorageWordStatusWorkers
@@ -49,18 +49,18 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ThWordStatusWorkers {
     /**
-     * ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Long>>
+     * ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Long>>
      * <keyPointFlowWorkers, <lastAccessNanotime.hashCode(), Long Value>>
      *                        <countDataUseIterationsSummary.hashCode(), Long Value>
      */
     private final Long timeCreation;
     private final UUID objectLabel;
-    private ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Boolean>> poolStatusWorkers;
+    private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Boolean>> poolStatusWorkers;
     
     ThWordStatusWorkers(){
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
-        this.poolStatusWorkers = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Boolean>>();
+        this.poolStatusWorkers = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Boolean>>();
     }
     /**
      * 
@@ -68,9 +68,9 @@ public class ThWordStatusWorkers {
      * @return 
      * @throws IllegalStateException
      */
-    private ConcurrentHashMap<Integer, Boolean> getStatusWorkersForKeyPointFlow(final UUID keyPointFlowWorkers){
+    private ConcurrentSkipListMap<Integer, Boolean> getStatusWorkersForKeyPointFlow(final UUID keyPointFlowWorkers){
         UUID inputedVal;
-        ConcurrentHashMap<Integer, Boolean> getStatusWorkersFormPool;
+        ConcurrentSkipListMap<Integer, Boolean> getStatusWorkersFormPool;
         try{
             inputedVal = (UUID) keyPointFlowWorkers;
             getStatusWorkersFormPool = this.poolStatusWorkers.get(inputedVal);
@@ -97,10 +97,10 @@ public class ThWordStatusWorkers {
      */
     protected Boolean removeStatusWorkersForKeyPointFlow(final UUID keyPointFlowWorkers){
         UUID inputedVal;
-        ConcurrentHashMap<Integer, Boolean> getRemovedStatusWorkersFormPool;
+        ConcurrentSkipListMap<Integer, Boolean> getRemovedStatusWorkersFormPool;
         try{
             inputedVal = (UUID) keyPointFlowWorkers;
-            getRemovedStatusWorkersFormPool = (ConcurrentHashMap<Integer, Boolean>) this.poolStatusWorkers.remove(inputedVal);
+            getRemovedStatusWorkersFormPool = (ConcurrentSkipListMap<Integer, Boolean>) this.poolStatusWorkers.remove(inputedVal);
             if( getRemovedStatusWorkersFormPool == null ){
                 return Boolean.FALSE;
             }
@@ -141,7 +141,7 @@ public class ThWordStatusWorkers {
      */
     protected void createStructureParamsWorkers(
                         final UUID keyPointFlowWorkersInputed){
-        ConcurrentHashMap<Integer, Boolean> countWorkers;
+        ConcurrentSkipListMap<Integer, Boolean> countWorkers;
         UUID keyPointFlowWorkersFunc;
         try{
             keyPointFlowWorkersFunc = (UUID) keyPointFlowWorkersInputed;
@@ -156,17 +156,17 @@ public class ThWordStatusWorkers {
     }
     /**
      * Create, set all values to Boolean.FALSE
-     * @return ConcurrentHashMap<Integer, Boolean>
+     * @return ConcurrentSkipListMap<Integer, Boolean>
      *                          <ParamCode, Value>
      * @see ThWordStatusWorkers#getParamCodeByNumber(int) 
      */
-    private ConcurrentHashMap<Integer, Boolean> setInitParamWorkers(){
-        ConcurrentHashMap<Integer, Boolean> returnedHashMap;
+    private ConcurrentSkipListMap<Integer, Boolean> setInitParamWorkers(){
+        ConcurrentSkipListMap<Integer, Boolean> returnedHashMap;
         Integer paramCodeByNumber;
         Integer countParamsWorkersForSet;
         Integer idx;
         try {
-            returnedHashMap = new ConcurrentHashMap<Integer, Boolean>();
+            returnedHashMap = new ConcurrentSkipListMap<Integer, Boolean>();
             countParamsWorkersForSet = getParamCount();
             for(idx = 0; idx < countParamsWorkersForSet; idx++ ){
                 paramCodeByNumber = getParamCodeByNumber(idx);
@@ -209,13 +209,13 @@ public class ThWordStatusWorkers {
         Integer paramNumberFunc;
         Boolean changedValFunc;
         Integer paramCodeByNumber;
-        ConcurrentHashMap<Integer, Boolean> fromCurrentFlow;
+        ConcurrentSkipListMap<Integer, Boolean> fromCurrentFlow;
         try{
             changedKeyPointFlowWorkersFunc = (UUID) changedKeyPointFlowWorkers;
             validateCountParams(changedKeyPointFlowWorkersFunc);
             paramNumberFunc = (Integer) paramNumber;
             changedValFunc = (Boolean) changedVal;
-            fromCurrentFlow = (ConcurrentHashMap<Integer, Boolean>) this.poolStatusWorkers.get(changedKeyPointFlowWorkersFunc);
+            fromCurrentFlow = (ConcurrentSkipListMap<Integer, Boolean>) this.poolStatusWorkers.get(changedKeyPointFlowWorkersFunc);
             paramCodeByNumber = (Integer) getParamCodeByNumber(paramNumberFunc);
             fromCurrentFlow.put(paramCodeByNumber, changedValFunc);
             this.poolStatusWorkers.put(changedKeyPointFlowWorkersFunc, fromCurrentFlow);
@@ -353,7 +353,7 @@ public class ThWordStatusWorkers {
     
     protected void validateCountParams(final UUID keyPointFlowWorkers){
         UUID keyPointFlowWorkersFunc;
-        ConcurrentHashMap<Integer, Boolean> statusWorkersForKeyPointFlow;
+        ConcurrentSkipListMap<Integer, Boolean> statusWorkersForKeyPointFlow;
         Integer sizeRec;
         Integer paramCount;
         Integer idxParam;
@@ -364,7 +364,7 @@ public class ThWordStatusWorkers {
             keyPointFlowWorkersFunc = (UUID) keyPointFlowWorkers;
             if( !isStatusWorkersNotExist(keyPointFlowWorkersFunc) ){
                 
-                statusWorkersForKeyPointFlow = (ConcurrentHashMap<Integer, Boolean>) getStatusWorkersForKeyPointFlow(keyPointFlowWorkersFunc);
+                statusWorkersForKeyPointFlow = (ConcurrentSkipListMap<Integer, Boolean>) getStatusWorkersForKeyPointFlow(keyPointFlowWorkersFunc);
                 sizeRec = (Integer) statusWorkersForKeyPointFlow.size();
                 paramCount = (Integer) getParamCount();
                 if( sizeRec != paramCount ){

@@ -18,7 +18,7 @@ package ru.newcontrol.ncfv;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  *
@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ThWordStatusMainFlow {
     /**
-     * ConcurrentHashMap<Integer, Integer> (<hashFieldCode, Value>)
+     * ConcurrentSkipListMap<Integer, Integer> (<hashFieldCode, Value>)
      * hashFieldCode:
      * - Size
      * - VolumeNum
@@ -39,13 +39,13 @@ public class ThWordStatusMainFlow {
      * 
      * This structure also for distinct word index need...
      * 
-     * ConcurrentHashMap<Integer,     - (1) - Strorage hash value 
+     * ConcurrentSkipListMap<Integer,     - (1) - Strorage hash value 
      * * * * * - (1) In release only for storage of Word index not apply
-     * > ConcurrentHashMap<Integer,   - (2) - Type of word index hash value
-     *   ConcurrentHashMap<String,    - (2a) - tagFileName.substring(0,3)
-     *     ConcurrentHashMap<Integer, - (2b) - subString.length                            
-     *     ConcurrentHashMap<String,  - (3) - tagFileName with hex view
-     * > >   ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>
+     * > ConcurrentSkipListMap<Integer,   - (2) - Type of word index hash value
+     *   ConcurrentSkipListMap<String,    - (2a) - tagFileName.substring(0,3)
+     *     ConcurrentSkipListMap<Integer, - (2b) - subString.length                            
+     *     ConcurrentSkipListMap<String,  - (3) - tagFileName with hex view
+     * > >   ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>
      *          <UUID MainFlow, Field.hashCode(), valueUUID>
      *          <ThWordStatusDataFs.hashCode(), recordUUID>
      *          <ThWordStatusName.hashCode(), recordUUID>
@@ -105,14 +105,14 @@ public class ThWordStatusMainFlow {
     private final Long timeCreation;
     private final UUID objectLabel;
     
-    private ConcurrentHashMap<Integer, 
-                ConcurrentHashMap<String, 
-                    ConcurrentHashMap<Integer, 
-                        ConcurrentHashMap<String, 
-                            ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>>> fileStoragesMap;
+    private ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<Integer, 
+                        ConcurrentSkipListMap<String, 
+                            ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>>>> fileStoragesMap;
     
-    private final ThWordCache thWordCache;
-    private final ThWordCacheReaded thWordCacheReaded;
+    private final ThWordCacheSk thWordCache;
+    private final ThWordCacheSk thWordCacheReaded;
     
     private final ThWordStatusActivity thWordStatusActivity;
     private final ThWordStatusDataCache thWordStatusDataCache;
@@ -130,8 +130,8 @@ public class ThWordStatusMainFlow {
         
         this.fileStoragesMap = createNewListStoragesMapEmpty();
         
-        this.thWordCache = new ThWordCache();
-        this.thWordCacheReaded = new ThWordCacheReaded();
+        this.thWordCache = new ThWordCacheSk();
+        this.thWordCacheReaded = new ThWordCacheSk();
         this.thWordStatusActivity = new ThWordStatusActivity();
         this.thWordStatusDataCache = new ThWordStatusDataCache();
         this.thWordStatusDataFs = new ThWordStatusDataFs();
@@ -154,7 +154,7 @@ public class ThWordStatusMainFlow {
      * @return true if found and delete data
      */
     protected Boolean removeAllFlowStatusByUUID(UUID inputMainFlowUUID){
-        ConcurrentHashMap<Integer, UUID> removeMainFlowRec;
+        ConcurrentSkipListMap<Integer, UUID> removeMainFlowRec;
         UUID keyMainFlow;
         Integer countParam;
         Integer paramCodeByNumber;
@@ -164,15 +164,15 @@ public class ThWordStatusMainFlow {
             if( this.fileStoragesMap == null ){
                 return Boolean.FALSE;
             }
-            for( Map.Entry<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>>> itemLvlTypeWord : this.fileStoragesMap.entrySet() ){
-                ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>> valueItemLvlTypeWord = itemLvlTypeWord.getValue();
-                for( Map.Entry<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>> itemLvlTagFileNameLetter : valueItemLvlTypeWord.entrySet() ){
-                    ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>> valueItemLvlTagFileNameLetter = itemLvlTagFileNameLetter.getValue();
-                    for( Map.Entry<Integer, ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>> itemLvlSubStrLength : valueItemLvlTagFileNameLetter.entrySet() ){
-                        ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>> valueItemLvlSubStrLength = itemLvlSubStrLength.getValue();
-                        for( Map.Entry<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>> itemLvlTagFileName : valueItemLvlSubStrLength.entrySet() ){
-                            ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> valueItemLvlTagFileName = itemLvlTagFileName.getValue();
-                            for( Map.Entry<UUID, ConcurrentHashMap<Integer, UUID>> itemMainFlowUUID : valueItemLvlTagFileName.entrySet() ){
+            for( Map.Entry<Integer, ConcurrentSkipListMap<String, ConcurrentSkipListMap<Integer, ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>>>> itemLvlTypeWord : this.fileStoragesMap.entrySet() ){
+                ConcurrentSkipListMap<String, ConcurrentSkipListMap<Integer, ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>>> valueItemLvlTypeWord = itemLvlTypeWord.getValue();
+                for( Map.Entry<String, ConcurrentSkipListMap<Integer, ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>>> itemLvlTagFileNameLetter : valueItemLvlTypeWord.entrySet() ){
+                    ConcurrentSkipListMap<Integer, ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>> valueItemLvlTagFileNameLetter = itemLvlTagFileNameLetter.getValue();
+                    for( Map.Entry<Integer, ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>> itemLvlSubStrLength : valueItemLvlTagFileNameLetter.entrySet() ){
+                        ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>> valueItemLvlSubStrLength = itemLvlSubStrLength.getValue();
+                        for( Map.Entry<String, ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>> itemLvlTagFileName : valueItemLvlSubStrLength.entrySet() ){
+                            ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> valueItemLvlTagFileName = itemLvlTagFileName.getValue();
+                            for( Map.Entry<UUID, ConcurrentSkipListMap<Integer, UUID>> itemMainFlowUUID : valueItemLvlTagFileName.entrySet() ){
                                 keyMainFlow = (UUID) itemMainFlowUUID.getKey();
                                 removeMainFlowRec = valueItemLvlTagFileName.remove(keyMainFlow);
                                 countParam = getParamCount();
@@ -220,10 +220,10 @@ public class ThWordStatusMainFlow {
             keyMainFlow = null;
         }
     }
-    protected ThWordCache getWordCache(){
+    protected ThWordCacheSk getWordCache(){
         return this.thWordCache;
     }
-    protected ThWordCacheReaded getWordCacheReaded(){
+    protected ThWordCacheSk getWordCacheReaded(){
         return this.thWordCacheReaded;
     }
     protected ThWordStatusActivity getWordStatusActivity(){
@@ -244,8 +244,290 @@ public class ThWordStatusMainFlow {
     protected ThWordStatusWorkers getWordStatusWorkers(){
         return this.thWordStatusWorkers;
     }
-    
-    
+    /**
+     * 
+     * @param fromBusReadedData
+     * @param mainFlowUuidForChange
+     * @param numberParam
+     * <ul>
+     * <li>0 - countRecordsOnFileSystem
+     * <li>1 - volumeNumber
+     * </ul>
+     * @param changedValue 
+     */
+    protected void changeParamForMainUuidByNumberDataFs(final TdataWord fromBusReadedData,
+            final UUID mainFlowUuidForChange,
+            Integer numberParam,
+            Integer changedValue){
+        TdataWord dataFromBusFunc;
+        UUID createdMainFlow;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsByDataWord;
+        ConcurrentSkipListMap<Integer, UUID> createdFlowParams;
+        ThWordStatusDataFs wordStatusDataFs;
+        UUID valueUUIDDataFs;
+        Integer numberParamFunc;
+        Integer changedValueFunc;
+        try {
+            numberParamFunc = (Integer) numberParam;
+            changedValueFunc = (Integer) changedValue;
+            dataFromBusFunc = (TdataWord) fromBusReadedData;
+            createdMainFlow = (UUID) mainFlowUuidForChange;
+            flowUuidsByDataWord = this.getFlowUuidsByDataWord(dataFromBusFunc);
+            if( createdMainFlow != null ){
+                createdFlowParams = flowUuidsByDataWord.get(createdMainFlow);
+                wordStatusDataFs = this.getWordStatusDataFs();
+                valueUUIDDataFs = createdFlowParams.get(this.getParamCodeByNumber(0));
+                wordStatusDataFs.changeParamValByNumber(valueUUIDDataFs, numberParamFunc, changedValueFunc);
+            }
+        } finally {
+            dataFromBusFunc = null;
+            createdMainFlow = null;
+            flowUuidsByDataWord = null;
+            createdFlowParams = null;
+            wordStatusDataFs = null;
+            valueUUIDDataFs = null;
+        }
+    }
+    /**
+     * 
+     * @param fromBusReadedData
+     * @param mainFlowUuidForChange
+     * @param numberParam
+     * <ul>
+     * <li>0 - storageDirectoryName
+     * <li>1 - currentFileName
+     * <li>2 - newFileName
+     * <li>3 - deletedFileName
+     * <li>4 - flowFileNamePrefix
+     * </ul>
+     * @param changedValue 
+     */
+    protected void changeParamForMainUuidByNumberName(final TdataWord fromBusReadedData,
+            final UUID mainFlowUuidForChange,
+            Integer numberParam,
+            String changedValue){
+        TdataWord dataFromBusFunc;
+        UUID createdMainFlow;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsByDataWord;
+        ConcurrentSkipListMap<Integer, UUID> createdFlowParams;
+        ThWordStatusName wordStatusName;
+        UUID valueUUIDName;
+        Integer numberParamFunc;
+        String changedValueFunc;
+        try {
+            numberParamFunc = (Integer) numberParam;
+            changedValueFunc = (String) changedValue;
+            dataFromBusFunc = (TdataWord) fromBusReadedData;
+            createdMainFlow = (UUID) mainFlowUuidForChange;
+            
+            flowUuidsByDataWord = this.getFlowUuidsByDataWord(dataFromBusFunc);
+            if( createdMainFlow != null ){
+                createdFlowParams = flowUuidsByDataWord.get(createdMainFlow);
+                wordStatusName = this.getWordStatusName();
+                valueUUIDName = createdFlowParams.get(this.getParamCodeByNumber(1));
+                wordStatusName.changeParamValByNumber(valueUUIDName,  numberParamFunc, changedValueFunc);
+            }
+        } finally {
+            dataFromBusFunc = null;
+            createdMainFlow = null;
+            flowUuidsByDataWord = null;
+            createdFlowParams = null;
+            wordStatusName = null;
+            valueUUIDName = null;
+        }
+    }
+    /**
+     * 
+     * @param fromBusReadedData
+     * @param mainFlowUuidForChange
+     * @param numberParam
+     * <ul>
+     * <li>0 - lastAccessNanotime
+     * <li>1 - countDataUseIterationsSummary
+     * </ul>
+     * @param changedValue 
+     */
+    protected void changeParamForMainUuidByNumberActivity(final TdataWord fromBusReadedData,
+            final UUID mainFlowUuidForChange,
+            Integer numberParam,
+            Long changedValue){
+        TdataWord dataFromBusFunc;
+        UUID createdMainFlow;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsByDataWord;
+        ConcurrentSkipListMap<Integer, UUID> createdFlowParams;
+        ThWordStatusActivity wordStatusActivity;
+        UUID valueUUIDActivity;
+        Integer numberParamFunc;
+        Long changedValueFunc;
+        try {
+            numberParamFunc = (Integer) numberParam;
+            changedValueFunc = (Long) changedValue;
+            dataFromBusFunc = (TdataWord) fromBusReadedData;
+            createdMainFlow = (UUID) mainFlowUuidForChange;
+            
+            flowUuidsByDataWord = this.getFlowUuidsByDataWord(dataFromBusFunc);
+            if( createdMainFlow != null ){
+                createdFlowParams = flowUuidsByDataWord.get(createdMainFlow);
+                wordStatusActivity = this.getWordStatusActivity();
+                valueUUIDActivity = createdFlowParams.get(this.getParamCodeByNumber(2));
+                wordStatusActivity.changeParamValByNumber(valueUUIDActivity,  numberParamFunc, changedValueFunc);
+            }
+        } finally {
+            dataFromBusFunc = null;
+            createdMainFlow = null;
+            flowUuidsByDataWord = null;
+            createdFlowParams = null;
+            wordStatusActivity = null;
+            valueUUIDActivity = null;
+        }
+    }
+    /**
+     * 
+     * @param fromBusReadedData
+     * @param mainFlowUuidForChange
+     * @param numberParam
+     * <ul>
+     * <li>0 - currentInCache
+     * <li>1 - currentInCacheReaded
+     * <li>2 - addNeedToFileSystemLimit
+     * <li>3 - indexSystemLimitOnStorage
+     * </ul>
+     * @param changedValue 
+     */
+    protected void changeParamForMainUuidByNumberDataCache(final TdataWord fromBusReadedData,
+            final UUID mainFlowUuidForChange,
+            Integer numberParam,
+            Integer changedValue){
+        TdataWord dataFromBusFunc;
+        UUID createdMainFlow;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsByDataWord;
+        ConcurrentSkipListMap<Integer, UUID> createdFlowParams;
+        ThWordStatusDataCache wordStatusDataCache;
+        UUID valueUUIDDataCache;
+        Integer numberParamFunc;
+        Integer changedValueFunc;
+        try {
+            numberParamFunc = (Integer) numberParam;
+            changedValueFunc = (Integer) changedValue;
+            dataFromBusFunc = (TdataWord) fromBusReadedData;
+            createdMainFlow = (UUID) mainFlowUuidForChange;
+            flowUuidsByDataWord = this.getFlowUuidsByDataWord(dataFromBusFunc);
+            if( createdMainFlow != null ){
+                createdFlowParams = flowUuidsByDataWord.get(createdMainFlow);
+                wordStatusDataCache = this.getWordStatusDataCache();
+                valueUUIDDataCache = createdFlowParams.get(this.getParamCodeByNumber(3));
+                wordStatusDataCache.changeParamValByNumber(valueUUIDDataCache,  numberParamFunc, changedValueFunc);
+            }
+        } finally {
+            dataFromBusFunc = null;
+            createdMainFlow = null;
+            flowUuidsByDataWord = null;
+            createdFlowParams = null;
+            wordStatusDataCache = null;
+            valueUUIDDataCache = null;
+        }
+    }
+    /**
+     * 
+     * @param fromBusReadedData
+     * @param mainFlowUuidForChange
+     * @param numberParam
+     * <ul>
+     * <li>0 - isWriteProcess
+     * <li>1 - isReadProcess
+     * <li>2 - isNeedReadData
+     * <li>3 - isCachedData
+     * <li>4 - isCachedReadedData
+     * <li>5 - isCalculatedData
+     * <li>6 - isUdatedDataInHashMap
+     * <li>7 - isMoveFileReady
+     * <li>8 - isFlowInWriteBus
+     * <li>9 - isFlowInReadBus
+     * <li>10 - isNeedDeleteOldFile
+     * <li>11 - isOldFileDeleted
+     * </ul>
+     * @param changedValue 
+     */
+    protected void changeParamForMainUuidByNumberWorkers(final TdataWord fromBusReadedData,
+            final UUID mainFlowUuidForChange,
+            Integer numberParam,
+            Boolean changedValue){
+        TdataWord dataFromBusFunc;
+        UUID createdMainFlow;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsByDataWord;
+        ConcurrentSkipListMap<Integer, UUID> createdFlowParams;
+        ThWordStatusWorkers wordStatusWorkers;
+        UUID valueUUIDWorkers;
+        Integer numberParamFunc;
+        Boolean changedValueFunc;
+        try {
+            numberParamFunc = (Integer) numberParam;
+            changedValueFunc = (Boolean) changedValue;
+            dataFromBusFunc = (TdataWord) fromBusReadedData;
+            createdMainFlow = (UUID) mainFlowUuidForChange;
+            flowUuidsByDataWord = this.getFlowUuidsByDataWord(dataFromBusFunc);
+            if( createdMainFlow != null ){
+                createdFlowParams = flowUuidsByDataWord.get(createdMainFlow);
+                wordStatusWorkers = this.getWordStatusWorkers();
+                valueUUIDWorkers = createdFlowParams.get(this.getParamCodeByNumber(4));
+                wordStatusWorkers.changeParamValByNumber(valueUUIDWorkers,  numberParamFunc, changedValueFunc);
+            }
+        } finally {
+            dataFromBusFunc = null;
+            createdMainFlow = null;
+            flowUuidsByDataWord = null;
+            createdFlowParams = null;
+            wordStatusWorkers = null;
+            valueUUIDWorkers = null;
+        }
+    }
+    /**
+     * 
+     * @param fromBusReadedData
+     * @param mainFlowUuidForChange
+     * @param numberParam
+     * <ul>
+     * <li>0 - isErrorOnWrite
+     * <li>1 - isErrorOnMove
+     * <li>2 - isNullOnDataInCache
+     * <li>3 - isErrorOnDataInCache
+     * </ul>
+     * @param changedValue 
+     */
+    protected void changeParamForMainUuidByNumberError(final TdataWord fromBusReadedData,
+            final UUID mainFlowUuidForChange,
+            Integer numberParam,
+            Integer changedValue){
+        TdataWord dataFromBusFunc;
+        UUID createdMainFlow;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsByDataWord;
+        ConcurrentSkipListMap<Integer, UUID> createdFlowParams;
+        ThWordStatusError wordStatusError;
+        UUID valueUUIDError;
+        Integer numberParamFunc;
+        Integer changedValueFunc;
+        try {
+            numberParamFunc = (Integer) numberParam;
+            changedValueFunc = (Integer) changedValue;
+            dataFromBusFunc = (TdataWord) fromBusReadedData;
+            createdMainFlow = (UUID) mainFlowUuidForChange;
+            
+            flowUuidsByDataWord = this.getFlowUuidsByDataWord(dataFromBusFunc);
+            if( createdMainFlow != null ){
+                createdFlowParams = flowUuidsByDataWord.get(createdMainFlow);
+                wordStatusError = this.getWordStatusError();
+                valueUUIDError = createdFlowParams.get(this.getParamCodeByNumber(5));
+                wordStatusError.changeParamValByNumber(valueUUIDError, numberParamFunc, changedValueFunc);
+            }
+        } finally {
+            dataFromBusFunc = null;
+            createdMainFlow = null;
+            flowUuidsByDataWord = null;
+            createdFlowParams = null;
+            wordStatusError = null;
+            valueUUIDError = null;
+        }
+    }
     //label
     
     
@@ -267,35 +549,125 @@ public class ThWordStatusMainFlow {
     /*protected Integer getGroupIdByStringName(String inputedName){
         return inputedName.hashCode();
     }*/
+    protected UUID createInitMainFlow(final TdataWord dataInputed){
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> initMainFlow;
+        ConcurrentSkipListMap<Integer, UUID> initValues;
+        UUID generatedMainFlowUUID;
+        UUID keyFlowStatusDataFs;
+        UUID keyFlowStatusName;
+        UUID keyFlowStatusActivity;
+        UUID keyFlowStatusDataCache;
+        UUID keyFlowStatusWorkers;
+        UUID keyFlowStatusError;
+        
+        try {
+            generatedMainFlowUUID = UUID.randomUUID();
+            keyFlowStatusDataFs = UUID.randomUUID();
+            getWordStatusDataFs().createStructureParamsDataFs(keyFlowStatusDataFs);
+            keyFlowStatusName = UUID.randomUUID();
+            getWordStatusName().createStructureParamsName(keyFlowStatusName);
+            keyFlowStatusActivity = UUID.randomUUID();
+            getWordStatusActivity().createStructureParamsActivity(keyFlowStatusActivity);
+            keyFlowStatusDataCache = UUID.randomUUID();
+            getWordStatusDataCache().createStructureParamsDataCache(keyFlowStatusDataCache);
+            keyFlowStatusWorkers = UUID.randomUUID();
+            getWordStatusWorkers().createStructureParamsWorkers(keyFlowStatusWorkers);
+            keyFlowStatusError = UUID.randomUUID();
+            getWordStatusError().createStructureParamsError(keyFlowStatusError);
+            initValues = new ConcurrentSkipListMap<Integer, UUID>();
+            
+            initValues.put(getParamCodeByNumber(0), keyFlowStatusDataFs);
+            initValues.put(getParamCodeByNumber(1), keyFlowStatusName);
+            initValues.put(getParamCodeByNumber(2), keyFlowStatusActivity);
+            initValues.put(getParamCodeByNumber(3), keyFlowStatusDataCache);
+            initValues.put(getParamCodeByNumber(4), keyFlowStatusWorkers);
+            initValues.put(getParamCodeByNumber(5), keyFlowStatusError);
+            initMainFlow = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>();
+            initMainFlow.put(generatedMainFlowUUID, initValues);
+            setParamFlowUuidsByDataWord(dataInputed, initMainFlow);
+            return generatedMainFlowUUID;
+        } finally {
+            generatedMainFlowUUID = null;
+            keyFlowStatusActivity = null;
+            keyFlowStatusDataCache = null;
+            keyFlowStatusDataFs = null;
+            keyFlowStatusError = null;
+            keyFlowStatusName = null;
+            keyFlowStatusWorkers = null;
+        }
+    }
+    
+    private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> getFlowUuidsByDataWord(final TdataWord dataInputed){
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> dataTypeWordTagNameSubStr;
+        TdataWord dataFunc;
+        String tagNameFunc;
+        String strSubStringFunc;
+        Integer typeWordFunc;
+        Boolean tdataWordValid;
+        try {
+            dataFunc = (TdataWord) dataInputed;
+            
+            tdataWordValid = ThWordHelper.isTdataWordValid(dataFunc);
+            if( !tdataWordValid ){
+                throw new IllegalArgumentException(ThWordBusReadedFlow.class.getCanonicalName() 
+                        + " not valid data for get from cache object class " + TdataWord.class.getCanonicalName() 
+                        + " object data " + dataFunc.toString());
+            }
+            tagNameFunc = dataFunc.hexSubString;
+            strSubStringFunc = dataFunc.strSubString;
+            typeWordFunc = dataFunc.typeWord;
+            
+            dataTypeWordTagNameSubStr = getTypeWordTagFileNameFlowUuids(typeWordFunc, strSubStringFunc, tagNameFunc);
+            if( dataTypeWordTagNameSubStr == null ){
+                throw new NullPointerException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " not have UUIDs in MainFlow for key type " + TdataWord.class.getCanonicalName() 
+                        + " object data " + dataFunc.toString());
+            }
+            if( dataTypeWordTagNameSubStr.isEmpty() ){
+                throw new NullPointerException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " not have UUIDs in MainFlow for key type " + TdataWord.class.getCanonicalName() 
+                        + " object data " + dataFunc.toString());
+            }
+            return dataTypeWordTagNameSubStr;
+        }
+        finally {
+            dataFunc = null;
+            tagNameFunc = null;
+            strSubStringFunc = null;
+            typeWordFunc = null;
+            dataTypeWordTagNameSubStr = null;
+            tdataWordValid = null;
+        }
+    }
     /**
-     * > > > > > > > > > this use in router
-     * lvl (2a) init params for new itemIndex
+     * <p><h2>this use in router
+     * <p>lvl (2a) init params for new itemIndex
      * @param typeWord
      * @param tagName
      * @param strSubString
      * @return lvl (3a)
      * @throws IllegalArgumentException
      */
-    protected ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> getTypeWordTagFileNameFlowUuids(
+    private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> getTypeWordTagFileNameFlowUuids(
             final Integer typeWordInputed, 
             final String tagNameInputed, 
             final String strSubStringInputed
     ){
         
         //(3)
-        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> tagFileNameParams;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> tagFileNameParams;
         //(1)
-        ConcurrentHashMap<String, 
-                ConcurrentHashMap<Integer, 
-                    ConcurrentHashMap<String, 
-                        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>> getListByTypeWord;
+        ConcurrentSkipListMap<String, 
+                ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>>> getListByTypeWord;
         //(2a)
-        ConcurrentHashMap<Integer, 
-                ConcurrentHashMap<String, 
-                        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>> getListByTagNameCode;
+        ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>> getListByTagNameCode;
         //(2b)
-        ConcurrentHashMap<String, 
-                        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>> getListBySubStrLength;
+        ConcurrentSkipListMap<String, 
+                        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>> getListBySubStrLength;
         Integer strSubStringlength;
         Integer tagNamelength;
         
@@ -328,16 +700,16 @@ public class ThWordStatusMainFlow {
             String substringTagName = tagNameFunc.substring(0, 3);
             getListByTagNameCode = getListByTypeWord.get(substringTagName);
             if( getListByTagNameCode == null ){
-                getListByTagNameCode = new ConcurrentHashMap<Integer, 
-                                                ConcurrentHashMap<String, 
-                                                        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>();
+                getListByTagNameCode = new ConcurrentSkipListMap<Integer, 
+                                                ConcurrentSkipListMap<String, 
+                                                        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>>();
                 getListByTypeWord.put(substringTagName, getListByTagNameCode);
                 
             }
             getListBySubStrLength = getListByTagNameCode.get(strSubStringlength);
             if( getListBySubStrLength == null ){
-                getListBySubStrLength = new ConcurrentHashMap<String, 
-                                                ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>();
+                getListBySubStrLength = new ConcurrentSkipListMap<String, 
+                                                ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>();
                 getListByTagNameCode.put(strSubStringlength, getListBySubStrLength);
             }
             tagFileNameParams = getTagFileNameParams(getListBySubStrLength, tagNameFunc);
@@ -361,18 +733,18 @@ public class ThWordStatusMainFlow {
      * @param tagName
      * @return lvl (3)
      */
-    private ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> getTagFileNameParams(
-            final ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>> getListByTypeWordInputed,
+    private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> getTagFileNameParams(
+            final ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>> getListByTypeWordInputed,
             final String tagNameInputed){
-        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> getListByTagFileName;
-        ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>> getListByTypeWordFunc;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> getListByTagFileName;
+        ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>> getListByTypeWordFunc;
         String tagNameFunc;
         try{
             tagNameFunc = (String) tagNameInputed;
-            getListByTypeWordFunc = (ConcurrentHashMap<String, ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>) getListByTypeWordInputed;
+            getListByTypeWordFunc = (ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>) getListByTypeWordInputed;
             getListByTagFileName = getListByTypeWordFunc.get(tagNameFunc);
             if( getListByTagFileName == null ){
-                getListByTagFileName = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>();
+                getListByTagFileName = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>();
                 getListByTypeWordFunc.put(tagNameFunc, getListByTagFileName);
             }
             return getListByTagFileName;
@@ -382,12 +754,42 @@ public class ThWordStatusMainFlow {
             tagNameFunc = null;
         }
     }
+    protected void setParamFlowUuidsByDataWord(final TdataWord dataInputed,
+            final ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> mainFlowContentInputed){
+        TdataWord dataFunc;
+        String tagNameFunc;
+        String strSubStringFunc;
+        Integer typeWordFunc;
+        Boolean tdataWordValid;
+        try {
+            dataFunc = (TdataWord) dataInputed;
+            
+            tdataWordValid = ThWordHelper.isTdataWordValid(dataFunc);
+            if( !tdataWordValid ){
+                throw new IllegalArgumentException(ThWordBusReadedFlow.class.getCanonicalName() 
+                        + " not valid data for get from cache object class " + TdataWord.class.getCanonicalName() 
+                        + " object data " + dataFunc.toString());
+            }
+            tagNameFunc = dataFunc.hexSubString;
+            strSubStringFunc = dataFunc.strSubString;
+            typeWordFunc = dataFunc.typeWord;
+            
+            setParamsPointsFlow(typeWordFunc, strSubStringFunc, tagNameFunc, mainFlowContentInputed);
+        }
+        finally {
+            dataFunc = null;
+            tagNameFunc = null;
+            strSubStringFunc = null;
+            typeWordFunc = null;
+            tdataWordValid = null;
+        }
+    }
     /**
      * @todo check for inputed params
      * @param typeWord
      * @param tagName
      * @param strSubString
-     * @param keysPointsFlow ConcurrentHashMap<Integer, UUID>
+     * @param keysPointsFlow ConcurrentSkipListMap<Integer, UUID>
      *          <ThWordStatusDataFs.hashCode(), recordUUID>
      *          <ThWordStatusName.hashCode(), recordUUID>
      *          <ThWordStatusActivity.hashCode(), recordUUID>
@@ -396,33 +798,33 @@ public class ThWordStatusMainFlow {
      * @throws IllegalArgumentException when count params or name not valid
      */
     protected void setParamsPointsFlow(
-            final Integer typeWordOuter, 
-            final String tagNameOuter, 
+            final Integer typeWordOuter,
             final String strSubStringOuter,
-            final ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> mainFlowContentInputed){
+            final String tagNameOuter, 
+            final ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> mainFlowContentInputed){
         Integer typeWordInner;
         String tagNameInner;
         String strSubStringInner;
         
         Boolean existInListOfParams;
-        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> mainFlowContentFunc;
-        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>> typeWordTagFileNameFlowUuids;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> mainFlowContentFunc;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> typeWordTagFileNameFlowUuids;
         try {
             typeWordInner = (Integer) typeWordOuter;
             tagNameInner = (String) tagNameOuter;
             strSubStringInner = (String) strSubStringOuter;
-            mainFlowContentFunc = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>();
-            for(Map.Entry<UUID, ConcurrentHashMap<Integer, UUID>> itemsContent : mainFlowContentInputed.entrySet()){
+            mainFlowContentFunc = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>();
+            for(Map.Entry<UUID, ConcurrentSkipListMap<Integer, UUID>> itemsContent : mainFlowContentInputed.entrySet()){
                 validateCountParams(itemsContent.getValue());
                 mainFlowContentFunc.put(itemsContent.getKey(), itemsContent.getValue());
             }
             
-            typeWordTagFileNameFlowUuids = (ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>) getTypeWordTagFileNameFlowUuids(
+            typeWordTagFileNameFlowUuids = (ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>) getTypeWordTagFileNameFlowUuids(
                     typeWordInner,
                     tagNameInner,
                     strSubStringInner);
             
-            typeWordTagFileNameFlowUuids.putAll((ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>) mainFlowContentFunc);
+            typeWordTagFileNameFlowUuids.putAll((ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>) mainFlowContentFunc);
         } finally {
             typeWordTagFileNameFlowUuids = null;
             existInListOfParams = null;
@@ -433,17 +835,88 @@ public class ThWordStatusMainFlow {
             strSubStringInner = null;
         }
     }
+    protected void validateInFlowAllPoints(final TdataWord fromBusReadedData,
+            final UUID mainFlowUuidForCheck){
+        TdataWord dataFromBusFunc;
+        UUID createdMainFlow;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsByDataWord;
+        ConcurrentSkipListMap<Integer, UUID> createdFlowParams;
+        
+        ThWordStatusDataFs wordStatusDataFs;
+        ThWordStatusName wordStatusName;
+        ThWordStatusActivity wordStatusActivity;
+        ThWordStatusDataCache wordStatusDataCache;
+        ThWordStatusWorkers wordStatusWorkers;
+        ThWordStatusError wordStatusError;
+        
+        UUID valueUUIDDataFs;
+        UUID valueUUIDName;
+        UUID valueUUIDActivity;
+        UUID valueUUIDDataCache;
+        UUID valueUUIDWorkers;
+        UUID valueUUIDError;
+        try {
+            dataFromBusFunc = (TdataWord) fromBusReadedData;
+            createdMainFlow = (UUID) mainFlowUuidForCheck;
+            
+            flowUuidsByDataWord = this.getFlowUuidsByDataWord(dataFromBusFunc);
+            if( createdMainFlow != null ){
+                createdFlowParams = flowUuidsByDataWord.get(createdMainFlow);
+                this.validateCountParams(createdFlowParams);
+
+                wordStatusDataFs = this.getWordStatusDataFs();
+                wordStatusName = this.getWordStatusName();
+                wordStatusActivity = this.getWordStatusActivity();
+                wordStatusDataCache = this.getWordStatusDataCache();
+                wordStatusWorkers = this.getWordStatusWorkers();
+                wordStatusError = this.getWordStatusError();
+                
+                valueUUIDDataFs = createdFlowParams.get(this.getParamCodeByNumber(0));
+                valueUUIDName = createdFlowParams.get(this.getParamCodeByNumber(1));
+                valueUUIDActivity = createdFlowParams.get(this.getParamCodeByNumber(2));
+                valueUUIDDataCache = createdFlowParams.get(this.getParamCodeByNumber(3));
+                valueUUIDWorkers = createdFlowParams.get(this.getParamCodeByNumber(4));
+                valueUUIDError = createdFlowParams.get(this.getParamCodeByNumber(5));
+                
+                wordStatusDataFs.validateCountParams(valueUUIDDataFs);
+                wordStatusName.validateCountParams(valueUUIDName);
+                wordStatusActivity.validateCountParams(valueUUIDActivity);
+                wordStatusDataCache.validateCountParams(valueUUIDDataCache);
+                wordStatusWorkers.validateCountParams(valueUUIDWorkers);
+                wordStatusError.validateCountParams(valueUUIDError);
+            }
+        } finally {
+            dataFromBusFunc = null;
+            createdMainFlow = null;
+            flowUuidsByDataWord = null;
+            createdFlowParams = null;
+
+            wordStatusDataFs = null;
+            wordStatusName = null;
+            wordStatusActivity = null;
+            wordStatusDataCache = null;
+            wordStatusWorkers = null;
+            wordStatusError = null;
+
+            valueUUIDDataFs = null;
+            valueUUIDName = null;
+            valueUUIDActivity = null;
+            valueUUIDDataCache = null;
+            valueUUIDWorkers = null;
+            valueUUIDError = null;
+        }
+    }
     /**
      * 
      * @param checkedMainFlowContentInputed 
      * @throws IllegalArgumentException when count params or name not valid
      */
-    protected void validateCountParams(final ConcurrentHashMap<Integer, UUID> checkedMainFlowContentInputed){
+    private void validateCountParams(final ConcurrentSkipListMap<Integer, UUID> checkedMainFlowContentInputed){
         Integer paramCodeByNumber;
         String paramNameByNumber;
-        ConcurrentHashMap<Integer, UUID> checkedMainFlowContentFunc;
+        ConcurrentSkipListMap<Integer, UUID> checkedMainFlowContentFunc;
         try {
-            checkedMainFlowContentFunc = (ConcurrentHashMap<Integer, UUID>) checkedMainFlowContentInputed;
+            checkedMainFlowContentFunc = (ConcurrentSkipListMap<Integer, UUID>) checkedMainFlowContentInputed;
             if( checkedMainFlowContentFunc.isEmpty() ){
                     throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
                             + " parameters of data for set into cache is empty");
@@ -502,6 +975,14 @@ public class ThWordStatusMainFlow {
         }
     }
     /**
+     * <ul>
+     * <li>0 - ThWordStatusDataFs
+     * <li>1 - ThWordStatusName
+     * <li>2 - ThWordStatusActivity
+     * <li>3 - ThWordStatusDataCache
+     * <li>4 - ThWordStatusWorkers
+     * <li>5 - ThWordStatusError
+     * </ul>
      * Return code of parameter by his number, calculeted from some fileds
      * @param numParam
      * @return hashCode for Parameter by his number
@@ -581,13 +1062,13 @@ public class ThWordStatusMainFlow {
     }
     
     
-    protected ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConcurrentHashMap<String, 
-                            ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>>> createNewListStoragesMapEmpty(){
-        return new ConcurrentHashMap<Integer, 
-                        ConcurrentHashMap<String, 
-                            ConcurrentHashMap<Integer, 
-                                ConcurrentHashMap<String, 
-                                    ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>>>();
+    protected ConcurrentSkipListMap<Integer, ConcurrentSkipListMap<String, ConcurrentSkipListMap<Integer, ConcurrentSkipListMap<String, 
+                            ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>>>> createNewListStoragesMapEmpty(){
+        return new ConcurrentSkipListMap<Integer, 
+                        ConcurrentSkipListMap<String, 
+                            ConcurrentSkipListMap<Integer, 
+                                ConcurrentSkipListMap<String, 
+                                    ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>>>>();
     }
     /*protected Map<String, String> getOperationsFileNames(final int typeWordOuter, final String tagFileNameOuter){
         Map<String, String> returnedNames;
@@ -607,21 +1088,21 @@ public class ThWordStatusMainFlow {
      * @param typeWordOuter
      * @return 
      */
-    protected ConcurrentHashMap<String, 
-                ConcurrentHashMap<Integer, 
-                    ConcurrentHashMap<String, 
-                        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>> getListByType(final int typeWordOuter){
-        ConcurrentHashMap<String, 
-                ConcurrentHashMap<Integer, 
-                    ConcurrentHashMap<String, 
-                        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>> forListReturn;
+    protected ConcurrentSkipListMap<String, 
+                ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>>> getListByType(final int typeWordOuter){
+        ConcurrentSkipListMap<String, 
+                ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>>> forListReturn;
         try{
             forListReturn = this.fileStoragesMap.get(typeWordOuter);
             if( forListReturn == null ){
-                forListReturn = new ConcurrentHashMap<String, 
-                ConcurrentHashMap<Integer, 
-                    ConcurrentHashMap<String, 
-                        ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, UUID>>>>>();
+                forListReturn = new ConcurrentSkipListMap<String, 
+                ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>>>();
                 this.fileStoragesMap.put(typeWordOuter, forListReturn);
             }
             return forListReturn;

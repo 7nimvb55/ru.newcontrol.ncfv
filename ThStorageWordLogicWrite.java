@@ -373,16 +373,23 @@ public class ThStorageWordLogicWrite {
                                          */
                                         if( !isDataToVol ){
                                             Path nowWritedFile = fsForWriteData.getPath(storageDirectoryName, currentFileName);
-
-                                            try(ObjectOutputStream oos = 
+                                            
+                                            try( ObjectOutputStream oos = 
                                                 new ObjectOutputStream(Files.newOutputStream(nowWritedFile)))
                                             {
+                                                /**
+                                                 * java.lang.OutOfMemoryError: GC overhead limit exceeded
+                                                 * ThStorageWordLogicWrite.java:384
+                                                 */
                                                 oos.writeObject(pollTypeWordTagFileNameData);
+                                                oos.flush();
                                                 System.out.println(ThStorageWordLogicWrite.class.getCanonicalName() 
                                                         + " => => =>                                             => => => " 
                                                         + nowWritedFile.toUri().toString() 
                                                         + " writed size " + pollTypeWordTagFileNameData.size());
                                                 statusWorkersForKeyPointFlow.put(1640531930, Boolean.TRUE);
+                                                
+                                                //more catch
                                             } catch(Exception ex){
                                                 ex.printStackTrace();
                                             }

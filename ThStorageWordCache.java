@@ -163,12 +163,12 @@ public class ThStorageWordCache {
      * @param tagName
      * @param strSubString
      * @return 
-     * ConcurrentHashMap<String, String> (3) - <hexWord (tagFileName), subString>
+     * ConcurrentHashMap{@code <String, String> (3) - <hexWord (tagFileName), subString>}
      */
     protected ConcurrentHashMap<String, String> getTypeWordTagFileNameData(
-            final Integer typeWord, 
-            final String tagName, 
-            final String strSubString){
+            final Integer typeWordInputed, 
+            final String tagNameInputed, 
+            final String strSubStringInputed){
         
 
         //(1)
@@ -180,26 +180,35 @@ public class ThStorageWordCache {
                 ConcurrentHashMap<String, String>> getListByTagNameCode;
         //(2b)
         ConcurrentHashMap<String, String> getListBySubStrLength;
-        
+        String substringTagName;
+        Integer strSubStringlength;
+        Integer tagNamelength;
+        Integer typeWordFunc;
+        String tagNameFunc;
+        String strSubStringFunc;
         try{
-            int strSubStringlength = strSubString.length();
-            int tagNamelength = tagName.length();
+            typeWordFunc = (Integer) typeWordInputed;
+            tagNameFunc = (String) tagNameInputed;
+            strSubStringFunc = (String) strSubStringInputed;
+            strSubStringlength = strSubStringFunc.length();
+            tagNamelength = tagNameFunc.length();
             if( (strSubStringlength * 4) != tagNamelength ){
                 throw new IllegalArgumentException(ThStorageWordStatusMainFlow.class.getCanonicalName() 
                         + " illegal length of inputed in index string, hexTagName: "
-                        + tagName + " lengthHex: " + tagName.length()
-                        + " strSubString: " + strSubString + " lengthStr: " + strSubString.length()
+                        + tagNameFunc + " lengthHex: " + tagNameFunc.length()
+                        + " strSubString: " + strSubStringFunc + " lengthStr: " + strSubStringFunc.length()
                         + " lengthHex == lengthStr * 4 ");
             }
             if( tagNamelength < 4 ){
                 throw new IllegalArgumentException(ThStorageWordStatusMainFlow.class.getCanonicalName() 
                         + " illegal length of inputed in index string, hexTagName: "
-                        + tagName + " length: " + tagName.length()
+                        + tagNameInputed + " length: " + tagNameInputed.length()
                         + " < 4 ");
             }
             
-            getListByTypeWord = getListByType(typeWord);
-            String substringTagName = tagName.substring(0, 3);
+            getListByTypeWord = getListByType(typeWordFunc);
+            
+            substringTagName = new String(tagNameFunc.substring(0, 3));
             getListByTagNameCode = getListByTypeWord.get(substringTagName);
             if( getListByTagNameCode == null ){
                 getListByTagNameCode = new ConcurrentHashMap<Integer, 
@@ -214,8 +223,13 @@ public class ThStorageWordCache {
             
             return getListBySubStrLength;
         } finally {
+            typeWordFunc = null;
+            tagNameFunc = null;
+            strSubStringFunc = null;
+            strSubStringlength = null;
+            tagNamelength = null;
             getListByTypeWord = null;
-            
+            substringTagName = null;
             getListByTagNameCode = null;
             getListBySubStrLength = null;
         }

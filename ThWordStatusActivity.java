@@ -17,7 +17,7 @@ package ru.newcontrol.ncfv;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * ThStorageWordStatusActivity
@@ -32,16 +32,16 @@ public class ThWordStatusActivity {
     private final Long timeCreation;
     private final UUID objectLabel;
     /**
-     * ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Long>>
+     * ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Long>>
      * <keyPointFlowActivity, <lastAccessNanotime.hashCode(), Long Value>>
      *                        <countDataUseIterationsSummary.hashCode(), Long Value>
      */
-    private ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Long>> poolStatusActivity;
+    private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Long>> poolStatusActivity;
     
     ThWordStatusActivity(){
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
-        this.poolStatusActivity = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Long>>();
+        this.poolStatusActivity = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Long>>();
     }
     /**
      * 
@@ -49,9 +49,9 @@ public class ThWordStatusActivity {
      * @return 
      * @throws IllegalStateException
      */
-    private ConcurrentHashMap<Integer, Long> getStatusActivityForKeyPointFlow(final UUID keyPointFlowActivity){
+    private ConcurrentSkipListMap<Integer, Long> getStatusActivityForKeyPointFlow(final UUID keyPointFlowActivity){
         UUID inputedVal;
-        ConcurrentHashMap<Integer, Long> getStatusActivityFormPool;
+        ConcurrentSkipListMap<Integer, Long> getStatusActivityFormPool;
         try{
             inputedVal = (UUID) keyPointFlowActivity;
             getStatusActivityFormPool = this.poolStatusActivity.get(inputedVal);
@@ -78,10 +78,10 @@ public class ThWordStatusActivity {
      */
     protected Boolean removeStatusActivityForKeyPointFlow(final UUID keyPointFlowActivity){
         UUID inputedVal;
-        ConcurrentHashMap<Integer, Long> getRemovedStatusActivityFormPool;
+        ConcurrentSkipListMap<Integer, Long> getRemovedStatusActivityFormPool;
         try{
             inputedVal = (UUID) keyPointFlowActivity;
-            getRemovedStatusActivityFormPool = (ConcurrentHashMap<Integer, Long>) this.poolStatusActivity.remove(inputedVal);
+            getRemovedStatusActivityFormPool = (ConcurrentSkipListMap<Integer, Long>) this.poolStatusActivity.remove(inputedVal);
             if( getRemovedStatusActivityFormPool == null ){
                 return Boolean.FALSE;
             }
@@ -121,7 +121,7 @@ public class ThWordStatusActivity {
      */
     protected void createStructureParamsActivity(
                         final UUID keyPointFlowActivityInputed){
-        ConcurrentHashMap<Integer, Long> countActivity;
+        ConcurrentSkipListMap<Integer, Long> countActivity;
         UUID keyPointFlowActivityFunc;
         try{
             keyPointFlowActivityFunc = (UUID) keyPointFlowActivityInputed;
@@ -138,13 +138,13 @@ public class ThWordStatusActivity {
      * 
      * @return 
      */
-    private ConcurrentHashMap<Integer, Long> setInitParamActivity(){
-        ConcurrentHashMap<Integer, Long> returnedHashMap;
+    private ConcurrentSkipListMap<Integer, Long> setInitParamActivity(){
+        ConcurrentSkipListMap<Integer, Long> returnedHashMap;
         Integer paramCodeByNumber;
         Integer countParamsActivityForSet;
         Integer idx;
         try {
-            returnedHashMap = new ConcurrentHashMap<Integer, Long>();
+            returnedHashMap = new ConcurrentSkipListMap<Integer, Long>();
             countParamsActivityForSet = getParamCount();
             for(idx = 0; idx < countParamsActivityForSet; idx++ ){
                 paramCodeByNumber = getParamCodeByNumber(idx);
@@ -177,13 +177,13 @@ public class ThWordStatusActivity {
         Integer paramNumberFunc;
         Long changedValFunc;
         Integer paramCodeByNumber;
-        ConcurrentHashMap<Integer, Long> fromCurrentFlow;
+        ConcurrentSkipListMap<Integer, Long> fromCurrentFlow;
         try{
             changedKeyPointFlowActivityFunc = (UUID) changedKeyPointFlowActivity;
             validateCountParams(changedKeyPointFlowActivityFunc);
             paramNumberFunc = (Integer) paramNumber;
             changedValFunc = (Long) changedVal;
-            fromCurrentFlow = (ConcurrentHashMap<Integer, Long>) this.poolStatusActivity.get(changedKeyPointFlowActivityFunc);
+            fromCurrentFlow = (ConcurrentSkipListMap<Integer, Long>) this.poolStatusActivity.get(changedKeyPointFlowActivityFunc);
             paramCodeByNumber = (Integer) getParamCodeByNumber(paramNumberFunc);
             fromCurrentFlow.put(paramCodeByNumber, changedValFunc);
             this.poolStatusActivity.put(changedKeyPointFlowActivityFunc, fromCurrentFlow);
@@ -301,7 +301,7 @@ public class ThWordStatusActivity {
     
     protected void validateCountParams(final UUID keyPointFlowActivity){
         UUID keyPointFlowActivityFunc;
-        ConcurrentHashMap<Integer, Long> statusActivityForKeyPointFlow;
+        ConcurrentSkipListMap<Integer, Long> statusActivityForKeyPointFlow;
         Integer sizeRec;
         Integer paramCount;
         Integer idxParam;
@@ -312,7 +312,7 @@ public class ThWordStatusActivity {
             keyPointFlowActivityFunc = (UUID) keyPointFlowActivity;
             if( !isStatusActivityNotExist(keyPointFlowActivityFunc) ){
                 
-                statusActivityForKeyPointFlow = (ConcurrentHashMap<Integer, Long>) getStatusActivityForKeyPointFlow(keyPointFlowActivityFunc);
+                statusActivityForKeyPointFlow = (ConcurrentSkipListMap<Integer, Long>) getStatusActivityForKeyPointFlow(keyPointFlowActivityFunc);
                 sizeRec = (Integer) statusActivityForKeyPointFlow.size();
                 paramCount = (Integer) getParamCount();
                 if( sizeRec != paramCount ){

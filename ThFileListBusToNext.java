@@ -47,8 +47,8 @@ public class ThFileListBusToNext {
      * class (1) - TdataDirListFsObjAttr, for next technology stadies of make 
      * index, get for need fields of data and save it in next structure:
      * 
-     * ConcurrentSkipListMap<UUID, ConcurrentHashMap<Integer, ?>>
-     *                      <recordDirList, <fieldsCodes, fieldsValue>>
+     * {@code ConcurrentSkipListMap<UUID, ConcurrentHashMap<Integer, ?>>
+     *                      <recordDirList, <fieldsCodes, fieldsValue>>}
      * 
      * this function used 
      * {@link java.util.concurrent.ConcurrentSkipListMap#put(java.lang.Object, java.lang.Object) }

@@ -17,7 +17,7 @@ package ru.newcontrol.ncfv;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * ThStorageWordStatusDataCache
@@ -54,16 +54,16 @@ public class ThWordStatusDataCache {
     private final Long timeCreation;
     private final UUID objectLabel;
     /**
-     * ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Long>>
+     * ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Long>>
      * <keyPointFlowDataCache, <lastAccessNanotime.hashCode(), Long Value>>
      *                        <countDataUseIterationsSummary.hashCode(), Long Value>
      */
-    private ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>> poolStatusDataCache;
+    private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Integer>> poolStatusDataCache;
     
     ThWordStatusDataCache(){
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
-        this.poolStatusDataCache = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>>();
+        this.poolStatusDataCache = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Integer>>();
     }
     /**
      * 
@@ -71,9 +71,9 @@ public class ThWordStatusDataCache {
      * @return 
      * @throws IllegalStateException
      */
-    private ConcurrentHashMap<Integer, Integer> getStatusDataCacheForKeyPointFlow(final UUID keyPointFlowDataCache){
+    private ConcurrentSkipListMap<Integer, Integer> getStatusDataCacheForKeyPointFlow(final UUID keyPointFlowDataCache){
         UUID inputedVal;
-        ConcurrentHashMap<Integer, Integer> getStatusDataCacheFormPool;
+        ConcurrentSkipListMap<Integer, Integer> getStatusDataCacheFormPool;
         try{
             inputedVal = (UUID) keyPointFlowDataCache;
             getStatusDataCacheFormPool = this.poolStatusDataCache.get(inputedVal);
@@ -100,10 +100,10 @@ public class ThWordStatusDataCache {
      */
     protected Boolean removeStatusDataCacheForKeyPointFlow(final UUID keyPointFlowDataCache){
         UUID inputedVal;
-        ConcurrentHashMap<Integer, Integer> getRemovedStatusDataCacheFormPool;
+        ConcurrentSkipListMap<Integer, Integer> getRemovedStatusDataCacheFormPool;
         try{
             inputedVal = (UUID) keyPointFlowDataCache;
-            getRemovedStatusDataCacheFormPool = (ConcurrentHashMap<Integer, Integer>) this.poolStatusDataCache.remove(inputedVal);
+            getRemovedStatusDataCacheFormPool = (ConcurrentSkipListMap<Integer, Integer>) this.poolStatusDataCache.remove(inputedVal);
             if( getRemovedStatusDataCacheFormPool == null ){
                 return Boolean.FALSE;
             }
@@ -144,7 +144,7 @@ public class ThWordStatusDataCache {
      */
     protected void createStructureParamsDataCache(
                         final UUID keyPointFlowDataCacheInputed){
-        ConcurrentHashMap<Integer, Integer> countDataCache;
+        ConcurrentSkipListMap<Integer, Integer> countDataCache;
         UUID keyPointFlowDataCacheFunc;
         try{
             keyPointFlowDataCacheFunc = (UUID) keyPointFlowDataCacheInputed;
@@ -157,24 +157,28 @@ public class ThWordStatusDataCache {
             keyPointFlowDataCacheFunc = null;
         }
     }
+    
     /**
      * 
      * @return 
      */
-    private ConcurrentHashMap<Integer, Integer> setInitParamDataCache(){
-        ConcurrentHashMap<Integer, Integer> returnedHashMap;
+    private ConcurrentSkipListMap<Integer, Integer> setInitParamDataCache(){
+        ConcurrentSkipListMap<Integer, Integer> returnedHashMap;
         Integer paramCodeByNumber;
         Integer countParamsDataCacheForSet;
         Integer idx;
         try {
-            returnedHashMap = new ConcurrentHashMap<Integer, Integer>();
+            returnedHashMap = new ConcurrentSkipListMap<Integer, Integer>();
             countParamsDataCacheForSet = getParamCount();
             for(idx = 0; idx < countParamsDataCacheForSet; idx++ ){
                 paramCodeByNumber = getParamCodeByNumber(idx);
                 returnedHashMap.put(paramCodeByNumber, 0);
                 idx++;
             }
-
+            paramCodeByNumber = getParamCodeByNumber(2);
+            returnedHashMap.put(paramCodeByNumber, AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT);
+            paramCodeByNumber = getParamCodeByNumber(3);
+            returnedHashMap.put(paramCodeByNumber, AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT);
             return returnedHashMap;
         } finally {
             idx = null;
@@ -202,13 +206,13 @@ public class ThWordStatusDataCache {
         Integer paramNumberFunc;
         Integer changedValFunc;
         Integer paramCodeByNumber;
-        ConcurrentHashMap<Integer, Integer> fromCurrentFlow;
+        ConcurrentSkipListMap<Integer, Integer> fromCurrentFlow;
         try{
             changedKeyPointFlowDataCacheFunc = (UUID) changedKeyPointFlowDataCache;
             validateCountParams(changedKeyPointFlowDataCacheFunc);
             paramNumberFunc = (Integer) paramNumber;
             changedValFunc = (Integer) changedVal;
-            fromCurrentFlow = (ConcurrentHashMap<Integer, Integer>) this.poolStatusDataCache.get(changedKeyPointFlowDataCacheFunc);
+            fromCurrentFlow = (ConcurrentSkipListMap<Integer, Integer>) this.poolStatusDataCache.get(changedKeyPointFlowDataCacheFunc);
             paramCodeByNumber = (Integer) getParamCodeByNumber(paramNumberFunc);
             fromCurrentFlow.put(paramCodeByNumber, changedValFunc);
             this.poolStatusDataCache.put(changedKeyPointFlowDataCacheFunc, fromCurrentFlow);
@@ -330,7 +334,7 @@ public class ThWordStatusDataCache {
     
     protected void validateCountParams(final UUID keyPointFlowDataCache){
         UUID keyPointFlowDataCacheFunc;
-        ConcurrentHashMap<Integer, Integer> statusDataCacheForKeyPointFlow;
+        ConcurrentSkipListMap<Integer, Integer> statusDataCacheForKeyPointFlow;
         Integer sizeRec;
         Integer paramCount;
         Integer idxParam;
@@ -341,7 +345,7 @@ public class ThWordStatusDataCache {
             keyPointFlowDataCacheFunc = (UUID) keyPointFlowDataCache;
             if( !isStatusDataCacheNotExist(keyPointFlowDataCacheFunc) ){
                 
-                statusDataCacheForKeyPointFlow = (ConcurrentHashMap<Integer, Integer>) getStatusDataCacheForKeyPointFlow(keyPointFlowDataCacheFunc);
+                statusDataCacheForKeyPointFlow = (ConcurrentSkipListMap<Integer, Integer>) getStatusDataCacheForKeyPointFlow(keyPointFlowDataCacheFunc);
                 sizeRec = (Integer) statusDataCacheForKeyPointFlow.size();
                 paramCount = (Integer) getParamCount();
                 if( sizeRec != paramCount ){

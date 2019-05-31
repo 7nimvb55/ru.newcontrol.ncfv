@@ -17,7 +17,8 @@ package ru.newcontrol.ncfv;
 
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -32,14 +33,14 @@ public class ThStorageWordBusOutput {
      */
     private ConcurrentHashMap<Integer, Long> lastLastAccessUsedBusNanoTime;
     /**
-     * ConcurrentHashMap<Integer, ArrayBlockingQueue<TdataStorageWord>>
+     * ConcurrentHashMap<Integer, LinkedTransferQueue<TdataStorageWord>>
      * <typeWordBus, <TdataStorageWord>>
      * ThWordLogicFilter.getWordCode(inputedPath.codePointAt(int idexCharCodePoint))
      */
-    private ConcurrentHashMap<Integer, ArrayBlockingQueue<TdataWord>> poolBusWordData;
+    private ConcurrentHashMap<Integer, LinkedTransferQueue<TdataWord>> poolBusWordData;
     
     ThStorageWordBusOutput(){
-        this.poolBusWordData = new ConcurrentHashMap<Integer, ArrayBlockingQueue<TdataWord>>();
+        this.poolBusWordData = new ConcurrentHashMap<Integer, LinkedTransferQueue<TdataWord>>();
         this.lastLastAccessUsedBusNanoTime = new ConcurrentHashMap<Integer, Long>();
     }
     /**
@@ -47,24 +48,25 @@ public class ThStorageWordBusOutput {
      * @param typeWordByDetectedCodePoint
      * @return 
      */
-    protected ArrayBlockingQueue<TdataWord> getBusForTypeWord(final int typeWordByDetectedCodePoint){
-        int inputedVal;
-        ArrayBlockingQueue<TdataWord> getBusFormPool;
+    protected LinkedTransferQueue<TdataWord> getBusForTypeWord(final int typeWordByDetectedCodePoint){
+        Integer inputedVal;
+        LinkedTransferQueue<TdataWord> getBusFormPool;
         try{
             inputedVal = (int) typeWordByDetectedCodePoint;
             getBusFormPool = this.poolBusWordData.get(inputedVal);
             if( getBusFormPool == null ){
-                getBusFormPool = new ArrayBlockingQueue<TdataWord>(AppConstants.FILTER_STORAGE_WORD_MESSAGES_QUEUE_SIZE);
+                getBusFormPool = new LinkedTransferQueue<TdataWord>();
                 this.poolBusWordData.put(inputedVal, getBusFormPool);
             }
             setLastAccessForUseTime(inputedVal);
             return getBusFormPool;
         } finally {
+            inputedVal = null;
             getBusFormPool = null;
         }
     }
-    protected Set<Entry<Integer, ArrayBlockingQueue<TdataWord>>> getExistBusEntrySetForTypeWord(){
-        Set<Entry<Integer, ArrayBlockingQueue<TdataWord>>> entrySet;
+    protected Set<Entry<Integer, LinkedTransferQueue<TdataWord>>> getExistBusEntrySetForTypeWord(){
+        Set<Entry<Integer, LinkedTransferQueue<TdataWord>>> entrySet;
         try{
             entrySet = this.poolBusWordData.entrySet();
         return entrySet;
@@ -77,7 +79,7 @@ public class ThStorageWordBusOutput {
      * @param typeWordByDetectedCodePoint 
      */
     private void setLastAccessForUseTime(final int typeWordByDetectedCodePoint){
-        int inputedTypeVal;
+        Integer inputedTypeVal;
         Long outerTimesPool;
         try{
             inputedTypeVal = (int) typeWordByDetectedCodePoint;
@@ -87,6 +89,7 @@ public class ThStorageWordBusOutput {
             }
             this.lastLastAccessUsedBusNanoTime.put(inputedTypeVal, outerTimesPool);
         } finally {
+            inputedTypeVal = null;
             outerTimesPool = null;
         }
     }
@@ -133,8 +136,8 @@ public class ThStorageWordBusOutput {
      * @return 
      */
     protected Boolean isBusNotEmpty(final int typeWordByDetectedCodePoint){
-        int inputedTypBusValue;
-        ArrayBlockingQueue<TdataWord> testedBusForTypeWord;
+        Integer inputedTypBusValue;
+        LinkedTransferQueue<TdataWord> testedBusForTypeWord;
         try{
             inputedTypBusValue = typeWordByDetectedCodePoint;
             
@@ -146,6 +149,7 @@ public class ThStorageWordBusOutput {
             }
             return Boolean.FALSE;
         } finally {
+            inputedTypBusValue = null;
             testedBusForTypeWord = null;
         }
     }
@@ -155,8 +159,8 @@ public class ThStorageWordBusOutput {
      * @return 
      */
     protected Boolean isBusNotExist(final int typeWordByDetectedCodePoint){
-        int inputedTypBusValue;
-        ArrayBlockingQueue<TdataWord> testedBusForTypeWord;
+        Integer inputedTypBusValue;
+        LinkedTransferQueue<TdataWord> testedBusForTypeWord;
         try{
             inputedTypBusValue = typeWordByDetectedCodePoint;
             
@@ -166,6 +170,7 @@ public class ThStorageWordBusOutput {
             }
             return Boolean.FALSE;
         } finally {
+            inputedTypBusValue = null;
             testedBusForTypeWord = null;
         }
     }

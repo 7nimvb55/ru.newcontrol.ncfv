@@ -18,7 +18,7 @@ package ru.newcontrol.ncfv;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  *
@@ -28,16 +28,16 @@ public class ThWordStatusError {
     private final Long timeCreation;
     private final UUID objectLabel;
     /**
-     * ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Long>>
+     * ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Long>>
      * <keyPointFlowError, <lastAccessNanotime.hashCode(), Long Value>>
      *                        <countDataUseIterationsSummary.hashCode(), Long Value>
      */
-    private ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>> poolStatusError;
+    private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Integer>> poolStatusError;
     
     ThWordStatusError(){
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
-        this.poolStatusError = new ConcurrentHashMap<UUID, ConcurrentHashMap<Integer, Integer>>();
+        this.poolStatusError = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Integer>>();
     }
     /**
      * 
@@ -45,9 +45,9 @@ public class ThWordStatusError {
      * @return 
      * @throws IllegalStateException when UUID not exist
      */
-    private ConcurrentHashMap<Integer, Integer> getStatusErrorForKeyPointFlow(final UUID keyPointFlowError){
+    private ConcurrentSkipListMap<Integer, Integer> getStatusErrorForKeyPointFlow(final UUID keyPointFlowError){
         UUID inputedVal;
-        ConcurrentHashMap<Integer, Integer> getStatusErrorFormPool;
+        ConcurrentSkipListMap<Integer, Integer> getStatusErrorFormPool;
         try{
             inputedVal = (UUID) keyPointFlowError;
             getStatusErrorFormPool = this.poolStatusError.get(inputedVal);
@@ -74,10 +74,10 @@ public class ThWordStatusError {
      */
     protected Boolean removeStatusErrorForKeyPointFlow(final UUID keyPointFlowError){
         UUID inputedVal;
-        ConcurrentHashMap<Integer, Integer> getRemovedStatusErrorFormPool;
+        ConcurrentSkipListMap<Integer, Integer> getRemovedStatusErrorFormPool;
         try{
             inputedVal = (UUID) keyPointFlowError;
-            getRemovedStatusErrorFormPool = (ConcurrentHashMap<Integer, Integer>) this.poolStatusError.remove(inputedVal);
+            getRemovedStatusErrorFormPool = (ConcurrentSkipListMap<Integer, Integer>) this.poolStatusError.remove(inputedVal);
             if( getRemovedStatusErrorFormPool == null ){
                 return Boolean.FALSE;
             }
@@ -118,7 +118,7 @@ public class ThWordStatusError {
      */
     protected void createStructureParamsError(
                         final UUID keyPointFlowErrorInputed){
-        ConcurrentHashMap<Integer, Integer> countError;
+        ConcurrentSkipListMap<Integer, Integer> countError;
         UUID keyPointFlowErrorFunc;
         try{
             keyPointFlowErrorFunc = (UUID) keyPointFlowErrorInputed;
@@ -135,13 +135,13 @@ public class ThWordStatusError {
      * 
      * @return 
      */
-    private ConcurrentHashMap<Integer, Integer> setInitParamError(){
-        ConcurrentHashMap<Integer, Integer> returnedHashMap;
+    private ConcurrentSkipListMap<Integer, Integer> setInitParamError(){
+        ConcurrentSkipListMap<Integer, Integer> returnedHashMap;
         Integer paramCodeByNumber;
         Integer countParamsErrorForSet;
         Integer idx;
         try {
-            returnedHashMap = new ConcurrentHashMap<Integer, Integer>();
+            returnedHashMap = new ConcurrentSkipListMap<Integer, Integer>();
             countParamsErrorForSet = getParamCount();
             for(idx = 0; idx < countParamsErrorForSet; idx++ ){
                 paramCodeByNumber = getParamCodeByNumber(idx);
@@ -176,13 +176,13 @@ public class ThWordStatusError {
         Integer paramNumberFunc;
         Integer changedValFunc;
         Integer paramCodeByNumber;
-        ConcurrentHashMap<Integer, Integer> fromCurrentFlow;
+        ConcurrentSkipListMap<Integer, Integer> fromCurrentFlow;
         try{
             changedKeyPointFlowErrorFunc = (UUID) changedKeyPointFlowError;
             validateCountParams(changedKeyPointFlowErrorFunc);
             paramNumberFunc = (Integer) paramNumber;
             changedValFunc = (Integer) changedVal;
-            fromCurrentFlow = (ConcurrentHashMap<Integer, Integer>) this.poolStatusError.get(changedKeyPointFlowErrorFunc);
+            fromCurrentFlow = (ConcurrentSkipListMap<Integer, Integer>) this.poolStatusError.get(changedKeyPointFlowErrorFunc);
             paramCodeByNumber = (Integer) getParamCodeByNumber(paramNumberFunc);
             fromCurrentFlow.put(paramCodeByNumber, changedValFunc);
             this.poolStatusError.put(changedKeyPointFlowErrorFunc, fromCurrentFlow);
@@ -306,7 +306,7 @@ public class ThWordStatusError {
     
     protected void validateCountParams(final UUID keyPointFlowError){
         UUID keyPointFlowErrorFunc;
-        ConcurrentHashMap<Integer, Integer> statusErrorForKeyPointFlow;
+        ConcurrentSkipListMap<Integer, Integer> statusErrorForKeyPointFlow;
         Integer sizeRec;
         Integer paramCount;
         Integer idxParam;
@@ -317,7 +317,7 @@ public class ThWordStatusError {
             keyPointFlowErrorFunc = (UUID) keyPointFlowError;
             if( !isStatusErrorNotExist(keyPointFlowErrorFunc) ){
                 
-                statusErrorForKeyPointFlow = (ConcurrentHashMap<Integer, Integer>) getStatusErrorForKeyPointFlow(keyPointFlowErrorFunc);
+                statusErrorForKeyPointFlow = (ConcurrentSkipListMap<Integer, Integer>) getStatusErrorForKeyPointFlow(keyPointFlowErrorFunc);
                 sizeRec = (Integer) statusErrorForKeyPointFlow.size();
                 paramCount = (Integer) getParamCount();
                 if( sizeRec != paramCount ){

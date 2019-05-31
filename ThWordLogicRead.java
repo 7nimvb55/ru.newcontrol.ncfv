@@ -164,8 +164,8 @@ public class ThWordLogicRead {
                                             /**
                                              * validate values, read from file
                                              */
-                                            ThWordCache storageWordCache = 
-                                                    (ThWordCache) storageWordStatistic.getWordCache();
+                                            ThWordCacheHa storageWordCache = 
+                                                    (ThWordCacheHa) storageWordStatistic.getWordCache();
                                             ThWordStatusActivity storageWordStatusActivity = 
                                                     (ThWordStatusActivity) storageWordStatistic.getWordStatusActivity();
 
@@ -292,7 +292,7 @@ public class ThWordLogicRead {
                                                 continue;
                                             }
 
-                                            Path forReadFileName = fsForReadData.getPath(currentFileName);
+                                            Path forReadFileName = fsForReadData.getPath(storageDirectoryName, currentFileName);
 
                                             ConcurrentHashMap<String, String> readedFormData = 
                                                     new ConcurrentHashMap<String, String>();
@@ -303,7 +303,7 @@ public class ThWordLogicRead {
                                                 {
                                                     readedFormData.putAll((ConcurrentHashMap<String, String>) ois.readObject());
 
-                                                    ThWordCacheReaded thWordCacheReaded = storageWordStatistic.getWordCacheReaded();
+                                                    ThWordCacheHaReaded thWordCacheReaded = storageWordStatistic.getWordCacheReaded();
 
                                                     Boolean isCachedReadedData = Boolean.FALSE;
 

@@ -22,6 +22,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.LinkedTransferQueue;
 
 /**
  *
@@ -43,8 +45,8 @@ public class ThWordLogicRouter {
         System.out.println("++++++++++++++++++++++++++++++start " + ThWordLogicRouter.class.getCanonicalName());
         ThStorageWordBusOutput busJobForWordRouter = storageWordState.getBusJobForWordWrite();
         do{
-            Set<Map.Entry<Integer, ArrayBlockingQueue<TdataWord>>> busForTypeWord = busJobForWordRouter.getExistBusEntrySetForTypeWord();
-            for(Map.Entry<Integer, ArrayBlockingQueue<TdataWord>> items : busForTypeWord){
+            Set<Map.Entry<Integer, LinkedTransferQueue<TdataWord>>> busForTypeWord = busJobForWordRouter.getExistBusEntrySetForTypeWord();
+            for(Map.Entry<Integer, LinkedTransferQueue<TdataWord>> items : busForTypeWord){
                 /**
                  * (1) - typeWord - directory in zipfs storage to string
                  */
@@ -74,7 +76,7 @@ public class ThWordLogicRouter {
                  */
                 
                 try {
-                    sendRemovedFromBusDataToFlow(items.getKey(), items.getValue());
+                    sendRemovedFromBusDataToFlow(funcRuleWord, items.getKey(), items.getValue());
                 } catch(IllegalArgumentException exIllArg) {
                     System.err.println(exIllArg.getMessage());
                     exIllArg.printStackTrace();
@@ -87,8 +89,8 @@ public class ThWordLogicRouter {
             }
         } while( ruleStorageWord.isRunnedStorageWordWorkFilter() );
         
-        Set<Map.Entry<Integer, ArrayBlockingQueue<TdataWord>>> busForTypeWord = busJobForWordRouter.getExistBusEntrySetForTypeWord();
-            for(Map.Entry<Integer, ArrayBlockingQueue<TdataWord>> items : busForTypeWord){
+        Set<Map.Entry<Integer, LinkedTransferQueue<TdataWord>>> busForTypeWord = busJobForWordRouter.getExistBusEntrySetForTypeWord();
+        for(Map.Entry<Integer, LinkedTransferQueue<TdataWord>> items : busForTypeWord){
                 System.out.println("From bus typeWord " + items.getKey());
                 /*for(Map.Entry<String, String> itemsOfBus : items.getValue().entrySet()){
                     System.out.println("For bus hexWord " 
@@ -101,7 +103,7 @@ public class ThWordLogicRouter {
                  * @todo IllegalArgumentException catch
                  */
                 try {
-                    sendRemovedFromBusDataToFlow(items.getKey(), items.getValue());
+                    sendRemovedFromBusDataToFlow(funcRuleWord, items.getKey(), items.getValue());
                 } catch(IllegalArgumentException exIllArg) {
                     System.err.println(exIllArg.getMessage());
                     exIllArg.printStackTrace();
@@ -115,24 +117,27 @@ public class ThWordLogicRouter {
         /**
          * @todo procedure for read all caches data and write it
          */
-        ThWordCache wordCache = (ThWordCache) wordStatusMainFlow.getWordCache();
-        
+        ThWordCacheSk wordCache = (ThWordCacheSk) wordStatusMainFlow.getWordCache();
+        wordCache.cleanKeyForEmptyLists();
+        ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                ConcurrentSkipListMap<UUID, TdataWord>>>>> pollAllData = wordCache.pollAllData();
         /*ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> listTypTagSubStr = wordCache.pollListTypeTagSubStr();
-        
         for(Map.Entry<Integer, ConcurrentHashMap<String, String>> itemList : listTypTagSubStr.entrySet()){
-            try {
-                    removeDataForCurrentTypeWordBus(funcRuleWord, 
-                        itemList.getKey(), 
-                        listTypTagSubStr.remove(itemList.getKey()));
-                } catch(IllegalArgumentException exIllArg) {
-                    System.err.println(exIllArg.getMessage());
-                    exIllArg.printStackTrace();
-
-                } catch(NullPointerException exNullReturn) {
-                    System.err.println(exNullReturn.getMessage());
-                    exNullReturn.printStackTrace();
-                    continue;
-                }
+        try {
+        removeDataForCurrentTypeWordBus(funcRuleWord,
+        itemList.getKey(),
+        listTypTagSubStr.remove(itemList.getKey()));
+        } catch(IllegalArgumentException exIllArg) {
+        System.err.println(exIllArg.getMessage());
+        exIllArg.printStackTrace();
+        } catch(NullPointerException exNullReturn) {
+        System.err.println(exNullReturn.getMessage());
+        exNullReturn.printStackTrace();
+        continue;
+        }
         }*/
         
         System.out.println("++++++++++++++++++++++++++++++stop " + ThWordLogicRouter.class.getCanonicalName());
@@ -140,23 +145,237 @@ public class ThWordLogicRouter {
     private static void iteratorBusData(){
         
     }
-    private static void sendRemovedFromBusDataToFlow(final Integer keyTypeWordInputed, 
-            final ArrayBlockingQueue<TdataWord> valueBusOfTypeWordInputed){
+    private static void sendRemovedFromBusDataToFlow(final ThWordRule outerRuleWord,
+            final Integer keyTypeWordInputed, 
+            final LinkedTransferQueue<TdataWord> valueBusOfTypeWordInputed){
         Integer keyTypeWordFunc;
-        ArrayBlockingQueue<TdataWord> valueBusOfTypeWordFunc;
+        LinkedTransferQueue<TdataWord> valueBusOfTypeWordFunc;
+        TdataWord poll;
         try {
+            
             keyTypeWordFunc = (Integer) keyTypeWordInputed;
-            valueBusOfTypeWordFunc = (ArrayBlockingQueue<TdataWord>) valueBusOfTypeWordInputed;
+            valueBusOfTypeWordFunc = (LinkedTransferQueue<TdataWord>) valueBusOfTypeWordInputed;
+            
+            if (valueBusOfTypeWordFunc == null) {
+                throw new NullPointerException("Bus for type of Word number not exist: " + String.valueOf(keyTypeWordFunc));
+            }
+            
             if (valueBusOfTypeWordFunc.isEmpty()) {
                 throw new NullPointerException("Empty bus for type of Word number: " + String.valueOf(keyTypeWordFunc));
             }
-            TdataWord poll = valueBusOfTypeWordFunc.poll();
-            if (poll == null) {
-                throw new NullPointerException("Null returned from bus for type of Word number: " + String.valueOf(keyTypeWordFunc));
+            do{
+                /**
+                 * create new main flow
+                 * set flags
+                 * get data from cache readed
+                 * change flag old flow
+                 * insert data into cache from bus and cachereaded
+                 * write data to storage
+                 */
+                
+                poll = (TdataWord) valueBusOfTypeWordFunc.poll();
+                if( poll != null){
+                    if( ThWordHelper.isTdataWordValid(poll) ){
+                        createNewFlow(outerRuleWord, poll);
+                    } else {
+                        System.out.println(ThWordLogicRouter.class.getCanonicalName() 
+                        + " inputed not valid data for poll from bus object class " 
+                        + TdataWord.class.getCanonicalName() 
+                        + " object data " + poll.toString());
+                        poll = null;
+                    }
+                }
             }
+            while( !valueBusOfTypeWordFunc.isEmpty() );
+            
         } finally {
             keyTypeWordFunc = null;
             valueBusOfTypeWordFunc = null;
+            poll = null;
+        }
+    }
+    private static void createNewFlow(final ThWordRule outerRuleWord,
+            final TdataWord fromBusReadedData){
+        ThWordStatusMainFlow wordStatusMainFlow;
+        ThWordCacheSk wordCache;
+        ThWordCacheSk wordCacheReaded;
+        ConcurrentSkipListMap<UUID, TdataWord> pollDataByDataWord;
+        UUID initMainFlowUUID;
+        TdataWord dataFromBusFunc;
+        try {
+            dataFromBusFunc = (TdataWord) fromBusReadedData;
+            wordStatusMainFlow = (ThWordStatusMainFlow) outerRuleWord.getWordStatusMainFlow();
+            
+            wordCache = wordStatusMainFlow.getWordCache();
+            wordCacheReaded = wordStatusMainFlow.getWordCacheReaded();
+            initMainFlowUUID = wordStatusMainFlow.createInitMainFlow(dataFromBusFunc);
+            /**
+             * DataCache - (0) currentInCache, (2) addNeedToFileSystemLimit
+             * Name - (4) flowFileNamePrefix
+             * Workers - (3) isCachedData
+             */
+            pollDataByDataWord = null;
+            try {
+                pollDataByDataWord = wordCacheReaded.pollDataByDataWord(dataFromBusFunc);
+                
+            } catch (IllegalArgumentException exIll) {
+                System.err.println(exIll.getMessage());
+            } catch (NullPointerException exNull) {
+                System.err.println(exNull.getMessage());
+            }
+            if( pollDataByDataWord != null ){
+                wordCache.addAllDataIntoCache(pollDataByDataWord);
+                endReadFlow(outerRuleWord, dataFromBusFunc, initMainFlowUUID);
+            }
+            
+            wordCache.setDataIntoCacheFlow(dataFromBusFunc);
+            changeInitFlowPoint(outerRuleWord, dataFromBusFunc, initMainFlowUUID);
+            /**
+             * check for exist data in storage
+             * if exist create reader job
+             * check reader ready job, create writer job
+             * create flow for writer, if exist readed job change it params
+             */
+            
+        }
+        finally {
+            wordStatusMainFlow = null;
+            wordCache = null;
+            wordCacheReaded = null;
+            pollDataByDataWord = null;
+            dataFromBusFunc = null;
+            initMainFlowUUID = null;
+        }
+    }
+    private static void intoWriteFlow(){
+        
+    }
+    private static void intoReadFlow(){
+        
+    }
+    private static void changeInitFlowPoint(final ThWordRule outerRuleWord,
+            final TdataWord fromBusReadedData,
+            final UUID newCreatedMainFlow){
+        ThWordStatusMainFlow wordStatusMainFlow;
+        UUID createdMainFlow;
+        ThWordCacheSk wordCache;
+        ThWordCacheSk wordCacheReaded;
+        ThWordState wordState;
+        ThWordBusReadedFlow wordFlowReaded;
+        ThWordStatusDataFs wordStatusDataFs;
+        ThWordStatusName wordStatusName;
+        ThWordStatusActivity wordStatusActivity;
+        ThWordStatusDataCache wordStatusDataCache;
+        ThWordStatusWorkers wordStatusWorkers;
+        ThWordStatusError wordStatusError;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsByDataWord;
+        ConcurrentSkipListMap<Integer, UUID> createdFlowParams;
+        TdataWord dataFromBusFunc;
+        Long nanoTime;
+        String buildTypeWordStoreSubDirictoriesFunc;
+        Integer sizeDataInCache;
+        Integer sizeDataInCacheReaded;
+        
+        UUID valueUUIDDataFs;
+        UUID valueUUIDName;
+        UUID valueUUIDActivity;
+        UUID valueUUIDDataCache;
+        UUID valueUUIDWorkers;
+        UUID valueUUIDError;
+        try {
+            dataFromBusFunc = (TdataWord) fromBusReadedData;
+            wordState = (ThWordState) outerRuleWord.getWordState();
+            wordStatusMainFlow = (ThWordStatusMainFlow) outerRuleWord.getWordStatusMainFlow();
+            wordCache = wordStatusMainFlow.getWordCache();
+            wordCacheReaded = wordStatusMainFlow.getWordCacheReaded();
+            wordFlowReaded = (ThWordBusReadedFlow) wordState.getWordFlowReaded();
+            createdMainFlow = (UUID) newCreatedMainFlow;
+            
+            if( createdMainFlow != null ){
+                wordStatusMainFlow.validateInFlowAllPoints(dataFromBusFunc, createdMainFlow);
+
+                buildTypeWordStoreSubDirictoriesFunc = (String) ThWordHelper.buildTypeWordStoreSubDirictories(
+                        dataFromBusFunc.typeWord,
+                        dataFromBusFunc.hexSubString.substring(0, 3), 
+                        dataFromBusFunc.lengthSubString);
+                
+                sizeDataInCache = wordCache.sizeDataInCache(dataFromBusFunc.typeWord, dataFromBusFunc.hexSubString, dataFromBusFunc.strSubString);
+                sizeDataInCacheReaded = wordCacheReaded.sizeDataInCache(dataFromBusFunc.typeWord, dataFromBusFunc.hexSubString, dataFromBusFunc.strSubString);
+                wordStatusMainFlow.changeParamForMainUuidByNumberName(dataFromBusFunc, createdMainFlow, 0, buildTypeWordStoreSubDirictoriesFunc);
+                wordStatusMainFlow.changeParamForMainUuidByNumberName(dataFromBusFunc, createdMainFlow, 4, dataFromBusFunc.hexSubString);
+                nanoTime = System.nanoTime();
+                wordStatusMainFlow.changeParamForMainUuidByNumberActivity(dataFromBusFunc, createdMainFlow, 0, nanoTime);
+                wordStatusMainFlow.changeParamForMainUuidByNumberActivity(dataFromBusFunc, createdMainFlow, 0, 0L);
+                wordStatusMainFlow.changeParamForMainUuidByNumberDataCache(dataFromBusFunc, createdMainFlow, 0, sizeDataInCache);
+                wordStatusMainFlow.changeParamForMainUuidByNumberDataCache(dataFromBusFunc, createdMainFlow, 1, sizeDataInCache);
+                wordStatusMainFlow.changeParamForMainUuidByNumberWorkers(dataFromBusFunc, createdMainFlow, 4, sizeDataInCache > 0);
+                wordStatusMainFlow.changeParamForMainUuidByNumberWorkers(dataFromBusFunc, createdMainFlow, 4, sizeDataInCacheReaded > 0);
+            }
+        }
+        finally {
+        
+        }
+    }
+    /**
+     * read UUID from BusReaded flow,
+     * read params, 
+     * change and set init values for new main Flow UUID
+     * remove from main flow UUID
+     * @param outerRuleWord
+     * @param fromBusReadedData 
+     */
+    private static void endReadFlow(final ThWordRule outerRuleWord,
+            final TdataWord fromBusReadedData,
+            final UUID newCreatedMainFlow){
+        ThWordStatusMainFlow wordStatusMainFlow;
+        ThWordCacheSk wordCache;
+        ThWordCacheSk wordCacheReaded;
+        ConcurrentSkipListMap<UUID, TdataWord> pollDataByDataWord;
+        ConcurrentSkipListMap<String, ConcurrentSkipListMap<Long, UUID>> dataReadedFlowUuidsByDataWord;
+        ThWordState wordState;
+        ThWordBusReadedFlow wordFlowReaded;
+        TdataWord dataFromBusFunc;
+        UUID valueReadedUUID;
+        try {
+            dataFromBusFunc = (TdataWord) fromBusReadedData;
+            wordState = (ThWordState) outerRuleWord.getWordState();
+            wordFlowReaded = wordState.getWordFlowReaded();
+            /**
+             * add getFuncByTdataWord
+             * get UUID from ReadedFlowBus
+             * future ... if UUID not exist set error in allIndexFlow about that
+             * finish him, that readedUUID in main flow
+             */
+            try {
+                dataReadedFlowUuidsByDataWord = wordFlowReaded.getDataReadedFlowUuidsByDataWord(dataFromBusFunc);
+                ConcurrentSkipListMap<Long, UUID> UUIDs = dataReadedFlowUuidsByDataWord.get(dataFromBusFunc.hexSubString);
+                if( !UUIDs.isEmpty() ){
+                    for(Map.Entry<Long, UUID> itemReadedUUIDS : UUIDs.entrySet()){
+                        
+                        //ifExistInMainFlowBus, change init newCreated param from readedUUIDparam = mainFlow(value)
+                        //delete from main flow readedUUIDparam
+                        valueReadedUUID = itemReadedUUIDS.getValue();
+                    }
+                }
+            } catch (IllegalArgumentException illExMessage) {
+                System.out.println(illExMessage.getMessage());
+            } catch (NullPointerException nullExMessage) {
+                System.out.println(nullExMessage.getMessage());
+            }
+        } finally {
+        
+        }
+    }
+    private static void changeCreatedFlowWithRead(final ThWordRule outerRuleWord,
+            final TdataWord fromBusReadedData,
+            final UUID newCreatedMainFlow){
+        ThWordStatusMainFlow wordStatusMainFlow;
+        ThWordCacheSk wordCache;
+        ThWordCacheSk wordCacheReaded;
+        try {
+            
+        } finally {
+            
         }
     }
     /**
@@ -240,8 +459,8 @@ public class ThWordLogicRouter {
         ThWordStatusName thWordStatusName;
         ThWordStatusActivity thWordStatusActivity;
         ThWordStatusDataCache thWordStatusDataCache;
-        ThWordCache thWordCache;
-        ThWordCacheReaded thWordCacheReaded;
+        ThWordCacheHa thWordCache;
+        ThWordCacheHaReaded thWordCacheReaded;
         ThWordStatusWorkers thWordStatusWorkers;
         ThWordStatusDataFs thWordStatusDataFs;
         

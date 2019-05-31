@@ -16,7 +16,11 @@
 package ru.newcontrol.ncfv;
 
 /**
- *
+ * java.lang.OutOfMemoryError: GC overhead limit exceeded
+ * ThStorageWordLogicFilter.java:283
+ * ThStorageWordLogicWrite.java:380
+ * ThStorageWordCache.java:202
+ * 
  * @author wladimirowichbiaran
  */
 public class ThStorageWordWorkFilter implements Runnable{
