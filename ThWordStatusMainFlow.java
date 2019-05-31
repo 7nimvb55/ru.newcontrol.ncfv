@@ -226,24 +226,283 @@ public class ThWordStatusMainFlow {
     protected ThWordCacheSk getWordCacheReaded(){
         return this.thWordCacheReaded;
     }
-    protected ThWordStatusActivity getWordStatusActivity(){
+    private ThWordStatusActivity getWordStatusActivity(){
         return this.thWordStatusActivity;
     }
-    protected ThWordStatusDataCache getWordStatusDataCache(){
+    private ThWordStatusDataCache getWordStatusDataCache(){
         return this.thWordStatusDataCache;
     }
-    protected ThWordStatusDataFs getWordStatusDataFs(){
+    private ThWordStatusDataFs getWordStatusDataFs(){
         return this.thWordStatusDataFs;
     }
-    protected ThWordStatusError getWordStatusError(){
+    private ThWordStatusError getWordStatusError(){
         return this.thWordStatusError;
     }
-    protected ThWordStatusName getWordStatusName(){
+    private ThWordStatusName getWordStatusName(){
         return this.thWordStatusName;
     }
-    protected ThWordStatusWorkers getWordStatusWorkers(){
+    private ThWordStatusWorkers getWordStatusWorkers(){
         return this.thWordStatusWorkers;
     }
+    /**
+     * 
+     * @param fromBusReadedData
+     * @param mainFlowUuidForReturnValue
+     * @param numberParam
+     * @return 
+     * @throw NullPointerException is mainFlowUuidForReturnValue null
+     */
+    protected Integer getValueForMainUuidByNumberDataFs(final TdataWord fromBusReadedData,
+            final UUID mainFlowUuidForReturnValue,
+            Integer numberParam){
+        TdataWord dataFromBusFunc;
+        UUID returnValueMainFlow;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsByDataWord;
+        ConcurrentSkipListMap<Integer, UUID> createdFlowParams;
+        ThWordStatusDataFs wordStatusDataFs;
+        UUID valueUUIDDataFs;
+        Integer numberParamFunc;
+
+        try {
+            numberParamFunc = (Integer) numberParam;
+            dataFromBusFunc = (TdataWord) fromBusReadedData;
+            returnValueMainFlow = (UUID) mainFlowUuidForReturnValue;
+            flowUuidsByDataWord = this.getFlowUuidsByDataWord(dataFromBusFunc);
+            if( returnValueMainFlow == null ){
+                throw new NullPointerException(ThWordStatusMainFlow.class.getCanonicalName()
+                        + " not exist values for UUID "
+                        + returnValueMainFlow.toString()
+                );
+            }    
+            createdFlowParams = flowUuidsByDataWord.get(returnValueMainFlow);
+            wordStatusDataFs = this.getWordStatusDataFs();
+            valueUUIDDataFs = createdFlowParams.get(this.getParamCodeByNumber(0));
+            return wordStatusDataFs.getValueForFlowPointByNumber(valueUUIDDataFs, numberParamFunc);
+        } finally {
+            dataFromBusFunc = null;
+            returnValueMainFlow = null;
+            flowUuidsByDataWord = null;
+            createdFlowParams = null;
+            wordStatusDataFs = null;
+            valueUUIDDataFs = null;
+        }
+    }
+    /**
+     * 
+     * @param fromBusReadedData
+     * @param mainFlowUuidForReturnValue
+     * @param numberParam
+     * @return 
+     * @throw NullPointerException is mainFlowUuidForReturnValue null
+     */
+    protected Long getValueForMainUuidByNumberActivity(final TdataWord fromBusReadedData,
+            final UUID mainFlowUuidForReturnValue,
+            Integer numberParam){
+        TdataWord dataFromBusFunc;
+        UUID returnValueMainFlow;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsByDataWord;
+        ConcurrentSkipListMap<Integer, UUID> createdFlowParams;
+        ThWordStatusActivity wordStatusActivity;
+        UUID valueUUIDActivity;
+        Integer numberParamFunc;
+
+        try {
+            numberParamFunc = (Integer) numberParam;
+            dataFromBusFunc = (TdataWord) fromBusReadedData;
+            returnValueMainFlow = (UUID) mainFlowUuidForReturnValue;
+            flowUuidsByDataWord = this.getFlowUuidsByDataWord(dataFromBusFunc);
+            if( returnValueMainFlow == null ){
+                throw new NullPointerException(ThWordStatusMainFlow.class.getCanonicalName()
+                        + " not exist values for UUID "
+                        + returnValueMainFlow.toString()
+                );
+            }    
+            createdFlowParams = flowUuidsByDataWord.get(returnValueMainFlow);
+            wordStatusActivity = this.getWordStatusActivity();
+            valueUUIDActivity = createdFlowParams.get(this.getParamCodeByNumber(0));
+            return wordStatusActivity.getValueForFlowPointByNumber(valueUUIDActivity, numberParamFunc);
+        } finally {
+            dataFromBusFunc = null;
+            returnValueMainFlow = null;
+            flowUuidsByDataWord = null;
+            createdFlowParams = null;
+            wordStatusActivity = null;
+            valueUUIDActivity = null;
+        }
+    }
+    /**
+     * 
+     * @param fromBusReadedData
+     * @param mainFlowUuidForReturnValue
+     * @param numberParam
+     * @return 
+     * @throw NullPointerException is mainFlowUuidForReturnValue null
+     */
+    protected Integer getValueForMainUuidByNumberDataCache(final TdataWord fromBusReadedData,
+            final UUID mainFlowUuidForReturnValue,
+            Integer numberParam){
+        TdataWord dataFromBusFunc;
+        UUID returnValueMainFlow;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsByDataWord;
+        ConcurrentSkipListMap<Integer, UUID> createdFlowParams;
+        ThWordStatusDataCache wordStatusDataCache;
+        UUID valueUUIDDataCache;
+        Integer numberParamFunc;
+
+        try {
+            numberParamFunc = (Integer) numberParam;
+            dataFromBusFunc = (TdataWord) fromBusReadedData;
+            returnValueMainFlow = (UUID) mainFlowUuidForReturnValue;
+            flowUuidsByDataWord = this.getFlowUuidsByDataWord(dataFromBusFunc);
+            if( returnValueMainFlow == null ){
+                throw new NullPointerException(ThWordStatusMainFlow.class.getCanonicalName()
+                        + " not exist values for UUID "
+                        + returnValueMainFlow.toString()
+                );
+            }    
+            createdFlowParams = flowUuidsByDataWord.get(returnValueMainFlow);
+            wordStatusDataCache = this.getWordStatusDataCache();
+            valueUUIDDataCache = createdFlowParams.get(this.getParamCodeByNumber(0));
+            return wordStatusDataCache.getValueForFlowPointByNumber(valueUUIDDataCache, numberParamFunc);
+        } finally {
+            dataFromBusFunc = null;
+            returnValueMainFlow = null;
+            flowUuidsByDataWord = null;
+            createdFlowParams = null;
+            wordStatusDataCache = null;
+            valueUUIDDataCache = null;
+        }
+    }
+    /**
+     * 
+     * @param fromBusReadedData
+     * @param mainFlowUuidForReturnValue
+     * @param numberParam
+     * @return 
+     * @throw NullPointerException is mainFlowUuidForReturnValue null
+     */
+    protected Integer getValueForMainUuidByNumberError(final TdataWord fromBusReadedData,
+            final UUID mainFlowUuidForReturnValue,
+            Integer numberParam){
+        TdataWord dataFromBusFunc;
+        UUID returnValueMainFlow;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsByDataWord;
+        ConcurrentSkipListMap<Integer, UUID> createdFlowParams;
+        ThWordStatusError wordStatusError;
+        UUID valueUUIDError;
+        Integer numberParamFunc;
+
+        try {
+            numberParamFunc = (Integer) numberParam;
+            dataFromBusFunc = (TdataWord) fromBusReadedData;
+            returnValueMainFlow = (UUID) mainFlowUuidForReturnValue;
+            flowUuidsByDataWord = this.getFlowUuidsByDataWord(dataFromBusFunc);
+            if( returnValueMainFlow == null ){
+                throw new NullPointerException(ThWordStatusMainFlow.class.getCanonicalName()
+                        + " not exist values for UUID "
+                        + returnValueMainFlow.toString()
+                );
+            }    
+            createdFlowParams = flowUuidsByDataWord.get(returnValueMainFlow);
+            wordStatusError = this.getWordStatusError();
+            valueUUIDError = createdFlowParams.get(this.getParamCodeByNumber(0));
+            return wordStatusError.getValueForFlowPointByNumber(valueUUIDError, numberParamFunc);
+        } finally {
+            dataFromBusFunc = null;
+            returnValueMainFlow = null;
+            flowUuidsByDataWord = null;
+            createdFlowParams = null;
+            wordStatusError = null;
+            valueUUIDError = null;
+        }
+    }
+    /**
+     * 
+     * @param fromBusReadedData
+     * @param mainFlowUuidForReturnValue
+     * @param numberParam
+     * @return 
+     * @throw NullPointerException is mainFlowUuidForReturnValue null
+     */
+    protected String getValueForMainUuidByNumberName(final TdataWord fromBusReadedData,
+            final UUID mainFlowUuidForReturnValue,
+            Integer numberParam){
+        TdataWord dataFromBusFunc;
+        UUID returnValueMainFlow;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsByDataWord;
+        ConcurrentSkipListMap<Integer, UUID> createdFlowParams;
+        ThWordStatusName wordStatusName;
+        UUID valueUUIDName;
+        Integer numberParamFunc;
+
+        try {
+            numberParamFunc = (Integer) numberParam;
+            dataFromBusFunc = (TdataWord) fromBusReadedData;
+            returnValueMainFlow = (UUID) mainFlowUuidForReturnValue;
+            flowUuidsByDataWord = this.getFlowUuidsByDataWord(dataFromBusFunc);
+            if( returnValueMainFlow == null ){
+                throw new NullPointerException(ThWordStatusMainFlow.class.getCanonicalName()
+                        + " not exist values for UUID "
+                        + returnValueMainFlow.toString()
+                );
+            }    
+            createdFlowParams = flowUuidsByDataWord.get(returnValueMainFlow);
+            wordStatusName = this.getWordStatusName();
+            valueUUIDName = createdFlowParams.get(this.getParamCodeByNumber(0));
+            return wordStatusName.getValueForFlowPointByNumber(valueUUIDName, numberParamFunc);
+        } finally {
+            dataFromBusFunc = null;
+            returnValueMainFlow = null;
+            flowUuidsByDataWord = null;
+            createdFlowParams = null;
+            wordStatusName = null;
+            valueUUIDName = null;
+        }
+    }
+    /**
+     * 
+     * @param fromBusReadedData
+     * @param mainFlowUuidForReturnValue
+     * @param numberParam
+     * @return 
+     * @throw NullPointerException is mainFlowUuidForReturnValue null
+     */
+    protected Boolean getValueForMainUuidByNumberWorkers(final TdataWord fromBusReadedData,
+            final UUID mainFlowUuidForReturnValue,
+            Integer numberParam){
+        TdataWord dataFromBusFunc;
+        UUID returnValueMainFlow;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsByDataWord;
+        ConcurrentSkipListMap<Integer, UUID> createdFlowParams;
+        ThWordStatusWorkers wordStatusWorkers;
+        UUID valueUUIDWorkers;
+        Integer numberParamFunc;
+
+        try {
+            numberParamFunc = (Integer) numberParam;
+            dataFromBusFunc = (TdataWord) fromBusReadedData;
+            returnValueMainFlow = (UUID) mainFlowUuidForReturnValue;
+            flowUuidsByDataWord = this.getFlowUuidsByDataWord(dataFromBusFunc);
+            if( returnValueMainFlow == null ){
+                throw new NullPointerException(ThWordStatusMainFlow.class.getCanonicalName()
+                        + " not exist values for UUID "
+                        + returnValueMainFlow.toString()
+                );
+            }    
+            createdFlowParams = flowUuidsByDataWord.get(returnValueMainFlow);
+            wordStatusWorkers = this.getWordStatusWorkers();
+            valueUUIDWorkers = createdFlowParams.get(this.getParamCodeByNumber(0));
+            return wordStatusWorkers.getValueForFlowPointByNumber(valueUUIDWorkers, numberParamFunc);
+        } finally {
+            dataFromBusFunc = null;
+            returnValueMainFlow = null;
+            flowUuidsByDataWord = null;
+            createdFlowParams = null;
+            wordStatusWorkers = null;
+            valueUUIDWorkers = null;
+        }
+    }
+
     /**
      * 
      * @param fromBusReadedData
@@ -528,27 +787,11 @@ public class ThWordStatusMainFlow {
             valueUUIDError = null;
         }
     }
-    //label
-    
-    
-    /*protected Integer getGroupIdByNumber(int groupNumber){
-        switch (groupNumber) {
-            case 1: //InDirNamesRecordsVolumeNumber.hashCode()
-                return -1160070363;
-            case 2: //SourcesNowMoveIntoNew.hashCode()
-                return 1247026961;
-            case 3: //LastAccessCountAccess.hashCode()
-                return -628632775;
-            case 4: //CacheToLimitFileSystemLimit.hashCode()
-                return 346081170;
-            case 5: //FlagsProcess.hashCode()
-                return 492307976;
-        }
-        return "defaultNotDetectedGroupNumber".hashCode();
-    }*/
-    /*protected Integer getGroupIdByStringName(String inputedName){
-        return inputedName.hashCode();
-    }*/
+    /**
+     * 
+     * @param dataInputed
+     * @return 
+     */
     protected UUID createInitMainFlow(final TdataWord dataInputed){
         ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> initMainFlow;
         ConcurrentSkipListMap<Integer, UUID> initValues;
@@ -596,6 +839,12 @@ public class ThWordStatusMainFlow {
             keyFlowStatusWorkers = null;
         }
     }
+    /**
+     * 
+     * @param dataInputed
+     * @param checkForExistUuid
+     * @return 
+     */
     protected Boolean isUuidExistInFlowByDataWord(final TdataWord dataInputed,
             UUID checkForExistUuid){
         ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> dataTypeWordTagNameSubStr;
@@ -629,6 +878,14 @@ public class ThWordStatusMainFlow {
             typeWordFunc = null;
         }
     }
+    /**
+     * 
+     * @param typeWordInputed
+     * @param tagNameInputed
+     * @param strSubStringInputed
+     * @param checkForExistUuid
+     * @return 
+     */
     protected Boolean isUuidExistInFlow(final Integer typeWordInputed, 
             final String tagNameInputed, 
             final String strSubStringInputed,
@@ -660,6 +917,11 @@ public class ThWordStatusMainFlow {
             typeWordFunc = null;
         }
     }
+    /**
+     * 
+     * @param dataInputed
+     * @return 
+     */
     private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> getFlowUuidsByDataWord(final TdataWord dataInputed){
         ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> dataTypeWordTagNameSubStr;
         TdataWord dataFunc;
@@ -817,7 +1079,12 @@ public class ThWordStatusMainFlow {
             tagNameFunc = null;
         }
     }
-    protected void setParamFlowUuidsByDataWord(final TdataWord dataInputed,
+    /**
+     * 
+     * @param dataInputed
+     * @param mainFlowContentInputed 
+     */
+    private void setParamFlowUuidsByDataWord(final TdataWord dataInputed,
             final ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> mainFlowContentInputed){
         TdataWord dataFunc;
         String tagNameFunc;
@@ -860,7 +1127,7 @@ public class ThWordStatusMainFlow {
      *          <ThWordStatusWorkers.hashCode(), recordUUID>
      * @throws IllegalArgumentException when count params or name not valid
      */
-    protected void setParamsPointsFlow(
+    private void setParamsPointsFlow(
             final Integer typeWordOuter,
             final String strSubStringOuter,
             final String tagNameOuter, 
@@ -898,6 +1165,11 @@ public class ThWordStatusMainFlow {
             strSubStringInner = null;
         }
     }
+    /**
+     * 
+     * @param fromBusReadedData
+     * @param mainFlowUuidForCheck 
+     */
     protected void validateInFlowAllPoints(final TdataWord fromBusReadedData,
             final UUID mainFlowUuidForCheck){
         TdataWord dataFromBusFunc;
@@ -1053,7 +1325,7 @@ public class ThWordStatusMainFlow {
      * @throws IllegalArgumentException when inputed number of parameter
      * out of bounds
      */
-    protected Integer getParamCodeByNumber(int numParam){
+    private Integer getParamCodeByNumber(int numParam){
         String[] paramNames;
         try {
             paramNames = getParamNames();
@@ -1082,7 +1354,7 @@ public class ThWordStatusMainFlow {
      * Count records (array.length) returned from {@link #getParamNames }
      * @return 
      */
-    protected Integer getParamCount(){
+    private Integer getParamCount(){
         String[] paramNames;
         try {
             paramNames = getParamNames();
@@ -1123,9 +1395,11 @@ public class ThWordStatusMainFlow {
             paramName = null;
         }
     }
-    
-    
-    protected ConcurrentSkipListMap<Integer, ConcurrentSkipListMap<String, ConcurrentSkipListMap<Integer, ConcurrentSkipListMap<String, 
+    /**
+     * 
+     * @return 
+     */
+    private ConcurrentSkipListMap<Integer, ConcurrentSkipListMap<String, ConcurrentSkipListMap<Integer, ConcurrentSkipListMap<String, 
                             ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>>>> createNewListStoragesMapEmpty(){
         return new ConcurrentSkipListMap<Integer, 
                         ConcurrentSkipListMap<String, 
@@ -1133,25 +1407,12 @@ public class ThWordStatusMainFlow {
                                 ConcurrentSkipListMap<String, 
                                     ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>>>>();
     }
-    /*protected Map<String, String> getOperationsFileNames(final int typeWordOuter, final String tagFileNameOuter){
-        Map<String, String> returnedNames;
-        try{
-            returnedNames = new HashMap<String, String>();
-            
-            //file names src dest
-            getGroupIdByNumber(2);
-            
-            return returnedNames;
-        } finally {
-            returnedNames = null;
-        }
-    }*/
     /**
-     * return list of not limited files from structure
+     * 
      * @param typeWordOuter
      * @return 
      */
-    protected ConcurrentSkipListMap<String, 
+    private ConcurrentSkipListMap<String, 
                 ConcurrentSkipListMap<Integer, 
                     ConcurrentSkipListMap<String, 
                         ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>>>> getListByType(final int typeWordOuter){

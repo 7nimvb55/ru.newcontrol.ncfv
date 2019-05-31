@@ -135,6 +135,35 @@ public class ThWordStatusWorkers {
         }
     }
     /**
+     * 
+     * @param keyPointFlowWorkersInputed
+     * @param paramNumber
+     * @return 
+     * @throw IllegalStateException is keyPointFlowWorkersInputed not exist
+     */
+    protected Boolean getValueForFlowPointByNumber(
+            final UUID keyPointFlowDataFsInputed, 
+            final Integer paramNumber){
+        ConcurrentSkipListMap<Integer, Boolean> getListValues;
+        Integer returnedParamValue;
+        UUID keyPointFlowWorkersFunc;
+        try{
+            keyPointFlowWorkersFunc = (UUID) keyPointFlowDataFsInputed;
+            returnedParamValue = (Integer) paramNumber;
+            if( isStatusWorkersNotExist(keyPointFlowWorkersFunc) ){
+                throw new IllegalStateException(ThWordStatusDataFs.class.getCanonicalName()
+                        + " not exist values for UUID "
+                        + keyPointFlowWorkersFunc.toString()
+                );
+            }
+            getListValues = this.poolStatusWorkers.get(keyPointFlowWorkersFunc);
+            return new Boolean(getListValues.get(returnedParamValue));
+        } finally {
+            keyPointFlowWorkersFunc = null;
+            getListValues = null;
+        }
+    }
+    /**
      * create new structure for UUID, and set all values to Boolean.FALSE
      * @param keyPointFlowWorkersInputed 
      * @see setInitParamWorkers()

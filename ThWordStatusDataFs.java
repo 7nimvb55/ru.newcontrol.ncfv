@@ -117,6 +117,38 @@ public class ThWordStatusDataFs {
         }
     }
     /**
+     * <ul>
+     * <li>0 - countRecordsOnFileSystem
+     * <li>1 - volumeNumber
+     * </ul>
+     * @param keyPointFlowDataFsInputed
+     * @param paramNumber
+     * @return 
+     * @throw IllegalStateException is keyPointFlowDataFsInputed not exist
+     */
+    protected Integer getValueForFlowPointByNumber(
+            final UUID keyPointFlowDataFsInputed, 
+            final Integer paramNumber){
+        ConcurrentSkipListMap<Integer, Integer> getListValues;
+        Integer returnedParamValue;
+        UUID keyPointFlowDataFsFunc;
+        try{
+            keyPointFlowDataFsFunc = (UUID) keyPointFlowDataFsInputed;
+            returnedParamValue = (Integer) paramNumber;
+            if( isStatusDataFsNotExist(keyPointFlowDataFsFunc) ){
+                throw new IllegalStateException(ThWordStatusDataFs.class.getCanonicalName()
+                        + " not exist values for UUID "
+                        + keyPointFlowDataFsFunc.toString()
+                );
+            }
+            getListValues = this.poolStatusDataFs.get(keyPointFlowDataFsFunc);
+            return new Integer(getListValues.get(returnedParamValue));
+        } finally {
+            keyPointFlowDataFsFunc = null;
+            getListValues = null;
+        }
+    }
+    /**
      * 
      * @param keyPointFlowDataFsInputed 
      */
@@ -300,7 +332,6 @@ public class ThWordStatusDataFs {
      * @throw IllegalArgumentException if count of parameters or his
      * names not equal concept
      */
-    
     protected void validateCountParams(final UUID keyPointFlowDataFs){
         UUID keyPointFlowDataFsFunc;
         ConcurrentSkipListMap<Integer, Integer> statusDataFsForKeyPointFlow;

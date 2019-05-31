@@ -112,6 +112,35 @@ public class ThWordStatusError {
         }
     }
     /**
+     * 
+     * @param keyPointFlowErrorInputed
+     * @param paramNumber
+     * @return 
+     * @throw IllegalStateException is keyPointFlowErrorInputed not exist
+     */
+    protected Integer getValueForFlowPointByNumber(
+            final UUID keyPointFlowDataFsInputed, 
+            final Integer paramNumber){
+        ConcurrentSkipListMap<Integer, Integer> getListValues;
+        Integer returnedParamValue;
+        UUID keyPointFlowErrorFunc;
+        try{
+            keyPointFlowErrorFunc = (UUID) keyPointFlowDataFsInputed;
+            returnedParamValue = (Integer) paramNumber;
+            if( isStatusErrorNotExist(keyPointFlowErrorFunc) ){
+                throw new IllegalStateException(ThWordStatusDataFs.class.getCanonicalName()
+                        + " not exist values for UUID "
+                        + keyPointFlowErrorFunc.toString()
+                );
+            }
+            getListValues = this.poolStatusError.get(keyPointFlowErrorFunc);
+            return new Integer(getListValues.get(returnedParamValue));
+        } finally {
+            keyPointFlowErrorFunc = null;
+            getListValues = null;
+        }
+    }
+    /**
      * create new structure for UUID, and set all values to 0 (zero)
      * @param keyPointFlowErrorInputed
      * @see setInitParamError()

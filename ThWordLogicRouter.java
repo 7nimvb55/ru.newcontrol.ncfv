@@ -202,6 +202,7 @@ public class ThWordLogicRouter {
         ConcurrentSkipListMap<UUID, TdataWord> pollDataByDataWord;
         UUID initMainFlowUUID;
         TdataWord dataFromBusFunc;
+        Boolean isAllReadedDataAddIntoCache;
         try {
             dataFromBusFunc = (TdataWord) fromBusReadedData;
             wordStatusMainFlow = (ThWordStatusMainFlow) outerRuleWord.getWordStatusMainFlow();
@@ -214,6 +215,7 @@ public class ThWordLogicRouter {
              * Name - (4) flowFileNamePrefix
              * Workers - (3) isCachedData
              */
+            isAllReadedDataAddIntoCache = Boolean.FALSE;
             pollDataByDataWord = null;
             try {
                 pollDataByDataWord = wordCacheReaded.pollDataByDataWord(dataFromBusFunc);
@@ -224,8 +226,10 @@ public class ThWordLogicRouter {
                 System.err.println(exNull.getMessage());
             }
             if( pollDataByDataWord != null ){
-                wordCache.addAllDataIntoCache(pollDataByDataWord);
-                endReadFlow(outerRuleWord, dataFromBusFunc, initMainFlowUUID);
+                isAllReadedDataAddIntoCache = wordCache.addAllDataIntoCache(pollDataByDataWord);
+                if( isAllReadedDataAddIntoCache ){
+                    endReadFlow(outerRuleWord, dataFromBusFunc, initMainFlowUUID);
+                }
             }
             
             wordCache.setDataIntoCacheFlow(dataFromBusFunc);
@@ -257,31 +261,16 @@ public class ThWordLogicRouter {
             final TdataWord fromBusReadedData,
             final UUID newCreatedMainFlow){
         ThWordStatusMainFlow wordStatusMainFlow;
+        ThWordBusReadedFlow wordFlowReaded;
         UUID createdMainFlow;
         ThWordCacheSk wordCache;
         ThWordCacheSk wordCacheReaded;
         ThWordState wordState;
-        ThWordBusReadedFlow wordFlowReaded;
-        ThWordStatusDataFs wordStatusDataFs;
-        ThWordStatusName wordStatusName;
-        ThWordStatusActivity wordStatusActivity;
-        ThWordStatusDataCache wordStatusDataCache;
-        ThWordStatusWorkers wordStatusWorkers;
-        ThWordStatusError wordStatusError;
-        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsByDataWord;
-        ConcurrentSkipListMap<Integer, UUID> createdFlowParams;
         TdataWord dataFromBusFunc;
         Long nanoTime;
         String buildTypeWordStoreSubDirictoriesFunc;
         Integer sizeDataInCache;
         Integer sizeDataInCacheReaded;
-        
-        UUID valueUUIDDataFs;
-        UUID valueUUIDName;
-        UUID valueUUIDActivity;
-        UUID valueUUIDDataCache;
-        UUID valueUUIDWorkers;
-        UUID valueUUIDError;
         try {
             dataFromBusFunc = (TdataWord) fromBusReadedData;
             wordState = (ThWordState) outerRuleWord.getWordState();
@@ -313,7 +302,17 @@ public class ThWordLogicRouter {
             }
         }
         finally {
-        
+            wordStatusMainFlow = null;
+            wordFlowReaded = null;
+            createdMainFlow = null;
+            wordCache = null;
+            wordCacheReaded = null;
+            wordState = null;
+            dataFromBusFunc = null;
+            nanoTime = null;
+            buildTypeWordStoreSubDirictoriesFunc = null;
+            sizeDataInCache = null;
+            sizeDataInCacheReaded = null;
         }
     }
     /**
@@ -340,6 +339,7 @@ public class ThWordLogicRouter {
             dataFromBusFunc = (TdataWord) fromBusReadedData;
             wordState = (ThWordState) outerRuleWord.getWordState();
             wordFlowReaded = wordState.getWordFlowReaded();
+            wordStatusMainFlow = (ThWordStatusMainFlow) outerRuleWord.getWordStatusMainFlow();
             /**
              * add getFuncByTdataWord
              * get UUID from ReadedFlowBus
@@ -355,6 +355,7 @@ public class ThWordLogicRouter {
                         //ifExistInMainFlowBus, change init newCreated param from readedUUIDparam = mainFlow(value)
                         //delete from main flow readedUUIDparam
                         valueReadedUUID = itemReadedUUIDS.getValue();
+                        wordStatusMainFlow.changeParamForMainUuidByNumberWorkers(dataFromBusFunc, valueReadedUUID, 1, Boolean.FALSE);
                     }
                 }
             } catch (IllegalArgumentException illExMessage) {

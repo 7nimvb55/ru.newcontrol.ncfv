@@ -117,6 +117,35 @@ public class ThWordStatusActivity {
     }
     /**
      * 
+     * @param keyPointFlowActivityInputed
+     * @param paramNumber
+     * @return 
+     * @throw IllegalStateException is keyPointFlowActivityInputed not exist
+     */
+    protected Long getValueForFlowPointByNumber(
+            final UUID keyPointFlowDataFsInputed, 
+            final Integer paramNumber){
+        ConcurrentSkipListMap<Integer, Long> getListValues;
+        Integer returnedParamValue;
+        UUID keyPointFlowActivityFunc;
+        try{
+            keyPointFlowActivityFunc = (UUID) keyPointFlowDataFsInputed;
+            returnedParamValue = (Integer) paramNumber;
+            if( isStatusActivityNotExist(keyPointFlowActivityFunc) ){
+                throw new IllegalStateException(ThWordStatusDataFs.class.getCanonicalName()
+                        + " not exist values for UUID "
+                        + keyPointFlowActivityFunc.toString()
+                );
+            }
+            getListValues = this.poolStatusActivity.get(keyPointFlowActivityFunc);
+            return new Long(getListValues.get(returnedParamValue));
+        } finally {
+            keyPointFlowActivityFunc = null;
+            getListValues = null;
+        }
+    }
+    /**
+     * 
      * @param keyPointFlowActivityInputed 
      */
     protected void createStructureParamsActivity(

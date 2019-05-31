@@ -123,6 +123,35 @@ public class ThWordStatusName {
     }
     /**
      * 
+     * @param keyPointFlowNameInputed
+     * @param paramNumber
+     * @return 
+     * @throw IllegalStateException is keyPointFlowNameInputed not exist
+     */
+    protected String getValueForFlowPointByNumber(
+            final UUID keyPointFlowDataFsInputed, 
+            final Integer paramNumber){
+        ConcurrentSkipListMap<Integer, String> getListValues;
+        Integer returnedParamValue;
+        UUID keyPointFlowNameFunc;
+        try{
+            keyPointFlowNameFunc = (UUID) keyPointFlowDataFsInputed;
+            returnedParamValue = (Integer) paramNumber;
+            if( isStatusNameNotExist(keyPointFlowNameFunc) ){
+                throw new IllegalStateException(ThWordStatusDataFs.class.getCanonicalName()
+                        + " not exist values for UUID "
+                        + keyPointFlowNameFunc.toString()
+                );
+            }
+            getListValues = this.poolStatusName.get(keyPointFlowNameFunc);
+            return new String(getListValues.get(returnedParamValue));
+        } finally {
+            keyPointFlowNameFunc = null;
+            getListValues = null;
+        }
+    }
+    /**
+     * 
      * @param keyPointFlowNameInputed 
      */
     protected void createStructureParamsName(

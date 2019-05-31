@@ -138,6 +138,35 @@ public class ThWordStatusDataCache {
         }
     }
     /**
+     * 
+     * @param keyPointFlowDataCacheInputed
+     * @param paramNumber
+     * @return 
+     * @throw IllegalStateException is keyPointFlowDataCacheInputed not exist
+     */
+    protected Integer getValueForFlowPointByNumber(
+            final UUID keyPointFlowDataFsInputed, 
+            final Integer paramNumber){
+        ConcurrentSkipListMap<Integer, Integer> getListValues;
+        Integer returnedParamValue;
+        UUID keyPointFlowDataCacheFunc;
+        try{
+            keyPointFlowDataCacheFunc = (UUID) keyPointFlowDataFsInputed;
+            returnedParamValue = (Integer) paramNumber;
+            if( isStatusDataCacheNotExist(keyPointFlowDataCacheFunc) ){
+                throw new IllegalStateException(ThWordStatusDataFs.class.getCanonicalName()
+                        + " not exist values for UUID "
+                        + keyPointFlowDataCacheFunc.toString()
+                );
+            }
+            getListValues = this.poolStatusDataCache.get(keyPointFlowDataCacheFunc);
+            return new Integer(getListValues.get(returnedParamValue));
+        } finally {
+            keyPointFlowDataCacheFunc = null;
+            getListValues = null;
+        }
+    }
+    /**
      * create new structure for UUID, and set all values to 0 (zero)
      * @param keyPointFlowDataCacheInputed
      * @see setInitParamDataCache()
