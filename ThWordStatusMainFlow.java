@@ -596,7 +596,70 @@ public class ThWordStatusMainFlow {
             keyFlowStatusWorkers = null;
         }
     }
-    
+    protected Boolean isUuidExistInFlowByDataWord(final TdataWord dataInputed,
+            UUID checkForExistUuid){
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> dataTypeWordTagNameSubStr;
+        
+        TdataWord dataInputedFunc;
+        UUID checkForExistUuidFunc;
+        
+        String tagNameFunc;
+        String strSubStringFunc;
+        Integer typeWordFunc;
+        try {
+            dataInputedFunc = (TdataWord) dataInputed;
+            checkForExistUuidFunc = (UUID) checkForExistUuid;
+            
+            tagNameFunc = dataInputedFunc.hexSubString;
+            strSubStringFunc = dataInputedFunc.strSubString;
+            typeWordFunc = dataInputedFunc.typeWord;
+            
+            dataTypeWordTagNameSubStr = getTypeWordTagFileNameFlowUuids(typeWordFunc, strSubStringFunc, tagNameFunc);
+            
+            if( !dataTypeWordTagNameSubStr.containsKey(checkForExistUuidFunc) ){
+                return Boolean.FALSE;
+            }
+            return Boolean.TRUE;
+        } finally {
+            dataTypeWordTagNameSubStr = null;
+            dataInputedFunc = null;
+            checkForExistUuidFunc = null;
+            tagNameFunc = null;
+            strSubStringFunc = null;
+            typeWordFunc = null;
+        }
+    }
+    protected Boolean isUuidExistInFlow(final Integer typeWordInputed, 
+            final String tagNameInputed, 
+            final String strSubStringInputed,
+            UUID checkForExistUuid){
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> dataTypeWordTagNameSubStr;
+        UUID checkForExistUuidFunc;
+        
+        String tagNameFunc;
+        String strSubStringFunc;
+        Integer typeWordFunc;
+        try {
+            checkForExistUuidFunc = (UUID) checkForExistUuid;
+            
+            tagNameFunc = (String) tagNameInputed;
+            strSubStringFunc = (String) strSubStringInputed;
+            typeWordFunc = (Integer) typeWordInputed;
+            
+            dataTypeWordTagNameSubStr = getTypeWordTagFileNameFlowUuids(typeWordFunc, strSubStringFunc, tagNameFunc);
+            
+            if( !dataTypeWordTagNameSubStr.containsKey(checkForExistUuidFunc) ){
+                return Boolean.FALSE;
+            }
+            return Boolean.TRUE;
+        } finally {
+            dataTypeWordTagNameSubStr = null;
+            checkForExistUuidFunc = null;
+            tagNameFunc = null;
+            strSubStringFunc = null;
+            typeWordFunc = null;
+        }
+    }
     private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> getFlowUuidsByDataWord(final TdataWord dataInputed){
         ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> dataTypeWordTagNameSubStr;
         TdataWord dataFunc;

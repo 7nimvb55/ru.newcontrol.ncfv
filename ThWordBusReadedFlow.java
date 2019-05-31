@@ -232,10 +232,7 @@ public class ThWordBusReadedFlow {
         ConcurrentSkipListMap<UUID, 
                     ConcurrentSkipListMap<Integer, UUID>> typeWordTagFileNameFlowUuidsFromMain;
         try {
-
-            
-            typeWordTagFileNameFlowUuidsFromMain = this.mainWordFlow.getTypeWordTagFileNameFlowUuids(typeWord, tagName, strSubString);
-            if( !typeWordTagFileNameFlowUuidsFromMain.containsKey(mainFlowContentInputed) ){
+            if( !this.mainWordFlow.isUuidExistInFlow(typeWord, tagName, strSubString, mainFlowContentInputed) ){
                 throw new IllegalArgumentException(ThWordBusReadedFlow.class.getCanonicalName() 
                         + " UUID: "
                         + mainFlowContentInputed.toString() 
