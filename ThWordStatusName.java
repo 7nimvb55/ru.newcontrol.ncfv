@@ -122,7 +122,13 @@ public class ThWordStatusName {
         }
     }
     /**
-     * 
+     * <ul>
+     * <li>0 - storageDirectoryName
+     * <li>1 - currentFileName
+     * <li>2 - newFileName
+     * <li>3 - deletedFileName
+     * <li>4 - flowFileNamePrefix
+     * </ul>
      * @param keyPointFlowNameInputed
      * @param paramNumber
      * @return 

@@ -145,7 +145,10 @@ public class ThWordStatusActivity {
         }
     }
     /**
-     * 
+     * <ul>
+     * <li>0 - lastAccessNanotime
+     * <li>1 - countDataUseIterationsSummary
+     * </ul>
      * @param keyPointFlowActivityInputed 
      */
     protected void createStructureParamsActivity(

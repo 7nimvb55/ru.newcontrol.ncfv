@@ -135,7 +135,20 @@ public class ThWordStatusWorkers {
         }
     }
     /**
-     * 
+     * <ul>
+     * <li>0 - isWriteProcess
+     * <li>1 - isReadProcess
+     * <li>2 - isNeedReadData
+     * <li>3 - isCachedData
+     * <li>4 - isCachedReadedData
+     * <li>5 - isCalculatedData
+     * <li>6 - isUdatedDataInHashMap
+     * <li>7 - isMoveFileReady
+     * <li>8 - isFlowInWriteBus
+     * <li>9 - isFlowInReadBus
+     * <li>10 - isNeedDeleteOldFile
+     * <li>11 - isOldFileDeleted
+     * </ul> 
      * @param keyPointFlowWorkersInputed
      * @param paramNumber
      * @return 

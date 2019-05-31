@@ -356,6 +356,7 @@ public class ThWordLogicRouter {
                         //delete from main flow readedUUIDparam
                         valueReadedUUID = itemReadedUUIDS.getValue();
                         wordStatusMainFlow.changeParamForMainUuidByNumberWorkers(dataFromBusFunc, valueReadedUUID, 1, Boolean.FALSE);
+                        wordStatusMainFlow.getValueForMainUuidByNumberWorkers(fromBusReadedData, valueReadedUUID, 1);
                     }
                 }
             } catch (IllegalArgumentException illExMessage) {

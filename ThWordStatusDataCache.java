@@ -138,7 +138,12 @@ public class ThWordStatusDataCache {
         }
     }
     /**
-     * 
+     * <ul>
+     * <li>0 - currentInCache
+     * <li>1 - currentInCacheReaded
+     * <li>2 - addNeedToFileSystemLimit
+     * <li>3 - indexSystemLimitOnStorage
+     * </ul>
      * @param keyPointFlowDataCacheInputed
      * @param paramNumber
      * @return 

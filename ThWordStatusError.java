@@ -112,7 +112,12 @@ public class ThWordStatusError {
         }
     }
     /**
-     * 
+     * <ul>
+     * <li>0 - isErrorOnWrite
+     * <li>1 - isErrorOnMove
+     * <li>2 - isNullOnDataInCache
+     * <li>3 - isErrorOnDataInCache
+     * </ul>
      * @param keyPointFlowErrorInputed
      * @param paramNumber
      * @return 
