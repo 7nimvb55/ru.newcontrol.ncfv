@@ -25,18 +25,18 @@ public class ThWordState {
     /**
      * ThWordBusWriter
      */
-    private ThWordBusWriter busWordRouterJobToWriter;
+    private ThWordBusFlowEvent busWordRouterJobToWriter;
     private Boolean isSetWordRouterJobToWriter;
     /**
      * ThWordBusReader
      */
-    private ThWordBusReader busWordRouterJobToReader;
+    private ThWordBusFlowEvent busWordRouterJobToReader;
     private Boolean isSetWordRouterJobToReader;
     /**
      * ThWordBusReadedFlow thWordFlowRead
      * @todo Bus into State
      */
-    private ThWordBusReadedFlow thWordFlowRead;
+    private ThWordBusFlowEvent thWordFlowRead;
     private Boolean isSetWordFlowReaded;
     
     public ThWordState() {
@@ -52,14 +52,14 @@ public class ThWordState {
      * @return 
      * @throws #java.lang.IllegalArgumentException
      */
-    protected ThWordBusWriter getBusJobForWordRouterJobToWriter(){
+    protected ThWordBusFlowEvent getBusJobForWordRouterJobToWriter(){
         if( !this.isWordRouterJobToWriter() ){
             throw new IllegalArgumentException("Bus jobs for output not set in " + ThWordState.class.getCanonicalName());
         }
-        return (ThWordBusWriter) this.busWordRouterJobToWriter;
+        return (ThWordBusFlowEvent) this.busWordRouterJobToWriter;
     }
-    protected void setBusJobForWordRouterJobToWriter(final ThWordBusWriter busWordRouterJobToWriterOuter){
-        this.busWordRouterJobToWriter = (ThWordBusWriter) busWordRouterJobToWriterOuter;
+    protected void setBusJobForWordRouterJobToWriter(final ThWordBusFlowEvent busWordRouterJobToWriterOuter){
+        this.busWordRouterJobToWriter = (ThWordBusFlowEvent) busWordRouterJobToWriterOuter;
         setTrueWordRouterJobToWriter();
     }
     protected void setTrueWordRouterJobToWriter(){
@@ -79,14 +79,14 @@ public class ThWordState {
      * @return 
      * @throws #java.lang.IllegalArgumentException
      */
-    protected ThWordBusReader getBusJobForWordRouterJobToReader(){
+    protected ThWordBusFlowEvent getBusJobForWordRouterJobToReader(){
         if( !this.isWordRouterJobToReader() ){
             throw new IllegalArgumentException("Bus jobs for output not set in " + ThWordState.class.getCanonicalName());
         }
-        return (ThWordBusReader) this.busWordRouterJobToReader;
+        return (ThWordBusFlowEvent) this.busWordRouterJobToReader;
     }
-    protected void setBusJobForWordRouterJobToReader(final ThWordBusReader busWordRouterJobToReaderOuter){
-        this.busWordRouterJobToReader = (ThWordBusReader) busWordRouterJobToReaderOuter;
+    protected void setBusJobForWordRouterJobToReader(final ThWordBusFlowEvent busWordRouterJobToReaderOuter){
+        this.busWordRouterJobToReader = (ThWordBusFlowEvent) busWordRouterJobToReaderOuter;
         setTrueWordRouterJobToReader();
     }
     protected void setTrueWordRouterJobToReader(){
@@ -105,13 +105,13 @@ public class ThWordState {
      * ThWordBusReadedFlow
      * @return 
      */
-    protected ThWordBusReadedFlow getWordFlowReaded(){
+    protected ThWordBusFlowEvent getWordFlowReaded(){
         if( !this.isWordFlowReaded() ){
             throw new IllegalArgumentException(ThWordBusReadedFlow.class.getCanonicalName() + " object not set in " + ThWordRule.class.getCanonicalName());
         }
         return this.thWordFlowRead;
     }
-    protected void setWordFlowReaded(final ThWordBusReadedFlow stateWordOuter){
+    protected void setWordFlowReaded(final ThWordBusFlowEvent stateWordOuter){
         this.thWordFlowRead = stateWordOuter;
         setTrueWordFlowReaded();
     }

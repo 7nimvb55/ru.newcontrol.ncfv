@@ -342,6 +342,10 @@ public class ThWordStatusActivity {
         
         try {
             keyPointFlowActivityFunc = (UUID) keyPointFlowActivity;
+            if( keyPointFlowActivityFunc == null ){
+                throw new NullPointerException(ThWordStatusActivity.class.getCanonicalName() 
+                        + " need point flow uuid, argument for validate is null");
+            }
             if( !isStatusActivityNotExist(keyPointFlowActivityFunc) ){
                 
                 statusActivityForKeyPointFlow = (ConcurrentSkipListMap<Integer, Long>) getStatusActivityForKeyPointFlow(keyPointFlowActivityFunc);

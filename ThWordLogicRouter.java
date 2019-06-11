@@ -335,6 +335,12 @@ public class ThWordLogicRouter {
         ThWordBusReadedFlow wordFlowReaded;
         TdataWord dataFromBusFunc;
         UUID valueReadedUUID;
+        
+        Boolean isMoveFileReady;
+        Boolean isNeedReadData;
+        Boolean isWriteProcess;
+        Boolean isCachedReadedData;
+        Boolean isReadProcess;
         try {
             dataFromBusFunc = (TdataWord) fromBusReadedData;
             wordState = (ThWordState) outerRuleWord.getWordState();
@@ -356,7 +362,27 @@ public class ThWordLogicRouter {
                         //delete from main flow readedUUIDparam
                         valueReadedUUID = itemReadedUUIDS.getValue();
                         wordStatusMainFlow.changeParamForMainUuidByNumberWorkers(dataFromBusFunc, valueReadedUUID, 1, Boolean.FALSE);
-                        wordStatusMainFlow.getValueForMainUuidByNumberWorkers(fromBusReadedData, valueReadedUUID, 1);
+                        isMoveFileReady = wordStatusMainFlow.getValueForMainUuidByNumberWorkers(dataFromBusFunc, valueReadedUUID, 7);
+                        isNeedReadData = wordStatusMainFlow.getValueForMainUuidByNumberWorkers(dataFromBusFunc, valueReadedUUID, 2);
+                        isWriteProcess = wordStatusMainFlow.getValueForMainUuidByNumberWorkers(dataFromBusFunc, valueReadedUUID, 0);
+                        isCachedReadedData = wordStatusMainFlow.getValueForMainUuidByNumberWorkers(dataFromBusFunc, valueReadedUUID, 4);
+                        isReadProcess = wordStatusMainFlow.getValueForMainUuidByNumberWorkers(dataFromBusFunc, valueReadedUUID, 1);
+                        if(isMoveFileReady){
+                            if(isNeedReadData){
+                                if(isWriteProcess){
+                                    if(!isCachedReadedData){
+                                        if(!isReadProcess){
+                                            
+                                        }
+                                    }else{
+                                        if(isReadProcess){
+                                            
+                                            
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             } catch (IllegalArgumentException illExMessage) {
@@ -365,7 +391,12 @@ public class ThWordLogicRouter {
                 System.out.println(nullExMessage.getMessage());
             }
         } finally {
-        
+            isMoveFileReady = null;
+            isNeedReadData = null;
+            isWriteProcess = null;
+            isCachedReadedData = null;
+            isReadProcess = null;
+
         }
     }
     private static void changeCreatedFlowWithRead(final ThWordRule outerRuleWord,

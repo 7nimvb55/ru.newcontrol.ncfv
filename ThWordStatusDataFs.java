@@ -343,6 +343,10 @@ public class ThWordStatusDataFs {
         
         try {
             keyPointFlowDataFsFunc = (UUID) keyPointFlowDataFs;
+            if( keyPointFlowDataFsFunc == null ){
+                throw new NullPointerException(ThWordStatusDataFs.class.getCanonicalName() 
+                        + " need point flow uuid, argument for validate is null");
+            }
             if( !isStatusDataFsNotExist(keyPointFlowDataFsFunc) ){
                 
                 statusDataFsForKeyPointFlow = (ConcurrentSkipListMap<Integer, Integer>) getStatusDataFsForKeyPointFlow(keyPointFlowDataFsFunc);

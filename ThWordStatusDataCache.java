@@ -377,6 +377,10 @@ public class ThWordStatusDataCache {
         
         try {
             keyPointFlowDataCacheFunc = (UUID) keyPointFlowDataCache;
+            if( keyPointFlowDataCacheFunc == null ){
+                throw new NullPointerException(ThWordStatusDataCache.class.getCanonicalName() 
+                        + " need point flow uuid, argument for validate is null");
+            }
             if( !isStatusDataCacheNotExist(keyPointFlowDataCacheFunc) ){
                 
                 statusDataCacheForKeyPointFlow = (ConcurrentSkipListMap<Integer, Integer>) getStatusDataCacheForKeyPointFlow(keyPointFlowDataCacheFunc);

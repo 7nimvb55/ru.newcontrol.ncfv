@@ -362,6 +362,10 @@ public class ThWordStatusName {
         
         try {
             keyPointFlowNameFunc = (UUID) keyPointFlowName;
+            if( keyPointFlowNameFunc == null ){
+                throw new NullPointerException(ThWordStatusName.class.getCanonicalName() 
+                        + " need point flow uuid, argument for validate is null");
+            }
             if( !isStatusNameNotExist(keyPointFlowNameFunc) ){
                 
                 statusNameForKeyPointFlow = (ConcurrentSkipListMap<Integer, String>) getStatusNameForKeyPointFlow(keyPointFlowNameFunc);

@@ -43,7 +43,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
  *     - (3a.5) - Boolean isFlowInWriteBus when data insert into Bus for Writer
  *     - (3a.5) - Boolean isFlowInReadBus when data insert into Bus for Reader
  *     - (3a.5) - Boolean isNeedDeleteOldFile when flow write, read iteration end
- *     - (3a.5) - Boolean isOldFileDeleted  when writer delete file woth old writed
+ *     - (3a.5) - Boolean isOldFileDeleted  when writer delete file with old writed
  *                  and readed data
  * @author wladimirowichbiaran
  */
@@ -404,6 +404,10 @@ public class ThWordStatusWorkers {
         
         try {
             keyPointFlowWorkersFunc = (UUID) keyPointFlowWorkers;
+            if( keyPointFlowWorkersFunc == null ){
+                throw new NullPointerException(ThWordStatusWorkers.class.getCanonicalName() 
+                        + " need point flow uuid, argument for validate is null");
+            }
             if( !isStatusWorkersNotExist(keyPointFlowWorkersFunc) ){
                 
                 statusWorkersForKeyPointFlow = (ConcurrentSkipListMap<Integer, Boolean>) getStatusWorkersForKeyPointFlow(keyPointFlowWorkersFunc);

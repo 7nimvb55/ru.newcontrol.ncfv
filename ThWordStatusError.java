@@ -349,6 +349,10 @@ public class ThWordStatusError {
         
         try {
             keyPointFlowErrorFunc = (UUID) keyPointFlowError;
+            if( keyPointFlowErrorFunc == null ){
+                throw new NullPointerException(ThWordStatusError.class.getCanonicalName() 
+                        + " need point flow uuid, argument for validate is null");
+            }
             if( !isStatusErrorNotExist(keyPointFlowErrorFunc) ){
                 
                 statusErrorForKeyPointFlow = (ConcurrentSkipListMap<Integer, Integer>) getStatusErrorForKeyPointFlow(keyPointFlowErrorFunc);
