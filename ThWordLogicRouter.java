@@ -261,7 +261,7 @@ public class ThWordLogicRouter {
             final TdataWord fromBusReadedData,
             final UUID newCreatedMainFlow){
         ThWordStatusMainFlow wordStatusMainFlow;
-        ThWordBusReadedFlow wordFlowReaded;
+        ThWordBusFlowEvent wordFlowReaded;
         UUID createdMainFlow;
         ThWordCacheSk wordCache;
         ThWordCacheSk wordCacheReaded;
@@ -277,11 +277,11 @@ public class ThWordLogicRouter {
             wordStatusMainFlow = (ThWordStatusMainFlow) outerRuleWord.getWordStatusMainFlow();
             wordCache = wordStatusMainFlow.getWordCache();
             wordCacheReaded = wordStatusMainFlow.getWordCacheReaded();
-            wordFlowReaded = (ThWordBusReadedFlow) wordState.getWordFlowReaded();
+            wordFlowReaded = (ThWordBusFlowEvent) wordState.getWordFlowReaded();
             createdMainFlow = (UUID) newCreatedMainFlow;
             
             if( createdMainFlow != null ){
-                wordStatusMainFlow.validateInFlowAllPoints(dataFromBusFunc, createdMainFlow);
+                wordStatusMainFlow.validateInFlowAllPointsByDataWord(dataFromBusFunc, createdMainFlow);
 
                 buildTypeWordStoreSubDirictoriesFunc = (String) ThWordHelper.buildTypeWordStoreSubDirictories(
                         dataFromBusFunc.typeWord,
@@ -292,6 +292,7 @@ public class ThWordLogicRouter {
                 sizeDataInCacheReaded = wordCacheReaded.sizeDataInCache(dataFromBusFunc.typeWord, dataFromBusFunc.hexSubString, dataFromBusFunc.strSubString);
                 wordStatusMainFlow.changeParamForMainUuidByNumberName(dataFromBusFunc, createdMainFlow, 0, buildTypeWordStoreSubDirictoriesFunc);
                 wordStatusMainFlow.changeParamForMainUuidByNumberName(dataFromBusFunc, createdMainFlow, 4, dataFromBusFunc.hexSubString);
+                wordStatusMainFlow.changeParamForMainUuidByNumberName(dataFromBusFunc, createdMainFlow, 5, dataFromBusFunc.strSubString);
                 nanoTime = System.nanoTime();
                 wordStatusMainFlow.changeParamForMainUuidByNumberActivity(dataFromBusFunc, createdMainFlow, 0, nanoTime);
                 wordStatusMainFlow.changeParamForMainUuidByNumberActivity(dataFromBusFunc, createdMainFlow, 0, 0L);

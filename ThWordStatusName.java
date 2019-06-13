@@ -128,6 +128,7 @@ public class ThWordStatusName {
      * <li>2 - newFileName
      * <li>3 - deletedFileName
      * <li>4 - flowFileNamePrefix
+     * <li>5 - secretStr
      * </ul>
      * @param keyPointFlowNameInputed
      * @param paramNumber
@@ -210,6 +211,7 @@ public class ThWordStatusName {
      * <li>2 - newFileName
      * <li>3 - deletedFileName
      * <li>4 - flowFileNamePrefix
+     * <li>5 - secretStr
      * </ul>
      * @param changedKeyPointFlowName
      * @param paramNumber
@@ -248,6 +250,7 @@ public class ThWordStatusName {
      * <li>2 - newFileName
      * <li>3 - deletedFileName
      * <li>4 - flowFileNamePrefix
+     * <li>5 - secretStr
      * </ul>
      * @return 
      */
@@ -259,7 +262,8 @@ public class ThWordStatusName {
                 "currentFileName",
                 "newFileName",
                 "deletedFileName",
-                "flowFileNamePrefix"
+                "flowFileNamePrefix",
+                "secretStr"
             };
             return namesForReturn;
         } finally {

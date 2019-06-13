@@ -63,6 +63,7 @@ public class ThWordBusFlowEvent {
         this.uuidReadedFlowMap = createNewListStoragesMapEmpty();
 
     }
+    
     /**
      * @param dataInputed
      * @return 
@@ -428,7 +429,6 @@ public class ThWordBusFlowEvent {
         LinkedTransferQueue<UUID> removedForReturn;
         try{
             forReturnData = createNewListStoragesMapEmpty();
-            //create list and put with key 
 
             forReturnHexTagNameLetter = new ConcurrentSkipListMap<String, 
             ConcurrentSkipListMap<Integer, 

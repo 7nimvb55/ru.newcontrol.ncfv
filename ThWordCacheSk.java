@@ -35,7 +35,7 @@ public class ThWordCacheSk {
     public ThWordCacheSk() {
         this.cachedData = createNewListStoragesMapEmpty();
     }
-    protected ConcurrentSkipListMap<Integer, 
+    private ConcurrentSkipListMap<Integer, 
         ConcurrentSkipListMap<String, 
             ConcurrentSkipListMap<Integer, 
                 ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, TdataWord>>>>> createNewListStoragesMapEmpty(){
@@ -562,6 +562,94 @@ public class ThWordCacheSk {
         }
     }
     /**
+     * poll by typeWord, hexTagName data
+     */
+    protected ConcurrentSkipListMap<UUID, TdataWord> pollDataByTypeWordHexTagName(
+        final Integer typeWordInputed,
+        final String hexTagNameInputed){
+        
+        ConcurrentSkipListMap<UUID, TdataWord> flowReturnedValueFunc;
+        ConcurrentSkipListMap<UUID, TdataWord> flowRecivedValueFunc;
+        ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<UUID, TdataWord>>>> listTypeWordData;
+        ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<UUID, TdataWord>>> listTagNameLetter;
+        ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<UUID, TdataWord>> listTagName;
+        Map.Entry<UUID, TdataWord> pollFirstEntry;
+        Integer typeWordFunc;
+        String tagNameFunc;
+        String tagNameLetter;
+        Integer tagNamelength;
+        Integer calculatedSubString;
+        try {
+            typeWordFunc = (Integer) typeWordInputed;
+            tagNameFunc = (String) hexTagNameInputed;
+            if( typeWordFunc == null || tagNameFunc == null ){
+                throw new NullPointerException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " Main Flow UUID is null");
+            }
+            tagNamelength = (Integer) tagNameFunc.length();
+            if( tagNamelength < 4 ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal length of inputed in index string, hexTagName: "
+                        + tagNameFunc + " length: " + tagNameFunc.length()
+                        + " < 4 ");
+            }
+            calculatedSubString = tagNamelength / 4;
+            tagNameLetter = tagNameFunc.substring(0, 3);
+            
+            listTypeWordData = this.cachedData.get(typeWordFunc);
+            if( listTypeWordData == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for typeWord: "
+                        + typeWordFunc);
+            }
+            listTagNameLetter = listTypeWordData.get(tagNameLetter);
+            if( listTagNameLetter == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for tagNameLetter: "
+                        + tagNameLetter);
+            }
+            listTagName = listTagNameLetter.get(calculatedSubString);
+            if( listTagName == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for subStringLength: "
+                        + calculatedSubString);
+            }
+            flowRecivedValueFunc = listTagName.get(tagNameFunc);
+            if(flowRecivedValueFunc == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for hexTagName: "
+                        + tagNameFunc);
+            }
+            flowReturnedValueFunc = new ConcurrentSkipListMap<UUID, TdataWord>();
+            do {
+                pollFirstEntry = flowRecivedValueFunc.pollFirstEntry();
+                if( pollFirstEntry != null ){
+                    flowReturnedValueFunc.put((UUID) pollFirstEntry.getKey(), (TdataWord) pollFirstEntry.getValue());
+                }
+            } while( !flowRecivedValueFunc.isEmpty() );
+            return flowReturnedValueFunc;
+        } finally {
+            pollFirstEntry = null;
+            flowRecivedValueFunc = null;
+            flowReturnedValueFunc = null;
+            listTypeWordData = null;
+            listTagNameLetter = null;
+            listTagName = null;
+
+            typeWordFunc = null;
+            tagNameFunc = null;
+            tagNamelength = null;
+            calculatedSubString = null;
+            tagNameLetter = null;
+        }
+    }
+    /**
      * Remove and return data from cache
      * {@code ConcurrentSkipListMap<Integer, 
      *      ConcurrentSkipListMap<String, 
@@ -636,6 +724,7 @@ public class ThWordCacheSk {
                         + " subString " + strSubStringFunc
                         + " data in cache is null");
             }
+            //do while and poll elements from list
             valTagNameListData = valListBySubStrLength.remove(tagNameFunc);
             if( valTagNameListData == null ){
                 throw new NullPointerException(ThWordCacheHa.class.getCanonicalName() 

@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedTransferQueue;
 
 /**
@@ -60,7 +61,7 @@ public class ThWordLogicWrite {
                     AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD);
             try( FileSystem fsForWriteData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
                 do {
-                    iterationBusData();
+                    iterationBusData(funcRuleWord, fsForWriteData);
                 } while( funcRuleWord.isRunnedWordWorkRouter() );
             } catch(FileSystemNotFoundException ex){
                 System.err.println(ex.getMessage());
@@ -85,7 +86,7 @@ public class ThWordLogicWrite {
             currentIndexStorages = null;
         }
     }
-    protected void iterationBusData(final ThWordRule outerRuleWord, final FileSystem fsForWriteData){
+    private void iterationBusData(final ThWordRule outerRuleWord, final FileSystem fsForWriteData){
         ThWordRule funcRuleWord;
         FileSystem fsForWriteDataFunc;
         ThWordState wordState;
@@ -105,8 +106,19 @@ public class ThWordLogicWrite {
             //wordCache = wordStatusMainFlow.getWordCache();
             pollAllBusData = busJobForWrite.pollAllBusData();
             /**
-             * process returned from bus data
+             * poll data  from cache by typeWord, hexTagName
              */
+            /**
+             * process returned from bus data
+             * 1. validate UUID
+             * 2. move cache and cacheReaded in state object
+             * 3. code in main flow object procedure for return data from cache by UUID
+             * 4. add state functional in main flow object
+             * 5. code and add list objects structure and validate procedures
+             * ConcurrentSkipListMap<Object, System.identityHashCode(Object x)>
+             * ...wait...wait...wait...
+             */
+            
             busJobForWrite.deleteBusPacketData(pollAllBusData);
 
 
@@ -114,7 +126,33 @@ public class ThWordLogicWrite {
         } finally {
             funcRuleWord = null;
             fsForWriteDataFunc = null;
+            wordState = null;
+            wordStatusMainFlow = null;
+            busJobForWrite = null;
             pollAllBusData = null;
+        }
+    }
+    private void processUuidFromBus(final ThWordRule outerRuleWordInputed, 
+            final FileSystem fsForWriteDataInputed, 
+            ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                LinkedTransferQueue<UUID>>>>> pollFromBusDataInputed){
+        ThWordRule outerRuleWordFunc;
+        FileSystem fsForWriteDataFunc;
+        ThWordStatusMainFlow wordStatusMainFlow;
+        ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                LinkedTransferQueue<UUID>>>>> pollFromBusDataFunc;
+        try {
+            outerRuleWordFunc = (ThWordRule) outerRuleWordInputed;
+            wordStatusMainFlow = (ThWordStatusMainFlow) outerRuleWordFunc.getWordStatusMainFlow();
+            
+        } finally {
+            
         }
     }
     protected void doOldWriteToIndexWord(final ThWordRule outerRuleWord){

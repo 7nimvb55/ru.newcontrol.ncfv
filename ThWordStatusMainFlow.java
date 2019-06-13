@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 
+
 /**
  *
  * @author wladimirowichbiaran
@@ -160,6 +161,7 @@ public class ThWordStatusMainFlow {
         Integer paramCodeByNumber;
         Integer keyRemovedItem;
         UUID valueRemovedItem;
+        UUID removedStatusUUID;
         try {
             if( this.fileStoragesMap == null ){
                 return Boolean.FALSE;
@@ -178,7 +180,7 @@ public class ThWordStatusMainFlow {
                                 countParam = getParamCount();
                                 for( int idx = 0 ; idx < countParam ; idx++ ){
                                     paramCodeByNumber = getParamCodeByNumber(idx);
-                                    UUID removedStatusUUID = removeMainFlowRec.remove(paramCodeByNumber);
+                                    removedStatusUUID = removeMainFlowRec.remove(paramCodeByNumber);
                                     if( this.thWordStatusActivity.removeStatusActivityForKeyPointFlow(removedStatusUUID) ){
                                         removedStatusUUID = null;
                                         continue;
@@ -217,6 +219,7 @@ public class ThWordStatusMainFlow {
             keyRemovedItem = null;
             valueRemovedItem = null;
             removeMainFlowRec = null;
+            removedStatusUUID = null;
             keyMainFlow = null;
         }
     }
@@ -243,6 +246,320 @@ public class ThWordStatusMainFlow {
     }
     private ThWordStatusWorkers getWordStatusWorkers(){
         return this.thWordStatusWorkers;
+    }
+    /**
+     * 
+     * @param typeWordInputed
+     * @param mainFlowUuid
+     * @param tagNameInputed
+     * @param numberParameter
+     * <ul>
+     * <li>0 - countRecordsOnFileSystem
+     * <li>1 - volumeNumber
+     * </ul>
+     * @return 
+     */
+    protected Integer getValueForValideUuuidByTypeWordHexTagNameNumberDataFs(
+            final Integer typeWordInputed,
+            final UUID mainFlowUuid,
+            final String tagNameInputed,
+            final Integer numberParameter
+    ){
+        Integer typeWordInputedFunc;
+        UUID mainFlowUuidFunc;
+        String tagNameInputedFunc;
+        Integer numberParameterFunc;
+        ConcurrentSkipListMap<Integer, UUID> flowUuidsByTypeWordHexTagName;
+        ThWordStatusDataFs wordStatusDataFs;
+        UUID valueUUIDDataFs;
+        Integer valueForFlowPointByNumber;
+        try {
+            typeWordInputedFunc = (Integer) typeWordInputed;
+            mainFlowUuidFunc = (UUID) mainFlowUuid;
+            tagNameInputedFunc = (String) tagNameInputed;
+            numberParameterFunc = (Integer) numberParameter;
+            valideInFlowAllPointsByTypeWordHexTagName(typeWordInputedFunc, mainFlowUuidFunc, tagNameInputedFunc);
+            flowUuidsByTypeWordHexTagName = getFlowUuidsByTypeWordHexTagName(typeWordInputedFunc, mainFlowUuidFunc, tagNameInputedFunc);
+            wordStatusDataFs = this.getWordStatusDataFs();
+            valueUUIDDataFs = flowUuidsByTypeWordHexTagName.get(this.getParamCodeByNumber(0));
+            wordStatusDataFs.validateCountParams(valueUUIDDataFs);
+            valueForFlowPointByNumber = wordStatusDataFs.getValueForFlowPointByNumber(valueUUIDDataFs, numberParameterFunc);
+            return valueForFlowPointByNumber;
+        } finally {
+            typeWordInputedFunc = null;
+            mainFlowUuidFunc = null;
+            tagNameInputedFunc = null;
+            numberParameterFunc = null;
+            flowUuidsByTypeWordHexTagName = null;
+            
+            wordStatusDataFs = null;
+            valueUUIDDataFs = null;
+            valueForFlowPointByNumber = null;
+        }
+    }
+    /**
+     * 
+     * @param typeWordInputed
+     * @param mainFlowUuid
+     * @param tagNameInputed
+     * @param numberParameter
+     * <ul>
+     * <li>0 - storageDirectoryName
+     * <li>1 - currentFileName
+     * <li>2 - newFileName
+     * <li>3 - deletedFileName
+     * <li>4 - flowFileNamePrefix
+     * </ul>
+     * @return 
+     */
+    protected String getValueForValideUuuidByTypeWordHexTagNameNumberName(
+            final Integer typeWordInputed,
+            final UUID mainFlowUuid,
+            final String tagNameInputed,
+            final Integer numberParameter
+    ){
+        Integer typeWordInputedFunc;
+        UUID mainFlowUuidFunc;
+        String tagNameInputedFunc;
+        Integer numberParameterFunc;
+        ConcurrentSkipListMap<Integer, UUID> flowUuidsByTypeWordHexTagName;
+        UUID valueUUIDName;
+        ThWordStatusName wordStatusName;
+        String valueForFlowPointByNumber;
+        try {
+            typeWordInputedFunc = (Integer) typeWordInputed;
+            mainFlowUuidFunc = (UUID) mainFlowUuid;
+            tagNameInputedFunc = (String) tagNameInputed;
+            numberParameterFunc = (Integer) numberParameter;
+            valideInFlowAllPointsByTypeWordHexTagName(typeWordInputedFunc, mainFlowUuidFunc, tagNameInputedFunc);
+            flowUuidsByTypeWordHexTagName = getFlowUuidsByTypeWordHexTagName(typeWordInputedFunc, mainFlowUuidFunc, tagNameInputedFunc);
+            wordStatusName = this.getWordStatusName();
+            valueUUIDName = flowUuidsByTypeWordHexTagName.get(this.getParamCodeByNumber(1));
+            wordStatusName.validateCountParams(valueUUIDName);
+            valueForFlowPointByNumber = wordStatusName.getValueForFlowPointByNumber(valueUUIDName, numberParameterFunc);
+            return valueForFlowPointByNumber;
+        } finally {
+            typeWordInputedFunc = null;
+            mainFlowUuidFunc = null;
+            tagNameInputedFunc = null;
+            numberParameterFunc = null;
+            flowUuidsByTypeWordHexTagName = null;
+            
+            wordStatusName = null;
+            valueUUIDName = null;
+            valueForFlowPointByNumber = null;
+        }
+    }
+    /**
+     * 
+     * @param typeWordInputed
+     * @param mainFlowUuid
+     * @param tagNameInputed
+     * @param numberParameter
+     * <ul>
+     * <li>0 - lastAccessNanotime
+     * <li>1 - countDataUseIterationsSummary
+     * </ul>
+     * @return 
+     */
+    protected Long getValueForValideUuuidByTypeWordHexTagNameNumberActivity(
+            final Integer typeWordInputed,
+            final UUID mainFlowUuid,
+            final String tagNameInputed,
+            final Integer numberParameter
+    ){
+        Integer typeWordInputedFunc;
+        UUID mainFlowUuidFunc;
+        String tagNameInputedFunc;
+        Integer numberParameterFunc;
+        ConcurrentSkipListMap<Integer, UUID> flowUuidsByTypeWordHexTagName;
+
+        ThWordStatusActivity wordStatusActivity;
+        UUID valueUUIDActivity;
+        Long valueForFlowPointByNumber;
+        try {
+            typeWordInputedFunc = (Integer) typeWordInputed;
+            mainFlowUuidFunc = (UUID) mainFlowUuid;
+            tagNameInputedFunc = (String) tagNameInputed;
+            numberParameterFunc = (Integer) numberParameter;
+            valideInFlowAllPointsByTypeWordHexTagName(typeWordInputedFunc, mainFlowUuidFunc, tagNameInputedFunc);
+            flowUuidsByTypeWordHexTagName = getFlowUuidsByTypeWordHexTagName(typeWordInputedFunc, mainFlowUuidFunc, tagNameInputedFunc);
+            wordStatusActivity = this.getWordStatusActivity();
+            valueUUIDActivity = flowUuidsByTypeWordHexTagName.get(this.getParamCodeByNumber(2));
+            wordStatusActivity.validateCountParams(valueUUIDActivity);
+            valueForFlowPointByNumber = wordStatusActivity.getValueForFlowPointByNumber(valueUUIDActivity, numberParameterFunc);
+            return valueForFlowPointByNumber;
+        } finally {
+            typeWordInputedFunc = null;
+            mainFlowUuidFunc = null;
+            tagNameInputedFunc = null;
+            numberParameterFunc = null;
+            flowUuidsByTypeWordHexTagName = null;
+            wordStatusActivity = null;
+            valueUUIDActivity = null;
+            valueForFlowPointByNumber = null;
+        }
+    }
+    /**
+     * 
+     * @param typeWordInputed
+     * @param mainFlowUuid
+     * @param tagNameInputed
+     * @param numberParameter
+     * <ul>
+     * <li>0 - currentInCache
+     * <li>1 - currentInCacheReaded
+     * <li>2 - addNeedToFileSystemLimit
+     * <li>3 - indexSystemLimitOnStorage
+     * </ul>
+     * @return 
+     */
+    protected Integer getValueForValideUuuidByTypeWordHexTagNameNumberDataCache(
+            final Integer typeWordInputed,
+            final UUID mainFlowUuid,
+            final String tagNameInputed,
+            final Integer numberParameter
+    ){
+        Integer typeWordInputedFunc;
+        UUID mainFlowUuidFunc;
+        String tagNameInputedFunc;
+        Integer numberParameterFunc;
+        ConcurrentSkipListMap<Integer, UUID> flowUuidsByTypeWordHexTagName;
+    ThWordStatusDataCache wordStatusDataCache;
+    UUID valueUUIDDataCache;
+        Integer valueForFlowPointByNumber;
+        try {
+            typeWordInputedFunc = (Integer) typeWordInputed;
+            mainFlowUuidFunc = (UUID) mainFlowUuid;
+            tagNameInputedFunc = (String) tagNameInputed;
+            numberParameterFunc = (Integer) numberParameter;
+            valideInFlowAllPointsByTypeWordHexTagName(typeWordInputedFunc, mainFlowUuidFunc, tagNameInputedFunc);
+            flowUuidsByTypeWordHexTagName = getFlowUuidsByTypeWordHexTagName(typeWordInputedFunc, mainFlowUuidFunc, tagNameInputedFunc);
+            wordStatusDataCache = this.getWordStatusDataCache();
+            valueUUIDDataCache = flowUuidsByTypeWordHexTagName.get(this.getParamCodeByNumber(3));
+            wordStatusDataCache.validateCountParams(valueUUIDDataCache);
+            valueForFlowPointByNumber = wordStatusDataCache.getValueForFlowPointByNumber(valueUUIDDataCache, numberParameterFunc);
+            return valueForFlowPointByNumber;
+        } finally {
+            typeWordInputedFunc = null;
+            mainFlowUuidFunc = null;
+            tagNameInputedFunc = null;
+            numberParameterFunc = null;
+            flowUuidsByTypeWordHexTagName = null;
+            wordStatusDataCache = null;
+            valueUUIDDataCache = null;
+            valueForFlowPointByNumber = null;
+        }
+    }
+    /**
+     * 
+     * @param typeWordInputed
+     * @param mainFlowUuid
+     * @param tagNameInputed
+     * @param numberParameter
+     * <ul>
+     * <li>0 - isWriteProcess
+     * <li>1 - isReadProcess
+     * <li>2 - isNeedReadData
+     * <li>3 - isCachedData
+     * <li>4 - isCachedReadedData
+     * <li>5 - isCalculatedData
+     * <li>6 - isUdatedDataInHashMap
+     * <li>7 - isMoveFileReady
+     * <li>8 - isFlowInWriteBus
+     * <li>9 - isFlowInReadBus
+     * <li>10 - isNeedDeleteOldFile
+     * <li>11 - isOldFileDeleted
+     * </ul> 
+     * @return 
+     */
+    protected Boolean getValueForValideUuuidByTypeWordHexTagNameNumberWorkers(
+            final Integer typeWordInputed,
+            final UUID mainFlowUuid,
+            final String tagNameInputed,
+            final Integer numberParameter
+    ){
+        Integer typeWordInputedFunc;
+        UUID mainFlowUuidFunc;
+        String tagNameInputedFunc;
+        Integer numberParameterFunc;
+        ConcurrentSkipListMap<Integer, UUID> flowUuidsByTypeWordHexTagName;
+        ThWordStatusWorkers wordStatusWorkers;
+        UUID valueUUIDWorkers;
+        Boolean valueForFlowPointByNumber;
+        try {
+            typeWordInputedFunc = (Integer) typeWordInputed;
+            mainFlowUuidFunc = (UUID) mainFlowUuid;
+            tagNameInputedFunc = (String) tagNameInputed;
+            numberParameterFunc = (Integer) numberParameter;
+            valideInFlowAllPointsByTypeWordHexTagName(typeWordInputedFunc, mainFlowUuidFunc, tagNameInputedFunc);
+            flowUuidsByTypeWordHexTagName = getFlowUuidsByTypeWordHexTagName(typeWordInputedFunc, mainFlowUuidFunc, tagNameInputedFunc);
+            wordStatusWorkers = this.getWordStatusWorkers();
+            valueUUIDWorkers = flowUuidsByTypeWordHexTagName.get(this.getParamCodeByNumber(4));
+            wordStatusWorkers.validateCountParams(valueUUIDWorkers);
+            valueForFlowPointByNumber = wordStatusWorkers.getValueForFlowPointByNumber(valueUUIDWorkers, numberParameterFunc);
+            return valueForFlowPointByNumber;
+        } finally {
+            typeWordInputedFunc = null;
+            mainFlowUuidFunc = null;
+            tagNameInputedFunc = null;
+            numberParameterFunc = null;
+            flowUuidsByTypeWordHexTagName = null;
+            wordStatusWorkers = null;
+            valueUUIDWorkers = null;
+            valueForFlowPointByNumber = null;
+        }
+    }
+    /**
+     * 
+     * @param typeWordInputed
+     * @param mainFlowUuid
+     * @param tagNameInputed
+     * @param numberParameter
+     * <ul>
+     * <li>0 - isErrorOnWrite
+     * <li>1 - isErrorOnMove
+     * <li>2 - isNullOnDataInCache
+     * <li>3 - isErrorOnDataInCache
+     * </ul>
+     * @return 
+     */
+    protected Integer getValueForValideUuuidByTypeWordHexTagNameNumberError(
+            final Integer typeWordInputed,
+            final UUID mainFlowUuid,
+            final String tagNameInputed,
+            final Integer numberParameter
+    ){
+        Integer typeWordInputedFunc;
+        UUID mainFlowUuidFunc;
+        String tagNameInputedFunc;
+        Integer numberParameterFunc;
+        ConcurrentSkipListMap<Integer, UUID> flowUuidsByTypeWordHexTagName;
+        ThWordStatusError wordStatusError;
+        UUID valueUUIDError;
+        Integer valueForFlowPointByNumber;
+        try {
+            typeWordInputedFunc = (Integer) typeWordInputed;
+            mainFlowUuidFunc = (UUID) mainFlowUuid;
+            tagNameInputedFunc = (String) tagNameInputed;
+            numberParameterFunc = (Integer) numberParameter;
+            valideInFlowAllPointsByTypeWordHexTagName(typeWordInputedFunc, mainFlowUuidFunc, tagNameInputedFunc);
+            flowUuidsByTypeWordHexTagName = getFlowUuidsByTypeWordHexTagName(typeWordInputedFunc, mainFlowUuidFunc, tagNameInputedFunc);
+            wordStatusError = this.getWordStatusError();
+            valueUUIDError = flowUuidsByTypeWordHexTagName.get(this.getParamCodeByNumber(5));
+            wordStatusError.validateCountParams(valueUUIDError);
+            valueForFlowPointByNumber = wordStatusError.getValueForFlowPointByNumber(valueUUIDError, numberParameterFunc);
+            return valueForFlowPointByNumber;
+        } finally {
+            typeWordInputedFunc = null;
+            mainFlowUuidFunc = null;
+            tagNameInputedFunc = null;
+            numberParameterFunc = null;
+            flowUuidsByTypeWordHexTagName = null;
+            wordStatusError = null;
+            valueUUIDError = null;
+            valueForFlowPointByNumber = null;
+        }
     }
     /**
      * 
@@ -1097,6 +1414,95 @@ public class ThWordStatusMainFlow {
             substringTagNameLetterFunc = null;
         }
     }
+    protected   ConcurrentSkipListMap<Integer, 
+                    UUID> getFlowUuidsByTypeWordHexTagName(
+            final Integer typeWordInputed,
+            final UUID mainFlowUuid,
+            final String tagNameInputed ){
+        
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsFunc;
+        ConcurrentSkipListMap<Integer, UUID> flowParamsFunc;
+        ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<UUID, 
+                    ConcurrentSkipListMap<Integer, UUID>>>>> listTypeWordData;
+        ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<UUID, 
+                    ConcurrentSkipListMap<Integer, UUID>>>> listTagNameLetter;
+        ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<UUID, 
+                    ConcurrentSkipListMap<Integer, 
+                    UUID>>> listTagName;
+        
+        Integer typeWordFunc;
+        UUID mainFlowUuidFunc;
+        String tagNameFunc;
+        String tagNameLetter;
+        Integer tagNamelength;
+        Integer calculatedSubString;
+        try {
+            typeWordFunc = (Integer) typeWordInputed;
+            mainFlowUuidFunc = (UUID) mainFlowUuid;
+            tagNameFunc = (String) tagNameInputed;
+            tagNamelength = (Integer) tagNameFunc.length();
+            if( mainFlowUuidFunc == null ){
+                throw new NullPointerException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " Main Flow UUID is null");
+            }
+            if( tagNamelength < 4 ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal length of inputed in index string, hexTagName: "
+                        + tagNameFunc + " length: " + tagNameFunc.length()
+                        + " < 4 ");
+            }
+            calculatedSubString = tagNamelength / 4;
+            tagNameLetter = tagNameFunc.substring(0, 3);
+            
+            listTypeWordData = this.fileStoragesMap.get(typeWordFunc);
+            if( listTypeWordData == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for typeWord: "
+                        + typeWordFunc);
+            }
+            listTagNameLetter = listTypeWordData.get(tagNameLetter);
+            if( listTagNameLetter == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for tagNameLetter: "
+                        + tagNameLetter);
+            }
+            listTagName = listTagNameLetter.get(calculatedSubString);
+            if( listTagName == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for subStringLength: "
+                        + calculatedSubString);
+            }
+            flowUuidsFunc = listTagName.get(tagNameFunc);
+            
+            flowParamsFunc = flowUuidsFunc.get(mainFlowUuidFunc);
+            if(flowParamsFunc == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for Main Flow UUID: "
+                        + mainFlowUuidFunc);
+            }
+            this.validateCountParams(flowParamsFunc);
+            return flowParamsFunc;
+        } finally {
+            flowUuidsFunc = null;
+            flowParamsFunc = null;
+            listTypeWordData = null;
+            listTagNameLetter = null;
+            listTagName = null;
+
+            typeWordFunc = null;
+            mainFlowUuidFunc = null;
+            tagNameFunc = null;
+            tagNamelength = null;
+            calculatedSubString = null;
+            tagNameLetter = null;
+        }
+    }
     /**
      * create default or get from lists
      * @param getListByTypeWord
@@ -1375,6 +1781,134 @@ public class ThWordStatusMainFlow {
             typeWordFunc = null;
             tagNameFunc = null;
             strSubStringFunc = null;
+        }
+    }
+    protected void valideInFlowAllPointsByTypeWordHexTagName(
+            final Integer typeWordInputed,
+            final UUID mainFlowUuid,
+            final String tagNameInputed ){
+        
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsFunc;
+        ConcurrentSkipListMap<Integer, UUID> flowParamsFunc;
+        ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<UUID, 
+                    ConcurrentSkipListMap<Integer, UUID>>>>> listTypeWordData;
+        ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<UUID, 
+                    ConcurrentSkipListMap<Integer, UUID>>>> listTagNameLetter;
+        ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<UUID, 
+                    ConcurrentSkipListMap<Integer, 
+                    UUID>>> listTagName;
+        ThWordStatusDataFs wordStatusDataFs;
+        ThWordStatusName wordStatusName;
+        ThWordStatusActivity wordStatusActivity;
+        ThWordStatusDataCache wordStatusDataCache;
+        ThWordStatusWorkers wordStatusWorkers;
+        ThWordStatusError wordStatusError;
+        
+        UUID valueUUIDDataFs;
+        UUID valueUUIDName;
+        UUID valueUUIDActivity;
+        UUID valueUUIDDataCache;
+        UUID valueUUIDWorkers;
+        UUID valueUUIDError;
+        
+        Integer typeWordFunc;
+        UUID mainFlowUuidFunc;
+        String tagNameFunc;
+        String tagNameLetter;
+        Integer tagNamelength;
+        Integer calculatedSubString;
+        try {
+            typeWordFunc = (Integer) typeWordInputed;
+            mainFlowUuidFunc = (UUID) mainFlowUuid;
+            tagNameFunc = (String) tagNameInputed;
+            tagNamelength = tagNameFunc.length();
+            
+            if( tagNamelength < 4 ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal length of inputed in index string, hexTagName: "
+                        + tagNameFunc + " length: " + tagNameFunc.length()
+                        + " < 4 ");
+            }
+            calculatedSubString = tagNamelength / 4;
+            tagNameLetter = tagNameFunc.substring(0, 3);
+            
+            listTypeWordData = this.fileStoragesMap.get(typeWordFunc);
+            if( listTypeWordData == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for typeWord: "
+                        + typeWordFunc);
+            }
+            listTagNameLetter = listTypeWordData.get(tagNameLetter);
+            if( listTagNameLetter == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for tagNameLetter: "
+                        + tagNameLetter);
+            }
+            listTagName = listTagNameLetter.get(calculatedSubString);
+            if( listTagName == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for subStringLength: "
+                        + calculatedSubString);
+            }
+            flowUuidsFunc = listTagName.get(tagNameFunc);
+            if( mainFlowUuidFunc != null ){
+                flowParamsFunc = flowUuidsFunc.get(mainFlowUuidFunc);
+                this.validateCountParams(flowParamsFunc);
+
+                wordStatusDataFs = this.getWordStatusDataFs();
+                wordStatusName = this.getWordStatusName();
+                wordStatusActivity = this.getWordStatusActivity();
+                wordStatusDataCache = this.getWordStatusDataCache();
+                wordStatusWorkers = this.getWordStatusWorkers();
+                wordStatusError = this.getWordStatusError();
+                
+                valueUUIDDataFs = flowParamsFunc.get(this.getParamCodeByNumber(0));
+                valueUUIDName = flowParamsFunc.get(this.getParamCodeByNumber(1));
+                valueUUIDActivity = flowParamsFunc.get(this.getParamCodeByNumber(2));
+                valueUUIDDataCache = flowParamsFunc.get(this.getParamCodeByNumber(3));
+                valueUUIDWorkers = flowParamsFunc.get(this.getParamCodeByNumber(4));
+                valueUUIDError = flowParamsFunc.get(this.getParamCodeByNumber(5));
+                
+                wordStatusDataFs.validateCountParams(valueUUIDDataFs);
+                wordStatusName.validateCountParams(valueUUIDName);
+                wordStatusActivity.validateCountParams(valueUUIDActivity);
+                wordStatusDataCache.validateCountParams(valueUUIDDataCache);
+                wordStatusWorkers.validateCountParams(valueUUIDWorkers);
+                wordStatusError.validateCountParams(valueUUIDError);
+            }
+        } finally {
+            flowUuidsFunc = null;
+            flowParamsFunc = null;
+            listTypeWordData = null;
+            listTagNameLetter = null;
+            listTagName = null;
+            
+            wordStatusDataFs = null;
+            wordStatusName = null;
+            wordStatusActivity = null;
+            wordStatusDataCache = null;
+            wordStatusWorkers = null;
+            wordStatusError = null;
+
+            valueUUIDDataFs = null;
+            valueUUIDName = null;
+            valueUUIDActivity = null;
+            valueUUIDDataCache = null;
+            valueUUIDWorkers = null;
+            valueUUIDError = null;
+            
+            typeWordFunc = null;
+            mainFlowUuidFunc = null;
+            tagNameFunc = null;
+            tagNamelength = null;
+            calculatedSubString = null;
+            tagNameLetter = null;
         }
     }
     /**
