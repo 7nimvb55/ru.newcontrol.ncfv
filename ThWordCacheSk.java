@@ -683,7 +683,8 @@ public class ThWordCacheSk {
         //(2b)
         ConcurrentSkipListMap<String, ConcurrentSkipListMap<UUID, TdataWord>> valListBySubStrLength;
         ConcurrentSkipListMap<UUID, TdataWord> valTagNameListData;
-        
+        ConcurrentSkipListMap<UUID, TdataWord> returnedTagNameListData;
+        Map.Entry<UUID, TdataWord> pollFirstEntry;
         String tagNameFunc;
         String strSubStringFunc;
         Integer typeWordFunc;
@@ -725,7 +726,7 @@ public class ThWordCacheSk {
                         + " data in cache is null");
             }
             //do while and poll elements from list
-            valTagNameListData = valListBySubStrLength.remove(tagNameFunc);
+            valTagNameListData = valListBySubStrLength.get(tagNameFunc);
             if( valTagNameListData == null ){
                 throw new NullPointerException(ThWordCacheHa.class.getCanonicalName() 
                         + " for word by type " + String.valueOf(typeWordFunc)
@@ -733,9 +734,18 @@ public class ThWordCacheSk {
                         + " subString " + strSubStringFunc
                         + " data in cache is null");
             }
-            return valTagNameListData;
+            returnedTagNameListData = new ConcurrentSkipListMap<UUID, TdataWord>();
+            do{
+                pollFirstEntry = valTagNameListData.pollFirstEntry();
+                if( pollFirstEntry != null ){
+                    returnedTagNameListData.put( (UUID) pollFirstEntry.getKey(), (TdataWord) pollFirstEntry.getValue());
+                }
+            } while( !valTagNameListData.isEmpty() );
+            return returnedTagNameListData;
         } finally {
+            pollFirstEntry = null;
             valListByTypeWord = null;
+            returnedTagNameListData = null;
             valListByTagNameCode = null;
             valListBySubStrLength = null;
             valTagNameListData = null;
