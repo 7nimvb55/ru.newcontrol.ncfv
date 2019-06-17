@@ -563,6 +563,8 @@ public class ThWordCacheSk {
     }
     /**
      * poll by typeWord, hexTagName data
+     * @throws IllegalArgumentException
+     * @throws NullPointerException
      */
     protected ConcurrentSkipListMap<UUID, TdataWord> pollDataByTypeWordHexTagName(
         final Integer typeWordInputed,

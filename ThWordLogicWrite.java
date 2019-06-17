@@ -116,9 +116,8 @@ public class ThWordLogicWrite {
              * 4. add state functional in main flow object
              * 5. code and add list objects structure and validate procedures
              * ConcurrentSkipListMap<Object, System.identityHashCode(Object x)>
-             * ...wait...wait...wait...
              */
-            
+            walkWriterJobBus(funcRuleWord, fsForWriteDataFunc, pollAllBusData);
             busJobForWrite.deleteBusPacketData(pollAllBusData);
 
 
@@ -132,7 +131,7 @@ public class ThWordLogicWrite {
             pollAllBusData = null;
         }
     }
-    private void processUuidFromBus(final ThWordRule outerRuleWordInputed, 
+    private void walkWriterJobBus(final ThWordRule outerRuleWordInputed, 
             final FileSystem fsForWriteDataInputed, 
             ConcurrentSkipListMap<Integer, 
                 ConcurrentSkipListMap<String, 
@@ -147,9 +146,272 @@ public class ThWordLogicWrite {
                 ConcurrentSkipListMap<Integer, 
                 ConcurrentSkipListMap<String, 
                 LinkedTransferQueue<UUID>>>>> pollFromBusDataFunc;
+        ConcurrentSkipListMap<String, 
+                ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                LinkedTransferQueue<UUID>>>> valueItemLvlTypeWord;
+        ConcurrentSkipListMap<Integer, ConcurrentSkipListMap<String, LinkedTransferQueue<UUID>>> valueItemLvlTagFileNameLetter;
+        ConcurrentSkipListMap<String, LinkedTransferQueue<UUID>> valueItemLvlSubStrLength;
+        LinkedTransferQueue<UUID> valueItemLvlTagFileName;
+        UUID pollUuidAboutWriteJob;
         try {
             outerRuleWordFunc = (ThWordRule) outerRuleWordInputed;
-            wordStatusMainFlow = (ThWordStatusMainFlow) outerRuleWordFunc.getWordStatusMainFlow();
+            fsForWriteDataFunc = (FileSystem) fsForWriteDataInputed;
+            pollFromBusDataFunc = pollFromBusDataInputed;
+            for( Map.Entry<Integer, 
+                    ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                    LinkedTransferQueue<UUID>>>>> itemLvlTypeWord : pollFromBusDataFunc.entrySet() ){
+                valueItemLvlTypeWord = itemLvlTypeWord.getValue();
+                for( Map.Entry<String, 
+                        ConcurrentSkipListMap<Integer, 
+                        ConcurrentSkipListMap<String, 
+                        LinkedTransferQueue<UUID>>>> itemLvlTagFileNameLetter : valueItemLvlTypeWord.entrySet() ){
+                    valueItemLvlTagFileNameLetter = itemLvlTagFileNameLetter.getValue();
+                    for( Map.Entry<Integer, 
+                            ConcurrentSkipListMap<String, 
+                            LinkedTransferQueue<UUID>>> itemLvlSubStrLength : valueItemLvlTagFileNameLetter.entrySet() ){
+                        valueItemLvlSubStrLength = itemLvlSubStrLength.getValue();
+                        for( Map.Entry<String, 
+                                LinkedTransferQueue<UUID>> itemLvlTagFileName : valueItemLvlSubStrLength.entrySet() ){
+                            valueItemLvlTagFileName = itemLvlTagFileName.getValue();
+                            do {
+                                pollUuidAboutWriteJob = valueItemLvlTagFileName.poll();
+                                if( pollUuidAboutWriteJob != null ){
+                                    getMainFlowCacheData(outerRuleWordFunc, fsForWriteDataFunc, pollUuidAboutWriteJob);
+                                }
+                            } while( !valueItemLvlTagFileName.isEmpty() );
+                        }
+                    }
+                }
+            }
+        } finally {
+            outerRuleWordFunc = null;
+            fsForWriteDataFunc = null;
+            wordStatusMainFlow = null;
+            pollFromBusDataFunc = null;
+            valueItemLvlTypeWord = null;
+            valueItemLvlTagFileNameLetter = null;
+            valueItemLvlSubStrLength = null;
+            valueItemLvlTagFileName = null;
+            pollUuidAboutWriteJob = null;
+        }
+    }
+    private void getMainFlowCacheData(final ThWordRule outerRuleWordInputed, 
+            final FileSystem fsForWriteDataInputed,
+            final Integer typeWordInputed,
+            final String hexTagNameInputed,
+            final UUID writerBusUuidInputed){
+        ThWordRule outerRuleWordFunc;
+        FileSystem fsForWriteDataFunc;
+        ThWordStatusMainFlow wordStatusMainFlowFunc;
+        ThWordCacheSk wordCache;
+        Integer typeWordFunc;
+        String hexTagNameFunc;
+        UUID writerBusUuidFunc;
+        Boolean workersIsWriteProcess;
+        String nameStorageDirectoryName;
+        String namePrefixFileName;
+        String localSrcFileName;
+        String localDestFileName;
+        Integer localSrcSize;
+        Integer localDestSize;
+        Integer localWritedSize;
+        Integer datafsVolumeNumber;
+        ConcurrentSkipListMap<UUID, TdataWord> pollTypeWordTagFileNameData;
+        ConcurrentSkipListMap<UUID, TdataWord> writedFromCacheData;
+        Map.Entry<UUID, TdataWord> pollFirstEntry;
+        Boolean localIsDataToVol;
+        Boolean localIsLimitForWrite;
+        try {
+            outerRuleWordFunc = (ThWordRule) outerRuleWordInputed;
+            wordStatusMainFlowFunc = (ThWordStatusMainFlow) outerRuleWordFunc.getWordStatusMainFlow();
+            wordCache = wordStatusMainFlowFunc.getWordCache();
+            
+            fsForWriteDataFunc = (FileSystem) fsForWriteDataInputed;
+            typeWordFunc = (Integer) typeWordInputed;
+            hexTagNameFunc = (String) hexTagNameInputed;
+            writerBusUuidFunc = (UUID) writerBusUuidInputed;
+            /**
+             * 1. mainFlowParams get values for Uuid
+             * 2. poll data from cache
+             * 3. generate names, voul numbers, count records for write
+             * 4. write data
+             * 5. set flags in main flow
+             * 6. change params in main flow
+             */
+            
+            workersIsWriteProcess = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  0);
+            if( !workersIsWriteProcess ){
+                pollTypeWordTagFileNameData = null;
+                try{
+                    pollTypeWordTagFileNameData = wordCache.pollDataByTypeWordHexTagName(typeWordFunc, hexTagNameFunc);
+                } catch (NullPointerException exRetNull) {
+                    System.err.println(exRetNull.getMessage());
+                    exRetNull.printStackTrace();
+                } catch (IllegalArgumentException exRetNull) {
+                    System.err.println(exRetNull.getMessage());
+                    exRetNull.printStackTrace();
+                }
+                if( pollTypeWordTagFileNameData != null ){
+                    if( !pollTypeWordTagFileNameData.isEmpty() ){
+                        nameStorageDirectoryName = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberName(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  0);
+                        // into helper class function
+                        Path storageTypeWordWritedDirectory = fsForWriteDataFunc.getPath(nameStorageDirectoryName);
+                        if( Files.notExists(storageTypeWordWritedDirectory, LinkOption.NOFOLLOW_LINKS) ){
+                            try{
+                                Files.createDirectories(storageTypeWordWritedDirectory);
+                            } catch (FileAlreadyExistsException exAlreadyExist) {
+                                exAlreadyExist.printStackTrace();
+                            } catch (SecurityException exSecurity) {
+                                exSecurity.printStackTrace();
+                            } catch (UnsupportedOperationException exUnSupp) {
+                                exUnSupp.printStackTrace();
+                            } catch (IOException exIO) {
+                                exIO.printStackTrace();
+                            }
+                        }
+                        // end into
+                        localSrcSize = 0;
+                        datafsVolumeNumber = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberDataFs(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  1);
+                        namePrefixFileName = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberName(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  4);
+                        localSrcFileName = new String()
+                            .concat(AppFileNamesConstants.SZFS_WORD_FILE_PREFIX)
+                            .concat(namePrefixFileName.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
+                            .concat(String.valueOf(localSrcSize))
+                            .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
+                            .concat(String.valueOf(datafsVolumeNumber));
+                
+                
+                        localIsDataToVol = Boolean.FALSE;
+                        localDestSize = 0;
+                        do {
+                            if( pollTypeWordTagFileNameData.size() > AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT){
+                                writedFromCacheData = new ConcurrentSkipListMap<UUID, TdataWord>();
+                                do {
+                                    pollFirstEntry = pollTypeWordTagFileNameData.pollFirstEntry();
+                                    if( pollFirstEntry != null ){
+                                        writedFromCacheData.put(pollFirstEntry.getKey(), pollFirstEntry.getValue());
+                                        localDestSize++;
+                                    }
+                                    localIsLimitForWrite = writedFromCacheData.size() == AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT;
+                                    if( localIsLimitForWrite ){
+                                        localDestFileName = new String()
+                                            .concat(AppFileNamesConstants.SZFS_WORD_FILE_PREFIX)
+                                            .concat(namePrefixFileName.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
+                                            .concat(String.valueOf(localDestSize))
+                                            .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
+                                            .concat(String.valueOf(datafsVolumeNumber));
+                                        //---section for next code release --- write to
+                                        Path nowWritedFile = fsForWriteDataFunc.getPath(storageTypeWordWritedDirectory.toString(), localDestFileName);
+
+                                        try( ObjectOutputStream oos = 
+                                            new ObjectOutputStream(Files.newOutputStream(nowWritedFile)) )
+                                        {
+                                            oos.writeObject(pollTypeWordTagFileNameData);
+                                            System.out.println(ThWordLogicWrite.class.getCanonicalName() 
+                                                    + " => => =>                                             => => => " 
+                                                    + nowWritedFile.toUri().toString() 
+                                                    + " writed size " + pollTypeWordTagFileNameData.size());
+                                            wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 0, Boolean.TRUE);
+                                        } catch(Exception ex){
+                                            ex.printStackTrace();
+                                        }
+                                        //isMoveFileReady - -1884096596
+                                        Boolean getIsMoveReady = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 7);
+                                        if( getIsMoveReady ){
+                                            continue;
+                                        }
+                                        //---section for next code release --- move to
+                                        Path moveToFile = fsForWriteData.getPath(storageDirectoryName, newFileName);
+                                        try{
+                                            Files.move(nowWritedFile, moveToFile, StandardCopyOption.ATOMIC_MOVE);
+                                            statusWorkersForKeyPointFlow.put(-1884096596, Boolean.TRUE);
+                                            statusWorkersForKeyPointFlow.put(-83825824, Boolean.TRUE);
+                                            statusNameForKeyPointFlow.put(1517772480, newFileName);
+                                            //after delete oldFile
+                                            ConcurrentHashMap<String, String> remove = busVal.getValue().remove(mainFlowLabel);
+                                            remove = null;
+                                        } catch(SecurityException exSecurity) {
+                                            System.err.println(exSecurity.getMessage());
+                                            exSecurity.printStackTrace();
+                                        } catch(AtomicMoveNotSupportedException exAtomic) {
+                                            System.err.println(exAtomic.getMessage());
+                                            exAtomic.printStackTrace();
+                                        } catch(FileAlreadyExistsException exAlreadyExists) {
+                                            System.err.println(exAlreadyExists.getMessage());
+                                            exAlreadyExists.printStackTrace();
+                                        } catch(UnsupportedOperationException exUnsupported) {
+                                            System.err.println(exUnsupported.getMessage());
+                                            exUnsupported.printStackTrace();
+                                        }
+
+                                        datafsVolumeNumber++;
+                                        //delete data from to write writedFromCacheData
+                                        writedFromCacheData = new ConcurrentSkipListMap<UUID, TdataWord>();
+                                    }
+                                    localIsDataToVol = pollTypeWordTagFileNameData.size() > AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT;
+
+                                } while( localIsDataToVol );
+                            }
+                            localDestFileName = new String()
+                                .concat(AppFileNamesConstants.SZFS_WORD_FILE_PREFIX)
+                                .concat(namePrefixFileName.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
+                                .concat(String.valueOf(localDestSize))
+                                .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
+                                .concat(String.valueOf(datafsVolumeNumber));
+                            //---section for next code release --- write to
+                            Path nowWritedFile = fsForWriteDataFunc.getPath(storageTypeWordWritedDirectory.toString(), localDestFileName);
+
+                            try(ObjectOutputStream oos = 
+                                new ObjectOutputStream(Files.newOutputStream(nowWritedFile)))
+                            {
+                                oos.writeObject(pollTypeWordTagFileNameData);
+                                System.out.println(ThWordLogicWrite.class.getCanonicalName() 
+                                        + " => => =>                                             => => => " 
+                                        + nowWritedFile.toUri().toString() 
+                                        + " writed size " + pollTypeWordTagFileNameData.size());
+                                //isWriteInProcess - 1640531930
+                                statusWorkersForKeyPointFlow.put(1640531930, Boolean.TRUE);
+                                wordStatusMainFlowFunc.changeValueForValideUuuidByTypeWordHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  0);
+                            } catch(Exception ex){
+                                ex.printStackTrace();
+                            }
+                            //isMoveFileReady - -1884096596
+                            Boolean getIsMoveReady = statusWorkersForKeyPointFlow.get(-1884096596);
+                            if( getIsMoveReady ){
+                                continue;
+                            }
+                            //---section for next code release --- move to
+                            Path moveToFile = fsForWriteData.getPath(storageDirectoryName, newFileName);
+                            try{
+                                Files.move(nowWritedFile, moveToFile, StandardCopyOption.ATOMIC_MOVE);
+                                statusWorkersForKeyPointFlow.put(-1884096596, Boolean.TRUE);
+                                statusWorkersForKeyPointFlow.put(-83825824, Boolean.TRUE);
+                                statusNameForKeyPointFlow.put(1517772480, newFileName);
+                                //after delete oldFile
+                                ConcurrentHashMap<String, String> remove = busVal.getValue().remove(mainFlowLabel);
+                                remove = null;
+                            } catch(SecurityException exSecurity) {
+                                System.err.println(exSecurity.getMessage());
+                                exSecurity.printStackTrace();
+                            } catch(AtomicMoveNotSupportedException exAtomic) {
+                                System.err.println(exAtomic.getMessage());
+                                exAtomic.printStackTrace();
+                            } catch(FileAlreadyExistsException exAlreadyExists) {
+                                System.err.println(exAlreadyExists.getMessage());
+                                exAlreadyExists.printStackTrace();
+                            } catch(UnsupportedOperationException exUnsupported) {
+                                System.err.println(exUnsupported.getMessage());
+                                exUnsupported.printStackTrace();
+                            }
+                            //---section for next code release --- delete data from to write pollTypeWordTagFileNameData
+                            //---section for next code release --- set params to flow
+                        } while ( !pollTypeWordTagFileNameData.isEmpty() );
+                    }
+                }
+            }
             
         } finally {
             

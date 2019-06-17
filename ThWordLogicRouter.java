@@ -296,8 +296,10 @@ public class ThWordLogicRouter {
                 nanoTime = System.nanoTime();
                 wordStatusMainFlow.changeParamForMainUuidByNumberActivity(dataFromBusFunc, createdMainFlow, 0, nanoTime);
                 wordStatusMainFlow.changeParamForMainUuidByNumberActivity(dataFromBusFunc, createdMainFlow, 0, 0L);
+                
                 wordStatusMainFlow.changeParamForMainUuidByNumberDataCache(dataFromBusFunc, createdMainFlow, 0, sizeDataInCache);
                 wordStatusMainFlow.changeParamForMainUuidByNumberDataCache(dataFromBusFunc, createdMainFlow, 1, sizeDataInCache);
+                
                 wordStatusMainFlow.changeParamForMainUuidByNumberWorkers(dataFromBusFunc, createdMainFlow, 4, sizeDataInCache > 0);
                 wordStatusMainFlow.changeParamForMainUuidByNumberWorkers(dataFromBusFunc, createdMainFlow, 4, sizeDataInCacheReaded > 0);
             }

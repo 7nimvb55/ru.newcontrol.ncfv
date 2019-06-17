@@ -79,11 +79,22 @@ public class AppFileNamesConstants {
      */
     protected static String SZFS_DIR_LIST_FILE_PREFIX = "dl-";
     /**
-     * Storage Zip File System for index system LongWord
+     * Storage Zip File System for index system StorageWord
      * prefix for data file
      * return wl-
      */
     protected static String SZFS_STORAGE_WORD_FILE_PREFIX = "wl-";
+    /**
+     * Storage Zip File System for index system Word
+     * prefix for data file
+     * return w-
+     */
+    protected static String SZFS_WORD_FILE_PREFIX = "w-";
+    /**
+     * Storage Zip File System for index system DirList
+     * prefix for contained not limit count records data file
+     * return notlimited-
+     */
     protected static String SZFS_DIR_LIST_FILE_NOT_LIMITED = "notlimited-";
     
     protected static String FILE_INDEX_KEY_MAP_URI = "UriForStorage";
