@@ -211,8 +211,11 @@ public class ThWordLogicWrite {
         String hexTagNameFunc;
         UUID writerBusUuidFunc;
         Boolean workersIsWriteProcess;
+        Boolean workersIsMoveReady;
         String nameStorageDirectoryName;
         String namePrefixFileName;
+        Path nowWritedFile;
+        Path moveToFile;
         String localSrcFileName;
         String localDestFileName;
         Integer localSrcSize;
@@ -276,12 +279,7 @@ public class ThWordLogicWrite {
                         localSrcSize = 0;
                         datafsVolumeNumber = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberDataFs(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  1);
                         namePrefixFileName = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberName(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  4);
-                        localSrcFileName = new String()
-                            .concat(AppFileNamesConstants.SZFS_WORD_FILE_PREFIX)
-                            .concat(namePrefixFileName.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
-                            .concat(String.valueOf(localSrcSize))
-                            .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
-                            .concat(String.valueOf(datafsVolumeNumber));
+                        
                 
                 
                         localIsDataToVol = Boolean.FALSE;
@@ -293,43 +291,55 @@ public class ThWordLogicWrite {
                                     pollFirstEntry = pollTypeWordTagFileNameData.pollFirstEntry();
                                     if( pollFirstEntry != null ){
                                         writedFromCacheData.put(pollFirstEntry.getKey(), pollFirstEntry.getValue());
-                                        localDestSize++;
                                     }
-                                    localIsLimitForWrite = writedFromCacheData.size() == AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT;
+                                    localDestSize = writedFromCacheData.size();
+                                    localIsLimitForWrite = localDestSize == AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT;
                                     if( localIsLimitForWrite ){
+                                        localSrcFileName = new String()
+                                            .concat(AppFileNamesConstants.SZFS_WORD_FILE_PREFIX)
+                                            .concat(namePrefixFileName.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
+                                            .concat(String.valueOf(localSrcSize))
+                                            .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
+                                            .concat(String.valueOf(datafsVolumeNumber));
+                                        //---section for next code release --- write to
+                                        
+                                        nowWritedFile = fsForWriteDataFunc.getPath(storageTypeWordWritedDirectory.toString(), localSrcFileName);
+
+                                        try( ObjectOutputStream oos = 
+                                            new ObjectOutputStream(Files.newOutputStream(nowWritedFile)) )
+                                        {
+                                            oos.writeObject(writedFromCacheData);
+                                            System.out.println(ThWordLogicWrite.class.getCanonicalName() 
+                                                    + " => => =>                                             => => => " 
+                                                    + nowWritedFile.toUri().toString() 
+                                                    + " writed size " + localDestSize);
+                                            wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 0, Boolean.TRUE);
+                                        } catch(Exception ex){
+                                            ex.printStackTrace();
+                                        }
+                                        //isMoveFileReady - -1884096596
+                                        
+                                        workersIsMoveReady = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 7);
+                                        if( workersIsMoveReady ){
+                                            continue;
+                                        }
+                                        /**
+                                         * build names for write and move operations
+                                         */
                                         localDestFileName = new String()
                                             .concat(AppFileNamesConstants.SZFS_WORD_FILE_PREFIX)
                                             .concat(namePrefixFileName.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
                                             .concat(String.valueOf(localDestSize))
                                             .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
                                             .concat(String.valueOf(datafsVolumeNumber));
-                                        //---section for next code release --- write to
-                                        Path nowWritedFile = fsForWriteDataFunc.getPath(storageTypeWordWritedDirectory.toString(), localDestFileName);
-
-                                        try( ObjectOutputStream oos = 
-                                            new ObjectOutputStream(Files.newOutputStream(nowWritedFile)) )
-                                        {
-                                            oos.writeObject(pollTypeWordTagFileNameData);
-                                            System.out.println(ThWordLogicWrite.class.getCanonicalName() 
-                                                    + " => => =>                                             => => => " 
-                                                    + nowWritedFile.toUri().toString() 
-                                                    + " writed size " + pollTypeWordTagFileNameData.size());
-                                            wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 0, Boolean.TRUE);
-                                        } catch(Exception ex){
-                                            ex.printStackTrace();
-                                        }
-                                        //isMoveFileReady - -1884096596
-                                        Boolean getIsMoveReady = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 7);
-                                        if( getIsMoveReady ){
-                                            continue;
-                                        }
                                         //---section for next code release --- move to
-                                        Path moveToFile = fsForWriteData.getPath(storageDirectoryName, newFileName);
+                                        
+                                        moveToFile = fsForWriteDataFunc.getPath(storageTypeWordWritedDirectory.toString(), localDestFileName);
                                         try{
                                             Files.move(nowWritedFile, moveToFile, StandardCopyOption.ATOMIC_MOVE);
-                                            statusWorkersForKeyPointFlow.put(-1884096596, Boolean.TRUE);
-                                            statusWorkersForKeyPointFlow.put(-83825824, Boolean.TRUE);
-                                            statusNameForKeyPointFlow.put(1517772480, newFileName);
+                                            wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 7, Boolean.TRUE);
+                                            wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 2, Boolean.TRUE);
+                                            wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberName(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 1, localDestFileName);
                                             //after delete oldFile
                                             ConcurrentHashMap<String, String> remove = busVal.getValue().remove(mainFlowLabel);
                                             remove = null;
@@ -345,6 +355,9 @@ public class ThWordLogicWrite {
                                         } catch(UnsupportedOperationException exUnsupported) {
                                             System.err.println(exUnsupported.getMessage());
                                             exUnsupported.printStackTrace();
+                                        } catch(IOException exIO) {
+                                            System.err.println(exIO.getMessage());
+                                            exIO.printStackTrace();
                                         }
 
                                         datafsVolumeNumber++;
