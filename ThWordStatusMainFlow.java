@@ -868,6 +868,18 @@ public class ThWordStatusMainFlow {
             valueUUIDWorkers = null;
         }
     }
+    /**
+     * 
+     * @param typeWordInputed
+     * @param hexTagNameInputed
+     * @param mainFlowUuidForChange
+     * @param numberParam
+     * <ul>
+     * <li>0 - countRecordsOnFileSystem
+     * <li>1 - volumeNumber
+     * </ul>
+     * @param changedValue 
+     */
     protected void changeParamForMainUuidByHexTagNameNumberDataFs(
             final Integer typeWordInputed,
             final String hexTagNameInputed,
@@ -904,6 +916,22 @@ public class ThWordStatusMainFlow {
             changedValueFunc = null;
         }
     }
+    /**
+     * 
+     * @param typeWordInputed
+     * @param hexTagNameInputed
+     * @param mainFlowUuidForChange
+     * @param numberParam
+     * <ul>
+     * <li>0 - storageDirectoryName
+     * <li>1 - currentFileName
+     * <li>2 - newFileName
+     * <li>3 - deletedFileName
+     * <li>4 - flowFileNamePrefix
+     * <li>5 - secretStr
+     * </ul>
+     * @param changedValue 
+     */
     protected void changeParamForMainUuidByHexTagNameNumberName(
             final Integer typeWordInputed,
             final String hexTagNameInputed,
@@ -940,6 +968,18 @@ public class ThWordStatusMainFlow {
             changedValueFunc = null;
         }
     }
+    /**
+     * 
+     * @param typeWordInputed
+     * @param hexTagNameInputed
+     * @param mainFlowUuidForChange
+     * @param numberParam
+     * <ul>
+     * <li>0 - lastAccessNanotime
+     * <li>1 - countDataUseIterationsSummary
+     * </ul>
+     * @param changedValue 
+     */
     protected void changeParamForMainUuidByHexTagNameNumberActivity(
             final Integer typeWordInputed,
             final String hexTagNameInputed,
@@ -976,6 +1016,20 @@ public class ThWordStatusMainFlow {
             changedValueFunc = null;
         }
     }
+    /**
+     * 
+     * @param typeWordInputed
+     * @param hexTagNameInputed
+     * @param mainFlowUuidForChange
+     * @param numberParam
+     * <ul>
+     * <li>0 - currentInCache
+     * <li>1 - currentInCacheReaded
+     * <li>2 - addNeedToFileSystemLimit
+     * <li>3 - indexSystemLimitOnStorage
+     * </ul>
+     * @param changedValue 
+     */
     protected void changeParamForMainUuidByHexTagNameNumberDataCache(
             final Integer typeWordInputed,
             final String hexTagNameInputed,
@@ -1012,6 +1066,28 @@ public class ThWordStatusMainFlow {
             changedValueFunc = null;
         }
     }
+    /**
+     * 
+     * @param typeWordInputed
+     * @param hexTagNameInputed
+     * @param mainFlowUuidForChange
+     * @param numberParam
+     * <ul>
+     * <li>0 - isWriteProcess
+     * <li>1 - isReadProcess
+     * <li>2 - isNeedReadData
+     * <li>3 - isCachedData
+     * <li>4 - isCachedReadedData
+     * <li>5 - isCalculatedData
+     * <li>6 - isUdatedDataInHashMap
+     * <li>7 - isMoveFileReady
+     * <li>8 - isFlowInWriteBus
+     * <li>9 - isFlowInReadBus
+     * <li>10 - isNeedDeleteOldFile
+     * <li>11 - isOldFileDeleted
+     * </ul>
+     * @param changedValue 
+     */
     protected void changeParamForMainUuidByHexTagNameNumberWorkers(
             final Integer typeWordInputed,
             final String hexTagNameInputed,
@@ -1048,6 +1124,20 @@ public class ThWordStatusMainFlow {
             changedValueFunc = null;
         }
     }
+    /**
+     * 
+     * @param typeWordInputed
+     * @param hexTagNameInputed
+     * @param mainFlowUuidForChange
+     * @param numberParam
+     * <ul>
+     * <li>0 - isErrorOnWrite
+     * <li>1 - isErrorOnMove
+     * <li>2 - isNullOnDataInCache
+     * <li>3 - isErrorOnDataInCache
+     * </ul>
+     * @param changedValue 
+     */
     protected void changeParamForMainUuidByHexTagNameNumberError(
             final Integer typeWordInputed,
             final String hexTagNameInputed,
