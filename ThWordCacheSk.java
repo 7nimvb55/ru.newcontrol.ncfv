@@ -904,6 +904,7 @@ public class ThWordCacheSk {
             return Boolean.TRUE;
         } finally {
             inputedData = null;
+            removeElementForAdd = null;
         }
     }
     /**

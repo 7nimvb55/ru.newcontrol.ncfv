@@ -63,6 +63,7 @@ public class ThWordLogicWrite {
                 do {
                     iterationBusData(funcRuleWord, fsForWriteData);
                 } while( funcRuleWord.isRunnedWordWorkRouter() );
+                //need write all cached data after end for all read jobs
             } catch(FileSystemNotFoundException ex){
                 System.err.println(ex.getMessage());
                 ex.printStackTrace();
@@ -119,9 +120,6 @@ public class ThWordLogicWrite {
              */
             walkWriterJobBus(funcRuleWord, fsForWriteDataFunc, pollAllBusData);
             busJobForWrite.deleteBusPacketData(pollAllBusData);
-
-
-            
         } finally {
             funcRuleWord = null;
             fsForWriteDataFunc = null;
@@ -154,6 +152,8 @@ public class ThWordLogicWrite {
         ConcurrentSkipListMap<String, LinkedTransferQueue<UUID>> valueItemLvlSubStrLength;
         LinkedTransferQueue<UUID> valueItemLvlTagFileName;
         UUID pollUuidAboutWriteJob;
+        Integer keyTypeWordList;
+        String keyHexTagNameList;
         try {
             outerRuleWordFunc = (ThWordRule) outerRuleWordInputed;
             fsForWriteDataFunc = (FileSystem) fsForWriteDataInputed;
@@ -172,14 +172,16 @@ public class ThWordLogicWrite {
                     for( Map.Entry<Integer, 
                             ConcurrentSkipListMap<String, 
                             LinkedTransferQueue<UUID>>> itemLvlSubStrLength : valueItemLvlTagFileNameLetter.entrySet() ){
+                        keyTypeWordList = itemLvlSubStrLength.getKey();
                         valueItemLvlSubStrLength = itemLvlSubStrLength.getValue();
                         for( Map.Entry<String, 
                                 LinkedTransferQueue<UUID>> itemLvlTagFileName : valueItemLvlSubStrLength.entrySet() ){
+                            keyHexTagNameList = itemLvlTagFileName.getKey();
                             valueItemLvlTagFileName = itemLvlTagFileName.getValue();
                             do {
                                 pollUuidAboutWriteJob = valueItemLvlTagFileName.poll();
                                 if( pollUuidAboutWriteJob != null ){
-                                    getMainFlowCacheData(outerRuleWordFunc, fsForWriteDataFunc, pollUuidAboutWriteJob);
+                                    getMainFlowCacheData(outerRuleWordFunc, fsForWriteDataFunc, keyTypeWordList, keyHexTagNameList, pollUuidAboutWriteJob);
                                 }
                             } while( !valueItemLvlTagFileName.isEmpty() );
                         }
@@ -196,6 +198,8 @@ public class ThWordLogicWrite {
             valueItemLvlSubStrLength = null;
             valueItemLvlTagFileName = null;
             pollUuidAboutWriteJob = null;
+            keyTypeWordList = null;
+            keyHexTagNameList = null;
         }
     }
     private void getMainFlowCacheData(final ThWordRule outerRuleWordInputed, 
@@ -220,13 +224,15 @@ public class ThWordLogicWrite {
         String localDestFileName;
         Integer localSrcSize;
         Integer localDestSize;
-        Integer localWritedSize;
         Integer datafsVolumeNumber;
         ConcurrentSkipListMap<UUID, TdataWord> pollTypeWordTagFileNameData;
         ConcurrentSkipListMap<UUID, TdataWord> writedFromCacheData;
         Map.Entry<UUID, TdataWord> pollFirstEntry;
-        Boolean localIsDataToVol;
         Boolean localIsLimitForWrite;
+        Boolean localPrevDataWrited; 
+        Boolean localPrevDataMoved;
+        Path storageTypeWordWritedDirectory;
+        
         try {
             outerRuleWordFunc = (ThWordRule) outerRuleWordInputed;
             wordStatusMainFlowFunc = (ThWordStatusMainFlow) outerRuleWordFunc.getWordStatusMainFlow();
@@ -236,6 +242,8 @@ public class ThWordLogicWrite {
             typeWordFunc = (Integer) typeWordInputed;
             hexTagNameFunc = (String) hexTagNameInputed;
             writerBusUuidFunc = (UUID) writerBusUuidInputed;
+            localPrevDataWrited = Boolean.FALSE; 
+            localPrevDataMoved = Boolean.FALSE;
             /**
              * 1. mainFlowParams get values for Uuid
              * 2. poll data from cache
@@ -261,7 +269,8 @@ public class ThWordLogicWrite {
                     if( !pollTypeWordTagFileNameData.isEmpty() ){
                         nameStorageDirectoryName = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberName(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  0);
                         // into helper class function
-                        Path storageTypeWordWritedDirectory = fsForWriteDataFunc.getPath(nameStorageDirectoryName);
+                        
+                        storageTypeWordWritedDirectory = fsForWriteDataFunc.getPath(nameStorageDirectoryName);
                         if( Files.notExists(storageTypeWordWritedDirectory, LinkOption.NOFOLLOW_LINKS) ){
                             try{
                                 Files.createDirectories(storageTypeWordWritedDirectory);
@@ -280,154 +289,172 @@ public class ThWordLogicWrite {
                         datafsVolumeNumber = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberDataFs(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  1);
                         namePrefixFileName = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberName(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  4);
                         
-                
-                
-                        localIsDataToVol = Boolean.FALSE;
                         localDestSize = 0;
+                        
+                        writedFromCacheData = new ConcurrentSkipListMap<UUID, TdataWord>();
                         do {
-                            if( pollTypeWordTagFileNameData.size() > AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT){
-                                writedFromCacheData = new ConcurrentSkipListMap<UUID, TdataWord>();
-                                do {
-                                    pollFirstEntry = pollTypeWordTagFileNameData.pollFirstEntry();
-                                    if( pollFirstEntry != null ){
-                                        writedFromCacheData.put(pollFirstEntry.getKey(), pollFirstEntry.getValue());
-                                    }
-                                    localDestSize = writedFromCacheData.size();
-                                    localIsLimitForWrite = localDestSize == AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT;
+                            pollFirstEntry = pollTypeWordTagFileNameData.pollFirstEntry();
+                            if( pollFirstEntry != null ){
+                                writedFromCacheData.put(pollFirstEntry.getKey(), pollFirstEntry.getValue());
+                            }
+                            localDestSize = writedFromCacheData.size();
+                            localIsLimitForWrite = ( localDestSize == AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT );
+                            if( localIsLimitForWrite || pollTypeWordTagFileNameData.isEmpty() ){
+                                localSrcFileName = fileNameBuilder(namePrefixFileName, localSrcSize, datafsVolumeNumber);
+                                //---section for next code release --- write to
+
+                                nowWritedFile = fsForWriteDataFunc.getPath(storageTypeWordWritedDirectory.toString(), localSrcFileName);
+
+                                try( ObjectOutputStream oos = 
+                                    new ObjectOutputStream(Files.newOutputStream(nowWritedFile)) )
+                                {
+                                    oos.writeObject(writedFromCacheData);
+                                    oos.flush();
+                                    System.out.println(ThWordLogicWrite.class.getCanonicalName() 
+                                            + " => => =>                                             => => => " 
+                                            + nowWritedFile.toUri().toString() 
+                                            + " writed size " + localDestSize);
+                                    wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 0, Boolean.TRUE);
+                                    localPrevDataWrited = Boolean.TRUE;
+                                } catch(Exception ex){
+                                    ex.printStackTrace();
+                                }
+
+                                localDestFileName = fileNameBuilder(namePrefixFileName, localDestSize, datafsVolumeNumber);
+                                //---section for next code release --- move to
+
+                                moveToFile = fsForWriteDataFunc.getPath(storageTypeWordWritedDirectory.toString(), localDestFileName);
+                                try{
+                                    Files.move(nowWritedFile, moveToFile, StandardCopyOption.ATOMIC_MOVE);
+                                    
+                                    wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 2, Boolean.TRUE);
+                                    wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberName(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 1, localDestFileName);
+                                    //after delete oldFile
+                                    localPrevDataMoved = Boolean.TRUE;
+                                } catch(SecurityException exSecurity) {
+                                    System.err.println(exSecurity.getMessage());
+                                    exSecurity.printStackTrace();
+                                } catch(AtomicMoveNotSupportedException exAtomic) {
+                                    System.err.println(exAtomic.getMessage());
+                                    exAtomic.printStackTrace();
+                                } catch(FileAlreadyExistsException exAlreadyExists) {
+                                    System.err.println(exAlreadyExists.getMessage());
+                                    exAlreadyExists.printStackTrace();
+                                } catch(UnsupportedOperationException exUnsupported) {
+                                    System.err.println(exUnsupported.getMessage());
+                                    exUnsupported.printStackTrace();
+                                } catch(IOException exIO) {
+                                    System.err.println(exIO.getMessage());
+                                    exIO.printStackTrace();
+                                }
+                                if( localPrevDataWrited && localPrevDataMoved ){ 
                                     if( localIsLimitForWrite ){
-                                        localSrcFileName = new String()
-                                            .concat(AppFileNamesConstants.SZFS_WORD_FILE_PREFIX)
-                                            .concat(namePrefixFileName.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
-                                            .concat(String.valueOf(localSrcSize))
-                                            .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
-                                            .concat(String.valueOf(datafsVolumeNumber));
-                                        //---section for next code release --- write to
-                                        
-                                        nowWritedFile = fsForWriteDataFunc.getPath(storageTypeWordWritedDirectory.toString(), localSrcFileName);
-
-                                        try( ObjectOutputStream oos = 
-                                            new ObjectOutputStream(Files.newOutputStream(nowWritedFile)) )
-                                        {
-                                            oos.writeObject(writedFromCacheData);
-                                            System.out.println(ThWordLogicWrite.class.getCanonicalName() 
-                                                    + " => => =>                                             => => => " 
-                                                    + nowWritedFile.toUri().toString() 
-                                                    + " writed size " + localDestSize);
-                                            wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 0, Boolean.TRUE);
-                                        } catch(Exception ex){
-                                            ex.printStackTrace();
-                                        }
-                                        //isMoveFileReady - -1884096596
-                                        
-                                        workersIsMoveReady = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 7);
-                                        if( workersIsMoveReady ){
-                                            continue;
-                                        }
-                                        /**
-                                         * build names for write and move operations
-                                         */
-                                        localDestFileName = new String()
-                                            .concat(AppFileNamesConstants.SZFS_WORD_FILE_PREFIX)
-                                            .concat(namePrefixFileName.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
-                                            .concat(String.valueOf(localDestSize))
-                                            .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
-                                            .concat(String.valueOf(datafsVolumeNumber));
-                                        //---section for next code release --- move to
-                                        
-                                        moveToFile = fsForWriteDataFunc.getPath(storageTypeWordWritedDirectory.toString(), localDestFileName);
-                                        try{
-                                            Files.move(nowWritedFile, moveToFile, StandardCopyOption.ATOMIC_MOVE);
-                                            wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 7, Boolean.TRUE);
-                                            wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 2, Boolean.TRUE);
-                                            wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberName(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 1, localDestFileName);
-                                            //after delete oldFile
-                                            ConcurrentHashMap<String, String> remove = busVal.getValue().remove(mainFlowLabel);
-                                            remove = null;
-                                        } catch(SecurityException exSecurity) {
-                                            System.err.println(exSecurity.getMessage());
-                                            exSecurity.printStackTrace();
-                                        } catch(AtomicMoveNotSupportedException exAtomic) {
-                                            System.err.println(exAtomic.getMessage());
-                                            exAtomic.printStackTrace();
-                                        } catch(FileAlreadyExistsException exAlreadyExists) {
-                                            System.err.println(exAlreadyExists.getMessage());
-                                            exAlreadyExists.printStackTrace();
-                                        } catch(UnsupportedOperationException exUnsupported) {
-                                            System.err.println(exUnsupported.getMessage());
-                                            exUnsupported.printStackTrace();
-                                        } catch(IOException exIO) {
-                                            System.err.println(exIO.getMessage());
-                                            exIO.printStackTrace();
-                                        }
-
                                         datafsVolumeNumber++;
-                                        //delete data from to write writedFromCacheData
-                                        writedFromCacheData = new ConcurrentSkipListMap<UUID, TdataWord>();
                                     }
-                                    localIsDataToVol = pollTypeWordTagFileNameData.size() > AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT;
-
-                                } while( localIsDataToVol );
+                                    writedFromCacheData = doUtilizationDataInitNew(writedFromCacheData);
+                                }
                             }
-                            localDestFileName = new String()
-                                .concat(AppFileNamesConstants.SZFS_WORD_FILE_PREFIX)
-                                .concat(namePrefixFileName.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
-                                .concat(String.valueOf(localDestSize))
-                                .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
-                                .concat(String.valueOf(datafsVolumeNumber));
-                            //---section for next code release --- write to
-                            Path nowWritedFile = fsForWriteDataFunc.getPath(storageTypeWordWritedDirectory.toString(), localDestFileName);
-
-                            try(ObjectOutputStream oos = 
-                                new ObjectOutputStream(Files.newOutputStream(nowWritedFile)))
-                            {
-                                oos.writeObject(pollTypeWordTagFileNameData);
-                                System.out.println(ThWordLogicWrite.class.getCanonicalName() 
-                                        + " => => =>                                             => => => " 
-                                        + nowWritedFile.toUri().toString() 
-                                        + " writed size " + pollTypeWordTagFileNameData.size());
-                                //isWriteInProcess - 1640531930
-                                statusWorkersForKeyPointFlow.put(1640531930, Boolean.TRUE);
-                                wordStatusMainFlowFunc.changeValueForValideUuuidByTypeWordHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  0);
-                            } catch(Exception ex){
-                                ex.printStackTrace();
-                            }
-                            //isMoveFileReady - -1884096596
-                            Boolean getIsMoveReady = statusWorkersForKeyPointFlow.get(-1884096596);
-                            if( getIsMoveReady ){
-                                continue;
-                            }
-                            //---section for next code release --- move to
-                            Path moveToFile = fsForWriteData.getPath(storageDirectoryName, newFileName);
-                            try{
-                                Files.move(nowWritedFile, moveToFile, StandardCopyOption.ATOMIC_MOVE);
-                                statusWorkersForKeyPointFlow.put(-1884096596, Boolean.TRUE);
-                                statusWorkersForKeyPointFlow.put(-83825824, Boolean.TRUE);
-                                statusNameForKeyPointFlow.put(1517772480, newFileName);
-                                //after delete oldFile
-                                ConcurrentHashMap<String, String> remove = busVal.getValue().remove(mainFlowLabel);
-                                remove = null;
-                            } catch(SecurityException exSecurity) {
-                                System.err.println(exSecurity.getMessage());
-                                exSecurity.printStackTrace();
-                            } catch(AtomicMoveNotSupportedException exAtomic) {
-                                System.err.println(exAtomic.getMessage());
-                                exAtomic.printStackTrace();
-                            } catch(FileAlreadyExistsException exAlreadyExists) {
-                                System.err.println(exAlreadyExists.getMessage());
-                                exAlreadyExists.printStackTrace();
-                            } catch(UnsupportedOperationException exUnsupported) {
-                                System.err.println(exUnsupported.getMessage());
-                                exUnsupported.printStackTrace();
-                            }
-                            //---section for next code release --- delete data from to write pollTypeWordTagFileNameData
-                            //---section for next code release --- set params to flow
-                        } while ( !pollTypeWordTagFileNameData.isEmpty() );
+                        } while( !pollTypeWordTagFileNameData.isEmpty() );
+                        wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 7, Boolean.TRUE);
+                        
+                        //---section for next code release --- delete data from to write pollTypeWordTagFileNameData
+                        //---section for next code release --- set params to flow
+                        // need release for delete old writed file
                     }
                 }
             }
             
         } finally {
-            
+            outerRuleWordFunc = null;
+            fsForWriteDataFunc = null;
+            wordStatusMainFlowFunc = null;
+            wordCache = null;
+            typeWordFunc = null;
+            hexTagNameFunc = null;
+            writerBusUuidFunc = null;
+            workersIsWriteProcess = null;
+            workersIsMoveReady = null;
+            nameStorageDirectoryName = null;
+            namePrefixFileName = null;
+            nowWritedFile = null;
+            moveToFile = null;
+            localSrcFileName = null;
+            localDestFileName = null;
+            localSrcSize = null;
+            localDestSize = null;
+            datafsVolumeNumber = null;
+            pollTypeWordTagFileNameData = null;
+            writedFromCacheData = null;
+            pollFirstEntry = null;
+            localIsLimitForWrite = null;
+            localPrevDataWrited = null; 
+            localPrevDataMoved = null;
+            storageTypeWordWritedDirectory = null;
+        }
+    }
+    private static ConcurrentSkipListMap<UUID, TdataWord> doUtilizationDataInitNew(ConcurrentSkipListMap<UUID, TdataWord> prevData){
+        utilizeTdataWord(prevData);
+        return new ConcurrentSkipListMap<UUID, TdataWord>();
+    }
+    private static void utilizeTdataWord(ConcurrentSkipListMap<UUID, TdataWord> forUtilizationData){
+        UUID keyForDelete;
+        TdataWord removedData;
+        try {
+            for( Map.Entry<UUID, TdataWord> deletingItem : forUtilizationData.entrySet() ){
+                keyForDelete = deletingItem.getKey();
+                removedData = forUtilizationData.remove(keyForDelete);
+                removedData.dirListFile = null;
+                removedData.hexSubString = null;
+                removedData.hexSubStringHash = null;
+                removedData.lengthSubString = null;
+                removedData.positionSubString = null;
+                removedData.randomUUID = null;
+                removedData.recordHash = null;
+                removedData.recordTime = null;
+                removedData.recordUUID = null;
+                removedData.strSubString = null;
+                removedData.strSubStringHash = null;
+                removedData.typeWord = null;
+                removedData = null;
+                keyForDelete = null;
+            }
+            forUtilizationData = null;
+        } finally {
+            keyForDelete = null;
+            removedData = null;
+        }
+    }
+    /**
+     * 
+     * @param namePrefixFileNameFromFlowInputed
+     * @param recordsCountInputed
+     * @param volumeNumberInputed
+     * @return 
+     */
+    private static String fileNameBuilder(
+            final String namePrefixFileNameFromFlowInputed,
+            final Integer recordsCountInputed,
+            final Integer volumeNumberInputed){
+        String namePrefixFunc;
+        Integer recordsCountFunc;
+        Integer volumeNumberFunc;
+        String buildedFileName;
+        try {
+            namePrefixFunc = new String(namePrefixFileNameFromFlowInputed);
+            recordsCountFunc = (Integer) recordsCountInputed;
+            volumeNumberFunc = (Integer) volumeNumberInputed;
+            buildedFileName = new String()
+                .concat(AppFileNamesConstants.SZFS_WORD_FILE_PREFIX)
+                .concat(namePrefixFunc.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
+                .concat(String.valueOf(recordsCountFunc))
+                .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
+                .concat(String.valueOf(volumeNumberFunc));
+            return buildedFileName;
+        } finally {
+            namePrefixFunc = null;
+            recordsCountFunc = null;
+            volumeNumberFunc = null;
+            buildedFileName = null;
         }
     }
     protected void doOldWriteToIndexWord(final ThWordRule outerRuleWord){

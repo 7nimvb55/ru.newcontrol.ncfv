@@ -18,25 +18,404 @@ package ru.newcontrol.ncfv;
 import java.io.IOException;
 import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OptionalDataException;
 import java.io.StreamCorruptedException;
 import java.net.URI;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.ProviderNotFoundException;
+import java.nio.file.StandardCopyOption;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.LinkedTransferQueue;
 
 /**
  *
  * @author wladimirowichbiaran
  */
 public class ThWordLogicRead {
-    protected void doReadFromIndexWord(ThWordRule outerRuleWord){
+    protected void doReadFromIndexWord(final ThWordRule outerRuleWord){
+        ThIndexRule indexRule;
+        ThIndexStatistic indexStatistic;
+        ThWordRule funcRuleWord;
+        AppFileStorageIndex currentIndexStorages;
+        
+        URI byPrefixGetUri;
+        Map<String, String> byPrefixGetMap;
+        try {
+            funcRuleWord = (ThWordRule) outerRuleWord;
+            
+            indexRule = funcRuleWord.getIndexRule();
+            indexStatistic = indexRule.getIndexStatistic();
+            indexStatistic.updateDataStorages();
+            currentIndexStorages = funcRuleWord.getIndexRule().getIndexState().currentIndexStorages();
+            byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD);
+            byPrefixGetMap = currentIndexStorages.byPrefixGetMap( 
+                    AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD);
+            try( FileSystem fsForWriteData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
+                do {
+                    iterationBusData(funcRuleWord, fsForWriteData);
+                } while( funcRuleWord.isRunnedWordWorkRouter() );
+                //need read all jobs and send data to cache
+            } catch(FileSystemNotFoundException ex){
+                System.err.println(ex.getMessage());
+                ex.printStackTrace();
+            } catch(ProviderNotFoundException ex){
+                System.err.println(ex.getMessage());
+                ex.printStackTrace();
+            } catch(IllegalArgumentException ex){
+                System.err.println(ex.getMessage());
+                ex.printStackTrace();
+            } catch(SecurityException ex){
+                System.err.println(ex.getMessage());
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                System.err.println(ex.getMessage());
+                ex.printStackTrace();
+            }
+        } finally {
+            indexRule = null;
+            indexStatistic = null;
+            funcRuleWord = null;
+            currentIndexStorages = null;
+            
+            byPrefixGetUri = null;
+            byPrefixGetMap = null;
+        }
+    }
+    private void iterationBusData(final ThWordRule outerRuleWord, final FileSystem fsForWriteData){
+        ThWordRule funcRuleWord;
+        FileSystem fsForWriteDataFunc;
+        ThWordState wordState;
+        ThWordStatusMainFlow wordStatusMainFlow;
+        ThWordBusFlowEvent busJobForRead;
+        ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                LinkedTransferQueue<UUID>>>>> pollAllBusData;
+        try {
+            funcRuleWord = (ThWordRule) outerRuleWord;
+            fsForWriteDataFunc = (FileSystem) fsForWriteData;
+            wordState = (ThWordState) funcRuleWord.getWordState();
+            busJobForRead = (ThWordBusFlowEvent) wordState.getBusJobForWordRouterJobToReader();
+            wordStatusMainFlow = (ThWordStatusMainFlow) outerRuleWord.getWordStatusMainFlow();
+            //wordCache = wordStatusMainFlow.getWordCache();
+            pollAllBusData = busJobForRead.pollAllBusData();
+            /**
+             * poll data  from cache by typeWord, hexTagName
+             */
+            /**
+             * process returned from bus data
+             * 1. validate UUID
+             * 2. move cache and cacheReaded in state object
+             * 3. code in main flow object procedure for return data from cache by UUID
+             * 4. add state functional in main flow object
+             * 5. code and add list objects structure and validate procedures
+             * ConcurrentSkipListMap<Object, System.identityHashCode(Object x)>
+             */
+            walkReaderJobBus(funcRuleWord, fsForWriteDataFunc, pollAllBusData);
+            busJobForRead.deleteBusPacketData(pollAllBusData);
+        } finally {
+            funcRuleWord = null;
+            fsForWriteDataFunc = null;
+            wordState = null;
+            wordStatusMainFlow = null;
+            busJobForRead = null;
+            pollAllBusData = null;
+        }
+    }
+    private void walkReaderJobBus(final ThWordRule outerRuleWordInputed, 
+            final FileSystem fsForReadDataInputed, 
+            ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                LinkedTransferQueue<UUID>>>>> pollFromBusDataInputed){
+        ThWordRule outerRuleWordFunc;
+        FileSystem fsForReadDataFunc;
+        ThWordStatusMainFlow wordStatusMainFlow;
+        ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                LinkedTransferQueue<UUID>>>>> pollFromBusDataFunc;
+        ConcurrentSkipListMap<String, 
+                ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                LinkedTransferQueue<UUID>>>> valueItemLvlTypeWord;
+        ConcurrentSkipListMap<Integer, ConcurrentSkipListMap<String, LinkedTransferQueue<UUID>>> valueItemLvlTagFileNameLetter;
+        ConcurrentSkipListMap<String, LinkedTransferQueue<UUID>> valueItemLvlSubStrLength;
+        LinkedTransferQueue<UUID> valueItemLvlTagFileName;
+        UUID pollUuidAboutReadJob;
+        Integer keyTypeWordList;
+        String keyHexTagNameList;
+        try {
+            outerRuleWordFunc = (ThWordRule) outerRuleWordInputed;
+            fsForReadDataFunc = (FileSystem) fsForReadDataInputed;
+            pollFromBusDataFunc = pollFromBusDataInputed;
+            for( Map.Entry<Integer, 
+                    ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                    LinkedTransferQueue<UUID>>>>> itemLvlTypeWord : pollFromBusDataFunc.entrySet() ){
+                valueItemLvlTypeWord = itemLvlTypeWord.getValue();
+                for( Map.Entry<String, 
+                        ConcurrentSkipListMap<Integer, 
+                        ConcurrentSkipListMap<String, 
+                        LinkedTransferQueue<UUID>>>> itemLvlTagFileNameLetter : valueItemLvlTypeWord.entrySet() ){
+                    valueItemLvlTagFileNameLetter = itemLvlTagFileNameLetter.getValue();
+                    for( Map.Entry<Integer, 
+                            ConcurrentSkipListMap<String, 
+                            LinkedTransferQueue<UUID>>> itemLvlSubStrLength : valueItemLvlTagFileNameLetter.entrySet() ){
+                        keyTypeWordList = itemLvlSubStrLength.getKey();
+                        valueItemLvlSubStrLength = itemLvlSubStrLength.getValue();
+                        for( Map.Entry<String, 
+                                LinkedTransferQueue<UUID>> itemLvlTagFileName : valueItemLvlSubStrLength.entrySet() ){
+                            keyHexTagNameList = itemLvlTagFileName.getKey();
+                            valueItemLvlTagFileName = itemLvlTagFileName.getValue();
+                            do {
+                                pollUuidAboutReadJob = valueItemLvlTagFileName.poll();
+                                if( pollUuidAboutReadJob != null ){
+                                    readToMainFlowCacheData(outerRuleWordFunc, fsForReadDataFunc, keyTypeWordList, keyHexTagNameList, pollUuidAboutReadJob);
+                                }
+                            } while( !valueItemLvlTagFileName.isEmpty() );
+                        }
+                    }
+                }
+            }
+        } finally {
+            outerRuleWordFunc = null;
+            fsForReadDataFunc = null;
+            wordStatusMainFlow = null;
+            pollFromBusDataFunc = null;
+            valueItemLvlTypeWord = null;
+            valueItemLvlTagFileNameLetter = null;
+            valueItemLvlSubStrLength = null;
+            valueItemLvlTagFileName = null;
+            pollUuidAboutReadJob = null;
+            keyTypeWordList = null;
+            keyHexTagNameList = null;
+        }
+    }
+    private void readToMainFlowCacheData(final ThWordRule outerRuleWordInputed, 
+            final FileSystem fsForWriteDataInputed,
+            final Integer typeWordInputed,
+            final String hexTagNameInputed,
+            final UUID writerBusUuidInputed){
+        ThWordRule outerRuleWordFunc;
+        FileSystem fsForWriteDataFunc;
+        ThWordStatusMainFlow wordStatusMainFlowFunc;
+        ThWordCacheSk wordCache;
+        Integer typeWordFunc;
+        String hexTagNameFunc;
+        UUID writerBusUuidFunc;
+        String storageDirectory;
+        String currentFile;
+        String newFile;
+        Boolean workersIsMoveReady;
+        String nameStorageDirectoryName;
+        String namePrefixFileName;
+        Path nowWritedFile;
+        Path moveToFile;
+        String localSrcFileName;
+        String localDestFileName;
+        Integer localSrcSize;
+        Integer localDestSize;
+        Integer datafsVolumeNumber;
+        ConcurrentSkipListMap<UUID, TdataWord> pollTypeWordTagFileNameData;
+        ConcurrentSkipListMap<UUID, TdataWord> writedFromCacheData;
+        Map.Entry<UUID, TdataWord> pollFirstEntry;
+        Boolean localIsLimitForWrite;
+        Boolean localPrevDataWrited; 
+        Boolean localPrevDataMoved;
+        Path storageTypeWordWritedDirectory;
+        ThWordCacheSk wordCacheReaded;
+        Boolean isCachedReadedData;
+        ThWordState wordState;
+        ThWordBusFlowEvent wordFlowReaded;
+        
+        try {
+            outerRuleWordFunc = (ThWordRule) outerRuleWordInputed;
+            wordStatusMainFlowFunc = (ThWordStatusMainFlow) outerRuleWordFunc.getWordStatusMainFlow();
+            wordCache = wordStatusMainFlowFunc.getWordCache();
+            
+            fsForWriteDataFunc = (FileSystem) fsForWriteDataInputed;
+            typeWordFunc = (Integer) typeWordInputed;
+            hexTagNameFunc = (String) hexTagNameInputed;
+            writerBusUuidFunc = (UUID) writerBusUuidInputed;
+            localPrevDataWrited = Boolean.FALSE; 
+            localPrevDataMoved = Boolean.FALSE;
+            /**
+             * 1. mainFlowParams get values for Uuid
+             * 2. poll data from cache
+             * 3. generate names, voul numbers, count records for write
+             * 4. write data
+             * 5. set flags in main flow
+             * 6. change params in main flow
+             */
+            
+            storageDirectory = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberName(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  0);
+            currentFile = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberName(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  1);
+            newFile = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberName(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  2);
+            
+            if( currentFile.equalsIgnoreCase(newFile) ){
+            
+
+                Path forReadFileName = fsForWriteDataFunc.getPath(storageDirectory, currentFile);
+
+                ConcurrentSkipListMap<UUID, TdataWord> readedFormData = 
+                        new ConcurrentSkipListMap<UUID, TdataWord>();
+
+                if( Files.exists(forReadFileName) ){
+                    try(ObjectInputStream ois =
+                        new ObjectInputStream(Files.newInputStream(forReadFileName)))
+                    {
+                        readedFormData.putAll((ConcurrentSkipListMap<UUID, TdataWord>) ois.readObject());
+
+                    } catch(ClassNotFoundException exCnf){
+                        System.err.println(exCnf.getMessage());
+                        exCnf.printStackTrace();
+                    } catch(InvalidClassException exIce){
+                        System.err.println(exIce.getMessage());
+                        exIce.printStackTrace();
+                    } catch(StreamCorruptedException exSce){
+                        System.err.println(exSce.getMessage());
+                        exSce.printStackTrace();
+                    } catch(OptionalDataException exOde){
+                        System.err.println(exOde.getMessage());
+                        exOde.printStackTrace();
+                    } catch(IOException exIo){
+                        System.err.println(exIo.getMessage());
+                        exIo.printStackTrace();
+                    }
+                    
+                    
+                    wordCacheReaded = wordStatusMainFlowFunc.getWordCacheReaded();
+
+                    
+                    isCachedReadedData = Boolean.FALSE;
+
+                    isCachedReadedData = wordCacheReaded.addAllDataIntoCache(readedFormData);
+                    wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 4, isCachedReadedData);
+                    wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberDataCache(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 1, readedFormData.size());
+                    
+                    wordState = outerRuleWordFunc.getWordState();
+                    
+                    wordFlowReaded = wordState.getWordFlowReaded();
+
+                    wordFlowReaded.addToListOfFlowEventUuidByTypeWordHexTagName(typeWordFunc, writerBusUuidFunc, hexTagNameFunc);
+
+                    utilizeTdataWord(readedFormData);
+                }
+            }
+            
+        } finally {
+            outerRuleWordFunc = null;
+            fsForWriteDataFunc = null;
+            wordStatusMainFlowFunc = null;
+            wordCache = null;
+            typeWordFunc = null;
+            hexTagNameFunc = null;
+            writerBusUuidFunc = null;
+            workersIsMoveReady = null;
+            nameStorageDirectoryName = null;
+            namePrefixFileName = null;
+            nowWritedFile = null;
+            moveToFile = null;
+            localSrcFileName = null;
+            localDestFileName = null;
+            localSrcSize = null;
+            localDestSize = null;
+            datafsVolumeNumber = null;
+            pollTypeWordTagFileNameData = null;
+            writedFromCacheData = null;
+            pollFirstEntry = null;
+            localIsLimitForWrite = null;
+            localPrevDataWrited = null; 
+            localPrevDataMoved = null;
+            storageTypeWordWritedDirectory = null;
+            wordCacheReaded = null;
+            isCachedReadedData = null;
+            wordState = null;
+            wordFlowReaded = null;
+        }
+    }
+    private static ConcurrentSkipListMap<UUID, TdataWord> doUtilizationDataInitNew(ConcurrentSkipListMap<UUID, TdataWord> prevData){
+        utilizeTdataWord(prevData);
+        return new ConcurrentSkipListMap<UUID, TdataWord>();
+    }
+    private static void utilizeTdataWord(ConcurrentSkipListMap<UUID, TdataWord> forUtilizationData){
+        UUID keyForDelete;
+        TdataWord removedData;
+        try {
+            for( Map.Entry<UUID, TdataWord> deletingItem : forUtilizationData.entrySet() ){
+                keyForDelete = deletingItem.getKey();
+                removedData = forUtilizationData.remove(keyForDelete);
+                removedData.dirListFile = null;
+                removedData.hexSubString = null;
+                removedData.hexSubStringHash = null;
+                removedData.lengthSubString = null;
+                removedData.positionSubString = null;
+                removedData.randomUUID = null;
+                removedData.recordHash = null;
+                removedData.recordTime = null;
+                removedData.recordUUID = null;
+                removedData.strSubString = null;
+                removedData.strSubStringHash = null;
+                removedData.typeWord = null;
+                removedData = null;
+                keyForDelete = null;
+            }
+            forUtilizationData = null;
+        } finally {
+            keyForDelete = null;
+            removedData = null;
+        }
+    }
+    /**
+     * 
+     * @param namePrefixFileNameFromFlowInputed
+     * @param recordsCountInputed
+     * @param volumeNumberInputed
+     * @return 
+     */
+    private static String fileNameBuilder(
+            final String namePrefixFileNameFromFlowInputed,
+            final Integer recordsCountInputed,
+            final Integer volumeNumberInputed){
+        String namePrefixFunc;
+        Integer recordsCountFunc;
+        Integer volumeNumberFunc;
+        String buildedFileName;
+        try {
+            namePrefixFunc = new String(namePrefixFileNameFromFlowInputed);
+            recordsCountFunc = (Integer) recordsCountInputed;
+            volumeNumberFunc = (Integer) volumeNumberInputed;
+            buildedFileName = new String()
+                .concat(AppFileNamesConstants.SZFS_WORD_FILE_PREFIX)
+                .concat(namePrefixFunc.concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR))
+                .concat(String.valueOf(recordsCountFunc))
+                .concat(AppFileNamesConstants.FILE_DIR_PART_SEPARATOR)
+                .concat(String.valueOf(volumeNumberFunc));
+            return buildedFileName;
+        } finally {
+            namePrefixFunc = null;
+            recordsCountFunc = null;
+            volumeNumberFunc = null;
+            buildedFileName = null;
+        }
+    }
+    protected void doOldReadFromIndexWord(ThWordRule outerRuleWord){
         ThIndexRule indexRule;
         ThIndexStatistic indexStatistic;
         ThWordRule funcRuleWord;

@@ -46,29 +46,29 @@ public class TdataWord implements Serializable {
     /**
      *
      */
-    public int strSubStringHash;
+    public Integer strSubStringHash;
     /**
      * 
      */
-    public int typeWord;
+    public Integer typeWord;
     /** hexSubString - returned by toStrUTFinHEX() */
     public String hexSubString;
     /** h - strSubString.hashCode() */
-    public int hexSubStringHash;
+    public Integer hexSubStringHash;
     /** p - (position) subString position in source str */
-    public int positionSubString;
+    public Integer positionSubString;
     /** l - (length) subString length */
-    public int lengthSubString;
+    public Integer lengthSubString;
 
     /**
      *
      */
-    public long recordTime;
+    public Long recordTime;
 
     /**
      *
      */
-    public int recordHash;
+    public Integer recordHash;
     
     
     /**
@@ -129,7 +129,7 @@ public class TdataWord implements Serializable {
         this.hexSubStringHash = hexSubString.hashCode();
         this.positionSubString = positionSubString;
         this.lengthSubString = lengthSubString;
-        final long nowSysTime = System.nanoTime();
+        final Long nowSysTime = System.nanoTime();
         this.recordTime = nowSysTime;
         this.recordHash = (
                 new String("")

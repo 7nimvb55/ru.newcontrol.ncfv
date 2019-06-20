@@ -1792,12 +1792,16 @@ public class ThWordStatusMainFlow {
                         + calculatedSubString);
             }
             flowUuidsFunc = listTagName.get(tagNameFunc);
-            
+            if( flowUuidsFunc == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for tagNameFunc: "
+                        + tagNameFunc);
+            }
             flowParamsFunc = flowUuidsFunc.get(mainFlowUuidFunc);
-            if(flowParamsFunc == null ){
+            if( flowParamsFunc == null ){
                 throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
                         + " illegal key value for Main Flow UUID: "
-                        + mainFlowUuidFunc);
+                        + mainFlowUuidFunc.toString());
             }
             this.validateCountParams(flowParamsFunc);
             return flowParamsFunc;

@@ -16,6 +16,7 @@
 package ru.newcontrol.ncfv;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -278,6 +279,85 @@ public class ThWordBusFlowEvent {
             tagNameFunc = null;
         }
     }
+    private LinkedTransferQueue<UUID> getFlowUuidsByTypeWordHexTagName(
+            final Integer typeWordInputed,
+            final UUID mainFlowUuid, 
+            final String tagNameInputed){
+        
+        LinkedTransferQueue<UUID> flowUuidsFunc;
+        ConcurrentSkipListMap<String, 
+                ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                LinkedTransferQueue<UUID>>>> listTypeWordData;
+        ConcurrentSkipListMap<Integer, 
+                ConcurrentSkipListMap<String, 
+                LinkedTransferQueue<UUID>>> listTagNameLetter;
+        ConcurrentSkipListMap<String, 
+                LinkedTransferQueue<UUID>> listTagName;
+        
+        Integer typeWordFunc;
+        UUID mainFlowUuidFunc;
+        String tagNameFunc;
+        String tagNameLetter;
+        Integer tagNamelength;
+        Integer calculatedSubString;
+        try {
+            typeWordFunc = (Integer) typeWordInputed;
+            mainFlowUuidFunc = (UUID) mainFlowUuid;
+            tagNameFunc = (String) tagNameInputed;
+            tagNamelength = (Integer) tagNameFunc.length();
+            if( mainFlowUuidFunc == null ){
+                throw new NullPointerException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " Main Flow UUID is null");
+            }
+            if( tagNamelength < 4 ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal length of inputed in index string, hexTagName: "
+                        + tagNameFunc + " length: " + tagNameFunc.length()
+                        + " < 4 ");
+            }
+            calculatedSubString = tagNamelength / 4;
+            tagNameLetter = tagNameFunc.substring(0, 3);
+            
+            listTypeWordData = this.uuidReadedFlowMap.get(typeWordFunc);
+            if( listTypeWordData == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for typeWord: "
+                        + typeWordFunc);
+            }
+            listTagNameLetter = listTypeWordData.get(tagNameLetter);
+            if( listTagNameLetter == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for tagNameLetter: "
+                        + tagNameLetter);
+            }
+            listTagName = listTagNameLetter.get(calculatedSubString);
+            if( listTagName == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for subStringLength: "
+                        + calculatedSubString);
+            }
+            flowUuidsFunc = listTagName.get(tagNameFunc);
+            if(flowUuidsFunc == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for tagName: "
+                        + tagNameFunc);
+            }
+            return flowUuidsFunc;
+        } finally {
+            flowUuidsFunc = null;
+            listTypeWordData = null;
+            listTagNameLetter = null;
+            listTagName = null;
+
+            typeWordFunc = null;
+            mainFlowUuidFunc = null;
+            tagNameFunc = null;
+            tagNamelength = null;
+            calculatedSubString = null;
+            tagNameLetter = null;
+        }
+    }
     /**
      * create default or get from lists
      * @param getListByTypeWord
@@ -300,6 +380,57 @@ public class ThWordBusFlowEvent {
             getListByTagFileName = null;
         }
     }*/
+    protected void addToListOfFlowEventUuidByTypeWordHexTagName(
+            final Integer typeWord, 
+            final UUID mainFlowContentInputed,
+            final String tagName
+            ){
+        LinkedTransferQueue<UUID> mainFlowContentFunc;
+        Integer typeWordFunc;
+        String tagNameFunc;
+        UUID uuidFlowContentFunc;
+        try {
+            typeWordFunc = (Integer) typeWord;
+            tagNameFunc = (String) tagName;
+            uuidFlowContentFunc = (UUID) mainFlowContentInputed;
+            mainFlowContentFunc = getFlowUuidsByTypeWordHexTagName(typeWordFunc, uuidFlowContentFunc, tagNameFunc);
+            
+            if( isExistInEventQueue(mainFlowContentFunc, uuidFlowContentFunc) ){
+                throw new IllegalArgumentException(ThWordBusFlowEvent.class.getCanonicalName() 
+                        + " UUID: "
+                        + uuidFlowContentFunc.toString() 
+                        + " exist in event flow, hexTagName: "
+                        + tagNameFunc + " lengthHex: " + tagNameFunc.length());
+            }
+            
+            this.mainWordFlow.valideInFlowAllPointsByTypeWordHexTagName(typeWordFunc, uuidFlowContentFunc, tagNameFunc);
+            mainFlowContentFunc.add(uuidFlowContentFunc);
+        } finally {
+            typeWordFunc = null;
+            tagNameFunc = null;
+            uuidFlowContentFunc = null;
+            mainFlowContentFunc = null;
+        }
+    }
+    private Boolean isExistInEventQueue(LinkedTransferQueue<UUID> checkedQueue, final UUID checkedUuid){
+        Iterator<UUID> iterator;
+        UUID next;
+        Boolean equals;
+        try{
+            for( iterator = checkedQueue.iterator(); iterator.hasNext(); ){
+                next = iterator.next();
+                equals = checkedUuid.equals(next);
+                if( equals ){
+                    return Boolean.TRUE;
+            }
+        }
+        return Boolean.FALSE;
+        } finally {
+            iterator = null;
+            next = null;
+            equals = null;
+        }
+    }
     /**
      * @todo check for inputed params
      * @param typeWord
