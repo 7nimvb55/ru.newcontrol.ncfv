@@ -300,7 +300,7 @@ public class ThWordLogicRouter {
                 wordStatusMainFlow.changeParamForMainUuidByNumberDataCache(dataFromBusFunc, createdMainFlow, 0, sizeDataInCache);
                 wordStatusMainFlow.changeParamForMainUuidByNumberDataCache(dataFromBusFunc, createdMainFlow, 1, sizeDataInCache);
                 
-                wordStatusMainFlow.changeParamForMainUuidByNumberWorkers(dataFromBusFunc, createdMainFlow, 4, sizeDataInCache > 0);
+                wordStatusMainFlow.changeParamForMainUuidByNumberWorkers(dataFromBusFunc, createdMainFlow, 3, sizeDataInCache > 0);
                 wordStatusMainFlow.changeParamForMainUuidByNumberWorkers(dataFromBusFunc, createdMainFlow, 4, sizeDataInCacheReaded > 0);
             }
         }
@@ -335,10 +335,10 @@ public class ThWordLogicRouter {
         ConcurrentSkipListMap<UUID, TdataWord> pollDataByDataWord;
         ConcurrentSkipListMap<String, ConcurrentSkipListMap<Long, UUID>> dataReadedFlowUuidsByDataWord;
         ThWordState wordState;
-        ThWordBusReadedFlow wordFlowReaded;
+        ThWordBusFlowEvent wordFlowReaded;
         TdataWord dataFromBusFunc;
         UUID valueReadedUUID;
-        
+        UUID changedInitedFlow;
         Boolean isMoveFileReady;
         Boolean isNeedReadData;
         Boolean isWriteProcess;
@@ -349,6 +349,7 @@ public class ThWordLogicRouter {
             wordState = (ThWordState) outerRuleWord.getWordState();
             wordFlowReaded = wordState.getWordFlowReaded();
             wordStatusMainFlow = (ThWordStatusMainFlow) outerRuleWord.getWordStatusMainFlow();
+            changedInitedFlow = (UUID) newCreatedMainFlow;
             /**
              * add getFuncByTdataWord
              * get UUID from ReadedFlowBus
@@ -356,14 +357,13 @@ public class ThWordLogicRouter {
              * finish him, that readedUUID in main flow
              */
             try {
-                dataReadedFlowUuidsByDataWord = wordFlowReaded.getDataReadedFlowUuidsByDataWord(dataFromBusFunc);
-                ConcurrentSkipListMap<Long, UUID> UUIDs = dataReadedFlowUuidsByDataWord.get(dataFromBusFunc.hexSubString);
-                if( !UUIDs.isEmpty() ){
-                    for(Map.Entry<Long, UUID> itemReadedUUIDS : UUIDs.entrySet()){
+                LinkedTransferQueue<UUID> pollDataReadedFlowUuidsByDataWord = wordFlowReaded.pollDataReadedFlowUuidsByDataWord(dataFromBusFunc);
+                do {
                         
-                        //ifExistInMainFlowBus, change init newCreated param from readedUUIDparam = mainFlow(value)
-                        //delete from main flow readedUUIDparam
-                        valueReadedUUID = itemReadedUUIDS.getValue();
+                    //ifExistInMainFlowBus, change init newCreated param from readedUUIDparam = mainFlow(value)
+                    //delete from main flow readedUUIDparam
+                    valueReadedUUID = pollDataReadedFlowUuidsByDataWord.poll();
+                    if( valueReadedUUID != null ){    
                         wordStatusMainFlow.changeParamForMainUuidByNumberWorkers(dataFromBusFunc, valueReadedUUID, 1, Boolean.FALSE);
                         isMoveFileReady = wordStatusMainFlow.getValueForMainUuidByNumberWorkers(dataFromBusFunc, valueReadedUUID, 7);
                         isNeedReadData = wordStatusMainFlow.getValueForMainUuidByNumberWorkers(dataFromBusFunc, valueReadedUUID, 2);
@@ -375,19 +375,23 @@ public class ThWordLogicRouter {
                                 if(isWriteProcess){
                                     if(!isCachedReadedData){
                                         if(!isReadProcess){
-                                            
+                                            changeFlowWithNeedRead(outerRuleWord, dataFromBusFunc, changedInitedFlow);
+                                            /**
+                                             * add to state event bus for
+                                             * need read, readed, need write
+                                             * need delete
+                                             */
                                         }
                                     }else{
                                         if(isReadProcess){
-                                            
-                                            
+                                            changeFlowWithNeedDelete(outerRuleWord, dataFromBusFunc, changedInitedFlow);
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                }
+                    }    
+                } while( !pollDataReadedFlowUuidsByDataWord.isEmpty() );
             } catch (IllegalArgumentException illExMessage) {
                 System.out.println(illExMessage.getMessage());
             } catch (NullPointerException nullExMessage) {
@@ -399,17 +403,61 @@ public class ThWordLogicRouter {
             isWriteProcess = null;
             isCachedReadedData = null;
             isReadProcess = null;
-
+            changedInitedFlow = null;
         }
     }
-    private static void changeCreatedFlowWithRead(final ThWordRule outerRuleWord,
+    private static void changeFlowWithNeedRead(
+            final ThWordRule outerRuleWord,
             final TdataWord fromBusReadedData,
-            final UUID newCreatedMainFlow){
+            final UUID changedInitedFlowInputed){
         ThWordStatusMainFlow wordStatusMainFlow;
         ThWordCacheSk wordCache;
         ThWordCacheSk wordCacheReaded;
         try {
+            ConcurrentHashMap<UUID, ConcurrentHashMap<String, String>> busForTypeWord = 
+            busJobForWordRouterJobToReader.getBusForTypeWord(typeWordFunc);
+            ConcurrentHashMap<String, String> newReaderJob = new ConcurrentHashMap<String, String>();
+            newReaderJob.put(tagNameFunc, strSubStringFunc);
+            busForTypeWord.put(keyMainFlow, newReaderJob);
+            isReadProcess = Boolean.TRUE;
+            statusWorkersForKeyPointFlow.put(1836000367, isReadProcess);
+            fileDataListPrefix = (String) statusNameForKeyPointFlow.get(-980152217);
+        } finally {
             
+        }
+    }
+    private static void changeFlowWithNeedDelete(
+            final ThWordRule outerRuleWord,
+            final TdataWord fromBusReadedData,
+            final UUID changedInitedFlowInputed){
+        ThWordStatusMainFlow wordStatusMainFlow;
+        ThWordCacheSk wordCache;
+        ThWordCacheSk wordCacheReaded;
+        try {
+            ConcurrentHashMap<String, String> pollTypeWordTagFileNameData = 
+            thWordCacheReaded.pollTypeWordTagFileNameData(typeWordFunc, tagNameFunc, strSubStringFunc);
+            Boolean addAllDataIntoCache = 
+            thWordCache.addAllDataIntoCache(typeWordFunc, tagNameFunc, strSubStringFunc, pollTypeWordTagFileNameData);
+            for( Map.Entry<String, ConcurrentHashMap<Long, UUID>> itemReadedMainFlow : typeWordTagFileNameReadedFlowUuids.entrySet() ) {
+                if( itemReadedMainFlow.getValue().equals(keyMainFlow) ){
+                    ConcurrentHashMap<Long, UUID> removeReadedFlowUUID = typeWordTagFileNameReadedFlowUuids.remove(itemReadedMainFlow.getKey());
+                    removeReadedFlowUUID = null;
+                }
+            }
+            //07 - isUdatedDataInHashMap - -2092233516
+            statusWorkersForKeyPointFlow.put(-2091433802, addAllDataIntoCache);
+            /**
+             * calculate cached data
+             * delete oldFlow, oldFile
+             */
+            //11 - isNeedDeleteOldFile - -1172779240
+            statusWorkersForKeyPointFlow.put(-1172779240, Boolean.TRUE);
+            String fileCurrentName = statusNameForKeyPointFlow.get(1517772480);
+            statusNameForKeyPointFlow.put(2045325664, fileCurrentName);
+            fileDataListPrefix = (String) statusNameForKeyPointFlow.get(-980152217);
+
+            ConcurrentHashMap<Integer, Integer> statusDataFsForKeyPointFlow = thWordStatusDataFs.getStatusDataFsForKeyPointFlow(keyDataFs);
+            volNumSettedInFlow = statusDataFsForKeyPointFlow.get(-1832815869);
         } finally {
             
         }

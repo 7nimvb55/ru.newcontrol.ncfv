@@ -211,14 +211,14 @@ public class ThWordLogicRead {
             final FileSystem fsForWriteDataInputed,
             final Integer typeWordInputed,
             final String hexTagNameInputed,
-            final UUID writerBusUuidInputed){
+            final UUID readerBusUuidInputed){
         ThWordRule outerRuleWordFunc;
         FileSystem fsForWriteDataFunc;
         ThWordStatusMainFlow wordStatusMainFlowFunc;
         ThWordCacheSk wordCache;
         Integer typeWordFunc;
         String hexTagNameFunc;
-        UUID writerBusUuidFunc;
+        UUID readerBusUuidFunc;
         String storageDirectory;
         String currentFile;
         String newFile;
@@ -243,7 +243,8 @@ public class ThWordLogicRead {
         Boolean isCachedReadedData;
         ThWordState wordState;
         ThWordBusFlowEvent wordFlowReaded;
-        
+        Path forReadFileName;
+        ConcurrentSkipListMap<UUID, TdataWord> readedFromStorageData;
         try {
             outerRuleWordFunc = (ThWordRule) outerRuleWordInputed;
             wordStatusMainFlowFunc = (ThWordStatusMainFlow) outerRuleWordFunc.getWordStatusMainFlow();
@@ -252,7 +253,7 @@ public class ThWordLogicRead {
             fsForWriteDataFunc = (FileSystem) fsForWriteDataInputed;
             typeWordFunc = (Integer) typeWordInputed;
             hexTagNameFunc = (String) hexTagNameInputed;
-            writerBusUuidFunc = (UUID) writerBusUuidInputed;
+            readerBusUuidFunc = (UUID) readerBusUuidInputed;
             localPrevDataWrited = Boolean.FALSE; 
             localPrevDataMoved = Boolean.FALSE;
             /**
@@ -264,24 +265,18 @@ public class ThWordLogicRead {
              * 6. change params in main flow
              */
             
-            storageDirectory = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberName(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  0);
-            currentFile = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberName(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  1);
-            newFile = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberName(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  2);
-            
+            storageDirectory = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberName(typeWordFunc, hexTagNameFunc, readerBusUuidFunc,  0);
+            currentFile = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberName(typeWordFunc, hexTagNameFunc, readerBusUuidFunc,  1);
+            newFile = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberName(typeWordFunc, hexTagNameFunc, readerBusUuidFunc,  2);
             if( currentFile.equalsIgnoreCase(newFile) ){
-            
-
-                Path forReadFileName = fsForWriteDataFunc.getPath(storageDirectory, currentFile);
-
-                ConcurrentSkipListMap<UUID, TdataWord> readedFormData = 
-                        new ConcurrentSkipListMap<UUID, TdataWord>();
-
+                
+                forReadFileName = fsForWriteDataFunc.getPath(storageDirectory, currentFile);
+                readedFromStorageData = new ConcurrentSkipListMap<UUID, TdataWord>();
                 if( Files.exists(forReadFileName) ){
                     try(ObjectInputStream ois =
                         new ObjectInputStream(Files.newInputStream(forReadFileName)))
                     {
-                        readedFormData.putAll((ConcurrentSkipListMap<UUID, TdataWord>) ois.readObject());
-
+                        readedFromStorageData.putAll((ConcurrentSkipListMap<UUID, TdataWord>) ois.readObject());
                     } catch(ClassNotFoundException exCnf){
                         System.err.println(exCnf.getMessage());
                         exCnf.printStackTrace();
@@ -298,24 +293,15 @@ public class ThWordLogicRead {
                         System.err.println(exIo.getMessage());
                         exIo.printStackTrace();
                     }
-                    
-                    
                     wordCacheReaded = wordStatusMainFlowFunc.getWordCacheReaded();
-
-                    
                     isCachedReadedData = Boolean.FALSE;
-
-                    isCachedReadedData = wordCacheReaded.addAllDataIntoCache(readedFormData);
-                    wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 4, isCachedReadedData);
-                    wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberDataCache(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 1, readedFormData.size());
-                    
+                    isCachedReadedData = wordCacheReaded.addAllDataIntoCache(readedFromStorageData);
+                    wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, readerBusUuidFunc, 4, isCachedReadedData);
+                    wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberDataCache(typeWordFunc, hexTagNameFunc, readerBusUuidFunc, 1, readedFromStorageData.size());
                     wordState = outerRuleWordFunc.getWordState();
-                    
                     wordFlowReaded = wordState.getWordFlowReaded();
-
-                    wordFlowReaded.addToListOfFlowEventUuidByTypeWordHexTagName(typeWordFunc, writerBusUuidFunc, hexTagNameFunc);
-
-                    utilizeTdataWord(readedFormData);
+                    wordFlowReaded.addToListOfFlowEventUuidByTypeWordHexTagName(typeWordFunc, readerBusUuidFunc, hexTagNameFunc);
+                    utilizeTdataWord(readedFromStorageData);
                 }
             }
             
@@ -326,7 +312,7 @@ public class ThWordLogicRead {
             wordCache = null;
             typeWordFunc = null;
             hexTagNameFunc = null;
-            writerBusUuidFunc = null;
+            readerBusUuidFunc = null;
             workersIsMoveReady = null;
             nameStorageDirectoryName = null;
             namePrefixFileName = null;
@@ -348,6 +334,8 @@ public class ThWordLogicRead {
             isCachedReadedData = null;
             wordState = null;
             wordFlowReaded = null;
+            forReadFileName = null;
+            readedFromStorageData = null;
         }
     }
     private static ConcurrentSkipListMap<UUID, TdataWord> doUtilizationDataInitNew(ConcurrentSkipListMap<UUID, TdataWord> prevData){

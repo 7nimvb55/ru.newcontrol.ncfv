@@ -21,30 +21,33 @@ import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * ThStorageWordStatusWorkers
- * flagsProc  - (3a.5) - Boolean isWriteProcess - when this param init do it
- *     - (3a.5) - Boolean isReadProcess - when this param init do it
- *     - (3a.5) - Boolean isNeedReadData - when in flow data has write, this flag
+ * <p>Boolean flagsProcessFlow:
+ * <ol>
+ * <li>    - (3a.5.0) - isWriteProcess - when this param init do it
+ * <li>    - (3a.5.1) - isReadProcess - when this param init do it
+ * <li>    - (3a.5.2) - isNeedReadData - when in flow data has write, this flag
  *                  set in TRUE for start reader job before write data, also
  *                  in StatusName, currentFileName set equal newFileName
  *                  in name generate functions add query for names equals and
  *                  flags about needRead isNeedReadData, writer process poll data
  *                  from ReadedCache, builder newFileName, build name with data from
  *                  ReaderCache when set isCachedReadedData to TRUE
- *     - (3a.5) - Boolean isCachedData - when this param init do it
- *     - (3a.5) - Boolean isCachedReadedData - when read process finished set
+ * <li>    - (3a.5.3) - isCachedData - when this param init do it
+ * <li>    - (3a.5.4) - isCachedReadedData - when read process finished set
  *                  this flag, set to false, writer process poll data
  *                  from ReadedCache, builder newFileName, build name with data from
  *                  ReaderCache when set isCachedReadedData to TRUE
- *     - (3a.5) - Boolean isCalculatedData
- *     - (3a.5) - Boolean isUdatedDataInHashMap
- *     - (3a.5) - Boolean isMoveFileReady - when move file process is finished,
+ * <li>    - (3a.5.5) - isCalculatedData
+ * <li>    - (3a.5.6) - isUdatedDataInHashMap
+ * <li>    - (3a.5.7) - isMoveFileReady - when move file process is finished,
  *                  set isNeedRead to TRUE, StatusName currentFileName set equal to
  *                  newFileName
- *     - (3a.5) - Boolean isFlowInWriteBus when data insert into Bus for Writer
- *     - (3a.5) - Boolean isFlowInReadBus when data insert into Bus for Reader
- *     - (3a.5) - Boolean isNeedDeleteOldFile when flow write, read iteration end
- *     - (3a.5) - Boolean isOldFileDeleted  when writer delete file with old writed
+ * <li>    - (3a.5.8) - isFlowInWriteBus when data insert into Bus for Writer
+ * <li>    - (3a.5.9) - isFlowInReadBus when data insert into Bus for Reader
+ * <li>    - (3a.5.10) - isNeedDeleteOldFile when flow write, read iteration end
+ * <li>    - (3a.5.11) - isOldFileDeleted when writer delete file with old writed
  *                  and readed data
+ * </ol>
  * @author wladimirowichbiaran
  */
 public class ThWordStatusWorkers {

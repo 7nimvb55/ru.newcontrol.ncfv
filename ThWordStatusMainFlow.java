@@ -1588,6 +1588,100 @@ public class ThWordStatusMainFlow {
             typeWordFunc = null;
         }
     }
+    
+    protected Boolean isUuidExistInFlowByTypeWordHexTagName(final Integer typeWordInputed, 
+            final String tagNameInputed,
+            UUID checkForExistUuid){
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> flowUuidsFunc;
+        ConcurrentSkipListMap<Integer, UUID> flowParamsFunc;
+        ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<UUID, 
+                    ConcurrentSkipListMap<Integer, UUID>>>>> listTypeWordData;
+        ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<UUID, 
+                    ConcurrentSkipListMap<Integer, UUID>>>> listTagNameLetter;
+        ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<UUID, 
+                    ConcurrentSkipListMap<Integer, 
+                    UUID>>> listTagName;
+        
+        Integer typeWordFunc;
+        UUID mainFlowUuidFunc;
+        String tagNameFunc;
+        String tagNameLetter;
+        Integer tagNamelength;
+        Integer calculatedSubString;
+        try {
+            typeWordFunc = (Integer) typeWordInputed;
+            mainFlowUuidFunc = (UUID) checkForExistUuid;
+            tagNameFunc = (String) tagNameInputed;
+            tagNamelength = (Integer) tagNameFunc.length();
+            if( mainFlowUuidFunc == null ){
+                throw new NullPointerException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " Main Flow UUID is null");
+            }
+            if( tagNamelength < 4 ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal length of inputed in index string, hexTagName: "
+                        + tagNameFunc + " length: " + tagNameFunc.length()
+                        + " < 4 ");
+            }
+            calculatedSubString = tagNamelength / 4;
+            tagNameLetter = tagNameFunc.substring(0, 3);
+            
+            listTypeWordData = this.fileStoragesMap.get(typeWordFunc);
+            if( listTypeWordData == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for typeWord: "
+                        + typeWordFunc);
+            }
+            listTagNameLetter = listTypeWordData.get(tagNameLetter);
+            if( listTagNameLetter == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for tagNameLetter: "
+                        + tagNameLetter);
+            }
+            listTagName = listTagNameLetter.get(calculatedSubString);
+            if( listTagName == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for subStringLength: "
+                        + calculatedSubString);
+            }
+            flowUuidsFunc = listTagName.get(tagNameFunc);
+            if( flowUuidsFunc == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for tagNameFunc: "
+                        + tagNameFunc);
+            }
+            if( !flowUuidsFunc.containsKey(mainFlowUuidFunc) ){
+                return Boolean.FALSE;
+            }
+            flowParamsFunc = flowUuidsFunc.get(mainFlowUuidFunc);
+            if( flowParamsFunc == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for Main Flow UUID: "
+                        + mainFlowUuidFunc.toString());
+            }
+            this.validateCountParams(flowParamsFunc);
+            return Boolean.TRUE;
+        } finally {
+            flowUuidsFunc = null;
+            flowParamsFunc = null;
+            listTypeWordData = null;
+            listTagNameLetter = null;
+            listTagName = null;
+
+            typeWordFunc = null;
+            mainFlowUuidFunc = null;
+            tagNameFunc = null;
+            tagNamelength = null;
+            calculatedSubString = null;
+            tagNameLetter = null;
+        }
+    }
     /**
      * 
      * @param dataInputed

@@ -232,7 +232,11 @@ public class ThWordLogicWrite {
         Boolean localPrevDataWrited; 
         Boolean localPrevDataMoved;
         Path storageTypeWordWritedDirectory;
-        
+        Boolean getIsNeedDelete;
+        String getOldForDeleteFileName;
+        Path deleteFile;
+        Boolean removeAllFlowStatusByUUID;
+        Integer compareTo;
         try {
             outerRuleWordFunc = (ThWordRule) outerRuleWordInputed;
             wordStatusMainFlowFunc = (ThWordStatusMainFlow) outerRuleWordFunc.getWordStatusMainFlow();
@@ -254,6 +258,7 @@ public class ThWordLogicWrite {
              */
             
             workersIsWriteProcess = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc,  0);
+            getIsNeedDelete = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 10);
             if( !workersIsWriteProcess ){
                 pollTypeWordTagFileNameData = null;
                 try{
@@ -324,11 +329,34 @@ public class ThWordLogicWrite {
                                 //---section for next code release --- move to
 
                                 moveToFile = fsForWriteDataFunc.getPath(storageTypeWordWritedDirectory.toString(), localDestFileName);
-                                try{
+                                
+                                if( getIsNeedDelete ){
+
+                                    getOldForDeleteFileName = wordStatusMainFlowFunc.getValueForValideUuuidByTypeWordHexTagNameNumberName(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 3);
+
+                                    deleteFile = fsForWriteDataFunc.getPath(getOldForDeleteFileName);
+                                    try {
+                                        compareTo = deleteFile.compareTo(moveToFile);
+                                    } catch (ClassCastException exClassCast){
+                                        System.err.println(exClassCast.getMessage());
+                                        exClassCast.printStackTrace();
+                                    }
+                                    try {
+                                        Files.deleteIfExists(deleteFile);
+                                    } catch (DirectoryNotEmptyException exNotEmptyDir) {
+                                        exNotEmptyDir.printStackTrace();
+                                    } catch (SecurityException exSecurity) {
+                                        exSecurity.printStackTrace();
+                                    } catch (IOException exInOut) {
+                                        exInOut.printStackTrace();
+                                    }
+                                }
+                                try {
                                     Files.move(nowWritedFile, moveToFile, StandardCopyOption.ATOMIC_MOVE);
                                     
                                     wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 2, Boolean.TRUE);
                                     wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberName(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 1, localDestFileName);
+                                    wordStatusMainFlowFunc.changeParamForMainUuidByHexTagNameNumberName(typeWordFunc, hexTagNameFunc, writerBusUuidFunc, 2, localDestFileName);
                                     //after delete oldFile
                                     localPrevDataMoved = Boolean.TRUE;
                                 } catch(SecurityException exSecurity) {
@@ -360,6 +388,18 @@ public class ThWordLogicWrite {
                         //---section for next code release --- delete data from to write pollTypeWordTagFileNameData
                         //---section for next code release --- set params to flow
                         // need release for delete old writed file
+                        /**
+                         * operations for write, delete, move into static functions with return
+                         * boolean result for operations
+                         * delete section need run after move section and before build moved file name section
+                         * if move result file name equal with olddelete file name,
+                         * first delete existing file second move new writed data
+                         */
+                         
+                        if( getIsNeedDelete ){
+                            removeAllFlowStatusByUUID = wordStatusMainFlowFunc.removeAllFlowStatusByUUID(writerBusUuidFunc);
+                            removeAllFlowStatusByUUID = null;
+                        }
                     }
                 }
             }
@@ -390,6 +430,11 @@ public class ThWordLogicWrite {
             localPrevDataWrited = null; 
             localPrevDataMoved = null;
             storageTypeWordWritedDirectory = null;
+            getIsNeedDelete = null;
+            getOldForDeleteFileName = null;
+            deleteFile = null;
+            removeAllFlowStatusByUUID = null;
+            compareTo = null;
         }
     }
     private static ConcurrentSkipListMap<UUID, TdataWord> doUtilizationDataInitNew(ConcurrentSkipListMap<UUID, TdataWord> prevData){
