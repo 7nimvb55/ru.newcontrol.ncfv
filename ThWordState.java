@@ -313,13 +313,17 @@ public class ThWordState {
         }
     }
     /**
-     * <ul>
-     * <li> 0 - fromFsDeleteDataEvent
-     * <li> 1 - markProcListDeleting
-     * <li> 2 - readReadyDataEvent
-     * <li> 3 - markProcListReading
-     * <li> 4 - writeDataFromCacheEvent
-     * <li> 5 - markProcListWriting
+     * event type flow points with indexing
+     * process Start(s), End(e)
+     * t...
+     * UUID01, UUID02, UUID03, UUID04
+     * <ul>                                     DataFromBus                 DataReaded          SetOldFileName      delFN-UUID      moveFN
+     * <li> 0 - fromFsDeleteDataEvent                                                                               (08e)UUID01-del
+     * <li> 1 - markProcListDeleting                                                            (05s)UUID01
+     * <li> 2 - readReadyDataEvent                                          (04e)UUID01
+     * <li> 3 - markProcListReading                                         (03s)UUID01
+     * <li> 4 - writeDataFromCacheEvent         (01e)UUID01, (07e)UUID02                                                            (02e)UUID01, (09e)UUID02
+     * <li> 5 - markProcListWriting             (00s)UUID01, (06e)UUID02
      * <li> 6 - insertIntoCacheEvent
      * <li> 7 - markProcListInserting
      * <li> 8 - cleanReadedCacheEvent

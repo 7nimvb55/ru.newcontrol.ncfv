@@ -1001,6 +1001,80 @@ public class ThWordCacheSk {
             returnedValue = null;
         }
     }
+    protected Integer sizeDataInCacheByTypeWordHexTagName(
+        final Integer typeWordInputed,
+        final String hexTagNameInputed){
+        
+        ConcurrentSkipListMap<UUID, TdataWord> flowRecivedValueFunc;
+        ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<UUID, TdataWord>>>> listTypeWordData;
+        ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<UUID, TdataWord>>> listTagNameLetter;
+        ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<UUID, TdataWord>> listTagName;
+        Integer typeWordFunc;
+        String tagNameFunc;
+        String tagNameLetter;
+        Integer tagNamelength;
+        Integer calculatedSubString;
+        try {
+            typeWordFunc = (Integer) typeWordInputed;
+            tagNameFunc = (String) hexTagNameInputed;
+            if( typeWordFunc == null || tagNameFunc == null ){
+                throw new NullPointerException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " Main Flow UUID is null");
+            }
+            tagNamelength = (Integer) tagNameFunc.length();
+            if( tagNamelength < 4 ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal length of inputed in index string, hexTagName: "
+                        + tagNameFunc + " length: " + tagNameFunc.length()
+                        + " < 4 ");
+            }
+            calculatedSubString = tagNamelength / 4;
+            tagNameLetter = tagNameFunc.substring(0, 3);
+            
+            listTypeWordData = this.cachedData.get(typeWordFunc);
+            if( listTypeWordData == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for typeWord: "
+                        + typeWordFunc);
+            }
+            listTagNameLetter = listTypeWordData.get(tagNameLetter);
+            if( listTagNameLetter == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for tagNameLetter: "
+                        + tagNameLetter);
+            }
+            listTagName = listTagNameLetter.get(calculatedSubString);
+            if( listTagName == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for subStringLength: "
+                        + calculatedSubString);
+            }
+            flowRecivedValueFunc = listTagName.get(tagNameFunc);
+            if(flowRecivedValueFunc == null ){
+                throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
+                        + " illegal key value for hexTagName: "
+                        + tagNameFunc);
+            }
+            return new Integer(flowRecivedValueFunc.size());
+        } finally {
+            flowRecivedValueFunc = null;
+            listTypeWordData = null;
+            listTagNameLetter = null;
+            listTagName = null;
+
+            typeWordFunc = null;
+            tagNameFunc = null;
+            tagNamelength = null;
+            calculatedSubString = null;
+            tagNameLetter = null;
+        }
+    }
     /*protected void printCacheData(){
         for( Map.Entry<Integer,ConcurrentSkipListMap<String, ConcurrentSkipListMap<Integer, ConcurrentSkipListMap<String, String>>>> cachedTypes : this.cachedData.entrySet()){
             for(Map.Entry<String, ConcurrentSkipListMap<Integer, ConcurrentSkipListMap<String, String>>> hexSubByte : cachedTypes.getValue().entrySet()){

@@ -82,24 +82,49 @@ public class ThWordEventIndex {
         this.wordState = ruleInputed.getWordState();
         
     }
+    /**
+     * 
+     * @param mainFlowUUID
+     * @return value in index
+     * @throws IllegalArgumentException if index not have value
+     */
     protected String getHexTagNameByMainFlowUuid(UUID mainFlowUUID){
         String getHexTagName;
         try {
             getHexTagName = this.idxMainFlowHexTagName.get(mainFlowUUID);
+            if( getHexTagName == null ){
+                throw new NullPointerException(ThWordEventIndex.class.getCanonicalName() + " returned HexTagName is null");
+            }
             return getHexTagName;
         } finally {
             getHexTagName = null;
         }
     }
+    /**
+     * 
+     * @param mainFlowUUID
+     * @return value in index
+     * @throws IllegalArgumentException if index not have value
+     */
     protected Integer getTypeWordByMainFlowUuid(UUID mainFlowUUID){
         Integer getTypeWord;
         try {
             getTypeWord = this.idxMainFlowTypeWord.get(mainFlowUUID);
+            if( getTypeWord == null ){
+                throw new NullPointerException(ThWordEventIndex.class.getCanonicalName() + " returned TypeWord is null");
+            }
             return getTypeWord;
         } finally {
             getTypeWord = null;
         }
     }
+    /**
+     * 
+     * @param inputedMainFlowUUID
+     * @param inputedTypeWord 
+     * @throws NullPointerException for null or empty arguments
+     * @throws IllegalArgumentException if in index exist value
+     */
     protected void putMainFlowUuidTypeWord(UUID inputedMainFlowUUID, Integer inputedTypeWord){
         Integer funcTypeWord;
         UUID funcMainFlowUUID;
@@ -128,7 +153,44 @@ public class ThWordEventIndex {
             pervValue = null;
         }
     }
-    
+    /**
+     * 
+     * @param inputedMainFlowUUID
+     * @param inputedHexTagName 
+     * @throws NullPointerException for null or empty arguments
+     * @throws IllegalArgumentException if in index exist value
+     */
+    protected void putMainFlowUuidHexTagName(UUID inputedMainFlowUUID, String inputedHexTagName){
+        String funcHexTagName;
+        UUID funcMainFlowUUID;
+        String pervValue;
+        try {
+            funcHexTagName = (String) inputedHexTagName;
+            funcMainFlowUUID = (UUID) inputedMainFlowUUID;
+            if( funcHexTagName == null ){
+                throw new NullPointerException(ThWordEventIndex.class.getCanonicalName() + " inputed HexTagName is null");
+            }
+            if( funcHexTagName.isEmpty() ){
+                throw new NullPointerException(ThWordEventIndex.class.getCanonicalName() + " inputed HexTagName is empty");
+            }
+            if( funcMainFlowUUID == null ){
+                throw new NullPointerException(ThWordEventIndex.class.getCanonicalName() + " inputed MainFlowUUID is null");
+            }
+            pervValue = this.idxMainFlowHexTagName.put(funcMainFlowUUID, funcHexTagName);
+            if( pervValue != null ){
+                this.idxMainFlowHexTagName.put(funcMainFlowUUID, pervValue);
+                throw new IllegalArgumentException(ThWordEventIndex.class.getCanonicalName() 
+                        + " value: " + String.valueOf(pervValue)
+                        + " for UUID: " + funcMainFlowUUID.toString()
+                        + " exist in index, new value: " + String.valueOf(funcHexTagName)
+                        + " not has been apply");
+            }
+        } finally {
+            funcHexTagName = null;
+            funcMainFlowUUID = null;
+            pervValue = null;
+        }
+    }
     
     /**
      * change in flow Workers states in EventLogic methods

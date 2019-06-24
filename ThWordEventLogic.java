@@ -73,5 +73,26 @@ public class ThWordEventLogic {
         this.wordCache = ruleWordInputed.getWordStatusMainFlow().getWordCache();
         this.eventIndex = ruleWordInputed.getWordState().getEventIndex();
     }
-    
+    /**
+     * 
+     * @param inputedMainFlowUuid
+     * @return 
+     */
+    protected Integer getSizeDataInCacheByMainFlowUuid( final UUID inputedMainFlowUuid ){
+        UUID functionMainFlowUuid;
+        String hexTagNameByMainFlowUuid;
+        Integer typeWordByMainFlowUuid;
+        Integer countRecordsForReturn;
+        try {
+            functionMainFlowUuid = (UUID) inputedMainFlowUuid;
+            hexTagNameByMainFlowUuid = this.eventIndex.getHexTagNameByMainFlowUuid(functionMainFlowUuid);
+            typeWordByMainFlowUuid = this.eventIndex.getTypeWordByMainFlowUuid(functionMainFlowUuid);
+            countRecordsForReturn = this.wordCache.sizeDataInCacheByTypeWordHexTagName(typeWordByMainFlowUuid, hexTagNameByMainFlowUuid);
+            return new Integer(countRecordsForReturn);
+        } finally {
+            hexTagNameByMainFlowUuid = null;
+            typeWordByMainFlowUuid = null;
+            countRecordsForReturn = null;
+        }
+    }
 }
