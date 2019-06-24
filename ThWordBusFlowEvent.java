@@ -198,6 +198,59 @@ public class ThWordBusFlowEvent {
         }
     }
     /**
+     * 
+     * @param typeWord
+     * @param mainFlowContentInputed
+     * @param tagName
+     * @return 
+     */
+    protected LinkedTransferQueue<UUID> pollDataReadedFlowUuidsByTypeWordHexTagName(final Integer typeWord, 
+            final UUID mainFlowContentInputed,
+            final String tagName){
+        LinkedTransferQueue<UUID> removedForReturn;
+        Integer typeWordFunc;
+        String tagNameFunc;
+        Integer tagNamelength;
+        UUID poll;
+        LinkedTransferQueue<UUID> mainFlowContentFunc;
+        UUID uuidFlowContentFunc;
+        try {
+            typeWordFunc = (Integer) typeWord;
+            tagNameFunc = (String) tagName;
+            tagNamelength = (Integer) tagNameFunc.length();
+            uuidFlowContentFunc = (UUID) mainFlowContentInputed;
+            mainFlowContentFunc = getFlowUuidsByTypeWordHexTagName(typeWordFunc, uuidFlowContentFunc, tagNameFunc);
+            
+            if( mainFlowContentFunc == null ){
+                throw new NullPointerException(ThWordBusFlowEvent.class.getCanonicalName() 
+                        + " not have UUIDs in for key type, hexTagName: "
+                        + tagNameFunc + " lengthHex: " + tagNamelength);
+            }
+            if( mainFlowContentFunc.isEmpty() ){
+                throw new NullPointerException(ThWordBusFlowEvent.class.getCanonicalName() 
+                        + " not have UUIDs in for key type, hexTagName: "
+                        + tagNameFunc + " lengthHex: " + tagNamelength);
+            }
+            removedForReturn = new LinkedTransferQueue<UUID>();
+            do {
+                poll = mainFlowContentFunc.poll();
+                if( poll != null ){
+                    removedForReturn.add(poll);
+                }
+            } while( !mainFlowContentFunc.isEmpty() );
+            return removedForReturn;
+        }
+        finally {
+            tagNameFunc = null;
+            tagNamelength = null;
+            typeWordFunc = null;
+            removedForReturn = null;
+            poll = null;
+            mainFlowContentFunc = null;
+            uuidFlowContentFunc = null;
+        }
+    }
+    /**
      * > > > > > > > > > this use in router
      * lvl (2a) init params for new itemIndex
      * @param typeWord
@@ -279,6 +332,13 @@ public class ThWordBusFlowEvent {
             tagNameFunc = null;
         }
     }
+    /**
+     * 
+     * @param typeWordInputed
+     * @param mainFlowUuid
+     * @param tagNameInputed
+     * @return 
+     */
     private LinkedTransferQueue<UUID> getFlowUuidsByTypeWordHexTagName(
             final Integer typeWordInputed,
             final UUID mainFlowUuid, 
@@ -356,6 +416,38 @@ public class ThWordBusFlowEvent {
             tagNamelength = null;
             calculatedSubString = null;
             tagNameLetter = null;
+        }
+    }
+    /**
+     * 
+     * @param typeWordInputed
+     * @param mainFlowUuid
+     * @param tagNameInputed
+     * @return 
+     */
+    protected Boolean isExistUUIDByTypeWordHexTagName(
+            final Integer typeWordInputed,
+            final UUID mainFlowUuid, 
+            final String tagNameInputed){
+        Integer typeWordFunc;
+        UUID mainFlowUuidFunc;
+        String tagNameFunc;
+        Boolean existInEventQueue;
+        try {
+            typeWordFunc = (Integer) typeWordInputed;
+            mainFlowUuidFunc = (UUID) mainFlowUuid;
+            tagNameFunc = (String) tagNameInputed;
+            LinkedTransferQueue<UUID> flowUuidsByTypeWordHexTagName = getFlowUuidsByTypeWordHexTagName(typeWordFunc, mainFlowUuidFunc, tagNameFunc);
+            existInEventQueue = isExistInEventQueue(flowUuidsByTypeWordHexTagName, mainFlowUuidFunc);
+            if( existInEventQueue ){
+                return Boolean.TRUE;
+            }
+            return Boolean.FALSE;
+        } finally {
+            typeWordFunc = null;
+            mainFlowUuidFunc = null;
+            tagNameFunc = null;
+            existInEventQueue = null;
         }
     }
     /**
@@ -724,7 +816,101 @@ public class ThWordBusFlowEvent {
             removeValueSubStrLength = null;
             removeValueHexTagNameList = null;
         }
-    
+    }
+    /**
+     *
+     */
+    protected void destructorBusFlowEvent(){
+        Integer keyTypeWord;
+        ConcurrentSkipListMap<String, 
+                        ConcurrentSkipListMap<Integer, 
+                        ConcurrentSkipListMap<String, 
+                        LinkedTransferQueue<UUID>>>> valueHexTagNameList;
+        String keyHexTagNameLetter;
+        ConcurrentSkipListMap<Integer, 
+                            ConcurrentSkipListMap<String, 
+                            LinkedTransferQueue<UUID>>> valueSubStrLength;
+        Integer keySubStrLength;
+        ConcurrentSkipListMap<String, 
+                                LinkedTransferQueue<UUID>> valueHexTagName;
+        String keyHexTagName;
+        LinkedTransferQueue<UUID> valueListUuids;
+        UUID poll;
+        LinkedTransferQueue<UUID> removeValueListUuids;
+        ConcurrentSkipListMap<String, 
+                                LinkedTransferQueue<UUID>> removeValueHexTagName;
+        ConcurrentSkipListMap<Integer, 
+                            ConcurrentSkipListMap<String, 
+                            LinkedTransferQueue<UUID>>> removeValueSubStrLength;
+        ConcurrentSkipListMap<String, 
+                        ConcurrentSkipListMap<Integer, 
+                        ConcurrentSkipListMap<String, 
+                        LinkedTransferQueue<UUID>>>> removeValueHexTagNameList;
+        try{
+            for( Map.Entry<Integer, 
+                    ConcurrentSkipListMap<String, 
+                    ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                    LinkedTransferQueue<UUID>>>>> itemOfListTypeWord : this.uuidReadedFlowMap.entrySet() ){
+                keyTypeWord = itemOfListTypeWord.getKey();
+                valueHexTagNameList = itemOfListTypeWord.getValue();
+                for( Map.Entry<String, 
+                    ConcurrentSkipListMap<Integer, 
+                    ConcurrentSkipListMap<String, 
+                    LinkedTransferQueue<UUID>>>> itemOfListHexTagNameLetter : valueHexTagNameList.entrySet() ){
+                    keyHexTagNameLetter = itemOfListHexTagNameLetter.getKey();
+                    valueSubStrLength = itemOfListHexTagNameLetter.getValue();
+                    for(Map.Entry<Integer, 
+                            ConcurrentSkipListMap<String, 
+                            LinkedTransferQueue<UUID>>> itemOfListSubStrLength  : valueSubStrLength.entrySet() ){
+                        keySubStrLength = itemOfListSubStrLength.getKey();
+                        valueHexTagName = itemOfListSubStrLength.getValue();
+                        for( Map.Entry<String, LinkedTransferQueue<UUID>> itemOfListHexTagName : valueHexTagName.entrySet() ){
+                            keyHexTagName = itemOfListHexTagName.getKey();
+                            valueListUuids = itemOfListHexTagName.getValue();
+                            if( !valueListUuids.isEmpty() ){
+
+                                do {
+                                    poll = valueListUuids.poll();
+                                    poll = null;
+                                } while( !valueListUuids.isEmpty() );
+
+                            }
+                            removeValueListUuids = valueHexTagName.remove(keyHexTagName);
+                            removeValueListUuids = null;
+                            valueListUuids = null;
+                            keyHexTagName = null;
+                        }
+                        removeValueHexTagName = valueSubStrLength.remove(keySubStrLength);
+                        removeValueHexTagName = null;
+                        valueHexTagName = null;
+                    }
+                    removeValueSubStrLength = valueHexTagNameList.remove(keyHexTagNameLetter);
+                    removeValueSubStrLength = null;
+                    keyHexTagNameLetter = null;
+                    valueSubStrLength = null;
+                }
+                removeValueHexTagNameList = this.uuidReadedFlowMap.remove(keyTypeWord);
+                removeValueHexTagNameList = null;
+                keyTypeWord = null;
+                valueHexTagNameList = null;
+            }
+            this.uuidReadedFlowMap = null;
+        } finally {
+            keyTypeWord = null;
+            valueHexTagNameList = null;
+            keyHexTagNameLetter = null;
+            valueSubStrLength = null;
+            keySubStrLength = null;
+            valueHexTagName = null;
+            keyHexTagName = null;
+            valueListUuids = null;
+            poll = null;
+            removeValueListUuids = null;
+            removeValueHexTagName = null;
+            removeValueSubStrLength = null;
+            removeValueHexTagNameList = null;
+        }
     }
 
 }

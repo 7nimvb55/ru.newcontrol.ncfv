@@ -15,11 +15,12 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
- * How work
+ * 
  * @author wladimirowichbiaran
  */
 public class ThWordState {
@@ -41,16 +42,120 @@ public class ThWordState {
      */
     private ThWordBusFlowEvent thWordFlowRead;
     private Boolean isSetWordFlowReaded;
-    
-    public ThWordState() {
+    private ConcurrentSkipListMap<Integer, ThWordBusFlowEvent> eventsBusObjectList;
+    private ThWordEventLogic eventsLogic;
+    private ThWordEventIndex eventsIndex;
+    private ThWordStatusMainFlow mainFlow;
+    public ThWordState(ThWordRule ruleWordInputed) {
+        this.mainFlow = (ThWordStatusMainFlow) ruleWordInputed.getWordStatusMainFlow();
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
+        newInstanceOfListBus(ruleWordInputed);
+        newInstanceEventIndex(ruleWordInputed);
+        newInstanceEventLogic(ruleWordInputed);
+        
         setFalseWordRouterJobToWriter();
         setFalseWordRouterJobToReader();
         /**
          * ThWordFlowReaded
          */
         setFalseWordFlowReaded();
+    }
+    private void newInstanceEventLogic(final ThWordRule ruleInputed){
+        this.eventsLogic = new ThWordEventLogic(ruleInputed);
+    }
+    private void newInstanceEventIndex(final ThWordRule ruleInputed){
+        this.eventsIndex = new ThWordEventIndex(ruleInputed);
+    }
+    /**
+     * Create Buses of Events on create object
+     * @param ruleInputed 
+     */
+    private void newInstanceOfListBus(final ThWordRule ruleInputed){
+        Integer eventCount;
+        Integer idx;
+        Integer currentEventCode;
+        ThWordBusFlowEvent newEventBus;
+        ThWordRule ruleFunc;
+        ThWordStatusMainFlow wordStatusMainFlow;
+        try {
+            ruleFunc = (ThWordRule) ruleInputed;
+            wordStatusMainFlow = ruleFunc.getWordStatusMainFlow();
+            this.eventsBusObjectList = new ConcurrentSkipListMap<Integer, ThWordBusFlowEvent>();
+            eventCount = getEventCount();
+            for( idx = 0; idx < eventCount ; idx++ ){
+                currentEventCode = getEventCodeByNumber(idx);
+                newEventBus = new ThWordBusFlowEvent(wordStatusMainFlow);
+                this.eventsBusObjectList.put(currentEventCode, newEventBus);
+            }
+        } finally {
+            eventCount = null;
+            idx = null;
+            currentEventCode = null;
+            newEventBus = null;
+            ruleFunc = null;
+            wordStatusMainFlow = null;
+        }
+    }
+    protected ThWordEventIndex getEventIndex(){
+        return this.eventsIndex;
+    }
+    /**
+     * 
+     */
+    protected void destructorOfListBus(){
+        Integer keyRemovedEventBus;
+        ThWordBusFlowEvent removedEventBus;
+        try {
+            for( Map.Entry<Integer, ThWordBusFlowEvent> destoyedItem : this.eventsBusObjectList.entrySet() ){
+                destoyedItem.getValue().destructorBusFlowEvent();
+                keyRemovedEventBus = destoyedItem.getKey();
+                removedEventBus = this.eventsBusObjectList.remove(keyRemovedEventBus);
+                removedEventBus = null;
+                keyRemovedEventBus = null;
+            }
+            this.eventsBusObjectList = null;
+        } finally {
+            keyRemovedEventBus = null;
+            removedEventBus = null;
+        }
+    }
+    /**
+     * <ul>
+     * <li> 0 - fromFsDeleteDataEvent
+     * <li> 1 - markProcListDeleting
+     * <li> 2 - readReadyDataEvent
+     * <li> 3 - markProcListReading
+     * <li> 4 - writeDataFromCacheEvent
+     * <li> 5 - markProcListWriting
+     * <li> 6 - insertIntoCacheEvent
+     * <li> 7 - markProcListInserting
+     * <li> 8 - cleanReadedCacheEvent
+     * <li> 9 - markProcListReadCacheCleaning
+     * <li> 10 - cleanCacheEvent
+     * <li> 11 - markProcListCacheCleaning
+     * </ul>
+     * @param numEventNameInputed
+     * @return 
+     */
+    protected ThWordBusFlowEvent getEventBusByNumber(final Integer numEventNameInputed){
+        Integer numEventNameFunc;
+        Integer eventCodeByNumber;
+        ThWordBusFlowEvent returnedEventBus;
+        try {
+            numEventNameFunc = (Integer) numEventNameInputed;
+            eventCodeByNumber = getEventCodeByNumber(numEventNameFunc);
+            returnedEventBus = (ThWordBusFlowEvent) this.eventsBusObjectList.get(eventCodeByNumber);
+            if( returnedEventBus == null  ){
+                returnedEventBus = new ThWordBusFlowEvent(this.mainFlow);
+                this.eventsBusObjectList.put(eventCodeByNumber, returnedEventBus);
+            }
+            return returnedEventBus;
+        } finally {
+            numEventNameFunc = null;
+            eventCodeByNumber = null;
+            returnedEventBus = null;
+        }
     }
     /**
      * 
@@ -133,23 +238,26 @@ public class ThWordState {
         return Boolean.FALSE;
     }
     /**
-     * On fromFsDelteDataEvent (markProcListDeleting)
+     * <ol>
+     * <li> when transfer data Event to Proc or Proc to Event set flag 
+     *      transEvPr or transPrEv
+     * <li> On fromFsDeleteDataEvent (markProcListDeleting)
      *  - current filename saved (curFNs)
      *  - poll data from Cache
      *  - if new move name (nMFN) after write equal curFNs than rename curFNs-UUID(prev)
      *  - write DataFromCache move to nMFN, delete curFNs-UUID(prev)
-     * On readReadyDataEvent (markProcListReading)
+     * <li> On readReadyDataEvent (markProcListReading)
      *  - current filename saved (curFNs)
      *  - read from Fs data
      *  - poll data from ReadedCache
      *  - insert into Cache (insertIntoCacheEvent)
      *  - add curFNs name to list, move UUID into fromFsDelteDataEvent
-     * On writeDataFromCacheEvent (markProcListWriting)
+     * <li> On writeDataFromCacheEvent (markProcListWriting)
      *  - poll data from Cache
      *  - if notexist (nMFN)
      *  - write data into FS
      *  - add nMFN to curFNs name to list, move UUID into readReadyDataEvent
-     * On insertIntoCacheEvent (markProcListInserting) 
+     * <li> On insertIntoCacheEvent (markProcListInserting) 
      *                      Sources: fromOuterBus, fromReadedCache
      *  - poll data from OuterBus
      *  - poll data from ReadedCache
@@ -158,21 +266,43 @@ public class ThWordState {
      *  - check for markProcListReading, readReadyDataEvent if need, do
      *  - check for markProcListWriting, writeDataFromCacheEvent if need, do
      *  - if end for fromOuterBus source, do all clean fromReadedCache source, do cleanCacheEvent
-     * On cleanCacheEvent, new Source cleanedCache
+     * <li> On cleanReadedCacheEvent (markProcListReadCacheCleaning)
+     *  - do insertIntoCacheEvent for all data fromReadedCache
+     * <li> On cleanCacheEvent, new Source cleanedCache
+     *  - do cleanReadedCacheEvent (markProcListCacheCleaning)
+     *  - poll all data from Cache
+     *  - create Source pollFromCache
      *  - do insertIntoCacheEvent
+     *  - while cleanedCache is not Empty
+     * </ol>
      */
     private String[] getEventNames(){
         String[] returnedListEventNames;
         try {
             returnedListEventNames = new String[] {
-                "",
-                
+                "fromFsDeleteDataEvent",
+                "markProcListDeleting",
+                "readReadyDataEvent",
+                "markProcListReading",
+                "writeDataFromCacheEvent",
+                "markProcListWriting",
+                "insertIntoCacheEvent",
+                "markProcListInserting",
+                "cleanReadedCacheEvent",
+                "markProcListReadCacheCleaning",
+                "cleanCacheEvent",
+                "markProcListCacheCleaning"
             };
             return returnedListEventNames;
         } finally {
             returnedListEventNames = null;
         }
     }
+    /**
+     * 
+     * @return count records of String array returned by
+     * @see getEventNames()
+     */
     private Integer getEventCount(){
         String[] eventNamesArray;
         try {
@@ -182,31 +312,88 @@ public class ThWordState {
             eventNamesArray = null;
         }
     }
-    private Integer getEventCodeByNumber(int numParam){
+    /**
+     * <ul>
+     * <li> 0 - fromFsDeleteDataEvent
+     * <li> 1 - markProcListDeleting
+     * <li> 2 - readReadyDataEvent
+     * <li> 3 - markProcListReading
+     * <li> 4 - writeDataFromCacheEvent
+     * <li> 5 - markProcListWriting
+     * <li> 6 - insertIntoCacheEvent
+     * <li> 7 - markProcListInserting
+     * <li> 8 - cleanReadedCacheEvent
+     * <li> 9 - markProcListReadCacheCleaning
+     * <li> 10 - cleanCacheEvent
+     * <li> 11 - markProcListCacheCleaning
+     * </ul>
+     * @param numEventNameInputed
+     * @return 
+     * @throws IllegalArgumentException
+     * <ul>
+     * <li> when numEventNameInputed < 0 (Zero)
+     * <li> when numEventNameInputed > count event names
+     * </ul>
+     * @see getEventCount()
+     * @see getEventNameByNumber()
+     */
+    private Integer getEventCodeByNumber(final Integer numEventNameInputed){
         String[] eventNamesArray;
         Integer codeForEventName;
+        Integer numEventNameFunc;
         try {
-            if( numParam < 0 ){
+            numEventNameFunc = (Integer) numEventNameInputed;
+            if( numEventNameFunc < 0 ){
                 throw new IllegalArgumentException(ThWordStatusName.class.getCanonicalName() 
                                 + " parameters of flow statusName in StorageWord is not valid, "
-                                + " negative index sended, 0 (zero) > " + numParam);
+                                + " negative index sended, 0 (zero) > " + numEventNameFunc);
             }
             eventNamesArray = getEventNames();
-            if( numParam > (eventNamesArray.length - 1) ){
+            if( numEventNameFunc > (eventNamesArray.length - 1) ){
                 throw new IllegalArgumentException(ThWordStatusName.class.getCanonicalName() 
                                 + " parameters of flow statusName in StorageWord is not valid, "
                                 + "count parameters: " 
                                 + eventNamesArray.length 
-                                + ", need for return " + numParam);
+                                + ", need for return " + numEventNameFunc);
             } 
-            codeForEventName = eventNamesArray[numParam]
+            codeForEventName = eventNamesArray[numEventNameFunc]
                     .concat(String.valueOf(this.timeCreation))
                     .concat(this.objectLabel.toString()).hashCode();
-            return codeForEventName;
+            return new Integer(codeForEventName);
         } finally {
             eventNamesArray = null;
             codeForEventName = null;
+            numEventNameFunc = null;
         }
     }
-    
+    /**
+     *  
+     * @param numEventNameInputed
+     * @return String name
+     * @see getEventNames()
+     */
+    private String getEventNameByNumber(final Integer numEventNameInputed){
+        String[] eventNames;
+        Integer numEventNameFunc;
+        try {
+            numEventNameFunc = (Integer) numEventNameInputed;
+            if( numEventNameFunc < 0 ){
+                throw new IllegalArgumentException(ThWordStatusName.class.getCanonicalName() 
+                                + " eventeters of flow statusName in StorageWord is not valid, "
+                                + " negative index sended, 0 (zero) > " + numEventNameFunc);
+            }
+            eventNames = getEventNames();
+            if( numEventNameFunc > (eventNames.length - 1) ){
+                throw new IllegalArgumentException(ThWordStatusName.class.getCanonicalName() 
+                                + " eventeters of flow statusName in StorageWord is not valid, "
+                                + "count eventeters: " 
+                                + eventNames.length 
+                                + ", need for return " + numEventNameFunc);
+            } 
+            return new String(eventNames[numEventNameFunc]);
+        } finally {
+            eventNames = null;
+            numEventNameFunc = null;
+        }
+    }
 }
