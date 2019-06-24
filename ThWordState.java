@@ -314,22 +314,46 @@ public class ThWordState {
     }
     /**
      * event type flow points with indexing
-     * process Start(s), End(e)
-     * t...
+     * process Start(s), End(e) part of logic algoritm
+     * t...(01...09)
      * UUID01, UUID02, UUID03, UUID04
      * <ul>                                     DataFromBus                 DataReaded          SetOldFileName      delFN-UUID      moveFN
-     * <li> 0 - fromFsDeleteDataEvent                                                                               (08e)UUID01-del
-     * <li> 1 - markProcListDeleting                                                            (05s)UUID01
-     * <li> 2 - readReadyDataEvent                                          (04e)UUID01
-     * <li> 3 - markProcListReading                                         (03s)UUID01
-     * <li> 4 - writeDataFromCacheEvent         (01e)UUID01, (07e)UUID02                                                            (02e)UUID01, (09e)UUID02
-     * <li> 5 - markProcListWriting             (00s)UUID01, (06e)UUID02
-     * <li> 6 - insertIntoCacheEvent
-     * <li> 7 - markProcListInserting
-     * <li> 8 - cleanReadedCacheEvent
-     * <li> 9 - markProcListReadCacheCleaning
-     * <li> 10 - cleanCacheEvent
-     * <li> 11 - markProcListCacheCleaning
+     * <li> 0  - eventFromFsDeleteOldData                                                                            del-UUID01andOldFileFromFs
+     * <li> 1  - waitFromFsDeleteOldData                                                                             (08e)UUID01
+     * <li> 2  - doFromFsDeleteOldData                                                            (05s)UUID01
+     *          - when algoritm poll UUID from 1 insert into 2 when end do insert into 0
+     *          - writer delete file after write before move
+     * <li> 3  - eventReadReadyData                                          (04e)UUID01
+     *          - poll from cacheReaded insert into cache
+     * <li> 4  - waitReadReadyData
+     * <li> 5  - doReadReadyData                                             (03s)UUID01
+     *          - reader read, insert into cacheReaded
+     *          - set UUID flag in (1)
+     * <li> 6  - eventWriteDataCache             (01e)UUID01, (07e)UUID02                                                            (02e)UUID01, (09e)UUID02
+     *          - set UUID flag in (4)
+     * <li> 7  - waitWriteDataCache
+     * <li> 8  - doWriteDataCache                (00s)UUID01, (06e)UUID02
+     *          - writer, poll from cache existing data packet
+     *          - get storage path
+     *          - if need write limited files with incremental volume number
+     *          - build new file name with him volume number
+     *          - write data to thisFile
+     *          - build file name for move movedFile, 
+     *          - if equal oldFile (from 1 rename it, change rename in 1)
+     *          - move thisFile to movedFile
+     *          - delete oldFile (from 1 or renamedOldFile)
+     *          - delete UUID00 contined oldFile (from 1)
+     * <li> 9  - eventInsertIntoCache
+     *          - if not UUID01 in (1 || 8) than new UUIDnextNum
+     *          - else if UUID01 in (7) nothing 
+     * <li> 10 - waitInsertIntoCache
+     * <li> 11 - doInsertIntoCache
+     * <li> 12 - eventCleanReadedCache
+     * <li> 13 - waitCleanReadedCache
+     * <li> 14 - doCleanReadedCache
+     * <li> 15 - eventCleanCache
+     * <li> 16 - waitCleanCache
+     * <li> 17 - doCleanCache
      * </ul>
      * @param numEventNameInputed
      * @return 
