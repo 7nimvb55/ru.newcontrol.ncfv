@@ -46,10 +46,14 @@ public class ThWordState {
     private ThWordEventLogic eventsLogic;
     private ThWordEventIndex eventsIndex;
     private ThWordStatusMainFlow mainFlow;
+    
+    private ThWordEventIndexFlow eventIndexFlow;
+    
     public ThWordState(ThWordRule ruleWordInputed) {
         this.mainFlow = (ThWordStatusMainFlow) ruleWordInputed.getWordStatusMainFlow();
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
+        this.eventIndexFlow = new ThWordEventIndexFlow();
         newInstanceOfListBus(ruleWordInputed);
         newInstanceEventIndex(ruleWordInputed);
         newInstanceEventLogic(ruleWordInputed);
@@ -60,6 +64,9 @@ public class ThWordState {
          * ThWordFlowReaded
          */
         setFalseWordFlowReaded();
+    }
+    protected ThWordEventIndexFlow getEventIndexFlow(){
+        return this.eventIndexFlow;
     }
     private void newInstanceEventLogic(final ThWordRule ruleInputed){
         this.eventsLogic = new ThWordEventLogic(ruleInputed);

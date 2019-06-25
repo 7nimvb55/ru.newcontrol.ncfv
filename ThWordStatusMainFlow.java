@@ -15,7 +15,6 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -1463,7 +1462,9 @@ public class ThWordStatusMainFlow {
      * @param dataInputed
      * @return 
      */
-    protected UUID createInitMainFlow(final TdataWord dataInputed){
+    protected UUID createInitMainFlow(
+            final TdataWord dataInputed,
+            ThWordEventIndexFlow eventIndexFlow){
         ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> initMainFlow;
         ConcurrentSkipListMap<Integer, UUID> initValues;
         UUID generatedMainFlowUUID;
@@ -1491,11 +1492,17 @@ public class ThWordStatusMainFlow {
             initValues = new ConcurrentSkipListMap<Integer, UUID>();
             
             initValues.put(getParamCodeByNumber(0), keyFlowStatusDataFs);
+            eventIndexFlow.setDataFs(generatedMainFlowUUID, keyFlowStatusDataFs);
             initValues.put(getParamCodeByNumber(1), keyFlowStatusName);
+            eventIndexFlow.setName(generatedMainFlowUUID, keyFlowStatusName);
             initValues.put(getParamCodeByNumber(2), keyFlowStatusActivity);
+            eventIndexFlow.setActivity(generatedMainFlowUUID, keyFlowStatusActivity);
             initValues.put(getParamCodeByNumber(3), keyFlowStatusDataCache);
+            eventIndexFlow.setDataCache(generatedMainFlowUUID, keyFlowStatusDataCache);
             initValues.put(getParamCodeByNumber(4), keyFlowStatusWorkers);
+            eventIndexFlow.setWorkers(generatedMainFlowUUID, keyFlowStatusWorkers);
             initValues.put(getParamCodeByNumber(5), keyFlowStatusError);
+            eventIndexFlow.setError(generatedMainFlowUUID, keyFlowStatusError);
             initMainFlow = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>>();
             initMainFlow.put(generatedMainFlowUUID, initValues);
             setParamFlowUuidsByDataWord(dataInputed, initMainFlow);

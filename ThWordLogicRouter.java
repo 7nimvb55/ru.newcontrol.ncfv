@@ -20,7 +20,6 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.LinkedTransferQueue;
@@ -209,7 +208,7 @@ public class ThWordLogicRouter {
             
             wordCache = wordStatusMainFlow.getWordCache();
             wordCacheReaded = wordStatusMainFlow.getWordCacheReaded();
-            initMainFlowUUID = wordStatusMainFlow.createInitMainFlow(dataFromBusFunc);
+            initMainFlowUUID = wordStatusMainFlow.createInitMainFlow(dataFromBusFunc, outerRuleWord.getWordState().getEventIndexFlow());
             /**
              * DataCache - (0) currentInCache, (2) addNeedToFileSystemLimit
              * Name - (4) flowFileNamePrefix
