@@ -15,7 +15,6 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
@@ -195,6 +194,74 @@ public class ThWordBusFlowEvent {
             dataTypeWordTagNameSubStr = null;
             removedForReturn = null;
             poll = null;
+        }
+    }
+    /**
+     * @param dataInputed
+     * @return 
+     * @throws IllegalArgumentException when inputed data not valid
+     */
+    protected Boolean removeMainFlowUuid(
+            UUID mainFlowUuidInputed,
+            ThWordEventIndex eventIndexInputed){
+        ConcurrentSkipListMap<String, LinkedTransferQueue<UUID>> dataTypeWordTagNameSubStr;
+
+        LinkedTransferQueue<UUID> getCurrentList;
+        Integer typeWordFunc;
+        String strSubStringFunc;
+        String tagNameFunc;
+        String[] forDeleteValues;
+        Integer strSubStringlength;
+        Integer tagNamelength;
+        UUID forDeleteFromQueue;
+        try{
+            forDeleteFromQueue = (UUID) mainFlowUuidInputed;
+            typeWordFunc = (Integer) eventIndexInputed.getTypeWordByMainFlowUuid(mainFlowUuidInputed);
+            strSubStringFunc = (String) eventIndexInputed.getSubStringByMainFlowUuid(mainFlowUuidInputed);
+            tagNameFunc = (String) eventIndexInputed.getHexTagNameByMainFlowUuid(mainFlowUuidInputed);
+            forDeleteValues = new String[]{tagNameFunc, strSubStringFunc};
+            strSubStringlength = strSubStringFunc.length();
+            tagNamelength = tagNameFunc.length();
+            
+            if( (strSubStringlength * 4) != tagNamelength ){
+                throw new IllegalArgumentException(ThWordBusFlowEvent.class.getCanonicalName() 
+                        + " illegal length of inputed in index string, hexTagName: "
+                        + tagNameFunc + " lengthHex: " + tagNamelength
+                        + " strSubString: " + strSubStringFunc + " lengthStr: " + strSubStringlength
+                        + " lengthHex == lengthStr * 4 ");
+            }
+            if( tagNamelength < 4 ){
+                throw new IllegalArgumentException(ThWordBusFlowEvent.class.getCanonicalName() 
+                        + " illegal length of inputed in index string, hexTagName: "
+                        + tagNameFunc + " length: " + tagNamelength
+                        + " < 4 ");
+            }
+            
+            dataTypeWordTagNameSubStr = getTypeWordTagFileNameReadedFlowUuids(typeWordFunc, strSubStringFunc, tagNameFunc);
+            if( dataTypeWordTagNameSubStr == null ){
+                throw new NullPointerException(ThWordBusFlowEvent.class.getCanonicalName() 
+                        + " not have UUIDs for key type, hexTagName: "
+                        + tagNameFunc + " lengthHex: " + tagNamelength
+                        + " strSubString: " + strSubStringFunc);
+            }
+            if( dataTypeWordTagNameSubStr.isEmpty() ){
+                throw new NullPointerException(ThWordBusFlowEvent.class.getCanonicalName() 
+                        + " not have UUIDs for key type, hexTagName: "
+                        + tagNameFunc + " lengthHex: " + tagNamelength
+                        + " strSubString: " + strSubStringFunc);
+            }
+            getCurrentList = dataTypeWordTagNameSubStr.get(tagNameFunc);
+            if( getCurrentList.remove(forDeleteFromQueue) ){
+                return Boolean.TRUE;
+            }
+            return Boolean.FALSE;
+        }
+        finally {
+            forDeleteValues = null;
+            typeWordFunc = null;
+            dataTypeWordTagNameSubStr = null;
+            forDeleteFromQueue = null;
+            getCurrentList = null;
         }
     }
     /**
@@ -529,7 +596,7 @@ public class ThWordBusFlowEvent {
      * @param tagName
      * @param strSubString
      * @param UUID mainFlowContentInputed
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException when UUID not exist in MainFlow
      */
     protected void addToListOfFlowEventUuids(
             final Integer typeWord, 

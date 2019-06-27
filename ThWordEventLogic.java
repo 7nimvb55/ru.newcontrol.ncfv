@@ -61,14 +61,20 @@ public class ThWordEventLogic {
     private final Long timeCreation;
     private final UUID objectLabel;
     //Sources
-    private final ThStorageWordBusOutput busJobForWordRouter;
+    //private final ThStorageWordBusOutput busJobForWordRouter;
+    private final ThWordState wordState;
+    private final ThWordStatusMainFlow wordStatusMainFlow;
     private final ThWordCacheSk wordCache;
     private final ThWordCacheSk wordCacheReaded;
     private final ThWordEventIndex eventIndex;
+    private final ThWordEventIndexFlow eventIndexFlow;
     public ThWordEventLogic(final ThWordRule ruleWordInputed) {
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
-        this.busJobForWordRouter = ruleWordInputed.getIndexRule().getIndexState().getRuleStorageWord().getStorageWordState().getBusJobForWordWrite();
+        //this.busJobForWordRouter = ruleWordInputed.getIndexRule().getIndexState().getRuleStorageWord().getStorageWordState().getBusJobForWordWrite();
+        this.wordState = ruleWordInputed.getWordState();
+        this.eventIndexFlow = ruleWordInputed.getWordState().getEventIndexFlow();
+        this.wordStatusMainFlow = ruleWordInputed.getWordStatusMainFlow();
         this.wordCacheReaded = ruleWordInputed.getWordStatusMainFlow().getWordCacheReaded();
         this.wordCache = ruleWordInputed.getWordStatusMainFlow().getWordCache();
         this.eventIndex = ruleWordInputed.getWordState().getEventIndex();
@@ -95,4 +101,77 @@ public class ThWordEventLogic {
             countRecordsForReturn = null;
         }
     }
+    protected void insertIntoCacheData(Integer typeWordOfBusOutput, 
+            String hexTagNameFromBusOutput, 
+            String subStringFromBusOutput, 
+            TdataWord pollFromBusOutputDataPacket){
+        UUID createInitMainFlow;
+        Boolean setDataIntoCacheFlow;
+        try {
+            if( typeWordOfBusOutput == null ){
+                throw new IllegalArgumentException(ThWordEventLogic.class.getCanonicalName() + " typeWord is null");
+            }
+            if( hexTagNameFromBusOutput.isEmpty() || hexTagNameFromBusOutput == null ){
+                throw new IllegalArgumentException(ThWordEventLogic.class.getCanonicalName() + " not set hexTagName");
+            }
+            if( subStringFromBusOutput.isEmpty() || subStringFromBusOutput == null ){
+                throw new IllegalArgumentException(ThWordEventLogic.class.getCanonicalName() + " not set subString");
+            }
+            if( pollFromBusOutputDataPacket == null ){
+                throw new IllegalArgumentException(ThWordEventLogic.class.getCanonicalName() + " data from output bus for insert into cache is null");
+            }
+            createInitMainFlow = this.wordStatusMainFlow.createInitMainFlow(pollFromBusOutputDataPacket, this.eventIndexFlow);
+            ThWordBusFlowEvent eventWaitBusByNumber = this.wordState.getEventWaitBusByNumber(3);
+            eventWaitBusByNumber.addToListOfFlowEventUuids(typeWordOfBusOutput, hexTagNameFromBusOutput, subStringFromBusOutput, createInitMainFlow);
+            setDataIntoCacheFlow = Boolean.FALSE;
+            String exMessage = new String();
+            try {
+                setDataIntoCacheFlow = wordCache.setDataIntoCacheFlow(pollFromBusOutputDataPacket);
+            } catch(IllegalArgumentException exArg){
+                exMessage = exArg.getMessage();
+            }
+            if( setDataIntoCacheFlow ){
+                
+                this.eventIndex.putMainFlowUuidTypeWord(createInitMainFlow, typeWordOfBusOutput);
+                this.eventIndex.putMainFlowUuidHexTagName(createInitMainFlow, hexTagNameFromBusOutput);
+                this.eventIndex.putMainFlowUuidSubString(createInitMainFlow, subStringFromBusOutput);
+                //set stop flags
+                this.eventIndex.changeFlowStatusProcDeletingEvent(typeWordOfBusOutput, hexTagNameFromBusOutput, createInitMainFlow);
+                ThWordBusFlowEvent eventReadyBusByNumber = this.wordState.getEventReadyBusByNumber(3);
+                eventReadyBusByNumber.addToListOfFlowEventUuids(typeWordOfBusOutput, hexTagNameFromBusOutput, subStringFromBusOutput, createInitMainFlow);
+                eventWaitBusByNumber.removeMainFlowUuid(createInitMainFlow, this.eventIndex);
+            } else {
+                Boolean removeAllFlowStatusByUUID = this.wordStatusMainFlow.removeAllFlowStatusByUUID(createInitMainFlow);
+                if( removeAllFlowStatusByUUID ){
+                    throw new IllegalArgumentException(ThWordEventLogic.class.getCanonicalName() + " data from output bus is not set "
+                            + " into cache, reason: " + exMessage);
+                }
+            }
+        } finally {
+            createInitMainFlow = null;
+            setDataIntoCacheFlow = null;
+        }
+    }
+    /**
+     * if true than from OuterBus not poll data for insert into cache
+     * true when writer run poll data from cache in local variable for write
+     * when data saved in local variable this procedure return false
+     * @return 
+     */
+    protected Boolean isStateChangedCacheWrite(){
+        return Boolean.FALSE;
+    }
+    /**
+     * when data exist in storage need read data before new write it
+     */
+    protected Boolean isNeedReadDataFromFs(){
+        return Boolean.TRUE;
+    }
+    /**
+     * if true than data from cache readed insert into cache
+     */
+    protected Boolean isStateChangedReadedCache(){
+        return Boolean.FALSE;
+    }
+    
 }

@@ -29,20 +29,121 @@ import java.util.concurrent.LinkedTransferQueue;
  * @author wladimirowichbiaran
  */
 public class ThWordLogicRouter {
+    /**
+     * with events logic version
+     * @param outerRuleWord 
+     */
     protected void doRouterForIndexWord(final ThWordRule outerRuleWord){
+        ThWordRule wordRuleFunc;
+        ThIndexRule indexRuleFunc;
+        ThIndexState indexState;
+        ThStorageWordRule storageWordRuleFunc;
+        ThStorageWordState storageWordState;
+        ThStorageWordBusOutput busOutputForWordRouter;
+        try {
+            wordRuleFunc = (ThWordRule) outerRuleWord;
+            indexRuleFunc = wordRuleFunc.getIndexRule();
+            indexState = indexRuleFunc.getIndexState();
+            storageWordRuleFunc = indexRuleFunc.getIndexState().getRuleStorageWord();
+            storageWordState = storageWordRuleFunc.getStorageWordState();
+            busOutputForWordRouter = storageWordState.getBusJobForWordWrite();
+            do{
+                outerBusIterator(wordRuleFunc, busOutputForWordRouter);
+            } while( storageWordRuleFunc.isRunnedStorageWordWorkFilter() );
+        } finally {
+            wordRuleFunc = null;
+            indexRuleFunc = null;
+            indexState = null;
+            storageWordRuleFunc = null;
+            storageWordState = null;
+            busOutputForWordRouter = null;
+        }
+    }
+    protected void outerBusIterator(
+            ThWordRule outerRuleWord, 
+            ThStorageWordBusOutput busOutputForWordRouterInputed){
+        ThStorageWordBusOutput busOutputForWordRouterFunc;
+        LinkedTransferQueue<TdataWord> busOutputByTypeWord;
+        Integer typeWordOfBusOutput;
+        try {
+            busOutputForWordRouterFunc = (ThStorageWordBusOutput) busOutputForWordRouterInputed;
+            for( Map.Entry<Integer, LinkedTransferQueue<TdataWord>> itemsBusByTypeWord : busOutputForWordRouterFunc.getExistBusEntrySetForTypeWord() ){
+                //make event indexes, main flow, set stop flags and insert data into cache
+                typeWordOfBusOutput = itemsBusByTypeWord.getKey();
+                busOutputByTypeWord = itemsBusByTypeWord.getValue();
+                if( busOutputByTypeWord != null ){
+                    if( !busOutputByTypeWord.isEmpty() ){
+                        generateMainFlowForDataFromBusOutput(outerRuleWord, typeWordOfBusOutput, busOutputByTypeWord);
+                    }
+                }
+            }
+        } finally {
+            busOutputForWordRouterFunc = null;
+            busOutputByTypeWord = null;
+            typeWordOfBusOutput = null;
+        }
+    }
+    protected void generateMainFlowForDataFromBusOutput(
+            ThWordRule outerRuleWord, 
+            Integer typeWordOfBusOutputInputed, 
+            LinkedTransferQueue<TdataWord> busOutputByTypeWordInputed){
+        ThWordEventLogic eventLogic;
+        Boolean labelTypeData;
+        Integer typeWordOfBusOutputFunc;
+        String hexTagName;
+        String subString;
+        LinkedTransferQueue<TdataWord> busOutputByTypeWordFunc;
+        ConcurrentSkipListMap<UUID, TdataWord> pollFromBusOutputDataPacket;
+        TdataWord pollDataItem;
+        UUID itemKey;
+        try {
+            typeWordOfBusOutputFunc = (Integer) typeWordOfBusOutputInputed;
+            busOutputByTypeWordFunc = (LinkedTransferQueue<TdataWord>) busOutputByTypeWordInputed;
+            hexTagName = new String();
+            
+            eventLogic = (ThWordEventLogic) outerRuleWord.getWordState().getEventLogic();
+            do {
+                pollDataItem = busOutputByTypeWordFunc.poll();
+                if( pollDataItem != null ){
+                    hexTagName = pollDataItem.hexSubString;
+                    subString = pollDataItem.strSubString;
+                    itemKey = pollDataItem.randomUUID;
+                    eventLogic.insertIntoCacheData(typeWordOfBusOutputFunc, hexTagName, subString, pollDataItem);
+                }
+            } while( !busOutputByTypeWordFunc.isEmpty() );
+            
+            
+        } finally {
+            eventLogic = null;
+            labelTypeData = null;
+            typeWordOfBusOutputFunc = null;
+            busOutputByTypeWordFunc = null;
+            pollFromBusOutputDataPacket = null;
+            pollDataItem = null;
+            itemKey = null;
+            hexTagName = null;
+            subString = null;
+        }
+    }
+    protected void doNotReleasedRouterForIndexWord(final ThWordRule outerRuleWord){
         /**
          * @todo ThWordCache objects for cache, cacheReaded, inputBusFromFilter
          * Status set and read algoritm flags
          */
-        final ThWordRule funcRuleWord = (ThWordRule) outerRuleWord;
-        ThIndexRule indexRule = funcRuleWord.getIndexRule();
+        final ThWordRule funcRuleWord;
+        funcRuleWord = (ThWordRule) outerRuleWord;
+        ThIndexRule indexRule;
+        indexRule = funcRuleWord.getIndexRule();
         ThIndexStatistic indexStatistic = indexRule.getIndexStatistic();
         ThWordState wordState = funcRuleWord.getWordState();
         ThWordStatusMainFlow wordStatusMainFlow = funcRuleWord.getWordStatusMainFlow();
-        ThStorageWordRule ruleStorageWord = indexRule.getIndexState().getRuleStorageWord();
-        ThStorageWordState storageWordState = ruleStorageWord.getStorageWordState();
+        ThStorageWordRule ruleStorageWord;
+        ruleStorageWord = indexRule.getIndexState().getRuleStorageWord();
+        ThStorageWordState storageWordState;
+        storageWordState = ruleStorageWord.getStorageWordState();
         System.out.println("++++++++++++++++++++++++++++++start " + ThWordLogicRouter.class.getCanonicalName());
-        ThStorageWordBusOutput busJobForWordRouter = storageWordState.getBusJobForWordWrite();
+        ThStorageWordBusOutput busJobForWordRouter;
+        busJobForWordRouter = storageWordState.getBusJobForWordWrite();
         do{
             Set<Map.Entry<Integer, LinkedTransferQueue<TdataWord>>> busForTypeWord = busJobForWordRouter.getExistBusEntrySetForTypeWord();
             for(Map.Entry<Integer, LinkedTransferQueue<TdataWord>> items : busForTypeWord){

@@ -73,6 +73,7 @@ public class ThWordEventIndex {
     private ThWordStatusMainFlow wordStatusMainFlow;
     private ThWordState wordState;
     private ConcurrentSkipListMap<UUID, String> idxMainFlowHexTagName;
+    private ConcurrentSkipListMap<UUID, String> idxMainFlowSubString;
     private ConcurrentSkipListMap<UUID, Integer> idxMainFlowTypeWord;
     private ConcurrentSkipListMap<UUID, Integer> idxMainFlowEventBusNumber;
     public ThWordEventIndex(ThWordRule ruleInputed) {
@@ -116,6 +117,24 @@ public class ThWordEventIndex {
             return getTypeWord;
         } finally {
             getTypeWord = null;
+        }
+    }
+    /**
+     * 
+     * @param mainFlowUUID
+     * @return value in index
+     * @throws IllegalArgumentException if index not have value
+     */
+    protected String getSubStringByMainFlowUuid(UUID mainFlowUUID){
+        String getSubString;
+        try {
+            getSubString = this.idxMainFlowSubString.get(mainFlowUUID);
+            if( getSubString == null ){
+                throw new NullPointerException(ThWordEventIndex.class.getCanonicalName() + " returned SubString is null");
+            }
+            return getSubString;
+        } finally {
+            getSubString = null;
         }
     }
     /**
@@ -191,7 +210,44 @@ public class ThWordEventIndex {
             pervValue = null;
         }
     }
-    
+    /**
+     * 
+     * @param inputedMainFlowUUID
+     * @param inputedSubString 
+     * @throws NullPointerException for null or empty arguments
+     * @throws IllegalArgumentException if in index exist value
+     */
+    protected void putMainFlowUuidSubString(UUID inputedMainFlowUUID, String inputedSubString){
+        String funcSubString;
+        UUID funcMainFlowUUID;
+        String pervValue;
+        try {
+            funcSubString = (String) inputedSubString;
+            funcMainFlowUUID = (UUID) inputedMainFlowUUID;
+            if( funcSubString == null ){
+                throw new NullPointerException(ThWordEventIndex.class.getCanonicalName() + " inputed SubString is null");
+            }
+            if( funcSubString.isEmpty() ){
+                throw new NullPointerException(ThWordEventIndex.class.getCanonicalName() + " inputed SubString is empty");
+            }
+            if( funcMainFlowUUID == null ){
+                throw new NullPointerException(ThWordEventIndex.class.getCanonicalName() + " inputed MainFlowUUID is null");
+            }
+            pervValue = this.idxMainFlowSubString.put(funcMainFlowUUID, funcSubString);
+            if( pervValue != null ){
+                this.idxMainFlowSubString.put(funcMainFlowUUID, pervValue);
+                throw new IllegalArgumentException(ThWordEventIndex.class.getCanonicalName() 
+                        + " value: " + String.valueOf(pervValue)
+                        + " for UUID: " + funcMainFlowUUID.toString()
+                        + " exist in index, new value: " + String.valueOf(funcSubString)
+                        + " not has been apply");
+            }
+        } finally {
+            funcSubString = null;
+            funcMainFlowUUID = null;
+            pervValue = null;
+        }
+    }
     /**
      * change in flow Workers states in EventLogic methods
      * @param typeWordInputed
@@ -215,8 +271,8 @@ public class ThWordEventIndex {
             checkForExistUuidFunc = (UUID) checkForExistUuidInputed;
             uuidExistInFlowByTypeWordHexTagName = this.wordStatusMainFlow.isUuidExistInFlowByTypeWordHexTagName(typeWordFunc, tagNameFunc, checkForExistUuidFunc);
             if( uuidExistInFlowByTypeWordHexTagName ){
-                eventBusProcDeleting = this.wordState.getEventBusByNumber(1);
-                eventBusEventDeleting = this.wordState.getEventBusByNumber(0);
+                eventBusProcDeleting = this.wordState.getEventDoBusByNumber(0);
+                eventBusEventDeleting = this.wordState.getEventReadyBusByNumber(0);
                 existUUIDByTypeWordHexTagName = eventBusProcDeleting.isExistUUIDByTypeWordHexTagName(typeWordFunc, checkForExistUuidFunc, tagNameFunc);
                 existUUIDByTypeWordHexTagName = eventBusEventDeleting.isExistUUIDByTypeWordHexTagName(typeWordFunc, checkForExistUuidFunc, tagNameFunc);
                 return Boolean.TRUE;
@@ -231,5 +287,8 @@ public class ThWordEventIndex {
             eventBusEventDeleting = null;
             existUUIDByTypeWordHexTagName = null;
         }
+    }
+    protected Boolean appendDataToCache(){
+        return Boolean.FALSE;
     }
 }

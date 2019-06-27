@@ -30,7 +30,7 @@ public class TdataWord implements Serializable {
      */
     public String dirListFile;
     /**
-     * UUID record in list of data in file
+     * UUID record in list of data in file of DirList index
      */
     public UUID recordUUID;
     /**
