@@ -49,6 +49,7 @@ public class ThWordState {
     private ThWordEventIndex eventsIndex;
     private ThWordStatusMainFlow mainFlow;
     private ThWordBusEventShort eventShort;
+    private ThWordBusEventShort eventShortNextStep;
     private ThWordEventIndexFlow eventIndexFlow;
     
     public ThWordState(ThWordRule ruleWordInputed) {
@@ -57,6 +58,7 @@ public class ThWordState {
         this.objectLabel = UUID.randomUUID();
         this.eventIndexFlow = new ThWordEventIndexFlow();
         this.eventShort = new ThWordBusEventShort();
+        this.eventShortNextStep = new ThWordBusEventShort();
         newInstanceOfReadyListBus(ruleWordInputed);
         newInstanceOfWaitListBus(ruleWordInputed);
         newInstanceOfDoListBus(ruleWordInputed);
@@ -73,8 +75,35 @@ public class ThWordState {
     protected ThWordEventIndexFlow getEventIndexFlow(){
         return this.eventIndexFlow;
     }
+    /**
+     * Object for add Uuid current event short state by buses types: wait, do, ready
+     * used with getBusEventShortNextStep()
+     * @return 
+     */
     protected ThWordBusEventShort getBusEventShort(){
         return this.eventShort;
+    }
+    /**
+     * Object for add Uuid next step event short by buses types: wait, do, ready
+     * for example:
+     * insert data into chache, create Uuid, set params, insert created uuid in
+     * BusEventShot in part 2 (ready), 3(insertCache) also eventLogic make insert
+     * uuid in BusEventShot next step in part 0 (wait), 2 (writeToStorage)
+     * if not need read data from storage before write else
+     * uuid in BusEventShot next step in part 0 (wait), 1 (ReadDataFromStorage)
+     * (when early data writed...)
+     * 
+     * when writer from BusEventShot get next job uuid, compare with next step
+     * if uuid next step not found in need position of table, result [-1,-1]
+     * than value not runned in logic writer
+     * 
+     * @todo queue not empty, for check and not create new uuids when insert 
+     * data into cache
+     * 
+     * @return 
+     */
+    protected ThWordBusEventShort getBusEventShortNextStep(){
+        return this.eventShortNextStep;
     }
     private void newInstanceEventLogic(final ThWordRule ruleInputed){
         this.eventsLogic = new ThWordEventLogic(ruleInputed);

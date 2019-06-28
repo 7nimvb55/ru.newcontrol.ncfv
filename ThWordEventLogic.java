@@ -150,7 +150,8 @@ public class ThWordEventLogic {
                 eventReadyBusByNumber = this.wordState.getEventReadyBusByNumber(3);
                 eventReadyBusByNumber.addToListOfFlowEventUuids(typeWordOfBusOutput, hexTagNameFromBusOutput, subStringFromBusOutput, createInitMainFlow);
                 eventDoBusByNumber.removeMainFlowUuid(createInitMainFlow, this.eventIndex);
-                this.wordState.getBusEventShort().addUuidToShortEvent(0, 2, createInitMainFlow);
+                this.wordState.getBusEventShort().addUuidToShortEvent(2, 3, createInitMainFlow);
+                this.wordState.getBusEventShortNextStep().addUuidToShortEvent(0, 2, createInitMainFlow);
             } else {
                 removeAllFlowStatusByUUID = this.wordStatusMainFlow.removeAllFlowStatusByUUID(createInitMainFlow);
                 if( !removeAllFlowStatusByUUID ){

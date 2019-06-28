@@ -60,7 +60,11 @@ public class ThWordLogicWrite {
                     AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD);
             try( FileSystem fsForWriteData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
                 do {
-                    
+                    UUID pollNextUuid = outerRuleWord.getWordState().getBusEventShort().pollNextUuid(2, 3);
+                    Integer[] foundUuidInList = outerRuleWord.getWordState().getBusEventShortNextStep().foundUuidInList(pollNextUuid);
+                    if( foundUuidInList[0] == -1 || foundUuidInList[1] == -1 ){
+                        continue;
+                    }
                 } while( funcRuleWord.isRunnedWordWorkRouter() );
                 //need write all cached data after end for all read jobs
             } catch(FileSystemNotFoundException ex){
