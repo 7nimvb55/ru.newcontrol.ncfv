@@ -101,13 +101,25 @@ public class ThWordEventLogic {
             countRecordsForReturn = null;
         }
     }
+    /**
+     * 
+     * @param typeWordOfBusOutput
+     * @param hexTagNameFromBusOutput
+     * @param subStringFromBusOutput
+     * @param pollFromBusOutputDataPacket 
+     */
     protected void insertIntoCacheData(Integer typeWordOfBusOutput, 
             String hexTagNameFromBusOutput, 
             String subStringFromBusOutput, 
             TdataWord pollFromBusOutputDataPacket){
         UUID createInitMainFlow;
         Boolean setDataIntoCacheFlow;
+        Boolean removeAllFlowStatusByUUID;
+        ThWordBusFlowEvent eventDoBusByNumber;
+        ThWordBusFlowEvent eventReadyBusByNumber;
+        String exMessage;
         try {
+            exMessage = new String();
             if( typeWordOfBusOutput == null ){
                 throw new IllegalArgumentException(ThWordEventLogic.class.getCanonicalName() + " typeWord is null");
             }
@@ -121,28 +133,27 @@ public class ThWordEventLogic {
                 throw new IllegalArgumentException(ThWordEventLogic.class.getCanonicalName() + " data from output bus for insert into cache is null");
             }
             createInitMainFlow = this.wordStatusMainFlow.createInitMainFlow(pollFromBusOutputDataPacket, this.eventIndexFlow);
-            ThWordBusFlowEvent eventWaitBusByNumber = this.wordState.getEventWaitBusByNumber(3);
-            eventWaitBusByNumber.addToListOfFlowEventUuids(typeWordOfBusOutput, hexTagNameFromBusOutput, subStringFromBusOutput, createInitMainFlow);
+            eventDoBusByNumber = this.wordState.getEventDoBusByNumber(3);
+            eventDoBusByNumber.addToListOfFlowEventUuids(typeWordOfBusOutput, hexTagNameFromBusOutput, subStringFromBusOutput, createInitMainFlow);
             setDataIntoCacheFlow = Boolean.FALSE;
-            String exMessage = new String();
+            
             try {
                 setDataIntoCacheFlow = wordCache.setDataIntoCacheFlow(pollFromBusOutputDataPacket);
             } catch(IllegalArgumentException exArg){
                 exMessage = exArg.getMessage();
             }
             if( setDataIntoCacheFlow ){
-                
                 this.eventIndex.putMainFlowUuidTypeWord(createInitMainFlow, typeWordOfBusOutput);
                 this.eventIndex.putMainFlowUuidHexTagName(createInitMainFlow, hexTagNameFromBusOutput);
                 this.eventIndex.putMainFlowUuidSubString(createInitMainFlow, subStringFromBusOutput);
-                //set stop flags
                 this.eventIndex.changeFlowStatusProcDeletingEvent(typeWordOfBusOutput, hexTagNameFromBusOutput, createInitMainFlow);
-                ThWordBusFlowEvent eventReadyBusByNumber = this.wordState.getEventReadyBusByNumber(3);
+                eventReadyBusByNumber = this.wordState.getEventReadyBusByNumber(3);
                 eventReadyBusByNumber.addToListOfFlowEventUuids(typeWordOfBusOutput, hexTagNameFromBusOutput, subStringFromBusOutput, createInitMainFlow);
-                eventWaitBusByNumber.removeMainFlowUuid(createInitMainFlow, this.eventIndex);
+                eventDoBusByNumber.removeMainFlowUuid(createInitMainFlow, this.eventIndex);
+                this.wordState.getBusEventShort().addUuidToShortEvent(0, 2, createInitMainFlow);
             } else {
-                Boolean removeAllFlowStatusByUUID = this.wordStatusMainFlow.removeAllFlowStatusByUUID(createInitMainFlow);
-                if( removeAllFlowStatusByUUID ){
+                removeAllFlowStatusByUUID = this.wordStatusMainFlow.removeAllFlowStatusByUUID(createInitMainFlow);
+                if( !removeAllFlowStatusByUUID ){
                     throw new IllegalArgumentException(ThWordEventLogic.class.getCanonicalName() + " data from output bus is not set "
                             + " into cache, reason: " + exMessage);
                 }
@@ -150,6 +161,61 @@ public class ThWordEventLogic {
         } finally {
             createInitMainFlow = null;
             setDataIntoCacheFlow = null;
+            removeAllFlowStatusByUUID = null;
+            eventDoBusByNumber = null;
+            eventReadyBusByNumber = null;
+            exMessage = null;
+            ThWordHelper.utilizeStringValues(new String[] {exMessage});
+        }
+    }
+    protected void writeDataToStorage(Integer typeWordOfBusOutput, 
+            String hexTagNameFromBusOutput, 
+            String subStringFromBusOutput, 
+            TdataWord pollFromBusOutputDataPacket){
+        try {
+            
+        } finally {
+            
+        }
+    }
+    protected void readDataFromStorage(Integer typeWordOfBusOutput, 
+            String hexTagNameFromBusOutput, 
+            String subStringFromBusOutput, 
+            TdataWord pollFromBusOutputDataPacket){
+        try {
+            
+        } finally {
+            
+        }
+    }
+    protected void deleteOldDataFromStorage(Integer typeWordOfBusOutput, 
+            String hexTagNameFromBusOutput, 
+            String subStringFromBusOutput, 
+            TdataWord pollFromBusOutputDataPacket){
+        try {
+            
+        } finally {
+            
+        }
+    }
+    protected void cleanReadedCache(Integer typeWordOfBusOutput, 
+            String hexTagNameFromBusOutput, 
+            String subStringFromBusOutput, 
+            TdataWord pollFromBusOutputDataPacket){
+        try {
+            
+        } finally {
+            
+        }
+    }
+    protected void cleanCache(Integer typeWordOfBusOutput, 
+            String hexTagNameFromBusOutput, 
+            String subStringFromBusOutput, 
+            TdataWord pollFromBusOutputDataPacket){
+        try {
+            
+        } finally {
+            
         }
     }
     /**

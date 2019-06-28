@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedTransferQueue;
 
 /**
@@ -42,6 +41,69 @@ import java.util.concurrent.LinkedTransferQueue;
  */
 public class ThWordLogicWrite {
     protected void doWriteToIndexWord(final ThWordRule outerRuleWord){
+        ThIndexRule indexRule;
+        ThIndexStatistic indexStatistic;
+        ThWordRule funcRuleWord;
+        AppFileStorageIndex currentIndexStorages;
+        
+        URI byPrefixGetUri;
+        Map<String, String> byPrefixGetMap;
+        try {
+            funcRuleWord = (ThWordRule) outerRuleWord;
+            
+            indexRule = funcRuleWord.getIndexRule();
+            indexStatistic = indexRule.getIndexStatistic();
+            indexStatistic.updateDataStorages();
+            currentIndexStorages = funcRuleWord.getIndexRule().getIndexState().currentIndexStorages();
+            byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD);
+            byPrefixGetMap = currentIndexStorages.byPrefixGetMap( 
+                    AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD);
+            try( FileSystem fsForWriteData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
+                do {
+                    
+                } while( funcRuleWord.isRunnedWordWorkRouter() );
+                //need write all cached data after end for all read jobs
+            } catch(FileSystemNotFoundException ex){
+                System.err.println(ex.getMessage());
+                ex.printStackTrace();
+            } catch(ProviderNotFoundException ex){
+                System.err.println(ex.getMessage());
+                ex.printStackTrace();
+            } catch(IllegalArgumentException ex){
+                System.err.println(ex.getMessage());
+                ex.printStackTrace();
+            } catch(SecurityException ex){
+                System.err.println(ex.getMessage());
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                System.err.println(ex.getMessage());
+                ex.printStackTrace();
+            }
+        } finally {
+            indexRule = null;
+            indexStatistic = null;
+            funcRuleWord = null;
+            currentIndexStorages = null;
+            byPrefixGetUri = null;
+            byPrefixGetMap = null;
+        }
+    }
+    protected void readNextUuidFromEventShot(){
+        
+    }
+    protected void readExtendedInfoForUUID(){
+        
+    }
+    protected void readDataFromCache(){
+        
+    }
+    protected void writeDataToStorage(){
+        
+    }
+    protected void deleteOldDataFromStorage(){
+        
+    }
+    protected void doNotReleasedWriteToIndexWord(final ThWordRule outerRuleWord){
         ThIndexRule indexRule;
         ThIndexStatistic indexStatistic;
         ThWordRule funcRuleWord;

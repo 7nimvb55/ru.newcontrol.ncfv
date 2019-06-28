@@ -76,12 +76,12 @@ public class ThWordEventIndex {
     private ConcurrentSkipListMap<UUID, String> idxMainFlowSubString;
     private ConcurrentSkipListMap<UUID, Integer> idxMainFlowTypeWord;
     private ConcurrentSkipListMap<UUID, Integer> idxMainFlowEventBusNumber;
+    
     public ThWordEventIndex(ThWordRule ruleInputed) {
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
         this.wordStatusMainFlow = ruleInputed.getWordStatusMainFlow();
         this.wordState = ruleInputed.getWordState();
-        
     }
     /**
      * 

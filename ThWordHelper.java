@@ -53,6 +53,11 @@ public class ThWordHelper {
         }
         
     }
+    /**
+     * 
+     * @param forValidateInputed
+     * @return 
+     */
     protected static Boolean isTdataWordValid(final TdataWord forValidateInputed){
         TdataWord forValidateFunction;
         Integer recordHash;
@@ -83,5 +88,11 @@ public class ThWordHelper {
             recordHash = null;
             calculatedHash = null;
         }
+    }
+    protected static void utilizeStringValues(String[] valuesForDelete){
+        for(String deletedItem : valuesForDelete){
+            deletedItem = null;
+        }
+        valuesForDelete = null;
     }
 }

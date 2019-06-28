@@ -100,7 +100,6 @@ public class ThWordLogicRouter {
             typeWordOfBusOutputFunc = (Integer) typeWordOfBusOutputInputed;
             busOutputByTypeWordFunc = (LinkedTransferQueue<TdataWord>) busOutputByTypeWordInputed;
             hexTagName = new String();
-            
             eventLogic = (ThWordEventLogic) outerRuleWord.getWordState().getEventLogic();
             do {
                 pollDataItem = busOutputByTypeWordFunc.poll();
@@ -111,8 +110,6 @@ public class ThWordLogicRouter {
                     eventLogic.insertIntoCacheData(typeWordOfBusOutputFunc, hexTagName, subString, pollDataItem);
                 }
             } while( !busOutputByTypeWordFunc.isEmpty() );
-            
-            
         } finally {
             eventLogic = null;
             labelTypeData = null;

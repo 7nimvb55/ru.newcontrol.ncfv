@@ -48,7 +48,7 @@ public class ThWordState {
     private ThWordEventLogic eventsLogic;
     private ThWordEventIndex eventsIndex;
     private ThWordStatusMainFlow mainFlow;
-    
+    private ThWordBusEventShort eventShort;
     private ThWordEventIndexFlow eventIndexFlow;
     
     public ThWordState(ThWordRule ruleWordInputed) {
@@ -56,6 +56,7 @@ public class ThWordState {
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
         this.eventIndexFlow = new ThWordEventIndexFlow();
+        this.eventShort = new ThWordBusEventShort();
         newInstanceOfReadyListBus(ruleWordInputed);
         newInstanceOfWaitListBus(ruleWordInputed);
         newInstanceOfDoListBus(ruleWordInputed);
@@ -71,6 +72,9 @@ public class ThWordState {
     }
     protected ThWordEventIndexFlow getEventIndexFlow(){
         return this.eventIndexFlow;
+    }
+    protected ThWordBusEventShort getBusEventShort(){
+        return this.eventShort;
     }
     private void newInstanceEventLogic(final ThWordRule ruleInputed){
         this.eventsLogic = new ThWordEventLogic(ruleInputed);
@@ -563,8 +567,8 @@ public class ThWordState {
      *          - if not UUID01 in (1 || 8) than new UUIDnextNum
      *          - else if UUID01 in (7) nothing 
      * <li> 10 - waitInsertIntoCache
-     * <li> 11 - doInsertIntoCache
-     * <li> 12 - eventCleanReadedCache
+     * <li> 11 - doInsertIntoCache             (new)UUID01
+     * <li> 12 - eventCleanReadedCache         (set)UUID01
      * <li> 13 - waitCleanReadedCache
      * <li> 14 - doCleanReadedCache
      * <li> 15 - eventCleanCache
