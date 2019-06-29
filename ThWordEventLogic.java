@@ -68,6 +68,7 @@ public class ThWordEventLogic {
     private final ThWordCacheSk wordCacheReaded;
     private final ThWordEventIndex eventIndex;
     private final ThWordEventIndexFlow eventIndexFlow;
+    
     public ThWordEventLogic(final ThWordRule ruleWordInputed) {
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
@@ -151,7 +152,13 @@ public class ThWordEventLogic {
                 eventReadyBusByNumber.addToListOfFlowEventUuids(typeWordOfBusOutput, hexTagNameFromBusOutput, subStringFromBusOutput, createInitMainFlow);
                 eventDoBusByNumber.removeMainFlowUuid(createInitMainFlow, this.eventIndex);
                 this.wordState.getBusEventShort().addUuidToShortEvent(2, 3, createInitMainFlow);
-                this.wordState.getBusEventShortNextStep().addUuidToShortEvent(0, 2, createInitMainFlow);
+                ThWordBusFlowEvent eventReadyBusByNumberWrite = this.wordState.getEventReadyBusByNumber(2);
+                Integer sizeBusFlowUuids = eventReadyBusByNumberWrite.sizeBusFlowUuids(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput);
+                if( sizeBusFlowUuids == 0 ){
+                    this.wordState.getBusEventShortNextStep().addUuidToShortEvent(0, 2, createInitMainFlow);
+                } else {
+                    this.wordState.getBusEventShortNextStep().addUuidToShortEvent(0, 1, createInitMainFlow);
+                }
             } else {
                 removeAllFlowStatusByUUID = this.wordStatusMainFlow.removeAllFlowStatusByUUID(createInitMainFlow);
                 if( !removeAllFlowStatusByUUID ){

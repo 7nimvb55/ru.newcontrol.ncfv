@@ -100,6 +100,8 @@ public class ThWordState {
      * @todo queue not empty, for check and not create new uuids when insert 
      * data into cache
      * 
+     * 
+     * 
      * @return 
      */
     protected ThWordBusEventShort getBusEventShortNextStep(){

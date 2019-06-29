@@ -201,6 +201,73 @@ public class ThWordBusFlowEvent {
      * @return 
      * @throws IllegalArgumentException when inputed data not valid
      */
+    protected Integer sizeBusFlowUuids(final Integer typeWord, 
+            final String strSubString,
+            final String tagName){
+        ConcurrentSkipListMap<String, LinkedTransferQueue<UUID>> dataTypeWordTagNameSubStr;
+        LinkedTransferQueue<UUID> getCurrentList;
+        LinkedTransferQueue<UUID> removedForReturn;
+        Integer typeWordFunc;
+        String strSubStringFunc;
+        String tagNameFunc;
+        
+        Integer strSubStringlength;
+        Integer tagNamelength;
+        UUID poll;
+        try{
+            typeWordFunc = (Integer) typeWord;
+            strSubStringFunc = (String) strSubString;
+            tagNameFunc = (String) tagName;
+            strSubStringlength = strSubString.length();
+            tagNamelength = tagName.length();
+            
+            if( (strSubStringlength * 4) != tagNamelength ){
+                throw new IllegalArgumentException(ThWordBusFlowEvent.class.getCanonicalName() 
+                        + " illegal length of inputed in index string, hexTagName: "
+                        + tagNameFunc + " lengthHex: " + tagNamelength
+                        + " strSubString: " + strSubStringFunc + " lengthStr: " + strSubStringlength
+                        + " lengthHex == lengthStr * 4 ");
+            }
+            if( tagNamelength < 4 ){
+                throw new IllegalArgumentException(ThWordBusFlowEvent.class.getCanonicalName() 
+                        + " illegal length of inputed in index string, hexTagName: "
+                        + tagNameFunc + " length: " + tagNamelength
+                        + " < 4 ");
+            }
+            
+            dataTypeWordTagNameSubStr = getTypeWordTagFileNameReadedFlowUuids(typeWordFunc, strSubStringFunc, tagNameFunc);
+            if( dataTypeWordTagNameSubStr == null ){
+                throw new NullPointerException(ThWordBusFlowEvent.class.getCanonicalName() 
+                        + " not have UUIDs in for key type, hexTagName: "
+                        + tagNameFunc + " lengthHex: " + tagNamelength
+                        + " strSubString: " + strSubStringFunc);
+            }
+            if( dataTypeWordTagNameSubStr.isEmpty() ){
+                throw new NullPointerException(ThWordBusFlowEvent.class.getCanonicalName() 
+                        + " not have UUIDs in for key type, hexTagName: "
+                        + tagNameFunc + " lengthHex: " + tagNamelength
+                        + " strSubString: " + strSubStringFunc);
+            }
+            
+            getCurrentList = dataTypeWordTagNameSubStr.get(tagNameFunc);
+            
+            return getCurrentList.size();
+        }
+        finally {
+            getCurrentList = null;
+            tagNameFunc = null;
+            strSubStringFunc = null;
+            typeWordFunc = null;
+            dataTypeWordTagNameSubStr = null;
+            removedForReturn = null;
+            poll = null;
+        }
+    }
+    /**
+     * @param dataInputed
+     * @return 
+     * @throws IllegalArgumentException when inputed data not valid
+     */
     protected Boolean removeMainFlowUuid(
             UUID mainFlowUuidInputed,
             ThWordEventIndex eventIndexInputed){

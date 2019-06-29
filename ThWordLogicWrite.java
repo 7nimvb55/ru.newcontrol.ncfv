@@ -61,10 +61,22 @@ public class ThWordLogicWrite {
             try( FileSystem fsForWriteData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
                 do {
                     UUID pollNextUuid = outerRuleWord.getWordState().getBusEventShort().pollNextUuid(2, 3);
-                    Integer[] foundUuidInList = outerRuleWord.getWordState().getBusEventShortNextStep().foundUuidInList(pollNextUuid);
-                    if( foundUuidInList[0] == -1 || foundUuidInList[1] == -1 ){
-                        continue;
-                    }
+                    LinkedTransferQueue<Integer[]> foundedNodes = outerRuleWord.getWordState().getBusEventShortNextStep().foundUuidInList(pollNextUuid);
+                    do {
+                        Integer[] foundUuidInList = foundedNodes.poll();
+                        if( foundUuidInList[0] == -1 || foundUuidInList[1] == -1 ){
+                            continue;
+                        }
+                        if( foundUuidInList[0] == 0 || foundUuidInList[1] == 1 ){
+                            continue;
+                        }
+                        if( foundUuidInList[0] == 0 || foundUuidInList[1] == 2 ){
+                            //move uuid in bus event shot
+                            //move uuid in statebuseventlocal
+                            //do write data
+                            //move uuid into wait read
+                        }
+                    } while( !foundedNodes.isEmpty() );
                 } while( funcRuleWord.isRunnedWordWorkRouter() );
                 //need write all cached data after end for all read jobs
             } catch(FileSystemNotFoundException ex){

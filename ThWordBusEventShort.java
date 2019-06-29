@@ -219,15 +219,16 @@ public class ThWordBusEventShort {
      * if algoritm in do write his value = codeTypeEvent(1)+codeEventName(2)
      * resulted code name may be equal with logic check point
      */
-    protected Integer[] foundUuidInList(UUID checkedOnExist){
+    protected LinkedTransferQueue<Integer[]> foundUuidInList(UUID checkedOnExist){
+        LinkedTransferQueue<Integer[]> returnedFoundedNodes = new LinkedTransferQueue<Integer[]>();
         for( Integer idxPrefix = 0; idxPrefix < getEventPrefixNamesCount(); idxPrefix++ ){
                 for(Integer idxEvent = 0; idxEvent < getEventNamesCount(); idxEvent++ ){
                     if( isExistUuid(idxPrefix, idxEvent, checkedOnExist) ){
-                        return new Integer[]{idxPrefix, idxEvent};
+                        returnedFoundedNodes.add(new Integer[]{idxPrefix, idxEvent});
                     }
                 }
         }
-        return new Integer[]{-1, -1};
+        return returnedFoundedNodes;
     }
     /**
      * {@code [prefixNumber]*[numEventReadyNameInputed]+sufFix=indexName}
