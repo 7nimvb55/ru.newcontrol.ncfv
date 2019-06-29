@@ -143,6 +143,7 @@ public class ThWordStatusDataCache {
      * <li>1 - currentInCacheReaded
      * <li>2 - addNeedToFileSystemLimit
      * <li>3 - indexSystemLimitOnStorage
+     * <li>4 - inCacheVolumesCount
      * </ul>
      * @param keyPointFlowDataCacheInputed
      * @param paramNumber
@@ -227,6 +228,7 @@ public class ThWordStatusDataCache {
      * <li>1 - currentInCacheReaded
      * <li>2 - addNeedToFileSystemLimit
      * <li>3 - indexSystemLimitOnStorage
+     * <li>4 - inCacheVolumesCount
      * </ul> 
      * @param changedKeyPointFlowDataCache
      * @param paramNumber
@@ -258,12 +260,32 @@ public class ThWordStatusDataCache {
             fromCurrentFlow = null;
         }
     }
+    protected void incrementVolumeCountInCache(final UUID changedKeyPointFlowDataCache){
+        UUID changedKeyPointFlowDataCacheFunc;
+        Integer paramCodeByNumber;
+        ConcurrentSkipListMap<Integer, Integer> fromCurrentFlow;
+        try{
+            changedKeyPointFlowDataCacheFunc = (UUID) changedKeyPointFlowDataCache;
+            validateCountParams(changedKeyPointFlowDataCacheFunc);
+            fromCurrentFlow = (ConcurrentSkipListMap<Integer, Integer>) this.poolStatusDataCache.get(changedKeyPointFlowDataCacheFunc);
+            paramCodeByNumber = (Integer) getParamCodeByNumber(4);
+            Integer incrementalVolumeCount = fromCurrentFlow.get(paramCodeByNumber);
+            incrementalVolumeCount++;
+            fromCurrentFlow.put(paramCodeByNumber, incrementalVolumeCount);
+            this.poolStatusDataCache.put(changedKeyPointFlowDataCacheFunc, fromCurrentFlow);
+        } finally {
+            changedKeyPointFlowDataCacheFunc = null;
+            paramCodeByNumber = null;
+            fromCurrentFlow = null;
+        }
+    }
     /**
      * <ul>
      * <li>0 - currentInCache
      * <li>1 - currentInCacheReaded
      * <li>2 - addNeedToFileSystemLimit
      * <li>3 - indexSystemLimitOnStorage
+     * <li>4 - inCacheVolumesCount
      * </ul>
      * @return 
      */
@@ -274,7 +296,8 @@ public class ThWordStatusDataCache {
                 "currentInCache",
                 "currentInCacheReaded",
                 "addNeedToFileSystemLimit",
-                "indexSystemLimitOnStorage"
+                "indexSystemLimitOnStorage",
+                "inCacheVolumesCount"
             };
             return namesForReturn;
         } finally {

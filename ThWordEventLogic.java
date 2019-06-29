@@ -88,18 +88,22 @@ public class ThWordEventLogic {
     protected Integer getSizeDataInCacheByMainFlowUuid( final UUID inputedMainFlowUuid ){
         UUID functionMainFlowUuid;
         String hexTagNameByMainFlowUuid;
+        String subStringByMainFlowUuid;
         Integer typeWordByMainFlowUuid;
         Integer countRecordsForReturn;
         try {
             functionMainFlowUuid = (UUID) inputedMainFlowUuid;
             hexTagNameByMainFlowUuid = this.eventIndex.getHexTagNameByMainFlowUuid(functionMainFlowUuid);
             typeWordByMainFlowUuid = this.eventIndex.getTypeWordByMainFlowUuid(functionMainFlowUuid);
-            countRecordsForReturn = this.wordCache.sizeDataInCacheByTypeWordHexTagName(typeWordByMainFlowUuid, hexTagNameByMainFlowUuid);
+            subStringByMainFlowUuid = this.eventIndex.getSubStringByMainFlowUuid(functionMainFlowUuid);
+            countRecordsForReturn = this.wordCache.sizeDataInCache(typeWordByMainFlowUuid, hexTagNameByMainFlowUuid, subStringByMainFlowUuid);
             return new Integer(countRecordsForReturn);
         } finally {
             hexTagNameByMainFlowUuid = null;
             typeWordByMainFlowUuid = null;
             countRecordsForReturn = null;
+            subStringByMainFlowUuid = null;
+            ThWordHelper.utilizeStringValues(new String[]{hexTagNameByMainFlowUuid, subStringByMainFlowUuid});
         }
     }
     /**
@@ -139,7 +143,41 @@ public class ThWordEventLogic {
             setDataIntoCacheFlow = Boolean.FALSE;
             
             try {
-                setDataIntoCacheFlow = wordCache.setDataIntoCacheFlow(pollFromBusOutputDataPacket);
+                setDataIntoCacheFlow = this.wordCache.setDataIntoCacheFlow(pollFromBusOutputDataPacket);
+                UUID dataCacheUuid = this.eventIndexFlow.getDataCache(createInitMainFlow);
+                //@todo 2,3 set in init
+                //@todo inctrement value size in cache
+                //@todo changeParam by typeWord, hexTagName, subString, UUID, numberParam, value
+                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberDataCache(typeWordOfBusOutput, hexTagNameFromBusOutput, dataCacheUuid, 0, 1);
+                UUID workersUuid = this.eventIndexFlow.getWorkers(createInitMainFlow);
+                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordOfBusOutput, hexTagNameFromBusOutput, workersUuid, 3, setDataIntoCacheFlow);
+                String buildTypeWordStoreSubDirictories = ThWordHelper.buildTypeWordStoreSubDirictories(typeWordOfBusOutput, hexTagNameFromBusOutput, subStringFromBusOutput.length());
+                UUID nameUuid = this.eventIndexFlow.getName(createInitMainFlow);
+                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberName(typeWordOfBusOutput, hexTagNameFromBusOutput, nameUuid, 0, buildTypeWordStoreSubDirictories);
+                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberName(typeWordOfBusOutput, hexTagNameFromBusOutput, nameUuid, 4, hexTagNameFromBusOutput);
+                Integer valueForMainUuidByNumberDataCache = this.wordStatusMainFlow.getValueForMainUuidByNumberDataCache(pollFromBusOutputDataPacket, createInitMainFlow, 2);
+                Integer valueLimitForMainUuidByNumberDataCache = this.wordStatusMainFlow.getValueForMainUuidByNumberDataCache(pollFromBusOutputDataPacket, createInitMainFlow, 3);
+                
+                Integer sizeDataInCacheByMainFlowUuid = this.getSizeDataInCacheByMainFlowUuid(createInitMainFlow);
+                Integer forLimitOnFsNeedAppendSize = valueForMainUuidByNumberDataCache - sizeDataInCacheByMainFlowUuid;
+                Integer valueForSetInDataCache = 0;
+                if( forLimitOnFsNeedAppendSize < 0 ){
+                    do {
+                        //increment cached volumes count
+                        this.wordStatusMainFlow.incrementVolumeCountForMainUuidByHexTagNameNumberDataCache(typeWordOfBusOutput, hexTagNameFromBusOutput, dataCacheUuid);
+                        forLimitOnFsNeedAppendSize = valueLimitForMainUuidByNumberDataCache + forLimitOnFsNeedAppendSize;
+                    } while( forLimitOnFsNeedAppendSize < 0 );
+                }
+                if( forLimitOnFsNeedAppendSize == 0 ){
+                    //increment cached volumes
+                    this.wordStatusMainFlow.incrementVolumeCountForMainUuidByHexTagNameNumberDataCache(typeWordOfBusOutput, hexTagNameFromBusOutput, dataCacheUuid);
+                    valueForSetInDataCache = valueLimitForMainUuidByNumberDataCache;
+                }    
+                if( forLimitOnFsNeedAppendSize > 0 ){
+                    valueForSetInDataCache = forLimitOnFsNeedAppendSize;
+                }
+                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberDataCache(typeWordOfBusOutput, hexTagNameFromBusOutput, dataCacheUuid, 2, valueForSetInDataCache);
+                //set flow flags
             } catch(IllegalArgumentException exArg){
                 exMessage = exArg.getMessage();
             }

@@ -1065,6 +1065,34 @@ public class ThWordStatusMainFlow {
             changedValueFunc = null;
         }
     }
+    protected void incrementVolumeCountForMainUuidByHexTagNameNumberDataCache(
+            final Integer typeWordInputed,
+            final String hexTagNameInputed,
+            final UUID mainFlowUuidForChange){
+        
+        UUID changedMainFlowFunc;
+        ConcurrentSkipListMap<Integer, UUID> flowUuidsByDataWord;
+        ThWordStatusDataCache wordStatusDataCache;
+        UUID valueUUIDDataCache;
+        Integer typeWordFunc;
+        String hexTagNameFunc;
+        try {
+            typeWordFunc = (Integer) typeWordInputed;
+            hexTagNameFunc = (String) hexTagNameInputed;
+            changedMainFlowFunc = (UUID) mainFlowUuidForChange;
+            flowUuidsByDataWord = this.getFlowUuidsByTypeWordHexTagName(typeWordFunc, hexTagNameFunc, changedMainFlowFunc);
+            wordStatusDataCache = this.getWordStatusDataCache();
+            valueUUIDDataCache = flowUuidsByDataWord.get(this.getParamCodeByNumber(3));
+            wordStatusDataCache.incrementVolumeCountInCache(valueUUIDDataCache);
+        } finally {
+            changedMainFlowFunc = null;
+            flowUuidsByDataWord = null;
+            wordStatusDataCache = null;
+            valueUUIDDataCache = null;
+            typeWordFunc = null;
+            hexTagNameFunc = null;
+        }
+    }
     /**
      * 
      * @param typeWordInputed
