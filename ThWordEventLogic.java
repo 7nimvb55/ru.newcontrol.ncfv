@@ -149,19 +149,14 @@ public class ThWordEventLogic {
             try {
                 setDataIntoCacheFlow = this.wordCache.setDataIntoCacheFlow(pollFromBusOutputDataPacket);
                 //start after insert into cache
-                UUID dataCacheUuid = this.eventIndexFlow.getDataCache(createInitMainFlow);
-                //@todo 2,3 set in init
-                //@todo changeParam by typeWord, hexTagName, subString, UUID, numberParam, value
-                //@todo inctrement value size in cache
+                //@todo 2 set in init
                 this.wordStatusMainFlow.incrementRecordsCountCache(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput, createInitMainFlow);
                 //set inital flags to workers
-                UUID workersUuid = this.eventIndexFlow.getWorkers(createInitMainFlow);
-                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordOfBusOutput, hexTagNameFromBusOutput, createInitMainFlow, 3, setDataIntoCacheFlow);
+                this.wordStatusMainFlow.changeInWorkers(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput, createInitMainFlow, 3, setDataIntoCacheFlow);
                 //set inital flags to name
                 String buildTypeWordStoreSubDirictories = ThWordHelper.buildTypeWordStoreSubDirictories(typeWordOfBusOutput, hexTagNameFromBusOutput, subStringFromBusOutput.length());
-                UUID nameUuid = this.eventIndexFlow.getName(createInitMainFlow);
-                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberName(typeWordOfBusOutput, hexTagNameFromBusOutput, createInitMainFlow, 0, buildTypeWordStoreSubDirictories);
-                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberName(typeWordOfBusOutput, hexTagNameFromBusOutput, createInitMainFlow, 4, hexTagNameFromBusOutput);
+                this.wordStatusMainFlow.changeInName(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput, createInitMainFlow, 0, buildTypeWordStoreSubDirictories);
+                this.wordStatusMainFlow.changeInName(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput, createInitMainFlow, 4, hexTagNameFromBusOutput);
                 Integer valueForMainUuidByNumberDataCache = this.wordStatusMainFlow.getValueForMainUuidByNumberDataCache(pollFromBusOutputDataPacket, createInitMainFlow, 2);
                 Integer valueLimitForMainUuidByNumberDataCache = this.wordStatusMainFlow.getValueForMainUuidByNumberDataCache(pollFromBusOutputDataPacket, createInitMainFlow, 3);
                 //set inital flags to cache
@@ -183,7 +178,7 @@ public class ThWordEventLogic {
                 if( forLimitOnFsNeedAppendSize > 0 ){
                     valueForSetInDataCache = forLimitOnFsNeedAppendSize;
                 }
-                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberDataCache(typeWordOfBusOutput, hexTagNameFromBusOutput, createInitMainFlow, 2, valueForSetInDataCache);
+                this.wordStatusMainFlow.changeInDataCache(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput, createInitMainFlow, 2, valueForSetInDataCache);
                 //set flow flags
             } catch(IllegalArgumentException exArg){
                 exMessage = exArg.getMessage();

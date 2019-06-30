@@ -1377,7 +1377,7 @@ public class ThWordStatusMainFlow {
      * </ul>
      * @param changedValue 
      */
-    protected void changeParamForMainUuidForNumberDataFs(
+    protected void changeInDataFs(
             final Integer typeWordInputed,
             final String subStringInputed,
             final String hexTagNameInputed,
@@ -1444,7 +1444,7 @@ public class ThWordStatusMainFlow {
      * </ul>
      * @param changedValue 
      */
-    protected void changeParamForMainUuidForNumberName(
+    protected void changeInName(
             final Integer typeWordInputed,
             final String subStringInputed,
             final String hexTagNameInputed,
@@ -1507,7 +1507,7 @@ public class ThWordStatusMainFlow {
      * </ul>
      * @param changedValue 
      */
-    protected void changeParamForMainUuidForNumberActivity(
+    protected void changeInActivity(
             final Integer typeWordInputed,
             final String subStringInputed,
             final String hexTagNameInputed,
@@ -1572,7 +1572,7 @@ public class ThWordStatusMainFlow {
      * </ul>
      * @param changedValue 
      */
-    protected void changeParamForMainUuidForNumberDataCache(
+    protected void changeInDataCache(
             final Integer typeWordInputed,
             final String subStringInputed,
             final String hexTagNameInputed,
@@ -1645,7 +1645,7 @@ public class ThWordStatusMainFlow {
      * </ul>
      * @param changedValue 
      */
-    protected void changeParamForMainUuidForNumberWorkers(
+    protected void changeInWorkers(
             final Integer typeWordInputed,
             final String subStringInputed,
             final String hexTagNameInputed,
@@ -1710,7 +1710,7 @@ public class ThWordStatusMainFlow {
      * </ul>
      * @param changedValue 
      */
-    protected void changeParamForMainUuidForNumberError(
+    protected void changeInError(
             final Integer typeWordInputed,
             final String subStringInputed,
             final String hexTagNameInputed,
