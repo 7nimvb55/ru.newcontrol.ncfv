@@ -223,19 +223,26 @@ public class ThWordStatusDataCache {
         }
     }
     /**
+     *  
+     * @param changedKeyPointFlowDataCache
+     * @param paramNumber
      * <ul>
      * <li>0 - currentInCache
      * <li>1 - currentInCacheReaded
      * <li>2 - addNeedToFileSystemLimit
      * <li>3 - indexSystemLimitOnStorage
      * <li>4 - inCacheVolumesCount
-     * </ul> 
-     * @param changedKeyPointFlowDataCache
-     * @param paramNumber
+     * </ul>
      * @param changedVal 
      * 
      * @throws IllegalArgumentException when inputed number of parameter
-     * out of bounds
+     * out of bounds or {@code changedKeyPointFlowDataCache < 0 (zero) }
+     * {@link ru.newcontrol.ncfv.ThWordStatusDataCache#getParamCodeByNumber(int) }
+     * @throws IllegalArgumentException if count of parameters or his
+     * names not equal concept  in used 
+     * {@link ru.newcontrol.ncfv.ThWordStatusDataCache#validateCountParams(java.util.UUID) }
+     * @throws NullPointerException when inputed value is null in used 
+     * {@link ru.newcontrol.ncfv.ThWordStatusDataCache#validateCountParams(java.util.UUID) }
      */
     protected void changeParamValByNumber(final UUID changedKeyPointFlowDataCache, final Integer paramNumber, final Integer changedVal){
         UUID changedKeyPointFlowDataCacheFunc;
@@ -260,16 +267,29 @@ public class ThWordStatusDataCache {
             fromCurrentFlow = null;
         }
     }
+    /**
+     * 
+     * @param changedKeyPointFlowDataCache 
+     * @throws IllegalArgumentException when inputed number of parameter
+     * out of bounds or {@code changedKeyPointFlowDataCache < 0 (zero) }
+     * {@link ru.newcontrol.ncfv.ThWordStatusDataCache#getParamCodeByNumber(int) }
+     * @throws IllegalArgumentException if count of parameters or his
+     * names not equal concept  in used 
+     * {@link ru.newcontrol.ncfv.ThWordStatusDataCache#validateCountParams(java.util.UUID) }
+     * @throws NullPointerException when inputed value is null in used 
+     * {@link ru.newcontrol.ncfv.ThWordStatusDataCache#validateCountParams(java.util.UUID) }
+     */
     protected void incrementVolumeCountInCache(final UUID changedKeyPointFlowDataCache){
         UUID changedKeyPointFlowDataCacheFunc;
         Integer paramCodeByNumber;
         ConcurrentSkipListMap<Integer, Integer> fromCurrentFlow;
+        Integer incrementalVolumeCount;
         try{
             changedKeyPointFlowDataCacheFunc = (UUID) changedKeyPointFlowDataCache;
             validateCountParams(changedKeyPointFlowDataCacheFunc);
             fromCurrentFlow = (ConcurrentSkipListMap<Integer, Integer>) this.poolStatusDataCache.get(changedKeyPointFlowDataCacheFunc);
             paramCodeByNumber = (Integer) getParamCodeByNumber(4);
-            Integer incrementalVolumeCount = fromCurrentFlow.get(paramCodeByNumber);
+            incrementalVolumeCount = fromCurrentFlow.get(paramCodeByNumber);
             incrementalVolumeCount++;
             fromCurrentFlow.put(paramCodeByNumber, incrementalVolumeCount);
             this.poolStatusDataCache.put(changedKeyPointFlowDataCacheFunc, fromCurrentFlow);
@@ -277,6 +297,73 @@ public class ThWordStatusDataCache {
             changedKeyPointFlowDataCacheFunc = null;
             paramCodeByNumber = null;
             fromCurrentFlow = null;
+            incrementalVolumeCount = null;
+        }
+    }
+    /**
+     * 
+     * @param changedKeyPointFlowDataCache 
+     * @throws IllegalArgumentException when inputed number of parameter
+     * out of bounds or {@code changedKeyPointFlowDataCache < 0 (zero) }
+     * {@link ru.newcontrol.ncfv.ThWordStatusDataCache#getParamCodeByNumber(int) }
+     * @throws IllegalArgumentException if count of parameters or his
+     * names not equal concept  in used 
+     * {@link ru.newcontrol.ncfv.ThWordStatusDataCache#validateCountParams(java.util.UUID) }
+     * @throws NullPointerException when inputed value is null in used 
+     * {@link ru.newcontrol.ncfv.ThWordStatusDataCache#validateCountParams(java.util.UUID) }
+     */
+    protected void incrementRecordsCountInCache(final UUID changedKeyPointFlowDataCache){
+        UUID changedKeyPointFlowDataCacheFunc;
+        Integer paramCodeByNumber;
+        ConcurrentSkipListMap<Integer, Integer> fromCurrentFlow;
+        Integer incrementalRecordCountInCache;
+        try{
+            changedKeyPointFlowDataCacheFunc = (UUID) changedKeyPointFlowDataCache;
+            validateCountParams(changedKeyPointFlowDataCacheFunc);
+            fromCurrentFlow = (ConcurrentSkipListMap<Integer, Integer>) this.poolStatusDataCache.get(changedKeyPointFlowDataCacheFunc);
+            paramCodeByNumber = (Integer) getParamCodeByNumber(0);
+            incrementalRecordCountInCache = fromCurrentFlow.get(paramCodeByNumber);
+            incrementalRecordCountInCache++;
+            fromCurrentFlow.put(paramCodeByNumber, incrementalRecordCountInCache);
+            this.poolStatusDataCache.put(changedKeyPointFlowDataCacheFunc, fromCurrentFlow);
+        } finally {
+            changedKeyPointFlowDataCacheFunc = null;
+            paramCodeByNumber = null;
+            fromCurrentFlow = null;
+            incrementalRecordCountInCache = null;
+        }
+    }
+    /**
+     * 
+     * @param changedKeyPointFlowDataCache 
+     * @throws IllegalArgumentException when inputed number of parameter
+     * out of bounds or {@code changedKeyPointFlowDataCache < 0 (zero) }
+     * {@link ru.newcontrol.ncfv.ThWordStatusDataCache#getParamCodeByNumber(int) }
+     * @throws IllegalArgumentException if count of parameters or his
+     * names not equal concept  in used 
+     * {@link ru.newcontrol.ncfv.ThWordStatusDataCache#validateCountParams(java.util.UUID) }
+     * @throws NullPointerException when inputed value is null in used 
+     * {@link ru.newcontrol.ncfv.ThWordStatusDataCache#validateCountParams(java.util.UUID) }
+     */
+    protected void incrementRecordsCountInCacheReaded(final UUID changedKeyPointFlowDataCache){
+        UUID changedKeyPointFlowDataCacheFunc;
+        Integer paramCodeByNumber;
+        ConcurrentSkipListMap<Integer, Integer> fromCurrentFlow;
+        Integer incrementalRecordCountInReadedCache;
+        try{
+            changedKeyPointFlowDataCacheFunc = (UUID) changedKeyPointFlowDataCache;
+            validateCountParams(changedKeyPointFlowDataCacheFunc);
+            fromCurrentFlow = (ConcurrentSkipListMap<Integer, Integer>) this.poolStatusDataCache.get(changedKeyPointFlowDataCacheFunc);
+            paramCodeByNumber = (Integer) getParamCodeByNumber(1);
+            incrementalRecordCountInReadedCache = fromCurrentFlow.get(paramCodeByNumber);
+            incrementalRecordCountInReadedCache++;
+            fromCurrentFlow.put(paramCodeByNumber, incrementalRecordCountInReadedCache);
+            this.poolStatusDataCache.put(changedKeyPointFlowDataCacheFunc, fromCurrentFlow);
+        } finally {
+            changedKeyPointFlowDataCacheFunc = null;
+            paramCodeByNumber = null;
+            fromCurrentFlow = null;
+            incrementalRecordCountInReadedCache = null;
         }
     }
     /**
@@ -307,13 +394,21 @@ public class ThWordStatusDataCache {
     /**
      * Return code of parameter by his number, calculeted from some fileds
      * @param numParam
+     * <ul>
+     * <li>0 - currentInCache
+     * <li>1 - currentInCacheReaded
+     * <li>2 - addNeedToFileSystemLimit
+     * <li>3 - indexSystemLimitOnStorage
+     * <li>4 - inCacheVolumesCount
+     * </ul>
      * @return hashCode for Parameter by his number
      * @see getParamNames()
      * @throws IllegalArgumentException when inputed number of parameter
-     * out of bounds
+     * out of bounds or {@code numParam < 0 (zero) }
      */
     private Integer getParamCodeByNumber(int numParam){
         String[] paramNames;
+        Integer codeForParameter;
         try {
             paramNames = getParamNames();
             if( numParam < 0 ){
@@ -329,12 +424,13 @@ public class ThWordStatusDataCache {
                                 + paramNames.length 
                                 + ", need for return " + numParam);
             } 
-            int codeForParameter = paramNames[numParam]
+            codeForParameter = paramNames[numParam]
                     .concat(String.valueOf(this.timeCreation))
                     .concat(this.objectLabel.toString()).hashCode();
             return codeForParameter;
         } finally {
             paramNames = null;
+            codeForParameter = null;
         }
     }
     /**
@@ -353,9 +449,16 @@ public class ThWordStatusDataCache {
     /**
      * 
      * @param numParam
+     * <ul>
+     * <li>0 - currentInCache
+     * <li>1 - currentInCacheReaded
+     * <li>2 - addNeedToFileSystemLimit
+     * <li>3 - indexSystemLimitOnStorage
+     * <li>4 - inCacheVolumesCount
+     * </ul>
      * @return name of param by his number
      * @throws IllegalArgumentException when inputed number of parameter
-     * out of bounds
+     * out of bounds or {@code numParam < 0 (zero) }
      */
     private String getParamNameByNumber(int numParam){
         String[] paramNames;
@@ -385,8 +488,9 @@ public class ThWordStatusDataCache {
     /**
      * 
      * @param keyPointFlowDataCache
-     * @throw IllegalArgumentException if count of parameters or his
+     * @throws IllegalArgumentException if count of parameters or his
      * names not equal concept
+     * @throws NullPointerException when inputed value is null
      */
     
     protected void validateCountParams(final UUID keyPointFlowDataCache){
