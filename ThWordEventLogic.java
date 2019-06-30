@@ -166,13 +166,13 @@ public class ThWordEventLogic {
                 if( forLimitOnFsNeedAppendSize < 0 ){
                     do {
                         //increment cached volumes count
-                        this.wordStatusMainFlow.incrementVolumeCountForMainUuidByHexTagNameNumberDataCache(typeWordOfBusOutput, hexTagNameFromBusOutput, createInitMainFlow);
+                        this.wordStatusMainFlow.incrementVolumeNumberDataCache(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput, createInitMainFlow);
                         forLimitOnFsNeedAppendSize = valueLimitForMainUuidByNumberDataCache + forLimitOnFsNeedAppendSize;
                     } while( forLimitOnFsNeedAppendSize < 0 );
                 }
                 if( forLimitOnFsNeedAppendSize == 0 ){
                     //increment cached volumes
-                    this.wordStatusMainFlow.incrementVolumeCountForMainUuidByHexTagNameNumberDataCache(typeWordOfBusOutput, hexTagNameFromBusOutput, createInitMainFlow);
+                    this.wordStatusMainFlow.incrementVolumeNumberDataCache(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput, createInitMainFlow);
                     valueForSetInDataCache = valueLimitForMainUuidByNumberDataCache;
                 }    
                 if( forLimitOnFsNeedAppendSize > 0 ){

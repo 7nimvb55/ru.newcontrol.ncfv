@@ -1362,6 +1362,56 @@ public class ThWordStatusMainFlow {
             wordStatusDataCache = null;
             valueUUIDDataCache = null;
             typeWordFunc = null;
+            subStringFunc = null;
+            hexTagNameFunc = null;
+        }
+    }
+    /**
+     * 
+     * @param typeWordInputed
+     * @param hexTagNameInputed
+     * @param mainFlowUuidForChange 
+     */
+    protected void incrementVolumeNumberDataCache(
+            final Integer typeWordInputed,
+            final String subStringInputed,
+            final String hexTagNameInputed,
+            final UUID mainFlowUuidForChange){
+        
+        UUID changedMainFlowFunc;
+        ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, UUID>> typeWordTagFileNameFlowUuids;
+        ConcurrentSkipListMap<Integer, UUID> flowUuidsByDataWord;
+        ThWordStatusDataCache wordStatusDataCache;
+        UUID valueUUIDDataCache;
+        Integer typeWordFunc;
+        String subStringFunc;
+        String hexTagNameFunc;
+        try {
+            typeWordFunc = (Integer) typeWordInputed;
+            subStringFunc = (String) subStringInputed;
+            hexTagNameFunc = (String) hexTagNameInputed;
+            changedMainFlowFunc = (UUID) mainFlowUuidForChange;
+            typeWordTagFileNameFlowUuids = this.getTypeWordTagFileNameFlowUuids(typeWordFunc, subStringFunc, hexTagNameFunc);
+            if( typeWordTagFileNameFlowUuids == null ){
+                throw new NullPointerException(ThWordStatusMainFlow.class.getCanonicalName()
+                + " get null for UUID: "
+                + changedMainFlowFunc.toString() + " for typeWord: "
+                + String.valueOf(typeWordFunc) + " for tagHexName: "
+                + hexTagNameFunc + " for subString: "
+                + subStringFunc + ", need for return list of UUIDs");
+            }
+            flowUuidsByDataWord = typeWordTagFileNameFlowUuids.get(changedMainFlowFunc);
+            wordStatusDataCache = this.getWordStatusDataCache();
+            valueUUIDDataCache = flowUuidsByDataWord.get(this.getParamCodeByNumber(3));
+            wordStatusDataCache.incrementVolumeCountInCache(valueUUIDDataCache);
+        } finally {
+            changedMainFlowFunc = null;
+            typeWordTagFileNameFlowUuids = null;
+            flowUuidsByDataWord = null;
+            wordStatusDataCache = null;
+            valueUUIDDataCache = null;
+            typeWordFunc = null;
+            subStringFunc = null;
             hexTagNameFunc = null;
         }
     }
@@ -2067,6 +2117,7 @@ public class ThWordStatusMainFlow {
             changedValueFunc = null;
         }
     }
+    
     /**
      * 
      * @param typeWordInputed
