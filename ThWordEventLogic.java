@@ -153,15 +153,15 @@ public class ThWordEventLogic {
                 //@todo 2,3 set in init
                 //@todo changeParam by typeWord, hexTagName, subString, UUID, numberParam, value
                 //@todo inctrement value size in cache
-                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberDataCache(typeWordOfBusOutput, hexTagNameFromBusOutput, dataCacheUuid, 0, 1);
+                this.wordStatusMainFlow.incrementRecordsCountCache(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput, createInitMainFlow);
                 //set inital flags to workers
                 UUID workersUuid = this.eventIndexFlow.getWorkers(createInitMainFlow);
-                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordOfBusOutput, hexTagNameFromBusOutput, workersUuid, 3, setDataIntoCacheFlow);
+                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberWorkers(typeWordOfBusOutput, hexTagNameFromBusOutput, createInitMainFlow, 3, setDataIntoCacheFlow);
                 //set inital flags to name
                 String buildTypeWordStoreSubDirictories = ThWordHelper.buildTypeWordStoreSubDirictories(typeWordOfBusOutput, hexTagNameFromBusOutput, subStringFromBusOutput.length());
                 UUID nameUuid = this.eventIndexFlow.getName(createInitMainFlow);
-                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberName(typeWordOfBusOutput, hexTagNameFromBusOutput, nameUuid, 0, buildTypeWordStoreSubDirictories);
-                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberName(typeWordOfBusOutput, hexTagNameFromBusOutput, nameUuid, 4, hexTagNameFromBusOutput);
+                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberName(typeWordOfBusOutput, hexTagNameFromBusOutput, createInitMainFlow, 0, buildTypeWordStoreSubDirictories);
+                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberName(typeWordOfBusOutput, hexTagNameFromBusOutput, createInitMainFlow, 4, hexTagNameFromBusOutput);
                 Integer valueForMainUuidByNumberDataCache = this.wordStatusMainFlow.getValueForMainUuidByNumberDataCache(pollFromBusOutputDataPacket, createInitMainFlow, 2);
                 Integer valueLimitForMainUuidByNumberDataCache = this.wordStatusMainFlow.getValueForMainUuidByNumberDataCache(pollFromBusOutputDataPacket, createInitMainFlow, 3);
                 //set inital flags to cache
@@ -171,19 +171,19 @@ public class ThWordEventLogic {
                 if( forLimitOnFsNeedAppendSize < 0 ){
                     do {
                         //increment cached volumes count
-                        this.wordStatusMainFlow.incrementVolumeCountForMainUuidByHexTagNameNumberDataCache(typeWordOfBusOutput, hexTagNameFromBusOutput, dataCacheUuid);
+                        this.wordStatusMainFlow.incrementVolumeCountForMainUuidByHexTagNameNumberDataCache(typeWordOfBusOutput, hexTagNameFromBusOutput, createInitMainFlow);
                         forLimitOnFsNeedAppendSize = valueLimitForMainUuidByNumberDataCache + forLimitOnFsNeedAppendSize;
                     } while( forLimitOnFsNeedAppendSize < 0 );
                 }
                 if( forLimitOnFsNeedAppendSize == 0 ){
                     //increment cached volumes
-                    this.wordStatusMainFlow.incrementVolumeCountForMainUuidByHexTagNameNumberDataCache(typeWordOfBusOutput, hexTagNameFromBusOutput, dataCacheUuid);
+                    this.wordStatusMainFlow.incrementVolumeCountForMainUuidByHexTagNameNumberDataCache(typeWordOfBusOutput, hexTagNameFromBusOutput, createInitMainFlow);
                     valueForSetInDataCache = valueLimitForMainUuidByNumberDataCache;
                 }    
                 if( forLimitOnFsNeedAppendSize > 0 ){
                     valueForSetInDataCache = forLimitOnFsNeedAppendSize;
                 }
-                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberDataCache(typeWordOfBusOutput, hexTagNameFromBusOutput, dataCacheUuid, 2, valueForSetInDataCache);
+                this.wordStatusMainFlow.changeParamForMainUuidByHexTagNameNumberDataCache(typeWordOfBusOutput, hexTagNameFromBusOutput, createInitMainFlow, 2, valueForSetInDataCache);
                 //set flow flags
             } catch(IllegalArgumentException exArg){
                 exMessage = exArg.getMessage();
