@@ -45,9 +45,10 @@ public class ThWordLogicWrite {
         ThIndexStatistic indexStatistic;
         ThWordRule funcRuleWord;
         AppFileStorageIndex currentIndexStorages;
-        
+        UUID pollNextUuid;
         URI byPrefixGetUri;
         Map<String, String> byPrefixGetMap;
+        ThWordEventLogic eventLogic;
         try {
             funcRuleWord = (ThWordRule) outerRuleWord;
             
@@ -55,28 +56,25 @@ public class ThWordLogicWrite {
             indexStatistic = indexRule.getIndexStatistic();
             indexStatistic.updateDataStorages();
             currentIndexStorages = funcRuleWord.getIndexRule().getIndexState().currentIndexStorages();
-            byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD);
+            byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
             byPrefixGetMap = currentIndexStorages.byPrefixGetMap( 
-                    AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD);
+                    AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
             try( FileSystem fsForWriteData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
                 do {
-                    UUID pollNextUuid = outerRuleWord.getWordState().getBusEventShort().pollNextUuid(2, 3);
-                    LinkedTransferQueue<Integer[]> foundedNodes = outerRuleWord.getWordState().getBusEventShortNextStep().foundUuidInList(pollNextUuid);
-                    do {
-                        Integer[] foundUuidInList = foundedNodes.poll();
-                        if( foundUuidInList[0] == -1 || foundUuidInList[1] == -1 ){
-                            continue;
+                    pollNextUuid = outerRuleWord.getWordState().getBusEventShort().pollNextUuid(2, 3);
+                    if( checkStateForUuidOnDoWrite(outerRuleWord, pollNextUuid) ){
+                        //move uuid in bus event shot
+                        //move uuid in statebuseventlocal
+                        //do write data
+                        //move uuid into wait read
+                        eventLogic = (ThWordEventLogic) outerRuleWord.getWordState().getEventLogic();
+                        try {
+                            eventLogic.writeDataToStorage(fsForWriteData, pollNextUuid);
+                        } catch(IllegalStateException exIllState) {
+                            System.err.println(exIllState.getMessage());
+                            exIllState.printStackTrace();
                         }
-                        if( foundUuidInList[0] == 0 || foundUuidInList[1] == 1 ){
-                            continue;
-                        }
-                        if( foundUuidInList[0] == 0 || foundUuidInList[1] == 2 ){
-                            //move uuid in bus event shot
-                            //move uuid in statebuseventlocal
-                            //do write data
-                            //move uuid into wait read
-                        }
-                    } while( !foundedNodes.isEmpty() );
+                    }
                 } while( funcRuleWord.isRunnedWordWorkRouter() );
                 //need write all cached data after end for all read jobs
             } catch(FileSystemNotFoundException ex){
@@ -96,12 +94,38 @@ public class ThWordLogicWrite {
                 ex.printStackTrace();
             }
         } finally {
+            pollNextUuid = null;
             indexRule = null;
             indexStatistic = null;
             funcRuleWord = null;
             currentIndexStorages = null;
             byPrefixGetUri = null;
             byPrefixGetMap = null;
+            eventLogic = null;
+        }
+    }
+    protected Boolean checkStateForUuidOnDoWrite(ThWordRule outerRuleWord, UUID checkedReturnedUuid){
+        LinkedTransferQueue<Integer[]> foundedNodes;
+        try {
+            if( checkedReturnedUuid != null ){
+                foundedNodes = outerRuleWord.getWordState().getBusEventShortNextStep().foundUuidInList(checkedReturnedUuid);
+                while( !foundedNodes.isEmpty() ) {
+                    Integer[] foundUuidInList = foundedNodes.poll();
+                    if( foundUuidInList[0] == -1 || foundUuidInList[1] == -1 ){
+                        continue;
+                    }
+                    if( foundUuidInList[0] == 0 || foundUuidInList[1] == 1 ){
+                        continue;
+                    }
+                    if( foundUuidInList[0] == 0 && foundUuidInList[1] == 2 ){
+                        return Boolean.TRUE;
+                    }
+                }
+            }
+            return Boolean.FALSE;
+        }
+        finally {
+            foundedNodes = null;
         }
     }
     protected void readNextUuidFromEventShot(){

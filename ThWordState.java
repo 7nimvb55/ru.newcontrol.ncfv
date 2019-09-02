@@ -20,7 +20,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
- * 
+ * Contains method and values for control word index process
  * @author wladimirowichbiaran
  */
 public class ThWordState {
@@ -86,7 +86,7 @@ public class ThWordState {
     /**
      * Object for add Uuid next step event short by buses types: wait, do, ready
      * for example:
-     * insert data into chache, create Uuid, set params, insert created uuid in
+     * insert data into cache, create Uuid, set params, insert created uuid in
      * BusEventShot in part 2 (ready), 3(insertCache) also eventLogic make insert
      * uuid in BusEventShot next step in part 0 (wait), 2 (writeToStorage)
      * if not need read data from storage before write else

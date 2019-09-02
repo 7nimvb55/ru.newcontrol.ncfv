@@ -220,15 +220,23 @@ public class ThWordBusEventShort {
      * resulted code name may be equal with logic check point
      */
     protected LinkedTransferQueue<Integer[]> foundUuidInList(UUID checkedOnExist){
-        LinkedTransferQueue<Integer[]> returnedFoundedNodes = new LinkedTransferQueue<Integer[]>();
-        for( Integer idxPrefix = 0; idxPrefix < getEventPrefixNamesCount(); idxPrefix++ ){
-                for(Integer idxEvent = 0; idxEvent < getEventNamesCount(); idxEvent++ ){
-                    if( isExistUuid(idxPrefix, idxEvent, checkedOnExist) ){
-                        returnedFoundedNodes.add(new Integer[]{idxPrefix, idxEvent});
-                    }
-                }
+        if( checkedOnExist == null ){
+            return new LinkedTransferQueue<Integer[]>();
         }
-        return returnedFoundedNodes;
+        LinkedTransferQueue<Integer[]> returnedFoundedNodes = new LinkedTransferQueue<Integer[]>();
+        try {
+            for( Integer idxPrefix = 0; idxPrefix < getEventPrefixNamesCount(); idxPrefix++ ){
+                    for(Integer idxEvent = 0; idxEvent < getEventNamesCount(); idxEvent++ ){
+                        if( isExistUuid(idxPrefix, idxEvent, checkedOnExist) ){
+                            returnedFoundedNodes.add(new Integer[]{idxPrefix, idxEvent});
+                        }
+                    }
+            }
+            return returnedFoundedNodes;
+        }
+        finally {
+            returnedFoundedNodes = null;
+        }
     }
     /**
      * {@code [prefixNumber]*[numEventReadyNameInputed]+sufFix=indexName}

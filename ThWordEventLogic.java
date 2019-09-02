@@ -15,7 +15,11 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.nio.file.FileSystem;
+import java.nio.file.Path;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * <ol>
@@ -122,9 +126,16 @@ public class ThWordEventLogic {
         Boolean removeAllFlowStatusByUUID;
         ThWordBusFlowEvent eventDoBusByNumber;
         ThWordBusFlowEvent eventReadyBusByNumber;
-        String exMessage;
+        String buildTypeWordStoreSubDirictories = new String();
+        Integer valueForMainUuidByNumberDataCache;
+        Integer valueLimitForMainUuidByNumberDataCache;
+        Integer sizeDataInCacheByMainFlowUuid;
+        Integer forLimitOnFsNeedAppendSize;
+        Integer valueForSetInDataCache;
+        Integer sizeBusFlowUuids;
+        String exMessage = new String();
         try {
-            exMessage = new String();
+            
             if( typeWordOfBusOutput == null ){
                 throw new IllegalArgumentException(ThWordEventLogic.class.getCanonicalName() + " typeWord is null");
             }
@@ -154,15 +165,15 @@ public class ThWordEventLogic {
                 //set inital flags to workers
                 this.wordStatusMainFlow.changeInWorkers(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput, createInitMainFlow, 3, setDataIntoCacheFlow);
                 //set inital flags to name
-                String buildTypeWordStoreSubDirictories = ThWordHelper.buildTypeWordStoreSubDirictories(typeWordOfBusOutput, hexTagNameFromBusOutput, subStringFromBusOutput.length());
+                buildTypeWordStoreSubDirictories = ThWordHelper.buildTypeWordStoreSubDirictories(typeWordOfBusOutput, hexTagNameFromBusOutput, subStringFromBusOutput.length());
                 this.wordStatusMainFlow.changeInName(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput, createInitMainFlow, 0, buildTypeWordStoreSubDirictories);
                 this.wordStatusMainFlow.changeInName(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput, createInitMainFlow, 4, hexTagNameFromBusOutput);
-                Integer valueForMainUuidByNumberDataCache = this.wordStatusMainFlow.getValueForMainUuidByNumberDataCache(pollFromBusOutputDataPacket, createInitMainFlow, 2);
-                Integer valueLimitForMainUuidByNumberDataCache = this.wordStatusMainFlow.getValueForMainUuidByNumberDataCache(pollFromBusOutputDataPacket, createInitMainFlow, 3);
+                valueForMainUuidByNumberDataCache = this.wordStatusMainFlow.getValueForMainUuidByNumberDataCache(pollFromBusOutputDataPacket, createInitMainFlow, 2);
+                valueLimitForMainUuidByNumberDataCache = this.wordStatusMainFlow.getValueForMainUuidByNumberDataCache(pollFromBusOutputDataPacket, createInitMainFlow, 3);
                 //set inital flags to cache
-                Integer sizeDataInCacheByMainFlowUuid = this.getSizeDataInCacheByMainFlowUuid(createInitMainFlow);
-                Integer forLimitOnFsNeedAppendSize = valueForMainUuidByNumberDataCache - sizeDataInCacheByMainFlowUuid;
-                Integer valueForSetInDataCache = 0;
+                sizeDataInCacheByMainFlowUuid = this.getSizeDataInCacheByMainFlowUuid(createInitMainFlow);
+                forLimitOnFsNeedAppendSize = valueForMainUuidByNumberDataCache - sizeDataInCacheByMainFlowUuid;
+                valueForSetInDataCache = 0;
                 if( forLimitOnFsNeedAppendSize < 0 ){
                     do {
                         //increment cached volumes count
@@ -193,7 +204,7 @@ public class ThWordEventLogic {
                 eventDoBusByNumber.removeMainFlowUuid(createInitMainFlow, this.eventIndex);
                 this.wordState.getBusEventShort().addUuidToShortEvent(2, 3, createInitMainFlow);
                 ThWordBusFlowEvent eventReadyBusByNumberWrite = this.wordState.getEventReadyBusByNumber(2);
-                Integer sizeBusFlowUuids = eventReadyBusByNumberWrite.sizeBusFlowUuids(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput);
+                sizeBusFlowUuids = eventReadyBusByNumberWrite.sizeBusFlowUuids(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput);
                 if( sizeBusFlowUuids == 0 ){
                     this.wordState.getBusEventShortNextStep().addUuidToShortEvent(0, 2, createInitMainFlow);
                 } else {
@@ -213,16 +224,137 @@ public class ThWordEventLogic {
             removeAllFlowStatusByUUID = null;
             eventDoBusByNumber = null;
             eventReadyBusByNumber = null;
-            exMessage = null;
-            ThWordHelper.utilizeStringValues(new String[] {exMessage});
+            valueForMainUuidByNumberDataCache = null;
+            valueLimitForMainUuidByNumberDataCache = null;
+            sizeDataInCacheByMainFlowUuid = null;
+            forLimitOnFsNeedAppendSize = null;
+            valueForSetInDataCache = null;
+            sizeBusFlowUuids = null;
+            ThWordHelper.utilizeStringValues(new String[] {
+                exMessage,
+                buildTypeWordStoreSubDirictories
+            });
         }
     }
-    protected void writeDataToStorage(Integer typeWordOfBusOutput, 
-            String hexTagNameFromBusOutput, 
-            String subStringFromBusOutput, 
-            TdataWord pollFromBusOutputDataPacket){
+    /**
+     * @todo algoritm need change for not del, not move, not write parts
+     * @param fsForWriteData
+     * @param pollNextUuid 
+     * @throws IllegalStateException 
+     * <ul>
+     * <li>when from cache return empty or null value for write
+     * <li>when Main Flow UUID is writed
+     * <li>when Storage directory not exist and not created, exceptions on create
+     * </ul>
+     */
+    protected void writeDataToStorage(FileSystem fsForWriteData, UUID pollNextUuid){
+        ConcurrentSkipListMap<UUID, TdataWord> writedFromCacheData;
+        Map.Entry<UUID, TdataWord> pollFirstEntry;
+        Boolean localIsLimitForWrite;
+        Boolean localPrevDataWrited; 
+        Boolean localPrevDataMoved;
+        Boolean localIsUuidFinished;
         try {
-            
+            localIsUuidFinished = Boolean.TRUE; 
+            localPrevDataWrited = Boolean.FALSE; 
+            localPrevDataMoved = Boolean.FALSE;
+            String hexTagNameByMainFlowUuid = this.eventIndex.getHexTagNameByMainFlowUuid(pollNextUuid);
+            String subStringByMainFlowUuid = this.eventIndex.getSubStringByMainFlowUuid(pollNextUuid);
+            Integer typeWordByMainFlowUuid = this.eventIndex.getTypeWordByMainFlowUuid(pollNextUuid);
+            Boolean valueForMainFlowUuidByNumberWorkers = this.wordStatusMainFlow.getValueForMainFlowUuidByNumberWorkers(typeWordByMainFlowUuid, subStringByMainFlowUuid, hexTagNameByMainFlowUuid, pollNextUuid, 0);
+            if( valueForMainFlowUuidByNumberWorkers ){
+                throw new IllegalStateException(ThWordEventLogic.class.getCanonicalName() + " Main Flow UUID: "
+                    + pollNextUuid.toString() + " now writed in other worker");
+            }
+            ConcurrentSkipListMap<UUID, TdataWord> pollTypeWordTagFileNameData = null;
+            try{
+                pollTypeWordTagFileNameData = this.wordCache.pollTypeWordTagFileNameData(typeWordByMainFlowUuid, subStringByMainFlowUuid, hexTagNameByMainFlowUuid);
+            } catch (NullPointerException exRetNull) {
+                System.err.println(exRetNull.getMessage());
+                exRetNull.printStackTrace();
+            } catch (IllegalArgumentException exRetNull) {
+                    System.err.println(exRetNull.getMessage());
+                    exRetNull.printStackTrace();
+            }
+            if( pollTypeWordTagFileNameData.isEmpty() || pollTypeWordTagFileNameData == null ){
+                String strExReturn = pollTypeWordTagFileNameData.isEmpty() ? " received empty value for write from cache" : " from cache returned null for write to storage";
+                throw new IllegalStateException(ThWordEventLogic.class.getCanonicalName() + strExReturn);
+            }
+            String storageDirectoryName = this.wordStatusMainFlow.getValueForMainFlowUuidByNumberName(typeWordByMainFlowUuid, subStringByMainFlowUuid, hexTagNameByMainFlowUuid, pollNextUuid, 0);
+            Path storageTypeWordWritedFile = fsForWriteData.getPath(storageDirectoryName);
+            if( !ThWordHelper.createDirIfNotExist(storageTypeWordWritedFile) ){
+                String strExReturn = "Storage directory not created " + storageTypeWordWritedFile.toUri().toString();
+                throw new IllegalStateException(ThWordEventLogic.class.getCanonicalName() + strExReturn);
+            }
+            Boolean isDataToVol = Boolean.FALSE;
+            if( pollTypeWordTagFileNameData.size() > AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT ){
+                isDataToVol = Boolean.TRUE;
+            }
+            Integer datafsVolumeNumber = 
+                this.wordStatusMainFlow.getValueForMainFlowUuidByNumberDataFs(typeWordByMainFlowUuid, subStringByMainFlowUuid, hexTagNameByMainFlowUuid, pollNextUuid, 1);
+            Integer localSrcSize = 0;
+            Integer localDestSize = 0;
+            localDestSize = pollTypeWordTagFileNameData.size();
+            String prefixFileName = this.wordStatusMainFlow.getValueForMainFlowUuidByNumberName(typeWordByMainFlowUuid, subStringByMainFlowUuid, hexTagNameByMainFlowUuid, pollNextUuid, 4);
+
+            writedFromCacheData = new ConcurrentSkipListMap<UUID, TdataWord>();
+            do {
+                pollFirstEntry = pollTypeWordTagFileNameData.pollFirstEntry();
+                if( pollFirstEntry != null ){
+                    writedFromCacheData.put(pollFirstEntry.getKey(), pollFirstEntry.getValue());
+                }
+                localDestSize = writedFromCacheData.size();
+                localIsLimitForWrite = ( localDestSize == AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT );
+                if( localIsLimitForWrite || pollTypeWordTagFileNameData.isEmpty() ){
+                    String localSrcFileName = ThWordHelper.fileNameBuilder(prefixFileName, localSrcSize, datafsVolumeNumber);
+                    Path localNowWritedFile = fsForWriteData.getPath(storageTypeWordWritedFile.toString(), localSrcFileName);
+                    Boolean localIsWritedToStorage = ThWordHelper.writeDataToStorage(localNowWritedFile, writedFromCacheData);
+                    if( !localIsWritedToStorage ){
+                        //if not write data
+                        localIsUuidFinished = Boolean.FALSE;
+                    }
+                    this.wordStatusMainFlow.changeInWorkers(typeWordByMainFlowUuid, subStringByMainFlowUuid, hexTagNameByMainFlowUuid, pollNextUuid, 0, Boolean.TRUE);
+                    
+                    Boolean workersIsNeedDeleteOldFile = this.wordStatusMainFlow.getValueForMainFlowUuidByNumberWorkers(typeWordByMainFlowUuid, subStringByMainFlowUuid, hexTagNameByMainFlowUuid, pollNextUuid, 10);
+                    if( workersIsNeedDeleteOldFile ){
+                        String nameForDeleteFileName = this.wordStatusMainFlow.getValueForMainFlowUuidByNumberName(typeWordByMainFlowUuid, subStringByMainFlowUuid, hexTagNameByMainFlowUuid, pollNextUuid, 3);
+                        Path localDeleteOldFileName = fsForWriteData.getPath(storageTypeWordWritedFile.toString(), nameForDeleteFileName);
+                        Boolean isFileDeleted = ThWordHelper.deleteFileFromStorage(localDeleteOldFileName);
+                        if( !isFileDeleted ){
+                            //if not delete file
+                            localIsUuidFinished = Boolean.FALSE;
+                        }
+                        this.wordStatusMainFlow.changeInWorkers(typeWordByMainFlowUuid, subStringByMainFlowUuid, hexTagNameByMainFlowUuid, pollNextUuid, 11, Boolean.TRUE);
+                    } else {
+                        localIsUuidFinished = Boolean.FALSE;
+                    }
+                    
+                    String newFileName = ThWordHelper.fileNameBuilder(prefixFileName, localDestSize, datafsVolumeNumber);
+                    Path localFileNameForMove = fsForWriteData.getPath(storageTypeWordWritedFile.toString(), newFileName);
+                    localPrevDataMoved = ThWordHelper.moveAfterWrite(localNowWritedFile, localFileNameForMove);
+                    if( !localPrevDataMoved ){
+                        //if not move file
+                        localIsUuidFinished = Boolean.FALSE;
+                    }
+                    this.wordStatusMainFlow.changeInWorkers(typeWordByMainFlowUuid, subStringByMainFlowUuid, hexTagNameByMainFlowUuid, pollNextUuid, 2, Boolean.TRUE);
+                    if( pollTypeWordTagFileNameData.isEmpty() ){
+                        this.wordStatusMainFlow.changeInWorkers(typeWordByMainFlowUuid, subStringByMainFlowUuid, hexTagNameByMainFlowUuid, pollNextUuid, 7, Boolean.TRUE);
+                        this.wordStatusMainFlow.changeInName(typeWordByMainFlowUuid, subStringByMainFlowUuid, hexTagNameByMainFlowUuid, pollNextUuid, 1, localSrcFileName);
+                        this.wordStatusMainFlow.changeInName(typeWordByMainFlowUuid, subStringByMainFlowUuid, hexTagNameByMainFlowUuid, pollNextUuid, 2, newFileName);
+                    }
+                    if( localPrevDataWrited && localPrevDataMoved ){ 
+                        if( localIsLimitForWrite ){
+                            datafsVolumeNumber++;
+                        }
+                        writedFromCacheData = ThWordHelper.doUtilizationDataInitNew(writedFromCacheData);
+                    }
+                }
+            } while( !pollTypeWordTagFileNameData.isEmpty() );
+            //utilize writed data
+            if( localIsUuidFinished ){
+                Boolean removeAllFlowStatusByUUID = this.wordStatusMainFlow.removeAllFlowStatusByUUID(pollNextUuid);
+                removeAllFlowStatusByUUID = null;
+            }
         } finally {
             
         }
