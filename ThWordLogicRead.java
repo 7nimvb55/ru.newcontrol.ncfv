@@ -18,20 +18,15 @@ package ru.newcontrol.ncfv;
 import java.io.IOException;
 import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OptionalDataException;
 import java.io.StreamCorruptedException;
 import java.net.URI;
-import java.nio.file.AtomicMoveNotSupportedException;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.ProviderNotFoundException;
-import java.nio.file.StandardCopyOption;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,6 +39,94 @@ import java.util.concurrent.LinkedTransferQueue;
  */
 public class ThWordLogicRead {
     protected void doReadFromIndexWord(final ThWordRule outerRuleWord){
+        ThIndexRule indexRule;
+        ThIndexStatistic indexStatistic;
+        ThWordRule funcRuleWord;
+        AppFileStorageIndex currentIndexStorages;
+        UUID pollNextUuid;
+        URI byPrefixGetUri;
+        Map<String, String> byPrefixGetMap;
+        ThWordEventLogic eventLogic;
+        try {
+            funcRuleWord = (ThWordRule) outerRuleWord;
+            
+            indexRule = funcRuleWord.getIndexRule();
+            indexStatistic = indexRule.getIndexStatistic();
+            indexStatistic.updateDataStorages();
+            currentIndexStorages = funcRuleWord.getIndexRule().getIndexState().currentIndexStorages();
+            byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
+            byPrefixGetMap = currentIndexStorages.byPrefixGetMap( 
+                    AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
+            try( FileSystem fsForReadData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
+                do {
+                    pollNextUuid = outerRuleWord.getWordState().getBusEventShort().pollNextUuid(2, 2);
+                    if( checkStateForUuidOnDoRead(outerRuleWord, pollNextUuid) ){
+                        //move uuid in bus event shot
+                        //move uuid in statebuseventlocal
+                        //do read data
+                        //move uuid into wait read
+                        eventLogic = (ThWordEventLogic) outerRuleWord.getWordState().getEventLogic();
+                        try {
+                            eventLogic.readDataFromStorage(fsForReadData, pollNextUuid);
+                        } catch(IllegalStateException exIllState) {
+                            System.err.println(exIllState.getMessage());
+                            exIllState.printStackTrace();
+                        }
+                    } else {
+                        //not founded in nextStep ready write uuids go into...
+                    }
+                } while( funcRuleWord.isRunnedWordWorkRouter() );
+                //need read all cached data after end for all read jobs
+            } catch(FileSystemNotFoundException ex){
+                System.err.println(ex.getMessage());
+                ex.printStackTrace();
+            } catch(ProviderNotFoundException ex){
+                System.err.println(ex.getMessage());
+                ex.printStackTrace();
+            } catch(IllegalArgumentException ex){
+                System.err.println(ex.getMessage());
+                ex.printStackTrace();
+            } catch(SecurityException ex){
+                System.err.println(ex.getMessage());
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                System.err.println(ex.getMessage());
+                ex.printStackTrace();
+            }
+        } finally {
+            pollNextUuid = null;
+            indexRule = null;
+            indexStatistic = null;
+            funcRuleWord = null;
+            currentIndexStorages = null;
+            byPrefixGetUri = null;
+            byPrefixGetMap = null;
+            eventLogic = null;
+        }
+    }
+    protected Boolean checkStateForUuidOnDoRead(ThWordRule outerRuleWord, UUID checkedReturnedUuid){
+        LinkedTransferQueue<Integer[]> foundedNodes;
+        try {
+            if( checkedReturnedUuid != null ){
+                foundedNodes = outerRuleWord.getWordState().getBusEventShortNextStep().foundUuidInList(checkedReturnedUuid);
+                while( !foundedNodes.isEmpty() ) {
+                    Integer[] foundUuidInList = foundedNodes.poll();
+                    if( foundUuidInList[0] == -1 || foundUuidInList[1] == -1 ){
+                        continue;
+                    }
+                    if( foundUuidInList[0] == 0 || foundUuidInList[1] == 1 ){
+                        return Boolean.TRUE;
+                    }
+                }
+            }
+            return Boolean.FALSE;
+        }
+        finally {
+            foundedNodes = null;
+        }
+    }
+    
+    protected void doNotReleasedReadFromIndexWord(final ThWordRule outerRuleWord){
         ThIndexRule indexRule;
         ThIndexStatistic indexStatistic;
         ThWordRule funcRuleWord;

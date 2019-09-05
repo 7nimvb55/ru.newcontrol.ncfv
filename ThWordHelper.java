@@ -18,7 +18,10 @@ package ru.newcontrol.ncfv;
 import java.io.IOException;
 import java.io.InvalidClassException;
 import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
+import java.io.StreamCorruptedException;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileAlreadyExistsException;
@@ -191,18 +194,59 @@ public class ThWordHelper {
         }
         return Boolean.FALSE;
     }
+    /**
+     * 
+     * @param deleteFile
+     * @return 
+     */
     protected static Boolean deleteFileFromStorage(Path deleteFile){
+        Boolean resultOperation;
         try {
-            Files.deleteIfExists(deleteFile);
-            return Boolean.TRUE;
-        } catch (DirectoryNotEmptyException exNotEmptyDir) {
-            exNotEmptyDir.printStackTrace();
-        } catch (SecurityException exSecurity) {
-            exSecurity.printStackTrace();
-        } catch (IOException exInOut) {
-            exInOut.printStackTrace();
+            resultOperation = Boolean.TRUE;
+            try {
+                resultOperation = Files.deleteIfExists(deleteFile);
+                return resultOperation;
+            } catch (DirectoryNotEmptyException exNotEmptyDir) {
+                exNotEmptyDir.printStackTrace();
+            } catch (SecurityException exSecurity) {
+                exSecurity.printStackTrace();
+            } catch (IOException exInOut) {
+                exInOut.printStackTrace();
+            }
+            return Boolean.FALSE;
+        } finally {
+            resultOperation = null;
         }
-        return Boolean.FALSE;
+    }
+    protected static ConcurrentSkipListMap<UUID, TdataWord> readFromFile(Path forReadFileName){
+        ConcurrentSkipListMap<UUID, TdataWord> readedFromFileData = new ConcurrentSkipListMap<UUID, TdataWord>();
+        try{
+            try( ObjectInputStream ois =
+                new ObjectInputStream(Files.newInputStream(forReadFileName)) )
+            {
+                readedFromFileData.putAll((ConcurrentSkipListMap<UUID, TdataWord>) ois.readObject());
+                return readedFromFileData;
+            } catch(ClassNotFoundException exCnf){
+                System.err.println(exCnf.getMessage());
+                exCnf.printStackTrace();
+            } catch(InvalidClassException exIce){
+                System.err.println(exIce.getMessage());
+                exIce.printStackTrace();
+            } catch(StreamCorruptedException exSce){
+                System.err.println(exSce.getMessage());
+                exSce.printStackTrace();
+            } catch(OptionalDataException exOde){
+                System.err.println(exOde.getMessage());
+                exOde.printStackTrace();
+            } catch(IOException exIo){
+                System.err.println(exIo.getMessage());
+                exIo.printStackTrace();
+            }
+            return new ConcurrentSkipListMap<UUID, TdataWord>();
+        } finally {
+            ThWordHelper.utilizeTdataWord(readedFromFileData);
+            readedFromFileData = null;
+        }
     }
     /**
      * 

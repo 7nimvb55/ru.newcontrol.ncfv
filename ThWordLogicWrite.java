@@ -74,6 +74,8 @@ public class ThWordLogicWrite {
                             System.err.println(exIllState.getMessage());
                             exIllState.printStackTrace();
                         }
+                    } else {
+                        //not founded in nextStep ready insertToCache uuids go into...
                     }
                 } while( funcRuleWord.isRunnedWordWorkRouter() );
                 //need write all cached data after end for all read jobs
