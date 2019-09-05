@@ -33,8 +33,41 @@ public class ThIndexWord extends Thread{
     public void run(){
         System.out.println(ThIndexWord.class.getCanonicalName() 
                 + " do it +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        ThIndexState indexState = this.ruleThIndex.getIndexState();
+        ThWordRule thWordRule = new ThWordRule(this.ruleThIndex);
+        //init State
+        ThWordStatusMainFlow wordStatusMainFlow = new ThWordStatusMainFlow();
+        ThWordBusFlowEvent busWordRouterJobToReaderOuter = new ThWordBusFlowEvent(wordStatusMainFlow);
+        ThWordBusFlowEvent busWordRouterJobToWriterOuter = new ThWordBusFlowEvent(wordStatusMainFlow);
+        ThWordBusFlowEvent stateWordReadedOuter = new ThWordBusFlowEvent(wordStatusMainFlow);
+        ThWordState thWordState = new ThWordState(thWordRule);
+        thWordState.setBusJobForWordRouterJobToReader(busWordRouterJobToReaderOuter);
+        thWordState.setBusJobForWordRouterJobToWriter(busWordRouterJobToWriterOuter);
+        thWordState.setWordFlowReaded(stateWordReadedOuter);
+        ThWordStatusMainFlow thWordStatusMainFlow = new ThWordStatusMainFlow();
+        ThWordBusReadedFlow thWordFlowRead = new ThWordBusReadedFlow(thWordStatusMainFlow);
+        //init Rule
         
-        System.out.println(" do it +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        thWordRule.setWordState(thWordState);
+        thWordRule.setWordStatusMainFlow(thWordStatusMainFlow);
+        
+        //init Workers
+        
+        ThWordWorkRouter thWordWorkRouter = new ThWordWorkRouter(thWordRule);
+        thWordRule.setWordWorkRouter(thWordWorkRouter);
+        ThWordWorkWrite thWordWorkWrite = new ThWordWorkWrite(thWordRule);
+        thWordRule.setWordWorkWrite(thWordWorkWrite);
+        ThWordWorkRead thWordWorkRead = new ThWordWorkRead(thWordRule);
+        thWordRule.setWordWorkRead(thWordWorkRead);
+        
+        //set Word Rule in indexState
+        
+        // run Workers
+        thWordRule.runRouterWordWork();
+        thWordRule.runReadWordWork();
+        thWordRule.runWriteWordWork();
+        System.out.println(thWordWorkRouter.toString()
+                + " do it +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         
     }
     

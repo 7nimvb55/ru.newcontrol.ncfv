@@ -17,27 +17,12 @@
 
 package ru.newcontrol.ncfv;
 
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.AccessControlException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.security.auth.Policy;
 
 
 /**
@@ -85,7 +70,7 @@ public class Ncfv {
         thIndexRule.setIndexState(thIndexStateObj);
         ThIndexMaker thIndexMaker = new ThIndexMaker(thIndexRule);
         ThIndexDirList thIndexDirList = new ThIndexDirList(thIndexRule);
-        //ThIndexWord thIndexWord = new ThIndexWord(thIndexRule);
+        ThIndexWord thIndexWord = new ThIndexWord(thIndexRule);
         ThIndexFileList thIndexFileList = new ThIndexFileList(thIndexRule);
         ThIndexStorageWord thIndexStorageWord = new ThIndexStorageWord(thIndexRule);
         
@@ -94,7 +79,7 @@ public class Ncfv {
         
         thIndexRule.setThreadIndexMaker(thIndexMaker);
         thIndexRule.setThreadIndexDirList(thIndexDirList);
-        //thIndexRule.setThreadIndexWord(thIndexWord);
+        thIndexRule.setThreadIndexWord(thIndexWord);
         
         /**
          * @todo when storage index create and not need for new create not run for this methods
@@ -110,7 +95,7 @@ public class Ncfv {
         waitForFinishedIndexDirListThread(thIndexRule);
         thIndexFileList.start();
         thIndexStorageWord.start();
-        //thIndexWord.start();
+        thIndexWord.start();
     }
     /**
      * jobWalkerStorageType - job types:
