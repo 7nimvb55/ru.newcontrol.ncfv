@@ -436,9 +436,9 @@ public class ThWordEventLogic {
         String hexTagNameByMainFlowUuid = this.eventIndex.getHexTagNameByMainFlowUuid(pollNextUuid);
         String subStringByMainFlowUuid = this.eventIndex.getSubStringByMainFlowUuid(pollNextUuid);
         Integer typeWordByMainFlowUuid = this.eventIndex.getTypeWordByMainFlowUuid(pollNextUuid);
-        if(typeWordByMainFlowUuid.equals(typeWordOfBusOutput)){
-            if(hexTagNameByMainFlowUuid.equals(hexTagNameFromBusOutput)){
-                if(subStringFromBusOutput.equals(subStringByMainFlowUuid)){
+        if( typeWordByMainFlowUuid.equals(typeWordOfBusOutput) ){
+            if( hexTagNameByMainFlowUuid.contentEquals(hexTagNameFromBusOutput) ){
+                if( subStringByMainFlowUuid.contentEquals(subStringFromBusOutput) ){
                     return pollNextUuid;
                 }
             }
