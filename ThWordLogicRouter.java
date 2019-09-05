@@ -97,15 +97,19 @@ public class ThWordLogicRouter {
             busOutputByTypeWordFunc = (LinkedTransferQueue<TdataWord>) busOutputByTypeWordInputed;
             hexTagName = new String();
             eventLogic = (ThWordEventLogic) outerRuleWord.getWordState().getEventLogic();
+            
             do {
                 pollDataItem = busOutputByTypeWordFunc.poll();
                 if( pollDataItem != null ){
                     hexTagName = pollDataItem.hexSubString;
                     subString = pollDataItem.strSubString;
                     itemKey = pollDataItem.randomUUID;
+                    System.out.println("          ====        ++++      ====      <<< Logic Word"
+                            + "----- <   <   <   ---   " + hexTagName);
                     eventLogic.insertIntoCacheData(typeWordOfBusOutputFunc, hexTagName, subString, pollDataItem);
                 }
             } while( !busOutputByTypeWordFunc.isEmpty() );
+            
         } finally {
             eventLogic = null;
             labelTypeData = null;

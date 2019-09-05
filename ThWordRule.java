@@ -288,7 +288,7 @@ public class ThWordRule {
         return this.currentWordStatusMainFlow;
     }
     protected void setWordStatusMainFlow(final ThWordStatusMainFlow stateWordOuter){
-        this.currentWordStatusMainFlow = stateWordOuter;
+        this.currentWordStatusMainFlow = (ThWordStatusMainFlow) stateWordOuter;
         setTrueWordStatusMainFlow();
     }
     protected void setTrueWordStatusMainFlow(){

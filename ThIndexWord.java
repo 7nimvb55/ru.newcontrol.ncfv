@@ -37,6 +37,7 @@ public class ThIndexWord extends Thread{
         ThWordRule thWordRule = new ThWordRule(this.ruleThIndex);
         //init State
         ThWordStatusMainFlow wordStatusMainFlow = new ThWordStatusMainFlow();
+        thWordRule.setWordStatusMainFlow(wordStatusMainFlow);
         ThWordBusFlowEvent busWordRouterJobToReaderOuter = new ThWordBusFlowEvent(wordStatusMainFlow);
         ThWordBusFlowEvent busWordRouterJobToWriterOuter = new ThWordBusFlowEvent(wordStatusMainFlow);
         ThWordBusFlowEvent stateWordReadedOuter = new ThWordBusFlowEvent(wordStatusMainFlow);
@@ -44,12 +45,11 @@ public class ThIndexWord extends Thread{
         thWordState.setBusJobForWordRouterJobToReader(busWordRouterJobToReaderOuter);
         thWordState.setBusJobForWordRouterJobToWriter(busWordRouterJobToWriterOuter);
         thWordState.setWordFlowReaded(stateWordReadedOuter);
-        ThWordStatusMainFlow thWordStatusMainFlow = new ThWordStatusMainFlow();
-        ThWordBusReadedFlow thWordFlowRead = new ThWordBusReadedFlow(thWordStatusMainFlow);
+        ThWordBusReadedFlow thWordFlowRead = new ThWordBusReadedFlow(wordStatusMainFlow);
         //init Rule
         
         thWordRule.setWordState(thWordState);
-        thWordRule.setWordStatusMainFlow(thWordStatusMainFlow);
+        
         
         //init Workers
         

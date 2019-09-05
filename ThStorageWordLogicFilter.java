@@ -15,17 +15,12 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
 import java.nio.file.Path;
 import java.util.Map.Entry;
 import java.util.UUID;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.LinkedTransferQueue;
 
 /**
  *
@@ -77,7 +72,7 @@ public class ThStorageWordLogicFilter {
                 UUID keyInputedData = (UUID) itemFromStructure.getKey();
                 ConcurrentHashMap<Integer, Path> jobData = getJobData(itemFromStructure.getValue());
                 //ouputStructure.put(keyInputedData, jobData);
-                System.out.println("transfered UUID: " + keyInputedData.toString());
+                //System.out.println("transfered UUID: " + keyInputedData.toString());
                 transferDataToBusesWordLongWord(valStorageWordState, keyInputedData, jobData);
             }
             //return ouputStructure;
@@ -138,8 +133,8 @@ public class ThStorageWordLogicFilter {
             }
             funcNamePart = getNamePart;
             forDataOutput.put(-589260798, funcNamePart);
-            System.out.println("transfered funcReadedPath:  " + funcReadedPath.toString()
-                    + " funcNamePart: " + funcNamePart.toString());
+            //System.out.println("transfered funcReadedPath:  " + funcReadedPath.toString()
+            //        + " funcNamePart: " + funcNamePart.toString());
             return forDataOutput;
         } finally {
             funcReadedPath = null;
@@ -376,25 +371,25 @@ public class ThStorageWordLogicFilter {
              */
             /**
              * tmp comment before not released StorageWord part
-             *
+             **/
             forLastAddData = new TdataWord(recordId, storagePath, word, prevWordCodeType, heximalWord, startPos, lengthWord);
             if( lengthWord > 25){
-                ThStorageWordBusOutput busJobForLongWordWrite = inputedStorageWordState.getBusJobForLongWordWrite();
+                /*ThStorageWordBusOutput busJobForLongWordWrite = inputedStorageWordState.getBusJobForLongWordWrite();
                 ArrayBlockingQueue<TdataWord> busForTypeLongWord = busJobForLongWordWrite.getBusForTypeWord(prevWordCodeType);
                 busForTypeLongWord.add(forLastAddData);
                 int size = busForTypeLongWord.size();
                 System.out.println(">    >    >    >    >    >    >    >    >    >    >LongWord bus for typeWord " 
-                        + prevWordCodeType + " size " + size);
+                        + prevWordCodeType + " size " + size);*/
                 
             } else {
                 ThStorageWordBusOutput busJobForWordWrite = inputedStorageWordState.getBusJobForWordWrite();
-                ArrayBlockingQueue<TdataWord> busForTypeWord = busJobForWordWrite.getBusForTypeWord(prevWordCodeType);
+                LinkedTransferQueue<TdataWord> busForTypeWord = busJobForWordWrite.getBusForTypeWord(prevWordCodeType);
                 busForTypeWord.add(forLastAddData);
                 int size = busForTypeWord.size();
-                System.out.println(">    >    >    >    >    >Word bus for typeWord " 
-                        + prevWordCodeType + " size " + size);
+                //System.out.println(">    >    >    >    >    >Word bus for typeWord " 
+                //        + prevWordCodeType + " size " + size);
             }
-            */
+            
 
         } finally {
             forReturnLongWord = null;
