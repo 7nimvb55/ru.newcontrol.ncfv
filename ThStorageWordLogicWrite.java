@@ -29,12 +29,9 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.ProviderNotFoundException;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  *
@@ -335,8 +332,9 @@ public class ThStorageWordLogicWrite {
                                         try{
                                             pollTypeWordTagFileNameData = storageWordCache.pollTypeWordTagFileNameData(typeWordBusNumber, hexTagName, subStringValue);
                                         } catch (NullPointerException exRetNull) {
-                                            System.err.println(exRetNull.getMessage());
-                                            exRetNull.printStackTrace();
+                                            //@todo why null
+                                            //System.err.println(exRetNull.getMessage());
+                                            //exRetNull.printStackTrace();
                                             continue;
                                         }
                                         /**

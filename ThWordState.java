@@ -62,8 +62,8 @@ public class ThWordState {
         newInstanceOfReadyListBus(ruleWordInputed);
         newInstanceOfWaitListBus(ruleWordInputed);
         newInstanceOfDoListBus(ruleWordInputed);
-        newInstanceEventIndex(ruleWordInputed);
-        newInstanceEventLogic(ruleWordInputed);
+        //newInstanceEventIndex(ruleWordInputed);
+        //newInstanceEventLogic(ruleWordInputed);
         
         setFalseWordRouterJobToWriter();
         setFalseWordRouterJobToReader();
@@ -107,11 +107,15 @@ public class ThWordState {
     protected ThWordBusEventShort getBusEventShortNextStep(){
         return this.eventShortNextStep;
     }
-    private void newInstanceEventLogic(final ThWordRule ruleInputed){
-        this.eventsLogic = new ThWordEventLogic(ruleInputed);
+    protected void newInstanceEventLogic(final ThWordRule ruleInputed){
+        if( this.eventsLogic == null ){
+            this.eventsLogic = new ThWordEventLogic(ruleInputed);
+        }
     }
-    private void newInstanceEventIndex(final ThWordRule ruleInputed){
-        this.eventsIndex = new ThWordEventIndex(ruleInputed);
+    protected void newInstanceEventIndex(final ThWordRule ruleInputed){
+        if( this.eventsIndex == null ){
+            this.eventsIndex = new ThWordEventIndex(ruleInputed);
+        }
     }
     /**
      * Create Buses for list objects of Ready Events

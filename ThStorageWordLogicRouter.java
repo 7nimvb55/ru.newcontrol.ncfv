@@ -50,7 +50,7 @@ public class ThStorageWordLogicRouter {
                 /**
                  * (1) - typeWord - directory in zipfs storage to string
                  */
-                System.out.println("For bus typeWord " + items.getKey());
+                //System.out.println("For bus typeWord " + items.getKey());
                 //for(Map.Entry<String, String> itemsOfBus : items.getValue().entrySet()){
                     /**
                      * (2) - hexTagName
@@ -93,7 +93,7 @@ public class ThStorageWordLogicRouter {
         ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> busForTypeStorageWordRouter = 
                 busJobForStorageWordRouter.getMaxUsedBusesSet();
         for(Map.Entry<Integer, ConcurrentHashMap<String, String>> items : busForTypeStorageWordRouter.entrySet()){
-                System.out.println("From bus typeWord " + items.getKey());
+                //System.out.println("From bus typeWord " + items.getKey());
                 /*for(Map.Entry<String, String> itemsOfBus : items.getValue().entrySet()){
                     System.out.println("For bus hexWord " 
                             + itemsOfBus.getKey() 
