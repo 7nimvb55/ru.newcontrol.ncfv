@@ -90,7 +90,7 @@ public class Ncfv {
          * @todo append flag updated process, this ma used in while( updatedProcess ) { wait for end update }
          * after create storages workers... need release for storages (file systems) workers...
          */
-        //thIndexStateObj.currentIndexStorages().updateMapForStorages();
+        thIndexStateObj.currentIndexStorages().updateMapForStorages();
         thIndexDirList.start();
         waitForFinishedIndexDirListThread(thIndexRule);
         thIndexFileList.start();

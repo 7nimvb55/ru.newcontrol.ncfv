@@ -61,7 +61,8 @@ public class ThStorageWordLogicWrite {
                     AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD); 
             try( FileSystem fsForWriteData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
         
-        
+            System.out.println("   ---   ---   ---   ---   ---   ---   ---   ---   ---   " 
+                    + ThStorageWordLogicWrite.class.getCanonicalName() + " open storage " + fsForWriteData.getPath("/").toUri().toString());
             do { 
                 try {
 

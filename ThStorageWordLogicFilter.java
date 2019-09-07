@@ -319,23 +319,23 @@ public class ThStorageWordLogicFilter {
                     /**
                      * create data for transfer into LongWord, Word indexes
                      */
-                    //forAddData= new TdataWord(recordId, storagePath, word, prevWordCodeType, heximalWord, startPos, lengthWord);
+                    forAddData= new TdataWord(recordId, storagePath, word, prevWordCodeType, heximalWord, startPos, lengthWord);
                     /**
                      * put job to Bus by type ThWordState
                      */
                     
                     /**
                      * 
-                     *
+                     */
                     if( lengthWord > 25){
-                        ThStorageWordBusOutput busJobForLongWordWrite = inputedStorageWordState.getBusJobForLongWordWrite();
-                        ArrayBlockingQueue<TdataWord> busForTypeLongWord = busJobForLongWordWrite.getBusForTypeWord(prevWordCodeType);
-                        busForTypeLongWord.add(forAddData);
+                        //ThStorageWordBusOutput busJobForLongWordWrite = inputedStorageWordState.getBusJobForLongWordWrite();
+                        //LinkedTransferQueue<TdataWord> busForTypeLongWord = busJobForLongWordWrite.getBusForTypeWord(prevWordCodeType);
+                        //busForTypeLongWord.add(forAddData);
                     } else {
                         ThStorageWordBusOutput busJobForWordWrite = inputedStorageWordState.getBusJobForWordWrite();
-                        ArrayBlockingQueue<TdataWord> busForTypeWord = busJobForWordWrite.getBusForTypeWord(prevWordCodeType);
+                        LinkedTransferQueue<TdataWord> busForTypeWord = busJobForWordWrite.getBusForTypeWord(prevWordCodeType);
                         busForTypeWord.add(forAddData);
-                    }*/
+                    }
                     String[] oldVal = {word, heximalWord};
                     oldVal = null;
                     word = new String();

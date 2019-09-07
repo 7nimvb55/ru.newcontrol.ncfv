@@ -152,6 +152,7 @@ public class ThWordHelper {
         {
             oos.writeObject(dataForWrite);
             oos.flush();
+            
             return Boolean.TRUE;
         } catch(NotSerializableException exNotSer){
             System.err.println(exNotSer.getMessage());
@@ -174,7 +175,6 @@ public class ThWordHelper {
     protected static Boolean moveAfterWrite(Path srcFileName, Path destFileName){
         try {
             Files.move(srcFileName, destFileName, StandardCopyOption.ATOMIC_MOVE);
-            //after delete oldFile
             return Boolean.TRUE;
         } catch(SecurityException exSecurity) {
             System.err.println(exSecurity.getMessage());

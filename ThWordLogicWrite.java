@@ -50,6 +50,8 @@ public class ThWordLogicWrite {
             byPrefixGetMap = currentIndexStorages.byPrefixGetMap( 
                     AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
             try( FileSystem fsForWriteData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
+                System.out.println("   ---   ---   ---   ---   ---   ---   ---   ---   ---   " 
+                    + ThWordLogicWrite.class.getCanonicalName() + " open storage " + fsForWriteData.getPath("/").toUri().toString());
                 do {
                     pollNextUuid = outerRuleWord.getWordState().getBusEventShort().pollNextUuid(2, 3);
                     if( checkStateForUuidOnDoWrite(outerRuleWord, pollNextUuid) ){

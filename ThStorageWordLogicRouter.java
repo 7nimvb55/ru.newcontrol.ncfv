@@ -41,7 +41,7 @@ public class ThStorageWordLogicRouter {
         ThIndexStatistic indexStatistic = indexRule.getIndexStatistic();
         ThStorageWordState storageWordState = funcRuleStorageWord.getStorageWordState();
         ThStorageWordStatusMainFlow storageWordStatusMainFlow = funcRuleStorageWord.getStorageWordStatusMainFlow();
-        
+        Integer countRecToConsole = 0;
         System.out.println("++++++++++++++++++++++++++++++start " + ThStorageWordLogicRouter.class.getCanonicalName());
         ThStorageWordBusInput busJobForStorageWordRouter = storageWordState.getBusJobForStorageWordRouterJob();
         do{
@@ -51,7 +51,8 @@ public class ThStorageWordLogicRouter {
                  * (1) - typeWord - directory in zipfs storage to string
                  */
                 //System.out.println("For bus typeWord " + items.getKey());
-                //for(Map.Entry<String, String> itemsOfBus : items.getValue().entrySet()){
+                String busNumber = String.valueOf(items.getKey());
+                for(Map.Entry<String, String> itemsOfBus : items.getValue().entrySet()){
                     /**
                      * (2) - hexTagName
                      * (2a) - itemsOfBus.getKey() - .substring(0,3) - subDirectory into (1)
@@ -65,12 +66,21 @@ public class ThStorageWordLogicRouter {
                      *          released in ThStorageWordRouter, ThStorageWordStatistic
                      *                  ThStorageWordCache
                      */
-                    /*System.out.println("For bus hexWord " 
-                            + itemsOfBus.getKey() 
-                            + " subString " 
-                            + items.getValue().remove(itemsOfBus.getKey()));
-
-                }*/
+                    String removedStr = items.getValue().remove(itemsOfBus.getKey());
+                    if( countRecToConsole > 500 ){
+                        System.out.println("For bus " 
+                                + busNumber
+                                + " hexWord " 
+                                + itemsOfBus.getKey() 
+                                + " subString " 
+                                + removedStr);
+                    }
+                    countRecToConsole++;
+                    if( countRecToConsole > 503 ){
+                        countRecToConsole = 0;
+                    }
+                    ThWordHelper.utilizeStringValues(new String[]{removedStr, busNumber});
+                }
                 /**
                  * @todo IllegalArgumentException catch
                  */
@@ -89,18 +99,29 @@ public class ThStorageWordLogicRouter {
                 }
             }
         } while( outerRuleStorageWord.isRunnedStorageWordWorkFilter() );
-        
+        countRecToConsole = 0;
         ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> busForTypeStorageWordRouter = 
                 busJobForStorageWordRouter.getMaxUsedBusesSet();
         for(Map.Entry<Integer, ConcurrentHashMap<String, String>> items : busForTypeStorageWordRouter.entrySet()){
                 //System.out.println("From bus typeWord " + items.getKey());
-                /*for(Map.Entry<String, String> itemsOfBus : items.getValue().entrySet()){
-                    System.out.println("For bus hexWord " 
-                            + itemsOfBus.getKey() 
-                            + " subString " 
-                            + items.getValue().remove(itemsOfBus.getKey()));
+                String busNumber = String.valueOf(items.getKey());
+                for(Map.Entry<String, String> itemsOfBus : items.getValue().entrySet()){
+                    String removedStr = items.getValue().remove(itemsOfBus.getKey());
+                    if( countRecToConsole > 500 ){
+                        System.out.println("For bus " 
+                                + busNumber
+                                + " hexWord " 
+                                + itemsOfBus.getKey() 
+                                + " subString " 
+                                + removedStr);
+                    }
+                    countRecToConsole++;
+                    if( countRecToConsole > 503 ){
+                        countRecToConsole = 0;
+                    }
+                    ThWordHelper.utilizeStringValues(new String[]{removedStr, busNumber});
 
-                }*/
+                }
                 /**
                  * @todo IllegalArgumentException catch
                  */

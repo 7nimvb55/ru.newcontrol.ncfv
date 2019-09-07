@@ -104,8 +104,9 @@ public class ThWordLogicRouter {
                     hexTagName = pollDataItem.hexSubString;
                     subString = pollDataItem.strSubString;
                     itemKey = pollDataItem.randomUUID;
-                    System.out.println("          ====        ++++      ====      <<< Logic Word"
-                            + "----- <   <   <   ---   " + hexTagName);
+                    System.out.println(ThWordLogicRouter.class.getCanonicalName() 
+                            + "          ====        ++++      ====      <<< Logic Word"
+                            + "----- <   <   <   ---   tagname " + hexTagName + " string " + subString);
                     eventLogic.insertIntoCacheData(typeWordOfBusOutputFunc, hexTagName, subString, pollDataItem);
                 }
             } while( !busOutputByTypeWordFunc.isEmpty() );
