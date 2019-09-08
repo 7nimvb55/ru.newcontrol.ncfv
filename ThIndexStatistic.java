@@ -18,12 +18,12 @@ package ru.newcontrol.ncfv;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.ProviderNotFoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -108,6 +108,7 @@ public class ThIndexStatistic {
         AppFileStorageIndex currentIndexStorages = this.ruleThIndex.getIndexState().currentIndexStorages();
         currentIndexStorages.updateMapForStorages();
         ArrayList<String> listOfPrefixes = currentIndexStorages.listOfPrefixes();
+        Boolean isExistFs = Boolean.FALSE;
         for(String itemStorages : listOfPrefixes){
             URI byPrefixGetUri = currentIndexStorages.byPrefixGetUri(itemStorages);
             Map<String, String> byPrefixGetMap = currentIndexStorages.byPrefixGetMap(itemStorages);
@@ -123,21 +124,69 @@ public class ThIndexStatistic {
                 this.listFileNameSize.put(itemStorages, listForSize);
                 ArrayList<Path> filesByMaskFromDir = AppFileOperationsSimple.getFilesByMaskFromDir(rootForStorage, "*");
                 processPathToList(filesByMaskFromDir, itemStorages);
-            } catch(FileSystemNotFoundException ex){
-                System.err.println(ex.getMessage());
-                ex.printStackTrace();
-            } catch(ProviderNotFoundException ex){
-                System.err.println(ex.getMessage());
-                ex.printStackTrace();
-            } catch(IllegalArgumentException ex){
-                System.err.println(ex.getMessage());
-                ex.printStackTrace();
-            } catch(SecurityException ex){
-                System.err.println(ex.getMessage());
-                ex.printStackTrace();
-            } catch (IOException ex) {
-                System.err.println(ex.getMessage());
-                ex.printStackTrace();
+            } catch(FileSystemAlreadyExistsException exExist){
+                System.err.println(ThIndexStatistic.class.getCanonicalName() + " newFileSystem for URI "
+                        + byPrefixGetUri.toString() + " error " + exExist.getMessage());
+                exExist.printStackTrace();
+                isExistFs = Boolean.TRUE;
+            } catch(FileSystemNotFoundException exNotFound){
+                System.err.println(ThIndexStatistic.class.getCanonicalName() + " newFileSystem for URI "
+                        + byPrefixGetUri.toString() + " error " + exNotFound.getMessage());
+                exNotFound.printStackTrace();
+            } catch(ProviderNotFoundException exProvNotFound){
+                System.err.println(ThIndexStatistic.class.getCanonicalName() + " newFileSystem for URI "
+                        + byPrefixGetUri.toString() + " error " + exProvNotFound.getMessage());
+                exProvNotFound.printStackTrace();
+            } catch(IllegalArgumentException exIllArg){
+                System.err.println(ThIndexStatistic.class.getCanonicalName() + " newFileSystem for URI "
+                        + byPrefixGetUri.toString() + " error " + exIllArg.getMessage());
+                exIllArg.printStackTrace();
+            } catch(SecurityException exSecureEx){
+                System.err.println(ThIndexStatistic.class.getCanonicalName() + " newFileSystem for URI "
+                        + byPrefixGetUri.toString() + " error " + exSecureEx.getMessage());
+                exSecureEx.printStackTrace();
+            } catch (IOException exIoEx) {
+                System.err.println(ThIndexStatistic.class.getCanonicalName() + " newFileSystem for URI "
+                        + byPrefixGetUri.toString() + " error " + exIoEx.getMessage());
+                exIoEx.printStackTrace();
+            }
+            if( isExistFs ){
+                try( FileSystem fsForReadData = FileSystems.getFileSystem(byPrefixGetUri) ){
+                    Path rootForStorage = fsForReadData.getPath(AppFileNamesConstants.DIR_IDX_ROOT);
+                    this.storagesStatus.put(itemStorages, byPrefixGetUri);
+                    ConcurrentSkipListMap<String, Integer> listForVol = new ConcurrentSkipListMap<String, Integer>();
+                    this.listTagFileNameCountVol.put(itemStorages, listForVol);
+                    ConcurrentSkipListMap<String, Integer> listForProcess = new ConcurrentSkipListMap<String, Integer>();
+                    this.listFilesInProcess.put(itemStorages, listForProcess);
+                    ConcurrentSkipListMap<String, Integer> listForSize = new ConcurrentSkipListMap<String, Integer>();
+                    this.listFileNameSize.put(itemStorages, listForSize);
+                    ArrayList<Path> filesByMaskFromDir = AppFileOperationsSimple.getFilesByMaskFromDir(rootForStorage, "*");
+                    processPathToList(filesByMaskFromDir, itemStorages);
+                } catch(FileSystemAlreadyExistsException exExist){
+                    System.err.println(ThIndexStatistic.class.getCanonicalName() + " getFileSystem for URI "
+                        + byPrefixGetUri.toString() + " error " + exExist.getMessage());
+                    exExist.printStackTrace();
+                } catch(FileSystemNotFoundException exNotFound){
+                    System.err.println(ThIndexStatistic.class.getCanonicalName() + " getFileSystem for URI "
+                        + byPrefixGetUri.toString() + " error " + exNotFound.getMessage());
+                    exNotFound.printStackTrace();
+                } catch(ProviderNotFoundException exProvNotFound){
+                    System.err.println(ThIndexStatistic.class.getCanonicalName() + " getFileSystem for URI "
+                        + byPrefixGetUri.toString() + " error " + exProvNotFound.getMessage());
+                    exProvNotFound.printStackTrace();
+                } catch(IllegalArgumentException exIllArg){
+                    System.err.println(ThIndexStatistic.class.getCanonicalName() + " getFileSystem for URI "
+                        + byPrefixGetUri.toString() + " error " + exIllArg.getMessage());
+                    exIllArg.printStackTrace();
+                } catch(SecurityException exSecureEx){
+                    System.err.println(ThIndexStatistic.class.getCanonicalName() + " getFileSystem for URI "
+                        + byPrefixGetUri.toString() + " error " + exSecureEx.getMessage());
+                    exSecureEx.printStackTrace();
+                } catch (IOException exIoEx) {
+                    System.err.println(ThIndexStatistic.class.getCanonicalName() + " getFileSystem for URI "
+                        + byPrefixGetUri.toString() + " error " + exIoEx.getMessage());
+                    exIoEx.printStackTrace();
+                }
             }
         }
     }

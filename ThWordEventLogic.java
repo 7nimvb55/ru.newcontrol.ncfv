@@ -418,6 +418,14 @@ public class ThWordEventLogic {
             
         }
     }
+    /**
+     * 
+     * @param typeWordOfBusOutput
+     * @param hexTagNameFromBusOutput
+     * @param subStringFromBusOutput
+     * @return flase when poll data from cache readed and insert it into cache
+     * true if cache readed empty
+     */
     protected Boolean insertFromReadedToCache(Integer typeWordOfBusOutput, 
             String hexTagNameFromBusOutput, 
             String subStringFromBusOutput){
@@ -426,7 +434,7 @@ public class ThWordEventLogic {
         try {
                 this.wordCacheReaded.pollTypeWordTagFileNameData(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput);
         } catch(NullPointerException exNull) {
-            System.err.println(ThWordEventLogic.class.getCanonicalName() + " from RededCache poll failure: " + exNull.getMessage());
+            System.err.println(ThWordEventLogic.class.getCanonicalName() + " from ReadedCache poll failure: " + exNull.getMessage());
         }
         if( pollTypeWordTagFileNameData != null ){
             if( !pollTypeWordTagFileNameData.isEmpty() ){
