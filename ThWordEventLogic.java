@@ -170,6 +170,11 @@ public class ThWordEventLogic {
             
             try {
                 setDataIntoCacheFlow = this.wordCache.setDataIntoCacheFlow(pollFromBusOutputDataPacket);
+                if( setDataIntoCacheFlow ){
+                    this.eventIndex.putMainFlowUuidTypeWord(createInitMainFlow, typeWordOfBusOutput);
+                    this.eventIndex.putMainFlowUuidHexTagName(createInitMainFlow, hexTagNameFromBusOutput);
+                    this.eventIndex.putMainFlowUuidSubString(createInitMainFlow, subStringFromBusOutput);
+                }
                 //start after insert into cache
                 //@todo 2 set in init
                 this.wordStatusMainFlow.incrementRecordsCountCache(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput, createInitMainFlow);
@@ -207,9 +212,7 @@ public class ThWordEventLogic {
                 exMessage = exArg.getMessage();
             }
             if( setDataIntoCacheFlow ){
-                this.eventIndex.putMainFlowUuidTypeWord(createInitMainFlow, typeWordOfBusOutput);
-                this.eventIndex.putMainFlowUuidHexTagName(createInitMainFlow, hexTagNameFromBusOutput);
-                this.eventIndex.putMainFlowUuidSubString(createInitMainFlow, subStringFromBusOutput);
+                
                 this.eventIndex.changeFlowStatusProcDeletingEvent(typeWordOfBusOutput, hexTagNameFromBusOutput, createInitMainFlow);
                 eventReadyBusByNumber = this.wordState.getEventReadyBusByNumber(3);
                 eventReadyBusByNumber.addToListOfFlowEventUuids(typeWordOfBusOutput, hexTagNameFromBusOutput, subStringFromBusOutput, createInitMainFlow);

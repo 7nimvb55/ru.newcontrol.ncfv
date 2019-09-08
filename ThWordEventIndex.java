@@ -82,6 +82,9 @@ public class ThWordEventIndex {
         this.objectLabel = UUID.randomUUID();
         this.wordStatusMainFlow = ruleInputed.getWordStatusMainFlow();
         this.wordState = ruleInputed.getWordState();
+        this.idxMainFlowHexTagName = new ConcurrentSkipListMap<UUID, String>();
+        this.idxMainFlowSubString = new ConcurrentSkipListMap<UUID, String>();
+        this.idxMainFlowTypeWord = new ConcurrentSkipListMap<UUID, Integer>();
     }
     /**
      * 

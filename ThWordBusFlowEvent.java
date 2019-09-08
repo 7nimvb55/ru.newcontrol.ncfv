@@ -214,6 +214,8 @@ public class ThWordBusFlowEvent {
         Integer strSubStringlength;
         Integer tagNamelength;
         UUID poll;
+        
+        Integer countUuidRecords;
         try{
             typeWordFunc = (Integer) typeWord;
             strSubStringFunc = (String) strSubString;
@@ -249,9 +251,19 @@ public class ThWordBusFlowEvent {
                         + " strSubString: " + strSubStringFunc);
             }
             
-            getCurrentList = dataTypeWordTagNameSubStr.get(tagNameFunc);
-            
-            return getCurrentList.size();
+            countUuidRecords = 0;
+            getCurrentList = null;
+            try {
+                getCurrentList = dataTypeWordTagNameSubStr.get(tagNameFunc);
+            } catch(ClassCastException exClassCast) {
+                System.err.println(exClassCast.getMessage());
+            } catch(NullPointerException exNull) {
+                System.err.println(exNull.getMessage());
+            }
+            if(  getCurrentList != null){
+                countUuidRecords = getCurrentList.size();
+            }
+            return new Integer(countUuidRecords.intValue());
         }
         finally {
             getCurrentList = null;
@@ -261,6 +273,8 @@ public class ThWordBusFlowEvent {
             dataTypeWordTagNameSubStr = null;
             removedForReturn = null;
             poll = null;
+            countUuidRecords = null;
+            getCurrentList = null;
         }
     }
     /**
@@ -567,11 +581,17 @@ public class ThWordBusFlowEvent {
         UUID mainFlowUuidFunc;
         String tagNameFunc;
         Boolean existInEventQueue;
+        LinkedTransferQueue<UUID> flowUuidsByTypeWordHexTagName;
         try {
             typeWordFunc = (Integer) typeWordInputed;
             mainFlowUuidFunc = (UUID) mainFlowUuid;
             tagNameFunc = (String) tagNameInputed;
-            LinkedTransferQueue<UUID> flowUuidsByTypeWordHexTagName = getFlowUuidsByTypeWordHexTagName(typeWordFunc, mainFlowUuidFunc, tagNameFunc);
+            try {
+                flowUuidsByTypeWordHexTagName = getFlowUuidsByTypeWordHexTagName(typeWordFunc, mainFlowUuidFunc, tagNameFunc);
+            } catch(IllegalArgumentException exIll) {
+                System.err.println(exIll.getMessage());
+                return Boolean.FALSE;
+            }
             existInEventQueue = isExistInEventQueue(flowUuidsByTypeWordHexTagName, mainFlowUuidFunc);
             if( existInEventQueue ){
                 return Boolean.TRUE;

@@ -397,30 +397,32 @@ public class ThStorageWordLogicWrite {
                                             if( getIsMoveReady ){
                                                 continue;
                                             }
-                                            Boolean getIsNeedDelete = statusWorkersForKeyPointFlow.get(-1172779240);
-                                            if( getIsNeedDelete ){
-                                                String getOldForDeleteFileName = statusNameForKeyPointFlow.get(2045325664);
-                                                Path deleteFile = fsForWriteData.getPath(getOldForDeleteFileName);
 
-                                                try{
-                                                    Files.deleteIfExists(deleteFile);
-                                                } catch (DirectoryNotEmptyException exNotEmptyDir) {
-                                                    exNotEmptyDir.printStackTrace();
-                                                } catch (SecurityException exSecurity) {
-                                                    exSecurity.printStackTrace();
-                                                } catch (IOException exInOut) {
-                                                    exInOut.printStackTrace();
-                                                }
-                                            }
                                             Path moveToFile = fsForWriteData.getPath(storageDirectoryName, newFileName);
+                                            //efd - Existing For Delete after move new
+                                            String fileForTmpMove = newFileName + "-efd";
+                                            Path moveEfdFile = fsForWriteData.getPath(storageDirectoryName, "-efd");
+                                            Boolean isFileForMoveExist = Boolean.FALSE;
+                                            try {
+                                                isFileForMoveExist = Files.exists(moveToFile, LinkOption.NOFOLLOW_LINKS);
+                                            } catch(SecurityException exSecure) {
+                                                System.err.println(ThStorageWordLogicWrite.class.getCanonicalName()
+                                                    + " security error " + exSecure.getMessage());
+                                            }
+                                            if( isFileForMoveExist ){
+                                                moveEfdFile = fsForWriteData.getPath(storageDirectoryName, fileForTmpMove);
+                                            }
                                             try{
+                                                if( isFileForMoveExist ){
+                                                    Files.move(moveToFile, moveEfdFile, StandardCopyOption.ATOMIC_MOVE);
+                                                }
                                                 Files.move(nowWritedFile, moveToFile, StandardCopyOption.ATOMIC_MOVE);
                                                 statusWorkersForKeyPointFlow.put(-1884096596, Boolean.TRUE);
                                                 statusWorkersForKeyPointFlow.put(-83825824, Boolean.TRUE);
+                                                statusNameForKeyPointFlow.put(521024487, newFileName);
                                                 statusNameForKeyPointFlow.put(1517772480, newFileName);
-                                                //after delete oldFile
-                                                ConcurrentHashMap<String, String> remove = busVal.getValue().remove(mainFlowLabel);
-                                                remove = null;
+
+
                                             } catch(SecurityException exSecurity) {
                                                 System.err.println(exSecurity.getMessage());
                                                 exSecurity.printStackTrace();
@@ -433,6 +435,17 @@ public class ThStorageWordLogicWrite {
                                             } catch(UnsupportedOperationException exUnsupported) {
                                                 System.err.println(exUnsupported.getMessage());
                                                 exUnsupported.printStackTrace();
+                                            }
+                                            if( isFileForMoveExist ){
+                                                try{
+                                                    Files.deleteIfExists(moveEfdFile);
+                                                } catch (DirectoryNotEmptyException exNotEmptyDir) {
+                                                    exNotEmptyDir.printStackTrace();
+                                                } catch (SecurityException exSecurity) {
+                                                    exSecurity.printStackTrace();
+                                                } catch (IOException exInOut) {
+                                                    exInOut.printStackTrace();
+                                                }
                                             }
                                         } else {
                                             do{
@@ -481,23 +494,25 @@ public class ThStorageWordLogicWrite {
                                                             if( getIsMoveReady ){
                                                                 continue;
                                                             }
-                                                            Boolean getIsNeedDelete = statusWorkersForKeyPointFlow.get(-1172779240);
-                                                            if( getIsNeedDelete ){
-                                                                String getOldForDeleteFileName = statusNameForKeyPointFlow.get(2045325664);
-                                                                Path deleteFile = fsForWriteData.getPath(getOldForDeleteFileName);
 
-                                                                try{
-                                                                    Files.deleteIfExists(deleteFile);
-                                                                } catch (DirectoryNotEmptyException exNotEmptyDir) {
-                                                                    exNotEmptyDir.printStackTrace();
-                                                                } catch (SecurityException exSecurity) {
-                                                                    exSecurity.printStackTrace();
-                                                                } catch (IOException exInOut) {
-                                                                    exInOut.printStackTrace();
-                                                                }
-                                                            }
                                                             Path moveToFile = fsForWriteData.getPath(storageDirectoryName, newFileName);
+                                                            //efd - Existing For Delete after move new
+                                                            String fileForTmpMove = newFileName + "-efd";
+                                                            Path moveEfdFile = fsForWriteData.getPath(storageDirectoryName, "-efd");
+                                                            Boolean isFileForMoveExist = Boolean.FALSE;
+                                                            try {
+                                                                isFileForMoveExist = Files.exists(moveToFile, LinkOption.NOFOLLOW_LINKS);
+                                                            } catch(SecurityException exSecure) {
+                                                                System.err.println(ThStorageWordLogicWrite.class.getCanonicalName()
+                                                                    + " security error " + exSecure.getMessage());
+                                                            }
+                                                            if( isFileForMoveExist ){
+                                                                moveEfdFile = fsForWriteData.getPath(storageDirectoryName, fileForTmpMove);
+                                                            }
                                                             try{
+                                                                if( isFileForMoveExist ){
+                                                                    Files.move(moveToFile, moveEfdFile, StandardCopyOption.ATOMIC_MOVE);
+                                                                }
                                                                 Files.move(nowWritedFile, moveToFile, StandardCopyOption.ATOMIC_MOVE);
                                                                 statusWorkersForKeyPointFlow.put(-1884096596, Boolean.TRUE);
                                                                 statusWorkersForKeyPointFlow.put(-83825824, Boolean.TRUE);
@@ -517,6 +532,17 @@ public class ThStorageWordLogicWrite {
                                                             } catch(UnsupportedOperationException exUnsupported) {
                                                                 System.err.println(exUnsupported.getMessage());
                                                                 exUnsupported.printStackTrace();
+                                                            }
+                                                            if( isFileForMoveExist ){
+                                                                try{
+                                                                    Files.deleteIfExists(moveEfdFile);
+                                                                } catch (DirectoryNotEmptyException exNotEmptyDir) {
+                                                                    exNotEmptyDir.printStackTrace();
+                                                                } catch (SecurityException exSecurity) {
+                                                                    exSecurity.printStackTrace();
+                                                                } catch (IOException exInOut) {
+                                                                    exInOut.printStackTrace();
+                                                                }
                                                             }
                                                             volNum++;
                                                             statusDataFsForKeyPointFlow.put(-1832815869, volNum);
