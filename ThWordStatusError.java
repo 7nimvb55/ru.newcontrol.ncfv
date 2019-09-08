@@ -138,7 +138,9 @@ public class ThWordStatusError {
                 );
             }
             getListValues = this.poolStatusError.get(keyPointFlowErrorFunc);
-            return new Integer(getListValues.get(returnedParamValue));
+            Integer paramCodeByNumber = getParamCodeByNumber(returnedParamValue);
+            Integer getParamForReturn = getListValues.get(paramCodeByNumber);
+            return new Integer(getParamForReturn.intValue());
         } finally {
             keyPointFlowErrorFunc = null;
             getListValues = null;

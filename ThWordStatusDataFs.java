@@ -142,7 +142,9 @@ public class ThWordStatusDataFs {
                 );
             }
             getListValues = this.poolStatusDataFs.get(keyPointFlowDataFsFunc);
-            return new Integer(getListValues.get(returnedParamValue));
+            Integer paramCodeByNumber = getParamCodeByNumber(returnedParamValue);
+            Integer getParamForReturn = getListValues.get(paramCodeByNumber);
+            return new Integer(getParamForReturn.intValue());
         } finally {
             keyPointFlowDataFsFunc = null;
             getListValues = null;

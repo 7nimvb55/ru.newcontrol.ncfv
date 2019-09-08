@@ -397,7 +397,21 @@ public class ThStorageWordLogicWrite {
                                             if( getIsMoveReady ){
                                                 continue;
                                             }
+                                            Boolean getIsNeedDelete = statusWorkersForKeyPointFlow.get(-1172779240);
+                                            if( getIsNeedDelete ){
+                                                String getOldForDeleteFileName = statusNameForKeyPointFlow.get(2045325664);
+                                                Path deleteFile = fsForWriteData.getPath(getOldForDeleteFileName);
 
+                                                try{
+                                                    Files.deleteIfExists(deleteFile);
+                                                } catch (DirectoryNotEmptyException exNotEmptyDir) {
+                                                    exNotEmptyDir.printStackTrace();
+                                                } catch (SecurityException exSecurity) {
+                                                    exSecurity.printStackTrace();
+                                                } catch (IOException exInOut) {
+                                                    exInOut.printStackTrace();
+                                                }
+                                            }
                                             Path moveToFile = fsForWriteData.getPath(storageDirectoryName, newFileName);
                                             try{
                                                 Files.move(nowWritedFile, moveToFile, StandardCopyOption.ATOMIC_MOVE);
@@ -467,7 +481,21 @@ public class ThStorageWordLogicWrite {
                                                             if( getIsMoveReady ){
                                                                 continue;
                                                             }
+                                                            Boolean getIsNeedDelete = statusWorkersForKeyPointFlow.get(-1172779240);
+                                                            if( getIsNeedDelete ){
+                                                                String getOldForDeleteFileName = statusNameForKeyPointFlow.get(2045325664);
+                                                                Path deleteFile = fsForWriteData.getPath(getOldForDeleteFileName);
 
+                                                                try{
+                                                                    Files.deleteIfExists(deleteFile);
+                                                                } catch (DirectoryNotEmptyException exNotEmptyDir) {
+                                                                    exNotEmptyDir.printStackTrace();
+                                                                } catch (SecurityException exSecurity) {
+                                                                    exSecurity.printStackTrace();
+                                                                } catch (IOException exInOut) {
+                                                                    exInOut.printStackTrace();
+                                                                }
+                                                            }
                                                             Path moveToFile = fsForWriteData.getPath(storageDirectoryName, newFileName);
                                                             try{
                                                                 Files.move(nowWritedFile, moveToFile, StandardCopyOption.ATOMIC_MOVE);

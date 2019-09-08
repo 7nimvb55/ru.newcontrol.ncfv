@@ -166,7 +166,9 @@ public class ThWordStatusDataCache {
                 );
             }
             getListValues = this.poolStatusDataCache.get(keyPointFlowDataCacheFunc);
-            return new Integer(getListValues.get(returnedParamValue));
+            Integer paramCodeByNumber = getParamCodeByNumber(returnedParamValue);
+            Integer getParamForReturn = getListValues.get(paramCodeByNumber);
+            return new Integer(getParamForReturn.intValue());
         } finally {
             keyPointFlowDataCacheFunc = null;
             getListValues = null;

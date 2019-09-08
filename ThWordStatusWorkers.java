@@ -173,7 +173,9 @@ public class ThWordStatusWorkers {
                 );
             }
             getListValues = this.poolStatusWorkers.get(keyPointFlowWorkersFunc);
-            return new Boolean(getListValues.get(returnedParamValue));
+            Integer paramCodeByNumber = getParamCodeByNumber(returnedParamValue);
+            Boolean getParamForReturn = getListValues.get(paramCodeByNumber);
+            return new Boolean(getParamForReturn.booleanValue());
         } finally {
             keyPointFlowWorkersFunc = null;
             getListValues = null;

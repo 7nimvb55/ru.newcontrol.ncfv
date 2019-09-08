@@ -159,9 +159,9 @@ public class ThWordEventLogic {
             }
             else {
                 createInitMainFlow = getExistingUuidWithReadedValues(typeWordOfBusOutput, hexTagNameFromBusOutput, subStringFromBusOutput);
-                if( createInitMainFlow == null ){
-                    createInitMainFlow = this.wordStatusMainFlow.createInitMainFlow(pollFromBusOutputDataPacket, this.eventIndexFlow);
-                }
+            }
+            if( createInitMainFlow == null ){
+                createInitMainFlow = this.wordStatusMainFlow.createInitMainFlow(pollFromBusOutputDataPacket, this.eventIndexFlow);
             }
             eventDoBusByNumber = this.wordState.getEventDoBusByNumber(3);
             eventDoBusByNumber.addToListOfFlowEventUuids(typeWordOfBusOutput, hexTagNameFromBusOutput, subStringFromBusOutput, createInitMainFlow);
@@ -179,6 +179,7 @@ public class ThWordEventLogic {
                 buildTypeWordStoreSubDirictories = ThWordHelper.buildTypeWordStoreSubDirictories(typeWordOfBusOutput, hexTagNameFromBusOutput, subStringFromBusOutput.length());
                 this.wordStatusMainFlow.changeInName(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput, createInitMainFlow, 0, buildTypeWordStoreSubDirictories);
                 this.wordStatusMainFlow.changeInName(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput, createInitMainFlow, 4, hexTagNameFromBusOutput);
+                System.out.println(ThWordEventLogic.class.getCanonicalName() + " init UUID " + createInitMainFlow.toString());
                 valueForMainUuidByNumberDataCache = this.wordStatusMainFlow.getValueForMainUuidByNumberDataCache(pollFromBusOutputDataPacket, createInitMainFlow, 2);
                 valueLimitForMainUuidByNumberDataCache = this.wordStatusMainFlow.getValueForMainUuidByNumberDataCache(pollFromBusOutputDataPacket, createInitMainFlow, 3);
                 //set inital flags to cache

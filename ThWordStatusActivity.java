@@ -138,7 +138,9 @@ public class ThWordStatusActivity {
                 );
             }
             getListValues = this.poolStatusActivity.get(keyPointFlowActivityFunc);
-            return new Long(getListValues.get(returnedParamValue));
+            Integer paramCodeByNumber = getParamCodeByNumber(returnedParamValue);
+            Long getParamForReturn = getListValues.get(paramCodeByNumber);
+            return new Long(getParamForReturn.longValue());
         } finally {
             keyPointFlowActivityFunc = null;
             getListValues = null;

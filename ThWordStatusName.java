@@ -151,7 +151,9 @@ public class ThWordStatusName {
                 );
             }
             getListValues = this.poolStatusName.get(keyPointFlowNameFunc);
-            return new String(getListValues.get(returnedParamValue));
+            Integer paramCodeByNumber = getParamCodeByNumber(returnedParamValue);
+            String getParamForReturn = getListValues.get(paramCodeByNumber);
+            return new String(getParamForReturn);
         } finally {
             keyPointFlowNameFunc = null;
             getListValues = null;

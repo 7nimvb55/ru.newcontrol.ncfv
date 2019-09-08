@@ -694,8 +694,8 @@ public class ThWordBusFlowEvent {
             this.mainWordFlow.validateInFlowAllPoints(typeWordFunc, strSubStringFunc, tagNameFunc, uuidFlowContentFunc);
             typeWordTagFileNameFlowUuids = getTypeWordTagFileNameReadedFlowUuids(
                     typeWordFunc,
-                    tagNameFunc,
-                    strSubStringFunc);
+                    strSubStringFunc, 
+                    tagNameFunc);
             mainFlowContentFunc = typeWordTagFileNameFlowUuids.get(tagNameFunc);
             if( mainFlowContentFunc == null ){
                 mainFlowContentFunc = new LinkedTransferQueue<UUID>();
