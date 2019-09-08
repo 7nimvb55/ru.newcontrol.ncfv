@@ -182,7 +182,6 @@ public class ThWordStatusDataFs {
             for(idx = 0; idx < countParamsDataFsForSet; idx++ ){
                 paramCodeByNumber = getParamCodeByNumber(idx);
                 returnedHashMap.put(paramCodeByNumber, 0);
-                idx++;
             }
             
             return returnedHashMap;
@@ -370,7 +369,6 @@ public class ThWordStatusDataFs {
                             + " for name: " + paramNameByNumber
                             + " in inputed data for set into flow statusDataFs not exist");
                     }
-                    idxParam++;
                 }
             }
             

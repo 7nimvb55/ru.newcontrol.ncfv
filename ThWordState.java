@@ -191,12 +191,12 @@ public class ThWordState {
         try {
             ruleFunc = (ThWordRule) ruleInputed;
             wordStatusMainFlow = ruleFunc.getWordStatusMainFlow();
-            this.eventsBusReadyList = new ConcurrentSkipListMap<Integer, ThWordBusFlowEvent>();
+            this.eventsBusDoList = new ConcurrentSkipListMap<Integer, ThWordBusFlowEvent>();
             eventDoCount = getEventDoCount();
             for( idxDo = 0; idxDo < eventDoCount ; idxDo++ ){
                 currentEventDoCode = getEventDoCodeByNumber(idxDo);
                 newEventDoBus = new ThWordBusFlowEvent(wordStatusMainFlow);
-                this.eventsBusReadyList.put(currentEventDoCode, newEventDoBus);
+                this.eventsBusDoList.put(currentEventDoCode, newEventDoBus);
             }
         } finally {
             eventDoCount = null;
@@ -354,7 +354,17 @@ public class ThWordState {
         try {
             numEventDoNameFunc = (Integer) numEventNameInputed;
             eventDoCodeByNumber = getEventDoCodeByNumber(numEventDoNameFunc);
-            returnedEventDoBus = (ThWordBusFlowEvent) this.eventsBusDoList.get(eventDoCodeByNumber);
+            returnedEventDoBus = null;
+            try {
+                returnedEventDoBus = (ThWordBusFlowEvent) this.eventsBusDoList.get(eventDoCodeByNumber);
+            } catch(ClassCastException exClassCast) {
+                System.err.println(exClassCast.getMessage());
+                exClassCast.getStackTrace();
+            } catch(NullPointerException exNullPoint) {
+                System.err.println(exNullPoint.getMessage());
+                exNullPoint.getStackTrace();
+            }
+            //ClassCastException - if the specified key cannot be compared with the keys currently in the map NullPointerException
             if( returnedEventDoBus == null  ){
                 returnedEventDoBus = new ThWordBusFlowEvent(this.mainFlow);
                 this.eventsBusDoList.put(eventDoCodeByNumber, returnedEventDoBus);
@@ -692,6 +702,7 @@ public class ThWordState {
         String[] eventNamesArray;
         Integer codeForEventDoName;
         Integer numEventDoNameFunc;
+        String strEventName;
         try {
             numEventDoNameFunc = (Integer) numEventDoNameInputed;
             if( numEventDoNameFunc < 0 ){
@@ -707,7 +718,8 @@ public class ThWordState {
                                 + eventNamesArray.length 
                                 + ", need for return " + numEventDoNameFunc);
             } 
-            codeForEventDoName = eventNamesArray[numEventDoNameFunc]
+            strEventName = eventNamesArray[numEventDoNameFunc];
+            codeForEventDoName = strEventName
                     .concat(String.valueOf(this.timeCreation))
                     .concat(this.objectLabel.toString()).hashCode();
             return new Integer(codeForEventDoName);

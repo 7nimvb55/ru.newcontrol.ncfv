@@ -216,7 +216,6 @@ public class ThWordStatusWorkers {
             for(idx = 0; idx < countParamsWorkersForSet; idx++ ){
                 paramCodeByNumber = getParamCodeByNumber(idx);
                 returnedHashMap.put(paramCodeByNumber, Boolean.FALSE);
-                idx++;
             }
 
             return returnedHashMap;
@@ -434,7 +433,6 @@ public class ThWordStatusWorkers {
                             + " for name: " + paramNameByNumber
                             + " in inputed data for set into flow statusWorkers not exist");
                     }
-                    idxParam++;
                 }
             }
             

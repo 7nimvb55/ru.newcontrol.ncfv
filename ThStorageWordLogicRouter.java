@@ -108,7 +108,8 @@ public class ThStorageWordLogicRouter {
                 for(Map.Entry<String, String> itemsOfBus : items.getValue().entrySet()){
                     String removedStr = items.getValue().remove(itemsOfBus.getKey());
                     if( countRecToConsole > 500 ){
-                        System.out.println("For bus " 
+                        System.out.println(
+                                ThStorageWordLogicRouter.class.getCanonicalName() + " For bus " 
                                 + busNumber
                                 + " hexWord " 
                                 + itemsOfBus.getKey() 

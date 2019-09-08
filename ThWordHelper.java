@@ -273,9 +273,13 @@ public class ThWordHelper {
                 .concat(String.valueOf(forValidateFunction.positionSubString))
                 .concat(String.valueOf(forValidateFunction.lengthSubString))
                 .concat(String.valueOf(forValidateFunction.recordTime))).hashCode();
-            if( recordHash == calculatedHash ){
+            if( recordHash.equals(calculatedHash) ){
                 return Boolean.TRUE;
             }
+            System.err.println(ThWordHelper.class.getCanonicalName() + " Not valide data, in transfered record hash value is "
+                    + String.valueOf(recordHash)
+                    + ", calculated value is "
+                    + String.valueOf(calculatedHash));
             return Boolean.FALSE;
         }
         finally {

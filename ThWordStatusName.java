@@ -193,7 +193,6 @@ public class ThWordStatusName {
             for(idx = 0; idx < countParamsNameForSet; idx++ ){
                 paramCodeByNumber = getParamCodeByNumber(idx);
                 returnedHashMap.put(paramCodeByNumber, "undefined");
-                idx++;
             }
 
             return returnedHashMap;
@@ -393,7 +392,6 @@ public class ThWordStatusName {
                             + " for name: " + paramNameByNumber
                             + " in inputed data for set into flow statusName not exist");
                     }
-                    idxParam++;
                 }
             }
             

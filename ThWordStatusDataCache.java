@@ -208,7 +208,6 @@ public class ThWordStatusDataCache {
             for(idx = 0; idx < countParamsDataCacheForSet; idx++ ){
                 paramCodeByNumber = getParamCodeByNumber(idx);
                 returnedHashMap.put(paramCodeByNumber, 0);
-                idx++;
             }
             paramCodeByNumber = getParamCodeByNumber(2);
             returnedHashMap.put(paramCodeByNumber, AppConstants.STORAGE_WORD_RECORDS_COUNT_LIMIT);
@@ -531,7 +530,6 @@ public class ThWordStatusDataCache {
                             + " for name: " + paramNameByNumber
                             + " in inputed data for set into flow statusDataCache not exist");
                     }
-                    idxParam++;
                 }
             }
             

@@ -45,7 +45,25 @@ public class ThWordLogicRouter {
             busOutputForWordRouter = storageWordState.getBusJobForWordWrite();
             do{
                 outerBusIterator(wordRuleFunc, busOutputForWordRouter);
+                System.out.println(ThWordLogicRouter.class.getCanonicalName() 
+                            + "          ====        ++++      ====      <<< Logic Word"
+                            + "----- <   <   <   ---   life ");
             } while( storageWordRuleFunc.isRunnedStorageWordWorkFilter() );
+            System.out.println(ThWordLogicRouter.class.getCanonicalName() 
+                            + "          ====        ++++      ====      <<< Logic Word"
+                            + "----- <   <   <   ---   EOL ");
+            System.out.println(ThWordLogicRouter.class.getCanonicalName() 
+                            + "          ====        ++++      ====      <<< Logic Word"
+                            + "----- <   <   <   ---   EOL ");
+            System.out.println(ThWordLogicRouter.class.getCanonicalName() 
+                            + "          ====        ++++      ====      <<< Logic Word"
+                            + "----- <   <   <   ---   EOL ");
+            System.out.println(ThWordLogicRouter.class.getCanonicalName() 
+                            + "          ====        ++++      ====      <<< Logic Word"
+                            + "----- <   <   <   ---   EOL ");
+            System.out.println(ThWordLogicRouter.class.getCanonicalName() 
+                            + "          ====        ++++      ====      <<< Logic Word"
+                            + "----- <   <   <   ---   EOL ");
         } finally {
             wordRuleFunc = null;
             indexRuleFunc = null;

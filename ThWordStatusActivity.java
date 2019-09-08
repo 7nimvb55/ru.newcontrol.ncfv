@@ -181,7 +181,6 @@ public class ThWordStatusActivity {
             for(idx = 0; idx < countParamsActivityForSet; idx++ ){
                 paramCodeByNumber = getParamCodeByNumber(idx);
                 returnedHashMap.put(paramCodeByNumber, 0L);
-                idx++;
             }
 
             return returnedHashMap;
@@ -369,7 +368,6 @@ public class ThWordStatusActivity {
                             + " for name: " + paramNameByNumber
                             + " in inputed data for set into flow statusActivity not exist");
                     }
-                    idxParam++;
                 }
             }
             

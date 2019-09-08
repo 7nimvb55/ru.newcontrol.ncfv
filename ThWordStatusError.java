@@ -15,7 +15,6 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -180,7 +179,6 @@ public class ThWordStatusError {
             for(idx = 0; idx < countParamsErrorForSet; idx++ ){
                 paramCodeByNumber = getParamCodeByNumber(idx);
                 returnedHashMap.put(paramCodeByNumber, 0);
-                idx++;
             }
 
             return returnedHashMap;
@@ -376,7 +374,6 @@ public class ThWordStatusError {
                             + " for name: " + paramNameByNumber
                             + " in inputed data for set into flow statusError not exist");
                     }
-                    idxParam++;
                 }
             }
             

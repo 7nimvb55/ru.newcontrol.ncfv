@@ -99,7 +99,7 @@ public class TdataWord implements Serializable {
                 .concat(String.valueOf(this.hexSubStringHash))
                 .concat(String.valueOf(this.positionSubString))
                 .concat(String.valueOf(this.lengthSubString))
-                .concat(String.valueOf(nowSysTime))).hashCode();
+                .concat(String.valueOf(this.recordTime))).hashCode();
     }
     /**
      * 

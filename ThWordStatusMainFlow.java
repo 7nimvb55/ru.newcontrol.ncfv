@@ -2943,10 +2943,15 @@ public class ThWordStatusMainFlow {
             dataFunc = (TdataWord) dataInputed;
             
             tdataWordValid = ThWordHelper.isTdataWordValid(dataFunc);
-            if( !tdataWordValid ){
-                throw new IllegalArgumentException(ThWordBusReadedFlow.class.getCanonicalName() 
-                        + " not valid data for get from cache object class " + TdataWord.class.getCanonicalName() 
-                        + " object data " + dataFunc.toString());
+            try {
+                if( !tdataWordValid ){
+                    throw new IllegalArgumentException(ThWordBusReadedFlow.class.getCanonicalName() 
+                            + " not valid data for get from cache object class " + TdataWord.class.getCanonicalName() 
+                            + " object data " + dataFunc.toString());
+                }
+            } catch(IllegalArgumentException exxIll) {
+                System.err.println(exxIll.getMessage());
+                exxIll.printStackTrace();
             }
             tagNameFunc = dataFunc.hexSubString;
             strSubStringFunc = dataFunc.strSubString;
