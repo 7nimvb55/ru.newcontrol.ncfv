@@ -15,9 +15,6 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -27,14 +24,35 @@ import java.nio.file.Paths;
  */
 public class AdilStorage {
     /**
-     * 
+     * <code>/...applicationpath/adilog/currentDateTimeStamp/</code>
+     * @return directory for iteration log or null if it is not created or checked
+     */
+    protected static Path getStorageLogIterationDir(){
+        String nowTimeStringMillisFsNames = new String();
+        Path iterationLogSubDir;
+        try {
+            nowTimeStringMillisFsNames = AdihGetvalues.getNowTimeStringMillisFsNames();
+            iterationLogSubDir = getIterationLogSubDir(nowTimeStringMillisFsNames);
+            if( iterationLogSubDir == null ){
+                return null;
+            }
+            return iterationLogSubDir;
+        } finally {
+            iterationLogSubDir = null;
+            AdihUtilization.utilizeStringValues(new String[]{nowTimeStringMillisFsNames});
+        }
+    }
+    /**
+     * <code>/...applicationpath/adilog/currentDateTimeStamp/</code>
      * @param currentDateTimeStamp
-     * @return 
+     * @return directory for iteration log or null if it is not created or checked
      */
     protected static Path getIterationLogSubDir(String currentDateTimeStamp){
         String iterationTimeStamp = new String();
         String logAppSubDir = new String();
         Path toReturn;
+        Boolean isCreated;
+        Boolean isReadWriteNotLink;
         try{
             iterationTimeStamp = (String) currentDateTimeStamp;
             if( iterationTimeStamp.isEmpty() ){
@@ -45,42 +63,57 @@ public class AdilStorage {
                 return null;
             }
             toReturn = Paths.get(logAppSubDir, iterationTimeStamp);
-            if( AdihFileOperations.createDirIfNotExist(toReturn) ){
-               if( AdihFileOperations.pathIsReadWriteNotLink(toReturn) ){
-                   return toReturn;
-               }
+            isCreated = AdihFileOperations.createDirIfNotExist(toReturn);
+            if( !isCreated ){
+                return null;
             }
-            return null;
+            isReadWriteNotLink = AdihFileOperations.pathIsReadWriteNotLink(toReturn);
+            if( !isReadWriteNotLink ){
+                return null;
+            }
+            return toReturn;
         } finally {
             toReturn = null;
             AdihUtilization.utilizeStringValues(new String[]{iterationTimeStamp, logAppSubDir});
+            isCreated = null;
+            isReadWriteNotLink = null;
         }    
     }
     /**
      * 
-     * @return 
+     * @return subdirectory for logging or null if it is not created or checked
      */
     protected static Path getLogSubDir(){
-        String appCheckedPath = getAppCheckedPath().toString();
-        String subDirPrefix = getSubDirPrefix();
-        Path toReturn = Paths.get(appCheckedPath, subDirPrefix);
-        if( Files.notExists(toReturn, LinkOption.NOFOLLOW_LINKS) ){
-            try {
-                Files.createDirectories(toReturn);
-            } catch (IOException ex) {
-                System.err.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
-                ex.printStackTrace();
-                System.exit(0);
-            }
-        }
+        Path appCheckedPath;
+        String strAppCheckedPath = new String();
+        String subDirPrefix = new String();
+        Path toReturn;
+        Boolean isCreated;
+        Boolean isReadWriteNotLink;
         try {
-            AdihFileOperations.pathIsReadWriteNotLink(toReturn);
-        } catch (IOException ex) {
-            System.err.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
-            ex.printStackTrace();
-            System.exit(0);
+            appCheckedPath = AdihFileOperations.getAppCheckedPath();
+            if( appCheckedPath == null ){
+                return null;
+            }
+            strAppCheckedPath = appCheckedPath.toString();
+            subDirPrefix = getSubDirPrefix();
+            toReturn = Paths.get(strAppCheckedPath, subDirPrefix);
+            isCreated = AdihFileOperations.createDirIfNotExist(toReturn);
+            if( !isCreated ){
+                return null;
+            }
+            isReadWriteNotLink = AdihFileOperations.pathIsReadWriteNotLink(toReturn);
+            if( !isReadWriteNotLink ){
+                return null;
+            }
+            return toReturn;
+        } finally {
+            appCheckedPath = null;
+            AdihUtilization.utilizeStringValues(new String[]{strAppCheckedPath, subDirPrefix});
+            toReturn = null;
+            isCreated = null;
+            isReadWriteNotLink = null;
         }
-        return toReturn;
     }
     
     /**

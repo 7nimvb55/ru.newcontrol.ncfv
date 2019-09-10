@@ -15,10 +15,15 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.nio.file.Paths;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.LinkedTransferQueue;
 
 /**
  *
@@ -35,29 +40,34 @@ public class AdilLogicWrite {
      */
     protected void doWriteLinesIntoLog(AdilRule ruleAdil){
         AdilState adilState = ruleAdil.getAdilState();
-        TreeMap<String, ArrayList<String>> pollBusData = adilState.pollBusData();
-        updateLogDirectory();
-        TreeMap<String, Path> listLogFiles;
-        listLogFiles = AdilHelper.createLogFilesIteration(pollBusData);
-        for(Map.Entry<String, ArrayList<String>> itemBusName : pollBusData.entrySet()){
-            String keyBusName = itemBusName.getKey();
-            ArrayList<String> valueBusLines = itemBusName.getValue();
-            listLogFiles.get(keyBusName);
-            for(String itemLogLine : valueBusLines){
-                AdilHelper.writeLineIntoFile(keyBusName, itemLogLine);
+        ConcurrentSkipListMap<String, LinkedTransferQueue<String>> pollBusData = adilState.pollBusData();
+        if( pollBusData != null ){
+            Path storageLogIterationDir = AdilStorage.getStorageLogIterationDir();
+            if( storageLogIterationDir != null ){
+                for(Map.Entry<String, LinkedTransferQueue<String>> itemBusName : pollBusData.entrySet()){
+                    String keyBusName = itemBusName.getKey();
+                    Path getFileForWrite = null;
+                    try {
+                        getFileForWrite = Paths.get(storageLogIterationDir.toString(), keyBusName);
+                    } catch(InvalidPathException exInvPath){
+                    
+                    }
+                    LinkedTransferQueue<String> valueBusLines = pollBusData.remove(keyBusName);
+                    try(BufferedWriter bw = new BufferedWriter(new FileWriter(getFileForWrite.toString())))
+                    {
+                        for( String itemStr : valueBusLines ){
+                            String text = itemStr.toString();
+                            bw.write(text);
+                            bw.newLine();
+                        }
+                        bw.flush();
+                    }
+                    catch(IOException ex){
+                        ex.printStackTrace();
+                    }
+                }
             }
+            
         }
     }
-    /**
-     * @todo in other directory get prefixes from AdilHelper and constants
-     */
-    protected void updateLogDirectory(){
-        this.iterationStartTime = AppFileOperationsSimple.getNowTimeStringWithMS();
-        Path logForHtmlCurrentLogSubDir = 
-            AppFileOperationsSimple.getLogForHtmlCurrentLogSubDir(this.iterationStartTime);
-        this.listLogStorageFiles = 
-            AppFileOperationsSimple.getNewLogFileInLogHTML(logForHtmlCurrentLogSubDir);
-        this.listLogStorageFiles.put(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR, logForHtmlCurrentLogSubDir);
-    }
-    
 }

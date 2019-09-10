@@ -15,8 +15,6 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.util.ArrayList;
-import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.LinkedTransferQueue;
@@ -333,12 +331,12 @@ public class AdilState {
      * @param strForLogInputed 
      * @see ru.newcontrol.ncfv.AdilHelper#getParamNames AdilHelper.getParamNames()
      */
-    private ArrayList<String> pollLinesByProcessNumber(Integer typeBus){
+    private LinkedTransferQueue<String> pollLinesByProcessNumber(Integer typeBus){
         LinkedTransferQueue<String> logLinesBusByNumber;
-        ArrayList<String> strForInput;
+        LinkedTransferQueue<String> strForInput;
         String poll = new String();
         try {
-            strForInput = new ArrayList<String>();
+            strForInput = new LinkedTransferQueue<String>();
             logLinesBusByNumber = (LinkedTransferQueue<String>) getLogLinesBusByNumber(typeBus);
             do {
                 poll = logLinesBusByNumber.poll();
@@ -352,9 +350,9 @@ public class AdilState {
             logLinesBusByNumber = null;
         }
     }
-    protected TreeMap<String, ArrayList<String>> pollBusData(){
-        TreeMap<String, ArrayList<String>> forReturnList = new TreeMap<String, ArrayList<String>>();
-        ArrayList<String> returnedArrayLinesByNumber = null;
+    protected ConcurrentSkipListMap<String, LinkedTransferQueue<String>> pollBusData(){
+        ConcurrentSkipListMap<String, LinkedTransferQueue<String>> forReturnList = new ConcurrentSkipListMap<String, LinkedTransferQueue<String>>();
+        LinkedTransferQueue<String> returnedArrayLinesByNumber = null;
         String paramNameByNumber = new String();
         Integer countParamsDataFsForSet;
         Integer idx;
