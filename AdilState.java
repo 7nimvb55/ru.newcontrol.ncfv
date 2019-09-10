@@ -28,7 +28,7 @@ import java.util.concurrent.LinkedTransferQueue;
  * <li>data
  * <li>indexing
  * <li>lines of string log to file
- * <ul>
+ * </ul>
  * @author wladimirowichbiaran
  */
 public class AdilState {

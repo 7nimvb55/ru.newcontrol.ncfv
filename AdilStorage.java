@@ -20,39 +20,74 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import static ru.newcontrol.ncfv.AppFileOperationsSimple.getLogSubDir;
 
 /**
  *
  * @author wladimirowichbiaran
  */
 public class AdilStorage {
+    /**
+     * 
+     * @param currentDateTimeStamp
+     * @return 
+     */
     protected static Path getIterationLogSubDir(String currentDateTimeStamp){
+        String iterationTimeStamp = new String();
+        String logAppSubDir = new String();
         Path toReturn;
         try{
-            toReturn = Paths.get(getLogSubDir().toString(),
-                    currentDateTimeStamp);
-            if( Files.notExists(toReturn, LinkOption.NOFOLLOW_LINKS) ){
-                try {
-                    Files.createDirectories(toReturn);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    System.out.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
-                    System.exit(0);
-                }
+            iterationTimeStamp = (String) currentDateTimeStamp;
+            if( iterationTimeStamp.isEmpty() ){
+                return null;
             }
+            logAppSubDir = getLogSubDir().toString();
+            if( logAppSubDir.isEmpty() ){
+                return null;
+            }
+            toReturn = Paths.get(logAppSubDir, iterationTimeStamp);
+            if( AdihFileOperations.createDirIfNotExist(toReturn) ){
+               if( AdihFileOperations.pathIsReadWriteNotLink(toReturn) ){
+                   return toReturn;
+               }
+            }
+            return null;
+        } finally {
+            toReturn = null;
+            AdihUtilization.utilizeStringValues(new String[]{iterationTimeStamp, logAppSubDir});
+        }    
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected static Path getLogSubDir(){
+        String appCheckedPath = getAppCheckedPath().toString();
+        String subDirPrefix = getSubDirPrefix();
+        Path toReturn = Paths.get(appCheckedPath, subDirPrefix);
+        if( Files.notExists(toReturn, LinkOption.NOFOLLOW_LINKS) ){
             try {
-                pathIsNotReadWriteLink(toReturn);
+                Files.createDirectories(toReturn);
             } catch (IOException ex) {
+                System.err.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
                 ex.printStackTrace();
-                System.out.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
                 System.exit(0);
             }
-
-            return toReturn;
-        } finally {
-
-            
-        }    
+        }
+        try {
+            AdihFileOperations.pathIsReadWriteNotLink(toReturn);
+        } catch (IOException ex) {
+            System.err.println("[ERROR] Not readable, writeable or link " + toReturn.toString());
+            ex.printStackTrace();
+            System.exit(0);
+        }
+        return toReturn;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    private static String getSubDirPrefix(){
+        return new String(AdilConstants.LOG_SUB_DIR_PREFIX);
     }
 }

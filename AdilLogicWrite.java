@@ -59,4 +59,5 @@ public class AdilLogicWrite {
             AppFileOperationsSimple.getNewLogFileInLogHTML(logForHtmlCurrentLogSubDir);
         this.listLogStorageFiles.put(AppFileNamesConstants.LOG_HTML_KEY_FOR_CURRENT_SUB_DIR, logForHtmlCurrentLogSubDir);
     }
+    
 }

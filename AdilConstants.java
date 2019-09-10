@@ -20,6 +20,7 @@ package ru.newcontrol.ncfv;
  * @author wladimirowichbiaran
  */
 public class AdilConstants {
+    protected static String LOG_SUB_DIR_PREFIX = "adilog";
     protected static Boolean LOGNOWTIMEINHUMANFORMAT = Boolean.TRUE;
     protected static String  APP_LOGIC_NOW = "[APPNOW]";
     protected static String  APP_LOGIC_NEXT_WAY_VAR = "[APPNEXTWAYVAR]";
@@ -33,7 +34,7 @@ public class AdilConstants {
     protected static String  MSG_ERROR_CRITICAL = "[MSG][ERROR][CRITICAL]";
     protected static String  MSG_WARNING = "[MSG][WARNING]";
     protected static String  MSG_INFO = "[MSG][INFO]";
-    
+    protected static String  MSG = "[MSG]";
     protected static String  VARVAL = "[VARVAL]";
     protected static String  VALUE = "[VALUE]";
     protected static String  VARNAME = "[VARNAME]";
@@ -80,7 +81,7 @@ public class AdilConstants {
     protected static String  ELEMENTNUM = "[ELEMENTNUM]";
     protected static String  ELEMENT = "[ELEMENT]";
     protected static String  NUM = "[NUM]";
-    protected static String  MSG = "[MSG]";
+    
     protected static String  MAX = "[MAX]";
     protected static String  PRIORITY = "[PRIORITY]";
 }

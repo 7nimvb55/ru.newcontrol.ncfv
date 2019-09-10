@@ -48,6 +48,10 @@ public class AdilHelper {
             namesForReturn = null;
         }
     }
+    /**
+     * 
+     * @return 
+     */
     protected static String getNowTimeString(){
         if(AdilConstants.LOGNOWTIMEINHUMANFORMAT){
             return AppFileOperationsSimple.getNowTimeStringWithMsHuman();

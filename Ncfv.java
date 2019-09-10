@@ -49,10 +49,9 @@ public class Ncfv {
     public static void main(String[] args) {
         AppEtcSecurityHelper.createNewSecurity();
         
-            //runIndexMakeWordIntoZipByThreads();
-            runIndexMakeAndDirList();
-            
-            //outputToConsoleStrings();
+        //runIndexMakeWordIntoZipByThreads();
+        runIndexMakeAndDirList();
+        //outputToConsoleStrings();
     }
 
     private static void runIndexMakeAndDirList(){
