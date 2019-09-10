@@ -130,7 +130,7 @@ public class ThFileListRule {
              * for release wait him finish functions
              */
             String toStringFileListWorkBuild = UUID.randomUUID().toString();
-            this.indexRule.addThredNameInQueue(toStringFileListWorkBuild);
+            this.indexRule.addThreadNameInQueue(toStringFileListWorkBuild);
             Thread thForWorkWrite = new Thread(this.workerThFileList, this.runnableWorkerFileListBuild, toStringFileListWorkBuild);
             thForWorkWrite.start();
         }

@@ -66,6 +66,12 @@ public class Ncfv {
         thIndexStateObj.setBusJobForRead(thDirListBusReaded);
         ThIndexRule thIndexRule = new ThIndexRule();
         
+        AdilRule loggerRule = new AdilRule(thIndexRule);
+        AdilState loggerState = new AdilState(loggerRule);
+        loggerRule.setAdilState(loggerState);
+        AdilWorkerWrite loggerWorker = new AdilWorkerWrite(loggerRule);
+        loggerRule.setAdilWorkWrite(loggerWorker);
+        
         
         thIndexRule.setIndexState(thIndexStateObj);
         ThIndexMaker thIndexMaker = new ThIndexMaker(thIndexRule);
@@ -90,9 +96,13 @@ public class Ncfv {
          * @todo append flag updated process, this ma used in while( updatedProcess ) { wait for end update }
          * after create storages workers... need release for storages (file systems) workers...
          */
+        
+        
         thIndexStateObj.currentIndexStorages().updateMapForStorages();
         thIndexDirList.start();
         waitForFinishedIndexDirListThread(thIndexRule);
+        
+        loggerRule.runRouterWordWork();
         thIndexFileList.start();
         thIndexStorageWord.start();
         thIndexWord.start();

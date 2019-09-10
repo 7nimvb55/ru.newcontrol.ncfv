@@ -432,7 +432,7 @@ public class ThWordEventLogic {
         //
         ConcurrentSkipListMap<UUID, TdataWord> pollTypeWordTagFileNameData = null;
         try {
-                this.wordCacheReaded.pollTypeWordTagFileNameData(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput);
+                pollTypeWordTagFileNameData = this.wordCacheReaded.pollTypeWordTagFileNameData(typeWordOfBusOutput, subStringFromBusOutput, hexTagNameFromBusOutput);
         } catch(NullPointerException exNull) {
             System.err.println(ThWordEventLogic.class.getCanonicalName() + " from ReadedCache poll failure: " + exNull.getMessage());
         }

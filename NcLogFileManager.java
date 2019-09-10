@@ -58,6 +58,7 @@ public class NcLogFileManager {
      * @param ncStrCfgPath 
      */
     private static void createLogFile(String ncStrCfgPath){
+        //@todo recode java.time.LocalDateTime.now().toString(); for 1.7 new Date(System.nanotime())
         String strTime = java.time.LocalDateTime.now().toString();
         String text = NcStrLogMsgField.TIME.getStr() + strTime;
         String strMsg = text + NcStrLogMsgField.MSG_INFO.getStr()

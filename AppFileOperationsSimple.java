@@ -533,7 +533,21 @@ public class AppFileOperationsSimple {
       
        DateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
        
-       //formatted value of current Date
+       //formated value of current Date
+       return df.format(currentDate);
+    }
+    protected static String getNowTimeStringWithMsHuman(){
+        long currentDateTime = System.currentTimeMillis();
+      
+       //creating Date from millisecond
+       Date currentDate = new Date(currentDateTime);
+      
+       //printing value of Date
+       //System.out.println("current Date: " + currentDate);
+      
+       DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+       
+       //formated value of current Date
        return df.format(currentDate);
     }
     protected static String getNowTimeString(){

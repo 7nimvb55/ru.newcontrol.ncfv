@@ -152,7 +152,7 @@ public class ThStorageWordRule {
              * 
              */
             String toStringStorageWordWorkFilter = UUID.randomUUID().toString();
-            this.indexRule.addThredNameInQueue(toStringStorageWordWorkFilter);
+            this.indexRule.addThreadNameInQueue(toStringStorageWordWorkFilter);
             Thread thForWorkFilter = new Thread(this.workerThStorageWord, this.runnableWorkerStorageWordFilter, toStringStorageWordWorkFilter);
             thForWorkFilter.setPriority(2);
             thForWorkFilter.start();
@@ -206,7 +206,7 @@ public class ThStorageWordRule {
              * for release wait him finish functions
              */
             String toStringStorageWordWorkRouter = UUID.randomUUID().toString();
-            this.indexRule.addThredNameInQueue(toStringStorageWordWorkRouter);
+            this.indexRule.addThreadNameInQueue(toStringStorageWordWorkRouter);
             Thread thForWorkRouter = new Thread(this.workerThStorageWord, this.runnableWorkerStorageWordRouter, toStringStorageWordWorkRouter);
             thForWorkRouter.setPriority(5);
             thForWorkRouter.start();
@@ -260,7 +260,7 @@ public class ThStorageWordRule {
              * for release wait him finish functions
              */
             String toStringStorageWordWorkWrite = UUID.randomUUID().toString();
-            this.indexRule.addThredNameInQueue(toStringStorageWordWorkWrite);
+            this.indexRule.addThreadNameInQueue(toStringStorageWordWorkWrite);
             Thread thForWorkWrite = new Thread(this.workerThStorageWord, this.runnableWorkerStorageWordWrite, toStringStorageWordWorkWrite);
             thForWorkWrite.setPriority(3);
             thForWorkWrite.start();
@@ -314,7 +314,7 @@ public class ThStorageWordRule {
              * for release wait him finish functions
              */
             String toStringStorageWordWorkRead = UUID.randomUUID().toString();
-            this.indexRule.addThredNameInQueue(toStringStorageWordWorkRead);
+            this.indexRule.addThreadNameInQueue(toStringStorageWordWorkRead);
             Thread thForWorkRead = new Thread(this.workerThStorageWord, this.runnableWorkerStorageWordRead, toStringStorageWordWorkRead);
             thForWorkRead.setPriority(4);
             thForWorkRead.start();

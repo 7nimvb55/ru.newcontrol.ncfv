@@ -15,8 +15,6 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.nio.file.FileSystem;
-import java.nio.file.Path;
 import java.util.UUID;
 
 /**
@@ -241,7 +239,7 @@ public class ThDirListRule {
              * for release wait him finish functions
              */
             String toStringWorkReader = UUID.randomUUID().toString();
-            this.outerIndexRule.addThredNameInQueue(toStringWorkReader);
+            this.outerIndexRule.addThreadNameInQueue(toStringWorkReader);
             Thread thForWorkRead = new Thread(this.workerThDirList, this.runnableWorkerDirListRead, toStringWorkReader);
             thForWorkRead.start();
         }
@@ -253,7 +251,7 @@ public class ThDirListRule {
              * for release wait him finish functions
              */
             String toStringWorkWriter = UUID.randomUUID().toString();
-            this.outerIndexRule.addThredNameInQueue(toStringWorkWriter);
+            this.outerIndexRule.addThreadNameInQueue(toStringWorkWriter);
             Thread thForWorkWrite = new Thread(this.workerThDirList, this.runnableWorkerDirListWrite, toStringWorkWriter);
             thForWorkWrite.start();
         }
@@ -265,7 +263,7 @@ public class ThDirListRule {
              * for release wait him finish functions
              */
             String toStringWorkManager = UUID.randomUUID().toString();
-            this.outerIndexRule.addThredNameInQueue(toStringWorkManager);
+            this.outerIndexRule.addThreadNameInQueue(toStringWorkManager);
             Thread thForWorkManager = new Thread(this.workerThDirList, this.runnableWorkerDirListManager, toStringWorkManager);
             thForWorkManager.start();
         }

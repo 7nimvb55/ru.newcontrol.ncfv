@@ -185,7 +185,6 @@ public class ThWordStatusDataFs {
                 paramCodeByNumber = getParamCodeByNumber(idx);
                 returnedHashMap.put(paramCodeByNumber, 0);
             }
-            
             return returnedHashMap;
         } finally {
             idx = null;

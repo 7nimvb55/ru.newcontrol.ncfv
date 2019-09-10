@@ -137,7 +137,7 @@ public class ThWordRule {
              * for release wait him finish functions
              */
             String toStringWordWorkRouter = UUID.randomUUID().toString();
-            this.indexRule.addThredNameInQueue(toStringWordWorkRouter);
+            this.indexRule.addThreadNameInQueue(toStringWordWorkRouter);
             Thread thForWorkRouter = new Thread(this.workerThWord, this.runnableWorkerWordRouter, toStringWordWorkRouter);
             thForWorkRouter.setPriority(5);
             thForWorkRouter.start();
@@ -191,7 +191,7 @@ public class ThWordRule {
              * for release wait him finish functions
              */
             String toStringWordWorkWrite = UUID.randomUUID().toString();
-            this.indexRule.addThredNameInQueue(toStringWordWorkWrite);
+            this.indexRule.addThreadNameInQueue(toStringWordWorkWrite);
             Thread thForWorkWrite = new Thread(this.workerThWord, this.runnableWorkerWordWrite, toStringWordWorkWrite);
             thForWorkWrite.setPriority(3);
             thForWorkWrite.start();
@@ -245,7 +245,7 @@ public class ThWordRule {
              * for release wait him finish functions
              */
             String toStringWordWorkRead = UUID.randomUUID().toString();
-            this.indexRule.addThredNameInQueue(toStringWordWorkRead);
+            this.indexRule.addThreadNameInQueue(toStringWordWorkRead);
             Thread thForWorkRead = new Thread(this.workerThWord, this.runnableWorkerWordRead, toStringWordWorkRead);
             thForWorkRead.setPriority(4);
             thForWorkRead.start();

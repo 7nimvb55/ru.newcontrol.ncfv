@@ -697,14 +697,14 @@ public class ThWordCacheSk {
             int strSubStringlength = strSubStringFunc.length();
             int tagNamelength = tagNameFunc.length();
             if( (strSubStringlength * 4) != tagNamelength ){
-                throw new IllegalArgumentException(ThWordCacheHa.class.getCanonicalName() 
+                throw new IllegalArgumentException(ThWordCacheSk.class.getCanonicalName() 
                         + " illegal length of inputed in index string, hexTagName: "
                         + tagNameFunc + " lengthHex: " + tagNameFunc.length()
                         + " strSubString: " + strSubStringFunc + " lengthStr: " + strSubStringFunc.length()
                         + " lengthHex == lengthStr * 4 ");
             }
             if( tagNamelength < 4 ){
-                throw new IllegalArgumentException(ThWordCacheHa.class.getCanonicalName() 
+                throw new IllegalArgumentException(ThWordCacheSk.class.getCanonicalName() 
                         + " illegal length of inputed in index string, hexTagName: "
                         + tagNameFunc + " length: " + tagNameFunc.length()
                         + " < 4 ");
@@ -712,8 +712,14 @@ public class ThWordCacheSk {
             valListByTypeWord = getListByType(typeWordFunc);
             String substringTagName = tagNameFunc.substring(0, 3);
             valListByTagNameCode = valListByTypeWord.get(substringTagName);
+            /**
+             * @todo return null and code for this result algoritm in
+             * ru.newcontrol.ncfv.ThWordEventLogic from ReadedCache poll failure
+             * and in
+             * ru.newcontrol.ncfv.ThWordStatusMainFlow illegal key value for typeWord: -645606755
+             */
             if( valListByTagNameCode == null ){
-                throw new NullPointerException(ThWordCacheHa.class.getCanonicalName() 
+                throw new NullPointerException(ThWordCacheSk.class.getCanonicalName() 
                         + " for word by type " + String.valueOf(typeWordFunc)
                         + " tagName " + tagNameFunc
                         + " subString " + strSubStringFunc
@@ -721,7 +727,7 @@ public class ThWordCacheSk {
             }
             valListBySubStrLength = valListByTagNameCode.get(strSubStringlength);
             if( valListBySubStrLength == null ){
-                throw new NullPointerException(ThWordCacheHa.class.getCanonicalName() 
+                throw new NullPointerException(ThWordCacheSk.class.getCanonicalName() 
                         + " for word by type " + String.valueOf(typeWordFunc)
                         + " tagName " + tagNameFunc
                         + " subString " + strSubStringFunc
@@ -730,7 +736,7 @@ public class ThWordCacheSk {
             //do while and poll elements from list
             valTagNameListData = valListBySubStrLength.get(tagNameFunc);
             if( valTagNameListData == null ){
-                throw new NullPointerException(ThWordCacheHa.class.getCanonicalName() 
+                throw new NullPointerException(ThWordCacheSk.class.getCanonicalName() 
                         + " for word by type " + String.valueOf(typeWordFunc)
                         + " tagName " + tagNameFunc
                         + " subString " + strSubStringFunc

@@ -52,7 +52,7 @@ public class ThIndexRule {
         setFalseIndexStatistic();
         this.namesWorkerDirList = new ArrayBlockingQueue<String>(50);
     }
-    protected void addThredNameInQueue(String forAdd){
+    protected void addThreadNameInQueue(String forAdd){
         this.namesWorkerDirList.add(forAdd);
     }
     protected ArrayBlockingQueue<String> getQueueThreadNames(){
