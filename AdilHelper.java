@@ -23,19 +23,30 @@ public class AdilHelper {
     /**
      * Used in generate code names for log typed bus string lines
      * <ul>
-     * <li>  0 - WordRouter
-     * <li>  1 - WordReader
-     * <li>  2 - WordWriter
-     * <li>  3 - WordStorageRouter
-     * <li>  4 - WordStorageReader
-     * <li>  5 - WordStorageWriter
-     * </ul>
+     * <li>   0 -   Main
+     * <li>   1 -   Index
+     * <li>   2 -   DirListManager
+     * <li>   3 -   DirListRead
+     * <li>   4 -   DirListWrite
+     * <li>   5 -   FileListBuild
+     *              
+     * <li>   6 -   WordStorageFilter
+     * <li>   7 -   WordStorageRouter
+     * <li>   8 -   WordStorageReader
+     * <li>   9 -   WordStorageWriter
+     *              
+     * <li>  10 -   WordRouter
+     * <li>  11 -   WordReader
+     * <li>  12 -   WordWriter
+     * </ul> 
      * @return 
      */
     protected static String[] getParamNames(){
         String[] namesForReturn;
         try {
             namesForReturn = new String[] {
+                "Main",
+                "Index",
                 "DirListManager",
                 "DirListRead",
                 "DirListWrite",

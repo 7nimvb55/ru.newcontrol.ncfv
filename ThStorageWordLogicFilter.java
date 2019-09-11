@@ -28,6 +28,17 @@ import java.util.concurrent.LinkedTransferQueue;
  */
 public class ThStorageWordLogicFilter {
     protected static void doFilterForIndexStorageWord(final ThStorageWordRule outerRuleStorageWord){
+        AdilRule adilRule = outerRuleStorageWord.getIndexRule().getAdilRule();
+        AdilState adilState = adilRule.getAdilState();
+        Integer numberProcessIndexSystem = 6;
+        String msgToLog = AdilConstants.INFO_LOGIC_POSITION
+                + AdilConstants.CANONICALNAME
+                + ThStorageWordLogicFilter.class.getCanonicalName()
+                + AdilConstants.METHOD
+                + "doFilterForIndexStorageWord()";
+        adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                msgToLog
+                + AdilConstants.START);
         //bus from FileListBusToNext throw NullPointerException
         ThIndexRule indexRule = outerRuleStorageWord.getIndexRule();
         ThIndexState indexState = indexRule.getIndexState();
@@ -48,7 +59,9 @@ public class ThStorageWordLogicFilter {
             }
         } while( ruleFileList.isRunnedFileListWorkBuild() );
 
-
+        adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                msgToLog
+                + AdilConstants.FINISH);
 
     }
     /**

@@ -37,6 +37,19 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ThStorageWordLogicRouter {
     protected void doRouterForIndexStorageWord(final ThStorageWordRule outerRuleStorageWord){
         final ThStorageWordRule funcRuleStorageWord = (ThStorageWordRule) outerRuleStorageWord;
+        
+        AdilRule adilRule = outerRuleStorageWord.getIndexRule().getAdilRule();
+        AdilState adilState = adilRule.getAdilState();
+        Integer numberProcessIndexSystem = 7;
+        String msgToLog = AdilConstants.INFO_LOGIC_POSITION
+                + AdilConstants.CANONICALNAME
+                + ThStorageWordLogicRouter.class.getCanonicalName()
+                + AdilConstants.METHOD
+                + "doRouterForIndexStorageWord()";
+        adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                msgToLog
+                + AdilConstants.START);
+        
         ThIndexRule indexRule = funcRuleStorageWord.getIndexRule();
         ThIndexStatistic indexStatistic = indexRule.getIndexStatistic();
         ThStorageWordState storageWordState = funcRuleStorageWord.getStorageWordState();
@@ -51,6 +64,8 @@ public class ThStorageWordLogicRouter {
                  * (1) - typeWord - directory in zipfs storage to string
                  */
                 //System.out.println("For bus typeWord " + items.getKey());
+                String keyHexTagName = new String();
+                String removedSubString = new String();
                 String busNumber = String.valueOf(items.getKey());
                 for(Map.Entry<String, String> itemsOfBus : items.getValue().entrySet()){
                     /**
@@ -66,20 +81,38 @@ public class ThStorageWordLogicRouter {
                      *          released in ThStorageWordRouter, ThStorageWordStatistic
                      *                  ThStorageWordCache
                      */
-                    String removedStr = items.getValue().remove(itemsOfBus.getKey());
+                    keyHexTagName = itemsOfBus.getKey();
+                    removedSubString = items.getValue().remove(keyHexTagName);
                     if( countRecToConsole > 500 ){
-                        System.out.println("For bus " 
+                        /*System.out.println("For bus " 
                                 + busNumber
                                 + " hexWord " 
-                                + itemsOfBus.getKey() 
+                                + keyHexTagName
                                 + " subString " 
-                                + removedStr);
+                                + removedSubString);*/
+                        adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                            msgToLog
+                            + AdilConstants.STATE
+                            + AdilConstants.VARNAME
+                            + "busNumber"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(busNumber)
+                            + AdilConstants.VARNAME
+                            + "keyHexTagName"
+                            + AdilConstants.VARVAL
+                            + keyHexTagName
+                            + AdilConstants.VARNAME
+                            + "removedSubString"
+                            + AdilConstants.VARVAL
+                            + removedSubString
+                        );
+                        adilRule.runAdilWorkWrite();
                     }
                     countRecToConsole++;
                     if( countRecToConsole > 503 ){
                         countRecToConsole = 0;
                     }
-                    ThWordHelper.utilizeStringValues(new String[]{removedStr, busNumber});
+                    ThWordHelper.utilizeStringValues(new String[]{keyHexTagName, removedSubString, busNumber});
                 }
                 /**
                  * @todo IllegalArgumentException catch
@@ -166,6 +199,9 @@ public class ThStorageWordLogicRouter {
         }
         while( listTypTagSubStr != null );
         System.out.println("++++++++++++++++++++++++++++++stop " + ThStorageWordLogicRouter.class.getCanonicalName());
+        adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                msgToLog
+                + AdilConstants.FINISH);
     }
     /**
      * 

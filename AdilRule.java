@@ -16,6 +16,7 @@
 package ru.newcontrol.ncfv;
 
 import java.util.UUID;
+import java.util.concurrent.LinkedTransferQueue;
 
 /**
  *
@@ -31,8 +32,11 @@ public class AdilRule {
     private AdilState currentAdilState;
     private Boolean isSetAdilState;
     
+    private LinkedTransferQueue<UUID> queueForRunLogger;
+    
     AdilRule(ThIndexRule indexRuleOuter){
         this.indexRule = (ThIndexRule) indexRuleOuter;
+        this.queueForRunLogger = new LinkedTransferQueue<UUID>();
         setFalseRunnerAdilWorkWrite();
         setFalseAdilWorkWrite();
         setFalseAdilState();
@@ -96,6 +100,16 @@ public class AdilRule {
             Thread thForWorkRouter = new Thread(this.runnableAdilWorkWrite, toStringAdilWorkWrite);
             thForWorkRouter.setPriority(7);
             thForWorkRouter.start();
+        } else {
+            if( isAdilWorkWrite() ){
+                this.queueForRunLogger.add(UUID.randomUUID());
+            }
+        }
+    }
+    protected void needNextRunLogger(){
+        UUID poll = this.queueForRunLogger.poll();
+        if( poll != null ){
+            runAdilWorkWrite();
         }
     }
     /**

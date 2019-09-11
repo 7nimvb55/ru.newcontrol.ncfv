@@ -41,7 +41,7 @@ public class ThDirListLogicManager {
                 + ThDirListLogicManager.class.getCanonicalName()
                 + AdilConstants.METHOD
                 + "doIndexStorage()";
-        adilState.putLogLineByProcessNumberMsg(0, 
+        adilState.putLogLineByProcessNumberMsg(2, 
                 msgToLog
                 + AdilConstants.START);
         /**
@@ -93,7 +93,7 @@ public class ThDirListLogicManager {
                         //return entry;
                     //}
                     //System.out.println("Directory is " + entry.toString());
-                    adilState.putLogLineByProcessNumberMsg(0, 
+                    adilState.putLogLineByProcessNumberMsg(2, 
                         msgToLog
                         + AdilConstants.STATE
                         + AdilConstants.VARNAME
@@ -127,7 +127,7 @@ public class ThDirListLogicManager {
             ex.printStackTrace();
             ifException = Boolean.TRUE;
         }
-        adilState.putLogLineByProcessNumberMsg(0, 
+        adilState.putLogLineByProcessNumberMsg(2, 
                 msgToLog
                 + AdilConstants.FINISH);
         adilRule.runAdilWorkWrite();

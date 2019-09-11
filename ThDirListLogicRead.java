@@ -25,8 +25,6 @@ import java.nio.file.ProviderNotFoundException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -34,6 +32,16 @@ import java.util.logging.Logger;
  */
 public class ThDirListLogicRead {
     protected void doIndexStorage(final ThDirListRule outerRuleDirListReadWork){
+        AdilRule adilRule = outerRuleDirListReadWork.getIndexRule().getAdilRule();
+        AdilState adilState = adilRule.getAdilState();
+        String msgToLog = AdilConstants.INFO_LOGIC_POSITION
+                + AdilConstants.CANONICALNAME
+                + ThDirListLogicRead.class.getCanonicalName()
+                + AdilConstants.METHOD
+                + "doIndexStorage()";
+        adilState.putLogLineByProcessNumberMsg(3, 
+                msgToLog
+                + AdilConstants.START);
         /**
          * @todo need optimized that part of code, if have a jobForReadList, then
          * index storage exist, check for exist and open it
@@ -72,16 +80,36 @@ public class ThDirListLogicRead {
                         jobForRead.putReadedData(readDataFromFile);
                         jobForRead.setTrueReaderJobDone();
                         busJobForSendToIndexWord.addReaderJob(jobForRead);
-                        System.out.println("idx: " 
+                        /*System.out.println("idx: " 
                                 + countJobs 
                                 + " file " 
                                 + jobForRead.getReadedPath().toString() 
                                 + " read records count " 
                                 + jobForRead.getReadedDataSize().toString()
                                 + " jobDone " + jobForRead.isReaderJobDone().toString()
+                        );*/
+                        
+                        adilState.putLogLineByProcessNumberMsg(3, 
+                            msgToLog
+                            + AdilConstants.STATE
+                            + AdilConstants.VARNAME
+                            + "countJobs"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(countJobs)
+                            + AdilConstants.VARNAME
+                            + "jobForRead.getReadedPath()"
+                            + AdilConstants.VARVAL
+                            + jobForRead.getReadedPath().toString()
+                            + AdilConstants.VARNAME
+                            + "jobForRead.getReadedDataSize()"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(jobForRead.getReadedDataSize())
+                            + AdilConstants.VARNAME
+                            + "jobForRead.isReaderJobDone().toString()"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(jobForRead.isReaderJobDone())
                         );
                         countJobs++;
-                        
                     }
                     jobForRead = busReadedJob.getJobForRead();
                 }
@@ -102,6 +130,9 @@ public class ThDirListLogicRead {
                 ex.printStackTrace();
             } 
         }
+        adilState.putLogLineByProcessNumberMsg(3, 
+                msgToLog
+                + AdilConstants.FINISH);
     }
     
 }

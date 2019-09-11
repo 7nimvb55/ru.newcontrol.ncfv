@@ -39,6 +39,7 @@ public class AdilWorkerWrite implements Runnable{
         } finally {
             logicLogLinesWrite = null;
             this.ruleAdilWrite.setFalseRunnerAdilWorkWrite();
+            this.ruleAdilWrite.needNextRunLogger();
         }
     }
     

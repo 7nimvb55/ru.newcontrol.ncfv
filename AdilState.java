@@ -42,20 +42,22 @@ public class AdilState {
     }
     /**
      * <ul>
-     * <li>   0 -   DirListManager
-     * <li>   1 -   DirListRead
-     * <li>   2 -   DirListWrite
-     * <li>   3 -   FileListBuild
+     * <li>   0 -   Main
+     * <li>   1 -   Index
+     * <li>   2 -   DirListManager
+     * <li>   3 -   DirListRead
+     * <li>   4 -   DirListWrite
+     * <li>   5 -   FileListBuild
      *              
-     * <li>   4 -   WordStorageFilter
-     * <li>   5 -   WordStorageRouter
-     * <li>   6 -   WordStorageReader
-     * <li>   7 -   WordStorageWriter
+     * <li>   6 -   WordStorageFilter
+     * <li>   7 -   WordStorageRouter
+     * <li>   8 -   WordStorageReader
+     * <li>   9 -   WordStorageWriter
      *              
-     * <li>   8 -   WordRouter
-     * <li>   9 -   WordReader
-     * <li>  10 -   WordWriter
-     * </ul>
+     * <li>  10 -   WordRouter
+     * <li>  11 -   WordReader
+     * <li>  12 -   WordWriter
+     * </ul> 
      * This list of parameters changed in {@link ru.newcontrol.ncfv.AdilHelper#getParamNames AdilHelper.getParamNames()}
      * Return code of parameter by his number, calculeted from some fileds
      * @param numParam
@@ -177,20 +179,22 @@ public class AdilState {
     }
     /**
      * <ul>
-     * <li>   0 -   DirListManager
-     * <li>   1 -   DirListRead
-     * <li>   2 -   DirListWrite
-     * <li>   3 -   FileListBuild
+     * <li>   0 -   Main
+     * <li>   1 -   Index
+     * <li>   2 -   DirListManager
+     * <li>   3 -   DirListRead
+     * <li>   4 -   DirListWrite
+     * <li>   5 -   FileListBuild
      *              
-     * <li>   4 -   WordStorageFilter
-     * <li>   5 -   WordStorageRouter
-     * <li>   6 -   WordStorageReader
-     * <li>   7 -   WordStorageWriter
+     * <li>   6 -   WordStorageFilter
+     * <li>   7 -   WordStorageRouter
+     * <li>   8 -   WordStorageReader
+     * <li>   9 -   WordStorageWriter
      *              
-     * <li>   8 -   WordRouter
-     * <li>   9 -   WordReader
-     * <li>  10 -   WordWriter
-     * </ul> 
+     * <li>  10 -   WordRouter
+     * <li>  11 -   WordReader
+     * <li>  12 -   WordWriter
+     * </ul>  
      * @param typeBus
      * @param strForLogInputed 
      * @see ru.newcontrol.ncfv.AdilHelper#getParamNames AdilHelper.getParamNames()
@@ -214,19 +218,21 @@ public class AdilState {
     }
     /**
      * <ul>
-     * <li>   0 -   DirListManager
-     * <li>   1 -   DirListRead
-     * <li>   2 -   DirListWrite
-     * <li>   3 -   FileListBuild
+     * <li>   0 -   Main
+     * <li>   1 -   Index
+     * <li>   2 -   DirListManager
+     * <li>   3 -   DirListRead
+     * <li>   4 -   DirListWrite
+     * <li>   5 -   FileListBuild
      *              
-     * <li>   4 -   WordStorageFilter
-     * <li>   5 -   WordStorageRouter
-     * <li>   6 -   WordStorageReader
-     * <li>   7 -   WordStorageWriter
+     * <li>   6 -   WordStorageFilter
+     * <li>   7 -   WordStorageRouter
+     * <li>   8 -   WordStorageReader
+     * <li>   9 -   WordStorageWriter
      *              
-     * <li>   8 -   WordRouter
-     * <li>   9 -   WordReader
-     * <li>  10 -   WordWriter
+     * <li>  10 -   WordRouter
+     * <li>  11 -   WordReader
+     * <li>  12 -   WordWriter
      * </ul> 
      * @param typeBus
      * @param strForLogInputed 
@@ -251,19 +257,21 @@ public class AdilState {
     }
     /**
      * <ul>
-     * <li>   0 -   DirListManager
-     * <li>   1 -   DirListRead
-     * <li>   2 -   DirListWrite
-     * <li>   3 -   FileListBuild
+     * <li>   0 -   Main
+     * <li>   1 -   Index
+     * <li>   2 -   DirListManager
+     * <li>   3 -   DirListRead
+     * <li>   4 -   DirListWrite
+     * <li>   5 -   FileListBuild
      *              
-     * <li>   4 -   WordStorageFilter
-     * <li>   5 -   WordStorageRouter
-     * <li>   6 -   WordStorageReader
-     * <li>   7 -   WordStorageWriter
+     * <li>   6 -   WordStorageFilter
+     * <li>   7 -   WordStorageRouter
+     * <li>   8 -   WordStorageReader
+     * <li>   9 -   WordStorageWriter
      *              
-     * <li>   8 -   WordRouter
-     * <li>   9 -   WordReader
-     * <li>  10 -   WordWriter
+     * <li>  10 -   WordRouter
+     * <li>  11 -   WordReader
+     * <li>  12 -   WordWriter
      * </ul> 
      * @param typeBus
      * @param strForLogInputed 
@@ -288,19 +296,21 @@ public class AdilState {
     }
     /**
      * <ul>
-     * <li>   0 -   DirListManager
-     * <li>   1 -   DirListRead
-     * <li>   2 -   DirListWrite
-     * <li>   3 -   FileListBuild
+     * <li>   0 -   Main
+     * <li>   1 -   Index
+     * <li>   2 -   DirListManager
+     * <li>   3 -   DirListRead
+     * <li>   4 -   DirListWrite
+     * <li>   5 -   FileListBuild
      *              
-     * <li>   4 -   WordStorageFilter
-     * <li>   5 -   WordStorageRouter
-     * <li>   6 -   WordStorageReader
-     * <li>   7 -   WordStorageWriter
+     * <li>   6 -   WordStorageFilter
+     * <li>   7 -   WordStorageRouter
+     * <li>   8 -   WordStorageReader
+     * <li>   9 -   WordStorageWriter
      *              
-     * <li>   8 -   WordRouter
-     * <li>   9 -   WordReader
-     * <li>  10 -   WordWriter
+     * <li>  10 -   WordRouter
+     * <li>  11 -   WordReader
+     * <li>  12 -   WordWriter
      * </ul> 
      * @param typeBus
      * @param strForLogInputed 
@@ -325,19 +335,21 @@ public class AdilState {
     }
     /**
      * <ul>
-     * <li>   0 -   DirListManager
-     * <li>   1 -   DirListRead
-     * <li>   2 -   DirListWrite
-     * <li>   3 -   FileListBuild
+     * <li>   0 -   Main
+     * <li>   1 -   Index
+     * <li>   2 -   DirListManager
+     * <li>   3 -   DirListRead
+     * <li>   4 -   DirListWrite
+     * <li>   5 -   FileListBuild
      *              
-     * <li>   4 -   WordStorageFilter
-     * <li>   5 -   WordStorageRouter
-     * <li>   6 -   WordStorageReader
-     * <li>   7 -   WordStorageWriter
+     * <li>   6 -   WordStorageFilter
+     * <li>   7 -   WordStorageRouter
+     * <li>   8 -   WordStorageReader
+     * <li>   9 -   WordStorageWriter
      *              
-     * <li>   8 -   WordRouter
-     * <li>   9 -   WordReader
-     * <li>  10 -   WordWriter
+     * <li>  10 -   WordRouter
+     * <li>  11 -   WordReader
+     * <li>  12 -   WordWriter
      * </ul> 
      * @param typeBus
      * @param strForLogInputed 
@@ -362,19 +374,21 @@ public class AdilState {
     }
     /**
      * <ul>
-     * <li>   0 -   DirListManager
-     * <li>   1 -   DirListRead
-     * <li>   2 -   DirListWrite
-     * <li>   3 -   FileListBuild
+     * <li>   0 -   Main
+     * <li>   1 -   Index
+     * <li>   2 -   DirListManager
+     * <li>   3 -   DirListRead
+     * <li>   4 -   DirListWrite
+     * <li>   5 -   FileListBuild
      *              
-     * <li>   4 -   WordStorageFilter
-     * <li>   5 -   WordStorageRouter
-     * <li>   6 -   WordStorageReader
-     * <li>   7 -   WordStorageWriter
+     * <li>   6 -   WordStorageFilter
+     * <li>   7 -   WordStorageRouter
+     * <li>   8 -   WordStorageReader
+     * <li>   9 -   WordStorageWriter
      *              
-     * <li>   8 -   WordRouter
-     * <li>   9 -   WordReader
-     * <li>  10 -   WordWriter
+     * <li>  10 -   WordRouter
+     * <li>  11 -   WordReader
+     * <li>  12 -   WordWriter
      * </ul> 
      * @param typeBus
      * @param strForLogInputed 

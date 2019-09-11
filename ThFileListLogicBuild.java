@@ -28,6 +28,16 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class ThFileListLogicBuild {
     protected void doBuildToIndexFileList(final ThFileListRule outerRuleFileList){
+        AdilRule adilRule = outerRuleFileList.getIndexRule().getAdilRule();
+        AdilState adilState = adilRule.getAdilState();
+        String msgToLog = AdilConstants.INFO_LOGIC_POSITION
+                + AdilConstants.CANONICALNAME
+                + ThFileListLogicBuild.class.getCanonicalName()
+                + AdilConstants.METHOD
+                + "doBuildToIndexFileList()";
+        adilState.putLogLineByProcessNumberMsg(5, 
+                msgToLog
+                + AdilConstants.START);
         ThDirListBusReaded busJobForRead = outerRuleFileList.getIndexRule().getIndexState().getBusJobForRead();
         // bus for output data to next index system
         ThFileListState fileListState = outerRuleFileList.getFileListState();
@@ -83,6 +93,9 @@ public class ThFileListLogicBuild {
                 }
             }
         }
+        adilState.putLogLineByProcessNumberMsg(5, 
+                msgToLog
+                + AdilConstants.FINISH);
     }
     private static ConcurrentHashMap<Integer, Path> buildDataForSend(
             final Path readedPath, 
