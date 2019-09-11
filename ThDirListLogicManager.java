@@ -34,6 +34,26 @@ public class ThDirListLogicManager {
     
     
     protected void doIndexStorage(final ThDirListRule ruleDirList){
+        AdilRule adilRule = ruleDirList.getIndexRule().getAdilRule();
+        AdilState adilState = adilRule.getAdilState();
+        String msgToLog = AdilConstants.INFO_LOGIC_POSITION
+                + AdilConstants.CANONICALNAME
+                + ThDirListLogicManager.class.getCanonicalName()
+                + AdilConstants.METHOD
+                + "doIndexStorage()";
+        adilState.putLogLineByProcessNumberMsg(0, 
+                msgToLog
+                + AdilConstants.START);
+        /**
+         * log process example
+         * adilState.putLogLineByProcessNumberMsg(0, 
+         *              msgToLog
+         *              + AdilConstants.STATE
+         *              + AdilConstants.VARNAME
+         *              + "storageForJobElement"
+         *              + AdilConstants.VARVAL
+         *              + storageForJobElement.toUri().toString());
+         */
         ThDirListBusReaded busReadedJob = ruleDirList.getDirListState().getBusJobForRead();
         /**
          * ThIndexStatistic
@@ -62,17 +82,24 @@ public class ThDirListLogicManager {
             Path lookPath = fsForReadData.getPath(AppFileNamesConstants.DIR_IDX_ROOT);
             int count = 0;
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(lookPath,"{" + AppFileNamesConstants.SZFS_DIR_LIST_FILE_PREFIX + "}*")) {
-                for (Path entry : stream) {
-                    pathIsNotReadWriteLink(entry);
-                    pathIsNotFile(entry);
-                    ThDirListStateJobReader thDirListStateJobReader = new ThDirListStateJobReader(entry, byPrefixGetUri);
+                for (Path storageForJobElement : stream) {
+                    pathIsNotReadWriteLink(storageForJobElement);
+                    pathIsNotFile(storageForJobElement);
+                    ThDirListStateJobReader thDirListStateJobReader = new ThDirListStateJobReader(storageForJobElement, byPrefixGetUri);
                     busReadedJob.addReaderJob(thDirListStateJobReader);
                     //String replacedPath = entry.toString().replace(FILE_EXTENTION, FILE_FULL_EXTENTION);
                     //Path lockedFilePath = Paths.get(replacedPath);
                     //if( Files.notExists(lockedFilePath) ){
                         //return entry;
                     //}
-                    System.out.println("Directory is " + entry.toString());
+                    //System.out.println("Directory is " + entry.toString());
+                    adilState.putLogLineByProcessNumberMsg(0, 
+                        msgToLog
+                        + AdilConstants.STATE
+                        + AdilConstants.VARNAME
+                        + "storageForJobElement"
+                        + AdilConstants.VARVAL
+                        + storageForJobElement.toUri().toString());
                     //ThWordLogicFilter.processFilterInputedString(entry.toString());
                     count++;
                     
@@ -100,6 +127,10 @@ public class ThDirListLogicManager {
             ex.printStackTrace();
             ifException = Boolean.TRUE;
         }
+        adilState.putLogLineByProcessNumberMsg(0, 
+                msgToLog
+                + AdilConstants.FINISH);
+        adilRule.runAdilWorkWrite();
     }
     private static void pathIsNotReadWriteLink(Path innerWorkPath) throws IOException{
         if ( !Files.isReadable(innerWorkPath) ){

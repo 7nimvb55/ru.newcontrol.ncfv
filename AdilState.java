@@ -42,12 +42,19 @@ public class AdilState {
     }
     /**
      * <ul>
-     * <li>  0 - WordRouter
-     * <li>  1 - WordReader
-     * <li>  2 - WordWriter
-     * <li>  3 - WordStorageRouter
-     * <li>  4 - WordStorageReader
-     * <li>  5 - WordStorageWriter
+     * <li>   0 -   DirListManager
+     * <li>   1 -   DirListRead
+     * <li>   2 -   DirListWrite
+     * <li>   3 -   FileListBuild
+     *              
+     * <li>   4 -   WordStorageFilter
+     * <li>   5 -   WordStorageRouter
+     * <li>   6 -   WordStorageReader
+     * <li>   7 -   WordStorageWriter
+     *              
+     * <li>   8 -   WordRouter
+     * <li>   9 -   WordReader
+     * <li>  10 -   WordWriter
      * </ul>
      * This list of parameters changed in {@link ru.newcontrol.ncfv.AdilHelper#getParamNames AdilHelper.getParamNames()}
      * Return code of parameter by his number, calculeted from some fileds
@@ -170,12 +177,19 @@ public class AdilState {
     }
     /**
      * <ul>
-     * <li>  0 - WordRouter
-     * <li>  1 - WordReader
-     * <li>  2 - WordWriter
-     * <li>  3 - WordStorageRouter
-     * <li>  4 - WordStorageReader
-     * <li>  5 - WordStorageWriter
+     * <li>   0 -   DirListManager
+     * <li>   1 -   DirListRead
+     * <li>   2 -   DirListWrite
+     * <li>   3 -   FileListBuild
+     *              
+     * <li>   4 -   WordStorageFilter
+     * <li>   5 -   WordStorageRouter
+     * <li>   6 -   WordStorageReader
+     * <li>   7 -   WordStorageWriter
+     *              
+     * <li>   8 -   WordRouter
+     * <li>   9 -   WordReader
+     * <li>  10 -   WordWriter
      * </ul> 
      * @param typeBus
      * @param strForLogInputed 
@@ -200,12 +214,19 @@ public class AdilState {
     }
     /**
      * <ul>
-     * <li>  0 - WordRouter
-     * <li>  1 - WordReader
-     * <li>  2 - WordWriter
-     * <li>  3 - WordStorageRouter
-     * <li>  4 - WordStorageReader
-     * <li>  5 - WordStorageWriter
+     * <li>   0 -   DirListManager
+     * <li>   1 -   DirListRead
+     * <li>   2 -   DirListWrite
+     * <li>   3 -   FileListBuild
+     *              
+     * <li>   4 -   WordStorageFilter
+     * <li>   5 -   WordStorageRouter
+     * <li>   6 -   WordStorageReader
+     * <li>   7 -   WordStorageWriter
+     *              
+     * <li>   8 -   WordRouter
+     * <li>   9 -   WordReader
+     * <li>  10 -   WordWriter
      * </ul> 
      * @param typeBus
      * @param strForLogInputed 
@@ -230,12 +251,19 @@ public class AdilState {
     }
     /**
      * <ul>
-     * <li>  0 - WordRouter
-     * <li>  1 - WordReader
-     * <li>  2 - WordWriter
-     * <li>  3 - WordStorageRouter
-     * <li>  4 - WordStorageReader
-     * <li>  5 - WordStorageWriter
+     * <li>   0 -   DirListManager
+     * <li>   1 -   DirListRead
+     * <li>   2 -   DirListWrite
+     * <li>   3 -   FileListBuild
+     *              
+     * <li>   4 -   WordStorageFilter
+     * <li>   5 -   WordStorageRouter
+     * <li>   6 -   WordStorageReader
+     * <li>   7 -   WordStorageWriter
+     *              
+     * <li>   8 -   WordRouter
+     * <li>   9 -   WordReader
+     * <li>  10 -   WordWriter
      * </ul> 
      * @param typeBus
      * @param strForLogInputed 
@@ -260,12 +288,19 @@ public class AdilState {
     }
     /**
      * <ul>
-     * <li>  0 - WordRouter
-     * <li>  1 - WordReader
-     * <li>  2 - WordWriter
-     * <li>  3 - WordStorageRouter
-     * <li>  4 - WordStorageReader
-     * <li>  5 - WordStorageWriter
+     * <li>   0 -   DirListManager
+     * <li>   1 -   DirListRead
+     * <li>   2 -   DirListWrite
+     * <li>   3 -   FileListBuild
+     *              
+     * <li>   4 -   WordStorageFilter
+     * <li>   5 -   WordStorageRouter
+     * <li>   6 -   WordStorageReader
+     * <li>   7 -   WordStorageWriter
+     *              
+     * <li>   8 -   WordRouter
+     * <li>   9 -   WordReader
+     * <li>  10 -   WordWriter
      * </ul> 
      * @param typeBus
      * @param strForLogInputed 
@@ -290,12 +325,19 @@ public class AdilState {
     }
     /**
      * <ul>
-     * <li>  0 - WordRouter
-     * <li>  1 - WordReader
-     * <li>  2 - WordWriter
-     * <li>  3 - WordStorageRouter
-     * <li>  4 - WordStorageReader
-     * <li>  5 - WordStorageWriter
+     * <li>   0 -   DirListManager
+     * <li>   1 -   DirListRead
+     * <li>   2 -   DirListWrite
+     * <li>   3 -   FileListBuild
+     *              
+     * <li>   4 -   WordStorageFilter
+     * <li>   5 -   WordStorageRouter
+     * <li>   6 -   WordStorageReader
+     * <li>   7 -   WordStorageWriter
+     *              
+     * <li>   8 -   WordRouter
+     * <li>   9 -   WordReader
+     * <li>  10 -   WordWriter
      * </ul> 
      * @param typeBus
      * @param strForLogInputed 
@@ -320,12 +362,19 @@ public class AdilState {
     }
     /**
      * <ul>
-     * <li>  0 - WordRouter
-     * <li>  1 - WordReader
-     * <li>  2 - WordWriter
-     * <li>  3 - WordStorageRouter
-     * <li>  4 - WordStorageReader
-     * <li>  5 - WordStorageWriter
+     * <li>   0 -   DirListManager
+     * <li>   1 -   DirListRead
+     * <li>   2 -   DirListWrite
+     * <li>   3 -   FileListBuild
+     *              
+     * <li>   4 -   WordStorageFilter
+     * <li>   5 -   WordStorageRouter
+     * <li>   6 -   WordStorageReader
+     * <li>   7 -   WordStorageWriter
+     *              
+     * <li>   8 -   WordRouter
+     * <li>   9 -   WordReader
+     * <li>  10 -   WordWriter
      * </ul> 
      * @param typeBus
      * @param strForLogInputed 
@@ -340,7 +389,7 @@ public class AdilState {
             logLinesBusByNumber = (LinkedTransferQueue<String>) getLogLinesBusByNumber(typeBus);
             do {
                 poll = logLinesBusByNumber.poll();
-                if( !poll.isEmpty() ){
+                if( poll != null ){
                     strForInput.add(poll);
                 }
             } while( !logLinesBusByNumber.isEmpty() );
@@ -350,6 +399,10 @@ public class AdilState {
             logLinesBusByNumber = null;
         }
     }
+    /**
+     * 
+     * @return 
+     */
     protected ConcurrentSkipListMap<String, LinkedTransferQueue<String>> pollBusData(){
         ConcurrentSkipListMap<String, LinkedTransferQueue<String>> forReturnList = new ConcurrentSkipListMap<String, LinkedTransferQueue<String>>();
         LinkedTransferQueue<String> returnedArrayLinesByNumber = null;

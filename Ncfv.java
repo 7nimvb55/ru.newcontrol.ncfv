@@ -66,6 +66,7 @@ public class Ncfv {
         ThIndexRule thIndexRule = new ThIndexRule();
         
         AdilRule loggerRule = new AdilRule(thIndexRule);
+        thIndexRule.setAdilRule(loggerRule);
         AdilState loggerState = new AdilState(loggerRule);
         loggerRule.setAdilState(loggerState);
         AdilWorkerWrite loggerWorker = new AdilWorkerWrite(loggerRule);
@@ -101,7 +102,7 @@ public class Ncfv {
         thIndexDirList.start();
         waitForFinishedIndexDirListThread(thIndexRule);
         
-        loggerRule.runRouterWordWork();
+        
         thIndexFileList.start();
         thIndexStorageWord.start();
         thIndexWord.start();

@@ -36,12 +36,19 @@ public class AdilHelper {
         String[] namesForReturn;
         try {
             namesForReturn = new String[] {
-                "WordRouter",
-                "WordReader",
-                "WordWriter",
+                "DirListManager",
+                "DirListRead",
+                "DirListWrite",
+                "FileListBuild",
+                
+                "WordStorageFilter",
                 "WordStorageRouter",
                 "WordStorageReader",
                 "WordStorageWriter",
+                
+                "WordRouter",
+                "WordReader",
+                "WordWriter",
             };
             return namesForReturn;
         } finally {

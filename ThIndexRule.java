@@ -38,6 +38,9 @@ public class ThIndexRule {
     private ThIndexState currentIndexState;
     private Boolean isSetIndexState;
     
+    private AdilRule loggerRule;
+    private Boolean isSetAdilRule;
+    
     private ThIndexStatistic currentIndexStatistic;
     private Boolean isSetIndexStatistic;
     
@@ -50,6 +53,7 @@ public class ThIndexRule {
         setFalseRunnedThreadIndexDirList();
         setFalseRunnedThreadIndexMaker();
         setFalseIndexStatistic();
+        setFalseAdilRule();
         this.namesWorkerDirList = new ArrayBlockingQueue<String>(50);
     }
     protected void addThreadNameInQueue(String forAdd){
@@ -195,6 +199,32 @@ public class ThIndexRule {
     }
     protected Boolean isIndexState(){
         if( this.isSetIndexState ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * AdilRule
+     * @return 
+     */
+    protected AdilRule getAdilRule(){
+        if( !this.isAdilRule() ){
+            throw new IllegalArgumentException(AdilRule.class.getCanonicalName() + " object not set in " + ThIndexRule.class.getCanonicalName());
+        }
+        return this.loggerRule;
+    }
+    protected void setAdilRule(final AdilRule loggerAdilRuleOuter){
+        this.loggerRule = loggerAdilRuleOuter;
+        setTrueAdilRule();
+    }
+    protected void setTrueAdilRule(){
+        this.isSetAdilRule = Boolean.TRUE;
+    }
+    protected void setFalseAdilRule(){
+        this.isSetAdilRule = Boolean.FALSE;
+    }
+    protected Boolean isAdilRule(){
+        if( this.isSetAdilRule ){
             return Boolean.TRUE;
         }
         return Boolean.FALSE;

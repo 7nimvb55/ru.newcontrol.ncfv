@@ -85,7 +85,7 @@ public class AdilRule {
         }
         return Boolean.FALSE;
     }
-    protected void runRouterWordWork(){
+    protected void runAdilWorkWrite(){
         if( isAdilWorkWrite() && !isRunnedAdilWorkWrite() ){
             /**
              * @todo release workWriter Bus names for runned threads names threads
