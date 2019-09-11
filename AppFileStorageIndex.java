@@ -17,11 +17,6 @@ package ru.newcontrol.ncfv;
 
 import java.io.IOException;
 import java.net.URI;
-import java.nio.file.DirectoryIteratorException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -183,5 +178,13 @@ public class AppFileStorageIndex {
         listForReturn.add(AppFileNamesConstants.FILE_INDEX_PREFIX_LONG_WORD_LIST);
         listForReturn.add(AppFileNamesConstants.FILE_INDEX_PREFIX_LONG_WORD_DATA);
         return listForReturn;
+    }
+    /**
+     * @todo test open storages for exceptions,
+     * stop routers if not open storages
+     * @return 
+     */
+    protected static Boolean testOpenStore(){
+        return Boolean.TRUE;
     }
 }

@@ -18,6 +18,7 @@ package ru.newcontrol.ncfv;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.ProviderNotFoundException;
@@ -57,9 +58,11 @@ public class ThWordLogicWrite {
             //indexStatistic = indexRule.getIndexStatistic();
             //indexStatistic.updateDataStorages();
             currentIndexStorages = funcRuleWord.getIndexRule().getIndexState().currentIndexStorages();
+            
             byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
             byPrefixGetMap = currentIndexStorages.byPrefixGetMap( 
                     AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
+
             try( FileSystem fsForWriteData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
                 System.out.println("   ---   ---   ---   ---   ---   ---   ---   ---   ---   " 
                     + ThWordLogicWrite.class.getCanonicalName() + " open storage " + fsForWriteData.getPath("/").toUri().toString());
@@ -82,6 +85,9 @@ public class ThWordLogicWrite {
                     }
                 } while( funcRuleWord.isRunnedWordWorkRouter() );
                 //need write all cached data after end for all read jobs
+            } catch(FileSystemAlreadyExistsException exAlExist){
+                System.err.println(exAlExist.getMessage());
+                exAlExist.printStackTrace();
             } catch(FileSystemNotFoundException ex){
                 System.err.println(ex.getMessage());
                 ex.printStackTrace();

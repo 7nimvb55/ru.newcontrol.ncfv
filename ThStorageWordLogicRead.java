@@ -22,6 +22,7 @@ import java.io.OptionalDataException;
 import java.io.StreamCorruptedException;
 import java.net.URI;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -429,6 +430,9 @@ public class ThStorageWordLogicRead {
                     
                 }
             } while( outerRuleStorageWord.isRunnedStorageWordWorkRouter() );
+        } catch(FileSystemAlreadyExistsException exAlExist){
+            System.err.println(exAlExist.getMessage());
+            exAlExist.printStackTrace();
         } catch(FileSystemNotFoundException ex){
             System.err.println(ex.getMessage());
             ex.printStackTrace();

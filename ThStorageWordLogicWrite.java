@@ -22,6 +22,7 @@ import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -619,6 +620,10 @@ public class ThStorageWordLogicWrite {
             /**
              * @todo write all cache data 
              */
+            
+        } catch(FileSystemAlreadyExistsException exAlExist){
+            System.err.println(exAlExist.getMessage());
+            exAlExist.printStackTrace();
         } catch(FileSystemNotFoundException ex){
             System.err.println(ex.getMessage());
             ex.printStackTrace();

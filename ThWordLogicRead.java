@@ -18,6 +18,7 @@ package ru.newcontrol.ncfv;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.ProviderNotFoundException;
@@ -81,6 +82,9 @@ public class ThWordLogicRead {
                     }
                 } while( funcRuleWord.isRunnedWordWorkRouter() );
                 //need read all cached data after end for all read jobs
+            } catch(FileSystemAlreadyExistsException exAlExist){
+                System.err.println(exAlExist.getMessage());
+                exAlExist.printStackTrace();
             } catch(FileSystemNotFoundException ex){
                 System.err.println(ex.getMessage());
                 ex.printStackTrace();

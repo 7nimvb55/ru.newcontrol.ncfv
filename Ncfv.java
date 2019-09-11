@@ -97,7 +97,7 @@ public class Ncfv {
          */
         
         
-        thIndexStateObj.currentIndexStorages().updateMapForStorages();
+        //thIndexStateObj.currentIndexStorages().updateMapForStorages();
         thIndexDirList.start();
         waitForFinishedIndexDirListThread(thIndexRule);
         

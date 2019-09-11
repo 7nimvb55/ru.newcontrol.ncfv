@@ -42,10 +42,14 @@ public class AdilLogicWrite {
         AdilState adilState = ruleAdil.getAdilState();
         ConcurrentSkipListMap<String, LinkedTransferQueue<String>> pollBusData = adilState.pollBusData();
         if( pollBusData != null ){
-            Path storageLogIterationDir = AdilStorage.getStorageLogIterationDir();
-            if( storageLogIterationDir != null ){
-                for(Map.Entry<String, LinkedTransferQueue<String>> itemBusName : pollBusData.entrySet()){
-                    if( !itemBusName.getValue().isEmpty() ){
+            Path storageLogIterationDir = null;
+            
+            for(Map.Entry<String, LinkedTransferQueue<String>> itemBusName : pollBusData.entrySet()){
+                if( !itemBusName.getValue().isEmpty() ){
+                    if( storageLogIterationDir == null ){
+                        storageLogIterationDir = AdilStorage.getStorageLogIterationDir();
+                    } 
+                    if( storageLogIterationDir != null ) {
                         String keyBusName = itemBusName.getKey();
                         Path getFileForWrite = null;
                         try {
@@ -69,6 +73,7 @@ public class AdilLogicWrite {
                     }
                 }
             }
+            
             
         }
     }
