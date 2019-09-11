@@ -131,9 +131,9 @@ public class ThWordLogicRouter {
                     hexTagName = pollDataItem.hexSubString;
                     subString = pollDataItem.strSubString;
                     itemKey = pollDataItem.randomUUID;
-                    System.out.println(ThWordLogicRouter.class.getCanonicalName() 
+                    /*System.out.println(ThWordLogicRouter.class.getCanonicalName() 
                             + "          ====        ++++      ====      <<< Logic Word"
-                            + "----- <   <   <   ---   tagname " + hexTagName + " string " + subString);
+                            + "----- <   <   <   ---   tagname " + hexTagName + " string " + subString);*/
                     adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
                             msgToLog
                             + AdilConstants.STATE

@@ -41,6 +41,17 @@ public class ThWordLogicRead {
         Map<String, String> byPrefixGetMap;
         ThWordEventLogic eventLogic;
         try {
+            AdilRule adilRule = outerRuleWord.getIndexRule().getAdilRule();
+            AdilState adilState = adilRule.getAdilState();
+            Integer numberProcessIndexSystem = 11;
+            String msgToLog = AdilConstants.INFO_LOGIC_POSITION
+                    + AdilConstants.CANONICALNAME
+                    + ThWordLogicRead.class.getCanonicalName()
+                    + AdilConstants.METHOD
+                    + "doReadFromIndexWord()";
+            adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                    msgToLog
+                    + AdilConstants.START);
             funcRuleWord = (ThWordRule) outerRuleWord;
             
             indexRule = funcRuleWord.getIndexRule();
@@ -86,6 +97,9 @@ public class ThWordLogicRead {
                 System.err.println(ex.getMessage());
                 ex.printStackTrace();
             }
+            adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                msgToLog
+                + AdilConstants.FINISH);
         } finally {
             pollNextUuid = null;
             indexRule = null;

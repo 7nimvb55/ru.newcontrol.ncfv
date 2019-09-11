@@ -57,6 +57,7 @@ public class AdilState {
      * <li>  10 -   WordRouter
      * <li>  11 -   WordReader
      * <li>  12 -   WordWriter
+     * <li>  13 -   WordEvent
      * </ul> 
      * This list of parameters changed in {@link ru.newcontrol.ncfv.AdilHelper#getParamNames AdilHelper.getParamNames()}
      * Return code of parameter by his number, calculeted from some fileds
@@ -194,6 +195,7 @@ public class AdilState {
      * <li>  10 -   WordRouter
      * <li>  11 -   WordReader
      * <li>  12 -   WordWriter
+     * <li>  13 -   WordEvent
      * </ul>  
      * @param typeBus
      * @param strForLogInputed 
@@ -233,6 +235,7 @@ public class AdilState {
      * <li>  10 -   WordRouter
      * <li>  11 -   WordReader
      * <li>  12 -   WordWriter
+     * <li>  13 -   WordEvent
      * </ul> 
      * @param typeBus
      * @param strForLogInputed 
@@ -272,6 +275,7 @@ public class AdilState {
      * <li>  10 -   WordRouter
      * <li>  11 -   WordReader
      * <li>  12 -   WordWriter
+     * <li>  13 -   WordEvent
      * </ul> 
      * @param typeBus
      * @param strForLogInputed 
@@ -311,6 +315,7 @@ public class AdilState {
      * <li>  10 -   WordRouter
      * <li>  11 -   WordReader
      * <li>  12 -   WordWriter
+     * <li>  13 -   WordEvent
      * </ul> 
      * @param typeBus
      * @param strForLogInputed 
@@ -350,6 +355,7 @@ public class AdilState {
      * <li>  10 -   WordRouter
      * <li>  11 -   WordReader
      * <li>  12 -   WordWriter
+     * <li>  13 -   WordEvent
      * </ul> 
      * @param typeBus
      * @param strForLogInputed 
@@ -389,6 +395,7 @@ public class AdilState {
      * <li>  10 -   WordRouter
      * <li>  11 -   WordReader
      * <li>  12 -   WordWriter
+     * <li>  13 -   WordEvent
      * </ul> 
      * @param typeBus
      * @param strForLogInputed 

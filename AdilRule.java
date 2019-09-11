@@ -96,7 +96,7 @@ public class AdilRule {
              * for release wait him finish functions
              */
             String toStringAdilWorkWrite = UUID.randomUUID().toString();
-            this.indexRule.addThreadNameInQueue(toStringAdilWorkWrite);
+            //this.indexRule.addThreadNameInQueue(toStringAdilWorkWrite);
             Thread thForWorkRouter = new Thread(this.runnableAdilWorkWrite, toStringAdilWorkWrite);
             thForWorkRouter.setPriority(7);
             thForWorkRouter.start();

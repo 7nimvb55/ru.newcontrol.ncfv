@@ -97,6 +97,10 @@ public class ThDirListLogicManager {
                         msgToLog
                         + AdilConstants.STATE
                         + AdilConstants.VARNAME
+                        + "count"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(count)
+                        + AdilConstants.VARNAME
                         + "storageForJobElement"
                         + AdilConstants.VARVAL
                         + storageForJobElement.toUri().toString());
@@ -106,7 +110,14 @@ public class ThDirListLogicManager {
                     //Read into readedFromDirListDataBus
                     
                 }
-                System.out.println("Count of files " + count);
+                //System.out.println("Count of files " + count);
+                adilState.putLogLineByProcessNumberMsg(2, 
+                        msgToLog
+                        + AdilConstants.STATE
+                        + AdilConstants.VARNAME
+                        + "count"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(count));
             if( count == 0 ){
                 System.out.println("Directory is Empty " + lookPath.toString());
             }

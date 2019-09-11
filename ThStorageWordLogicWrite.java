@@ -44,6 +44,17 @@ public class ThStorageWordLogicWrite {
         ThStorageWordRule funcRuleStorageWord;
         AppFileStorageIndex currentIndexStorages;
         try{
+            AdilRule adilRule = outerRuleStorageWord.getIndexRule().getAdilRule();
+            AdilState adilState = adilRule.getAdilState();
+            Integer numberProcessIndexSystem = 9;
+            String msgToLog = AdilConstants.INFO_LOGIC_POSITION
+                    + AdilConstants.CANONICALNAME
+                    + ThStorageWordLogicWrite.class.getCanonicalName()
+                    + AdilConstants.METHOD
+                    + "doWriteToIndexStorageWord()";
+            adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                    msgToLog
+                    + AdilConstants.START);
             long counIterations = 0;
             /**
              * @todo
@@ -382,10 +393,22 @@ public class ThStorageWordLogicWrite {
                                                  */
                                                 oos.writeObject(pollTypeWordTagFileNameData);
                                                 oos.flush();
-                                                System.out.println(ThStorageWordLogicWrite.class.getCanonicalName() 
+                                                /*System.out.println(ThStorageWordLogicWrite.class.getCanonicalName() 
                                                         + " => => =>                                             => => => " 
                                                         + nowWritedFile.toUri().toString() 
-                                                        + " writed size " + pollTypeWordTagFileNameData.size());
+                                                        + " writed size " + pollTypeWordTagFileNameData.size());*/
+                                                adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                                                    msgToLog
+                                                    + AdilConstants.STATE
+                                                    + AdilConstants.VARNAME
+                                                    + "nowWritedFile.toUri().toString()"
+                                                    + AdilConstants.VARVAL
+                                                    + nowWritedFile.toUri().toString()
+                                                    + AdilConstants.VARNAME
+                                                    + "pollTypeWordTagFileNameData.size()"
+                                                    + AdilConstants.VARVAL
+                                                    + pollTypeWordTagFileNameData.size()
+                                                );
                                                 statusWorkersForKeyPointFlow.put(1640531930, Boolean.TRUE);
                                                 
                                                 //more catch
@@ -612,7 +635,9 @@ public class ThStorageWordLogicWrite {
             System.err.println(ex.getMessage());
             ex.printStackTrace();
         }
-        
+        adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                msgToLog
+                + AdilConstants.FINISH);
         
         } finally {
             

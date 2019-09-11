@@ -42,6 +42,18 @@ public class ThStorageWordLogicRead {
         ThStorageWordRule funcRuleStorageWord;
         AppFileStorageIndex currentIndexStorages;
         try{
+            AdilRule adilRule = outerRuleStorageWord.getIndexRule().getAdilRule();
+            AdilState adilState = adilRule.getAdilState();
+            Integer numberProcessIndexSystem = 8;
+            String msgToLog = AdilConstants.INFO_LOGIC_POSITION
+                    + AdilConstants.CANONICALNAME
+                    + ThStorageWordLogicRead.class.getCanonicalName()
+                    + AdilConstants.METHOD
+                    + "doReadFromIndexStorageWord()";
+            adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                    msgToLog
+                    + AdilConstants.START);
+            
             long counIterations = 0;
             /**
              * @todo
@@ -320,6 +332,18 @@ public class ThStorageWordLogicRead {
                                                             hexTagName, 
                                                             subStringValue, 
                                                             mainFlowLabel);
+                                                    adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                                                    msgToLog
+                                                        + AdilConstants.STATE
+                                                        + AdilConstants.VARNAME
+                                                        + "forReadFileName.toUri().toString()"
+                                                        + AdilConstants.VARVAL
+                                                        + forReadFileName.toUri().toString()
+                                                        + AdilConstants.VARNAME
+                                                        + "readedFormData.size()"
+                                                        + AdilConstants.VARVAL
+                                                        + String.valueOf(readedFormData.size())
+                                                    );
                                                     ConcurrentHashMap<String, String> remove = busVal.getValue().remove(mainFlowLabel);
                                                     remove = null;
                                                 } catch(ClassNotFoundException exCnf){
@@ -421,7 +445,9 @@ public class ThStorageWordLogicRead {
             System.err.println(ex.getMessage());
             ex.printStackTrace();
         }
-        
+        adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                msgToLog
+                + AdilConstants.FINISH);
         
         } finally {
             

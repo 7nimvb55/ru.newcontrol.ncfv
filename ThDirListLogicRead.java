@@ -113,6 +113,14 @@ public class ThDirListLogicRead {
                     }
                     jobForRead = busReadedJob.getJobForRead();
                 }
+                adilState.putLogLineByProcessNumberMsg(3, 
+                            msgToLog
+                            + AdilConstants.STATE
+                            + AdilConstants.VARNAME
+                            + "countJobs"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(countJobs));
+                
             } catch(FileSystemNotFoundException ex){
                 System.err.println(ex.getMessage());
                 ex.printStackTrace();

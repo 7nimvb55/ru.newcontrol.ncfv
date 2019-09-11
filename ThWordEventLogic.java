@@ -67,6 +67,7 @@ public class ThWordEventLogic {
     private final UUID objectLabel;
     //Sources
     //private final ThStorageWordBusOutput busJobForWordRouter;
+    private final ThWordRule ruleWord;
     private final ThWordState wordState;
     private final ThWordStatusMainFlow wordStatusMainFlow;
     private final ThWordCacheSk wordCache;
@@ -78,6 +79,7 @@ public class ThWordEventLogic {
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
         //this.busJobForWordRouter = ruleWordInputed.getIndexRule().getIndexState().getRuleStorageWord().getStorageWordState().getBusJobForWordWrite();
+        this.ruleWord = ruleWordInputed;
         this.wordState = ruleWordInputed.getWordState();
         this.eventIndexFlow = ruleWordInputed.getWordState().getEventIndexFlow();
         this.wordStatusMainFlow = ruleWordInputed.getWordStatusMainFlow();
@@ -136,7 +138,17 @@ public class ThWordEventLogic {
         Integer sizeBusFlowUuids;
         String exMessage = new String();
         try {
-            
+            AdilRule adilRule = this.ruleWord.getIndexRule().getAdilRule();
+            AdilState adilState = adilRule.getAdilState();
+            Integer numberProcessIndexSystem = 13;
+            String msgToLog = AdilConstants.INFO_LOGIC_POSITION
+                    + AdilConstants.CANONICALNAME
+                    + ThWordEventLogic.class.getCanonicalName()
+                    + AdilConstants.METHOD
+                    + "insertIntoCacheData()";
+            adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                    msgToLog
+                    + AdilConstants.START);
             if( typeWordOfBusOutput == null ){
                 throw new IllegalArgumentException(ThWordEventLogic.class.getCanonicalName() + " typeWord is null");
             }
@@ -174,6 +186,34 @@ public class ThWordEventLogic {
                     this.eventIndex.putMainFlowUuidTypeWord(createInitMainFlow, typeWordOfBusOutput);
                     this.eventIndex.putMainFlowUuidHexTagName(createInitMainFlow, hexTagNameFromBusOutput);
                     this.eventIndex.putMainFlowUuidSubString(createInitMainFlow, subStringFromBusOutput);
+                    adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                            msgToLog
+                            + AdilConstants.STATE
+                            + AdilConstants.VARNAME
+                            + "typeWordOfBusOutput"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(typeWordOfBusOutput)
+                            + AdilConstants.VARNAME
+                            + "hexTagNameFromBusOutput"
+                            + AdilConstants.VARVAL
+                            + hexTagNameFromBusOutput
+                            + AdilConstants.VARNAME
+                            + "subStringFromBusOutput"
+                            + AdilConstants.VARVAL
+                            + subStringFromBusOutput
+                            + AdilConstants.VARNAME
+                            + "setDataIntoCacheFlow"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(setDataIntoCacheFlow)
+                            + AdilConstants.VARNAME
+                            + "isNeedCreateNewUuid"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(isNeedCreateNewUuid)
+                            + AdilConstants.VARNAME
+                            + "createInitMainFlow"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(createInitMainFlow)
+                        );
                 }
                 //start after insert into cache
                 //@todo 2 set in init
@@ -233,6 +273,9 @@ public class ThWordEventLogic {
                 }
             }
             //end after insert into cache
+            adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                msgToLog
+                + AdilConstants.FINISH);
         } finally {
             createInitMainFlow = null;
             setDataIntoCacheFlow = null;
@@ -269,7 +312,19 @@ public class ThWordEventLogic {
         Boolean localPrevDataWrited; 
         Boolean localPrevDataMoved;
         Boolean localIsUuidFinished;
+        Boolean isFileDeleted = Boolean.FALSE;
         try {
+            AdilRule adilRule = this.ruleWord.getIndexRule().getAdilRule();
+            AdilState adilState = adilRule.getAdilState();
+            Integer numberProcessIndexSystem = 13;
+            String msgToLog = AdilConstants.INFO_LOGIC_POSITION
+                    + AdilConstants.CANONICALNAME
+                    + ThWordEventLogic.class.getCanonicalName()
+                    + AdilConstants.METHOD
+                    + "writeDataToStorage()";
+            adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                    msgToLog
+                    + AdilConstants.START);
             localIsUuidFinished = Boolean.TRUE; 
             localPrevDataWrited = Boolean.FALSE; 
             localPrevDataMoved = Boolean.FALSE;
@@ -334,7 +389,8 @@ public class ThWordEventLogic {
                     if( workersIsNeedDeleteOldFile ){
                         String nameForDeleteFileName = this.wordStatusMainFlow.getValueForMainFlowUuidByNumberName(typeWordByMainFlowUuid, subStringByMainFlowUuid, hexTagNameByMainFlowUuid, pollNextUuid, 3);
                         Path localDeleteOldFileName = fsForWriteData.getPath(storageTypeWordWritedFile.toString(), nameForDeleteFileName);
-                        Boolean isFileDeleted = ThWordHelper.deleteFileFromStorage(localDeleteOldFileName);
+                        
+                        isFileDeleted = ThWordHelper.deleteFileFromStorage(localDeleteOldFileName);
                         if( !isFileDeleted ){
                             //if not delete file
                             localIsUuidFinished = Boolean.FALSE;
@@ -365,6 +421,38 @@ public class ThWordEventLogic {
                         }
                         writedFromCacheData = ThWordHelper.doUtilizationDataInitNew(writedFromCacheData);
                     }
+                    adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                            msgToLog
+                            + AdilConstants.STATE
+                            + AdilConstants.VARNAME
+                            + "typeWordByMainFlowUuid"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(typeWordByMainFlowUuid)
+                            + AdilConstants.VARNAME
+                            + "hexTagNameByMainFlowUuid"
+                            + AdilConstants.VARVAL
+                            + hexTagNameByMainFlowUuid
+                            + AdilConstants.VARNAME
+                            + "subStringByMainFlowUuid"
+                            + AdilConstants.VARVAL
+                            + subStringByMainFlowUuid
+                            + AdilConstants.VARNAME
+                            + "localIsWritedToStorage"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(localIsWritedToStorage)
+                            + AdilConstants.VARNAME
+                            + "workersIsNeedDeleteOldFile"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(workersIsNeedDeleteOldFile)
+                            + AdilConstants.VARNAME
+                            + "isFileDeleted"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(isFileDeleted)
+                            + AdilConstants.VARNAME
+                            + "localPrevDataMoved"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(localPrevDataMoved)
+                        );
                 }
             } while( !pollTypeWordTagFileNameData.isEmpty() );
             //utilize writed data
@@ -377,13 +465,27 @@ public class ThWordEventLogic {
                 this.wordState.getBusEventShortNextStep().addUuidToShortEvent(0, 1, pollNextUuid);
                 this.wordState.getBusEventShort().addUuidToShortEvent(2, 2, pollNextUuid);
             }
-            
+            adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                msgToLog
+                + AdilConstants.FINISH);
         } finally {
             
         }
     }
     protected void readDataFromStorage(FileSystem fsForReadData, UUID pollNextUuid){
+        Boolean isCacheReaded = Boolean.FALSE;
         try {
+            AdilRule adilRule = this.ruleWord.getIndexRule().getAdilRule();
+            AdilState adilState = adilRule.getAdilState();
+            Integer numberProcessIndexSystem = 13;
+            String msgToLog = AdilConstants.INFO_LOGIC_POSITION
+                    + AdilConstants.CANONICALNAME
+                    + ThWordEventLogic.class.getCanonicalName()
+                    + AdilConstants.METHOD
+                    + "readDataFromStorage()";
+            adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                    msgToLog
+                    + AdilConstants.START);
             String hexTagNameByMainFlowUuid = this.eventIndex.getHexTagNameByMainFlowUuid(pollNextUuid);
             String subStringByMainFlowUuid = this.eventIndex.getSubStringByMainFlowUuid(pollNextUuid);
             Integer typeWordByMainFlowUuid = this.eventIndex.getTypeWordByMainFlowUuid(pollNextUuid);
@@ -404,7 +506,8 @@ public class ThWordEventLogic {
                         }
                     }
                     if( isReadedDataValide && (!readedFromStorageData.isEmpty()) ){
-                        Boolean isCacheReaded = this.wordCacheReaded.addAllDataIntoCache(readedFromStorageData);
+                        
+                        isCacheReaded = this.wordCacheReaded.addAllDataIntoCache(readedFromStorageData);
                         this.wordStatusMainFlow.changeInWorkers(typeWordByMainFlowUuid, subStringByMainFlowUuid, hexTagNameByMainFlowUuid, pollNextUuid, 4, isCacheReaded);
                         Integer sizeReadedData = readedFromStorageData.size();
                         this.wordStatusMainFlow.changeInDataCache(typeWordByMainFlowUuid, subStringByMainFlowUuid, hexTagNameByMainFlowUuid, pollNextUuid, 1, sizeReadedData);
@@ -412,10 +515,45 @@ public class ThWordEventLogic {
                         this.wordState.getBusEventShort().addUuidToShortEvent(2, 1, pollNextUuid);
                     }
                     //change main flow params
+                    adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                            msgToLog
+                            + AdilConstants.STATE
+                            + AdilConstants.VARNAME
+                            + "typeWordByMainFlowUuid"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(typeWordByMainFlowUuid)
+                            + AdilConstants.VARNAME
+                            + "hexTagNameByMainFlowUuid"
+                            + AdilConstants.VARVAL
+                            + hexTagNameByMainFlowUuid
+                            + AdilConstants.VARNAME
+                            + "subStringByMainFlowUuid"
+                            + AdilConstants.VARVAL
+                            + subStringByMainFlowUuid
+                            + AdilConstants.VARNAME
+                            + "readedFromStorageData.size()"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(readedFromStorageData.size())
+                            + AdilConstants.VARNAME
+                            + "isReadedDataValide"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(isReadedDataValide)
+                            + AdilConstants.VARNAME
+                            + "forReadFileName.toUri().toString()"//***
+                            + AdilConstants.VARVAL
+                            + String.valueOf(forReadFileName.toUri().toString())
+                            + AdilConstants.VARNAME
+                            + "isCacheReaded"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(isCacheReaded)
+                        );
                 }
             }
+            adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                msgToLog
+                + AdilConstants.FINISH);
         } finally {
-            
+            isCacheReaded = null;
         }
     }
     /**
