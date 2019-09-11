@@ -52,6 +52,7 @@ public class ThIndexStorageWord extends Thread{
         ThStorageWordBusReadedFlow thStorageWordFlowRead = new ThStorageWordBusReadedFlow(thStorageWordStatusMainFlow);
         //init Rule
         ThStorageWordRule thStorageWordRule = new ThStorageWordRule(this.ruleThIndex);
+        this.ruleThIndex.getIndexState().setRuleStorageWord(thStorageWordRule);
         thStorageWordRule.setStorageWordState(thStorageWordState);
         thStorageWordRule.setStorageWordStatusMainFlow(thStorageWordStatusMainFlow);
         thStorageWordState.setStorageWordFlowReaded(thStorageWordFlowRead);
