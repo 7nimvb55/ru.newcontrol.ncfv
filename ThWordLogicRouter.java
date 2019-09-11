@@ -37,6 +37,17 @@ public class ThWordLogicRouter {
         ThStorageWordState storageWordState;
         ThStorageWordBusOutput busOutputForWordRouter;
         try {
+            AdilRule adilRule = outerRuleWord.getIndexRule().getAdilRule();
+            AdilState adilState = adilRule.getAdilState();
+            Integer numberProcessIndexSystem = 10;
+            String msgToLog = AdilConstants.INFO_LOGIC_POSITION
+                    + AdilConstants.CANONICALNAME
+                    + ThWordLogicRouter.class.getCanonicalName()
+                    + AdilConstants.METHOD
+                    + "doRouterForIndexWord()";
+            adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                    msgToLog
+                    + AdilConstants.START);
             wordRuleFunc = (ThWordRule) outerRuleWord;
             indexRuleFunc = wordRuleFunc.getIndexRule();
             indexState = indexRuleFunc.getIndexState();
@@ -45,25 +56,12 @@ public class ThWordLogicRouter {
             busOutputForWordRouter = storageWordState.getBusJobForWordWrite();
             do{
                 outerBusIterator(wordRuleFunc, busOutputForWordRouter);
-                System.out.println(ThWordLogicRouter.class.getCanonicalName() 
-                            + "          ====        ++++      ====      <<< Logic Word"
-                            + "----- <   <   <   ---   life ");
+                
             } while( storageWordRuleFunc.isRunnedStorageWordWorkFilter() );
-            System.out.println(ThWordLogicRouter.class.getCanonicalName() 
-                            + "          ====        ++++      ====      <<< Logic Word"
-                            + "----- <   <   <   ---   EOL ");
-            System.out.println(ThWordLogicRouter.class.getCanonicalName() 
-                            + "          ====        ++++      ====      <<< Logic Word"
-                            + "----- <   <   <   ---   EOL ");
-            System.out.println(ThWordLogicRouter.class.getCanonicalName() 
-                            + "          ====        ++++      ====      <<< Logic Word"
-                            + "----- <   <   <   ---   EOL ");
-            System.out.println(ThWordLogicRouter.class.getCanonicalName() 
-                            + "          ====        ++++      ====      <<< Logic Word"
-                            + "----- <   <   <   ---   EOL ");
-            System.out.println(ThWordLogicRouter.class.getCanonicalName() 
-                            + "          ====        ++++      ====      <<< Logic Word"
-                            + "----- <   <   <   ---   EOL ");
+            
+            adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                msgToLog
+                + AdilConstants.FINISH);
         } finally {
             wordRuleFunc = null;
             indexRuleFunc = null;
@@ -111,6 +109,17 @@ public class ThWordLogicRouter {
         TdataWord pollDataItem;
         UUID itemKey;
         try {
+            AdilRule adilRule = outerRuleWord.getIndexRule().getAdilRule();
+            AdilState adilState = adilRule.getAdilState();
+            Integer numberProcessIndexSystem = 10;
+            String msgToLog = AdilConstants.INFO_LOGIC_POSITION
+                    + AdilConstants.CANONICALNAME
+                    + ThWordLogicRouter.class.getCanonicalName()
+                    + AdilConstants.METHOD
+                    + "generateMainFlowForDataFromBusOutput()";
+            adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                    msgToLog
+                    + AdilConstants.START);
             typeWordOfBusOutputFunc = (Integer) typeWordOfBusOutputInputed;
             busOutputByTypeWordFunc = (LinkedTransferQueue<TdataWord>) busOutputByTypeWordInputed;
             hexTagName = new String();
@@ -125,10 +134,32 @@ public class ThWordLogicRouter {
                     System.out.println(ThWordLogicRouter.class.getCanonicalName() 
                             + "          ====        ++++      ====      <<< Logic Word"
                             + "----- <   <   <   ---   tagname " + hexTagName + " string " + subString);
+                    adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                            msgToLog
+                            + AdilConstants.STATE
+                            + AdilConstants.VARNAME
+                            + "typeWordOfBusOutputFunc"
+                            + AdilConstants.VARVAL
+                            + String.valueOf(typeWordOfBusOutputFunc)
+                            + AdilConstants.VARNAME
+                            + "itemKey"
+                            + AdilConstants.VARVAL
+                            + itemKey
+                            + AdilConstants.VARNAME
+                            + "hexTagName"
+                            + AdilConstants.VARVAL
+                            + hexTagName
+                            + AdilConstants.VARNAME
+                            + "subString"
+                            + AdilConstants.VARVAL
+                            + subString
+                        );
                     eventLogic.insertIntoCacheData(typeWordOfBusOutputFunc, hexTagName, subString, pollDataItem);
                 }
             } while( !busOutputByTypeWordFunc.isEmpty() );
-            
+            adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                msgToLog
+                + AdilConstants.FINISH);
         } finally {
             eventLogic = null;
             labelTypeData = null;

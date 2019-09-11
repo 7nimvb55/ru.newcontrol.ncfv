@@ -83,7 +83,7 @@ public class ThStorageWordLogicRouter {
                      */
                     keyHexTagName = itemsOfBus.getKey();
                     removedSubString = items.getValue().remove(keyHexTagName);
-                    if( countRecToConsole > 500 ){
+                    if( countRecToConsole > 2500 ){
                         /*System.out.println("For bus " 
                                 + busNumber
                                 + " hexWord " 
@@ -109,7 +109,7 @@ public class ThStorageWordLogicRouter {
                         adilRule.runAdilWorkWrite();
                     }
                     countRecToConsole++;
-                    if( countRecToConsole > 503 ){
+                    if( countRecToConsole > 2503 ){
                         countRecToConsole = 0;
                     }
                     ThWordHelper.utilizeStringValues(new String[]{keyHexTagName, removedSubString, busNumber});
