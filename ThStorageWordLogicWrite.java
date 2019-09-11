@@ -64,8 +64,8 @@ public class ThStorageWordLogicWrite {
             funcRuleStorageWord = (ThStorageWordRule) outerRuleStorageWord;
             
             indexRule = funcRuleStorageWord.getIndexRule();
-            indexStatistic = indexRule.getIndexStatistic();
-            indexStatistic.updateDataStorages();
+            //indexStatistic = indexRule.getIndexStatistic();
+            //indexStatistic.updateDataStorages();
             currentIndexStorages = funcRuleStorageWord.getIndexRule().getIndexState().currentIndexStorages();
             URI byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD);
             Map<String, String> byPrefixGetMap = currentIndexStorages.byPrefixGetMap(

@@ -54,8 +54,8 @@ public class ThWordLogicWrite {
             funcRuleWord = (ThWordRule) outerRuleWord;
             
             indexRule = funcRuleWord.getIndexRule();
-            indexStatistic = indexRule.getIndexStatistic();
-            indexStatistic.updateDataStorages();
+            //indexStatistic = indexRule.getIndexStatistic();
+            //indexStatistic.updateDataStorages();
             currentIndexStorages = funcRuleWord.getIndexRule().getIndexState().currentIndexStorages();
             byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
             byPrefixGetMap = currentIndexStorages.byPrefixGetMap( 

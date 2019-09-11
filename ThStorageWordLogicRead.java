@@ -63,8 +63,8 @@ public class ThStorageWordLogicRead {
             funcRuleStorageWord = (ThStorageWordRule) outerRuleStorageWord;
             ThStorageWordBusReadedFlow storageWordFlowReaded = funcRuleStorageWord.getStorageWordState().getStorageWordFlowReaded();
             indexRule = funcRuleStorageWord.getIndexRule();
-            indexStatistic = indexRule.getIndexStatistic();
-            indexStatistic.updateDataStorages();
+            //indexStatistic = indexRule.getIndexStatistic();
+            //indexStatistic.updateDataStorages();
             currentIndexStorages = funcRuleStorageWord.getIndexRule().getIndexState().currentIndexStorages();
             URI byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD);
             Map<String, String> byPrefixGetMap = currentIndexStorages.byPrefixGetMap(
