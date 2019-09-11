@@ -58,7 +58,11 @@ public class AdilStorage {
             if( iterationTimeStamp.isEmpty() ){
                 return null;
             }
-            logAppSubDir = getLogSubDir().toString();
+            Path logSubDir = getLogSubDir();
+            if( logSubDir == null ){
+                return null;
+            }    
+            logAppSubDir = logSubDir.toString();
             if( logAppSubDir.isEmpty() ){
                 return null;
             }
@@ -91,7 +95,7 @@ public class AdilStorage {
         Boolean isCreated;
         Boolean isReadWriteNotLink;
         try {
-            appCheckedPath = AdihFileOperations.getAppCheckedPath();
+            appCheckedPath = AdihFileOperations.getForLogDirectory();
             if( appCheckedPath == null ){
                 return null;
             }
