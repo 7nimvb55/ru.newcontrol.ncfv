@@ -21,8 +21,6 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.ProviderNotFoundException;
 import java.util.Map;
 import java.util.UUID;
@@ -62,14 +60,25 @@ public class ThWordLogicRead {
             //indexStatistic.updateDataStorages();
             currentIndexStorages = funcRuleWord.getIndexRule().getIndexState().currentIndexStorages();
             byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
-            //byPrefixGetMap = currentIndexStorages.byPrefixGetMap( 
-            //        AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
-            Path pathStoreFromURI = Paths.get(byPrefixGetUri);
-            Boolean pathIsFile = AdihFileOperations.pathIsFile(pathStoreFromURI);
-            if( pathIsFile ){
-                byPrefixGetMap = AppFileStorageIndex.getFsPropExist();
-            } else {
-                byPrefixGetMap = AppFileStorageIndex.getFsPropCreate();
+            byPrefixGetMap = currentIndexStorages.byPrefixGetMap( 
+                    AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
+            for( Map.Entry<String, String> itemByPrefixGetMap : byPrefixGetMap.entrySet() ){
+                adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
+                    msgToLog
+                    + AdilConstants.STATE
+                    + AdilConstants.VARNAME
+                    + "byPrefixGetUri.toString()"
+                    + AdilConstants.VARVAL
+                    + byPrefixGetUri.toString()
+                    + AdilConstants.VARNAME
+                    + "itemByPrefixGetMap.getKey()"
+                    + AdilConstants.VARVAL
+                    + itemByPrefixGetMap.getKey()
+                    + AdilConstants.VARNAME
+                    + "itemByPrefixGetMap.getValue()"
+                    + AdilConstants.VARVAL
+                    + itemByPrefixGetMap.getValue()
+                );
             }
             try( FileSystem fsForReadData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
                 do {
@@ -92,23 +101,35 @@ public class ThWordLogicRead {
                 } while( funcRuleWord.isRunnedWordWorkRouter() );
                 //need read all cached data after end for all read jobs
             } catch(FileSystemAlreadyExistsException exAlExist){
-                System.err.println(exAlExist.getMessage());
+                System.err.println(ThWordLogicRead.class.getCanonicalName() 
+                        + " error for open storage for index, reason " 
+                        + exAlExist.getMessage());
                 exAlExist.printStackTrace();
-            } catch(FileSystemNotFoundException ex){
-                System.err.println(ex.getMessage());
-                ex.printStackTrace();
-            } catch(ProviderNotFoundException ex){
-                System.err.println(ex.getMessage());
-                ex.printStackTrace();
-            } catch(IllegalArgumentException ex){
-                System.err.println(ex.getMessage());
-                ex.printStackTrace();
-            } catch(SecurityException ex){
-                System.err.println(ex.getMessage());
-                ex.printStackTrace();
-            } catch (IOException ex) {
-                System.err.println(ex.getMessage());
-                ex.printStackTrace();
+            } catch(FileSystemNotFoundException exFsNotExist){
+                System.err.println(ThWordLogicRead.class.getCanonicalName() 
+                        + " error for open storage for index, reason " 
+                        + exFsNotExist.getMessage());
+                exFsNotExist.printStackTrace();
+            } catch(ProviderNotFoundException exProvNotFound){
+                System.err.println(ThWordLogicRead.class.getCanonicalName() 
+                        + " error for open storage for index, reason " 
+                        + exProvNotFound.getMessage());
+                exProvNotFound.printStackTrace();
+            } catch(IllegalArgumentException exIllArg){
+                System.err.println(ThWordLogicRead.class.getCanonicalName() 
+                        + " error for open storage for index, reason " 
+                        + exIllArg.getMessage());
+                exIllArg.printStackTrace();
+            } catch(SecurityException exSec){
+                System.err.println(ThWordLogicRead.class.getCanonicalName() 
+                        + " error for open storage for index, reason " 
+                        + exSec.getMessage());
+                exSec.printStackTrace();
+            } catch (IOException exIo) {
+                System.err.println(ThWordLogicRead.class.getCanonicalName() 
+                        + " error for open storage for index, reason " 
+                        + exIo.getMessage());
+                exIo.printStackTrace();
             }
             adilState.putLogLineByProcessNumberMsg(numberProcessIndexSystem, 
                 msgToLog
