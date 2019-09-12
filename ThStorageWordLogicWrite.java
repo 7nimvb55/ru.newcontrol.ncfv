@@ -28,6 +28,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.ProviderNotFoundException;
 import java.nio.file.StandardCopyOption;
 import java.util.Map;
@@ -69,8 +70,16 @@ public class ThStorageWordLogicWrite {
             //indexStatistic.updateDataStorages();
             currentIndexStorages = funcRuleStorageWord.getIndexRule().getIndexState().currentIndexStorages();
             URI byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD);
-            Map<String, String> byPrefixGetMap = currentIndexStorages.byPrefixGetMap(
-                    AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD); 
+            Map<String, String> byPrefixGetMap;
+            //Map<String, String> byPrefixGetMap = currentIndexStorages.byPrefixGetMap(
+            //        AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD); 
+            Path pathStoreFromURI = Paths.get(byPrefixGetUri);
+            Boolean pathIsFile = AdihFileOperations.pathIsFile(pathStoreFromURI);
+            if( pathIsFile ){
+                byPrefixGetMap = AppFileStorageIndex.getFsPropExist();
+            } else {
+                byPrefixGetMap = AppFileStorageIndex.getFsPropCreate();
+            }
             try( FileSystem fsForWriteData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
         
             System.out.println("   ---   ---   ---   ---   ---   ---   ---   ---   ---   " 

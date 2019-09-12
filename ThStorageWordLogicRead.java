@@ -27,6 +27,7 @@ import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.ProviderNotFoundException;
 import java.util.Map;
 import java.util.UUID;
@@ -68,8 +69,16 @@ public class ThStorageWordLogicRead {
             //indexStatistic.updateDataStorages();
             currentIndexStorages = funcRuleStorageWord.getIndexRule().getIndexState().currentIndexStorages();
             URI byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD);
-            Map<String, String> byPrefixGetMap = currentIndexStorages.byPrefixGetMap(
-                    AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD); 
+            Map<String, String> byPrefixGetMap;
+            //byPrefixGetMap = currentIndexStorages.byPrefixGetMap( 
+            //        AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD);
+            Path pathStoreFromURI = Paths.get(byPrefixGetUri);
+            Boolean pathIsFile = AdihFileOperations.pathIsFile(pathStoreFromURI);
+            if( pathIsFile ){
+                byPrefixGetMap = AppFileStorageIndex.getFsPropExist();
+            } else {
+                byPrefixGetMap = AppFileStorageIndex.getFsPropCreate();
+            }
             try( FileSystem fsForReadData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
         
         

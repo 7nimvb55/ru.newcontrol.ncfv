@@ -98,13 +98,52 @@ public class AppFileNamesConstants {
     protected static String SZFS_DIR_LIST_FILE_NOT_LIMITED = "notlimited-";
     
     protected static String FILE_INDEX_KEY_MAP_URI = "UriForStorage";
+    /**
+     * Storage Zip File System for index system Temporary
+     * prefix for data file
+     * return t-
+     */
     protected static String FILE_INDEX_PREFIX_TMP = "t-";
-    protected static String FILE_INDEX_PREFIX_DIR_LIST = "di-";
+    /**
+     * Storage Zip File System for index system Directory Index
+     * prefix for data file
+     * return di-
+     */
+    protected static String FILE_INDEX_PREFIX_DIR_LIST = "di-";/**
+     * Storage Zip File System for index system Journal
+     * prefix for data file
+     * return j-
+     */
     protected static String FILE_INDEX_PREFIX_JOURNAL = "j-";
+    /**
+     * Storage Zip File System for index system File List
+     * prefix for data file
+     * return fl-
+     */
     protected static String FILE_INDEX_PREFIX_FILE_LIST = "fl-";
+    /**
+     * Storage Zip File System for index system File Type Extentions
+     * prefix for data file
+     * return ft-
+     */
     protected static String FILE_INDEX_PREFIX_FILE_TYPE = "ft-";
+    /**
+     * Storage Zip File System for index system File Hash
+     * prefix for data file
+     * return fh-
+     */
     protected static String FILE_INDEX_PREFIX_FILE_HASH = "fh-";
+    /**
+     * Storage Zip File System for index system File eXist
+     * prefix for data file
+     * return fx-
+     */
     protected static String FILE_INDEX_PREFIX_FILE_EXIST = "fx-";
+    /**
+     * Storage Zip File System for index system Word
+     * prefix for data file
+     * return w-
+     */
     protected static String FILE_INDEX_PREFIX_WORD = "w-";
     /**
      * Storage Zip File System for index system StorageWord
@@ -112,7 +151,17 @@ public class AppFileNamesConstants {
      * return sw-
      */
     protected static String FILE_INDEX_PREFIX_STORAGE_WORD = "sw-";
+    /**
+     * Storage Zip File System for index system Word Long
+     * prefix for data file
+     * return lw-
+     */
     protected static String FILE_INDEX_PREFIX_LONG_WORD_LIST = "lw-";
+    /**
+     * Storage Zip File System for index system Word long Names list
+     * prefix for data file
+     * return ln-
+     */
     protected static String FILE_INDEX_PREFIX_LONG_WORD_DATA = "ln-";
     
     protected static String FILE_INDEX_EXT = ".zip";

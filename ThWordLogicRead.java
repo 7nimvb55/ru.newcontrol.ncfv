@@ -21,6 +21,8 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.ProviderNotFoundException;
 import java.util.Map;
 import java.util.UUID;
@@ -60,8 +62,15 @@ public class ThWordLogicRead {
             //indexStatistic.updateDataStorages();
             currentIndexStorages = funcRuleWord.getIndexRule().getIndexState().currentIndexStorages();
             byPrefixGetUri = currentIndexStorages.byPrefixGetUri(AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
-            byPrefixGetMap = currentIndexStorages.byPrefixGetMap( 
-                    AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
+            //byPrefixGetMap = currentIndexStorages.byPrefixGetMap( 
+            //        AppFileNamesConstants.FILE_INDEX_PREFIX_WORD);
+            Path pathStoreFromURI = Paths.get(byPrefixGetUri);
+            Boolean pathIsFile = AdihFileOperations.pathIsFile(pathStoreFromURI);
+            if( pathIsFile ){
+                byPrefixGetMap = AppFileStorageIndex.getFsPropExist();
+            } else {
+                byPrefixGetMap = AppFileStorageIndex.getFsPropCreate();
+            }
             try( FileSystem fsForReadData = FileSystems.newFileSystem(byPrefixGetUri, byPrefixGetMap) ){
                 do {
                     pollNextUuid = outerRuleWord.getWordState().getBusEventShort().pollNextUuid(2, 2);
