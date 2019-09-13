@@ -196,13 +196,29 @@ public class AdihZipStorages {
         }
     }
     private void fillOpenStoreList(){
+        Path storageFile;
+        URI valueForStorage;
+        Boolean pathIsFile;
+        FileSystem storageFileSystem;
+        try {
         for( Map.Entry<Integer, URI> itemOfURI : this.storagesUriList.entrySet() ){
-            Path storageFile = this.zipStoreFileList.get(itemOfURI.getKey());
-            URI valueForStorage = itemOfURI.getValue();
-            Boolean pathIsFile = AdihFileOperations.pathIsFile(storageFile);
-            FileSystem storageFileSystem = AdihFileOperations.getStorageFileSystem(storageFile, valueForStorage);
-            this.openedZipStoreList.put(itemOfURI.getKey(), storageFileSystem);
+            storageFile = this.zipStoreFileList.get(itemOfURI.getKey());
+            if( storageFile != null ){
+                valueForStorage = itemOfURI.getValue();
+                storageFileSystem = AdihFileOperations.getStorageFileSystem(storageFile, valueForStorage);
+                if( storageFileSystem != null ){
+                    this.openedZipStoreList.put(itemOfURI.getKey(), storageFileSystem);
+                }
+            }
         }
+        } finally {
+            storageFile = null;
+            valueForStorage = null;
+            pathIsFile = null;
+            storageFileSystem = null;
+        }
+        //for close procedure
+        //for add path from index dir procedure
     }
     private static Path buildZipStoragesPath(Path parenForStorage, String prefixStorage){
         Path forReturnStorage = null;
