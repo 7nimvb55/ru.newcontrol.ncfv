@@ -201,16 +201,16 @@ public class AdihZipStorages {
         Boolean pathIsFile;
         FileSystem storageFileSystem;
         try {
-        for( Map.Entry<Integer, URI> itemOfURI : this.storagesUriList.entrySet() ){
-            storageFile = this.zipStoreFileList.get(itemOfURI.getKey());
-            if( storageFile != null ){
-                valueForStorage = itemOfURI.getValue();
-                storageFileSystem = AdihFileOperations.getStorageFileSystem(storageFile, valueForStorage);
-                if( storageFileSystem != null ){
-                    this.openedZipStoreList.put(itemOfURI.getKey(), storageFileSystem);
+            for( Map.Entry<Integer, URI> itemOfURI : this.storagesUriList.entrySet() ){
+                storageFile = this.zipStoreFileList.get(itemOfURI.getKey());
+                if( storageFile != null ){
+                    valueForStorage = itemOfURI.getValue();
+                    storageFileSystem = AdihFileOperations.getStorageFileSystem(storageFile, valueForStorage);
+                    if( storageFileSystem != null ){
+                        this.openedZipStoreList.put(itemOfURI.getKey(), storageFileSystem);
+                    }
                 }
             }
-        }
         } finally {
             storageFile = null;
             valueForStorage = null;
@@ -219,6 +219,57 @@ public class AdihZipStorages {
         }
         //for close procedure
         //for add path from index dir procedure
+    }
+    /**
+     * 
+     */
+    private void closeOpenedAndUtilizeValuesFromList(){
+        FileSystem removedStorageItem;
+        Boolean closeOpenedStorage;
+        try {
+            for( Map.Entry<Integer, FileSystem> itemOfURI : this.openedZipStoreList.entrySet() ){
+                removedStorageItem = itemOfURI.getValue();
+                closeOpenedStorage = AdihFileOperations.closeOpenedStorage(removedStorageItem);
+            }
+        } finally {
+            removedStorageItem = null;
+            closeOpenedStorage = null;
+        }
+    }
+    protected void utilizeAllLists(){
+        Integer key;
+        FileSystem removeZipStorageItem;
+        URI removeUriStorageItem;
+        Path removePathStorageItem;
+        try {
+            closeOpenedAndUtilizeValuesFromList();
+            for( Map.Entry<Integer, FileSystem> itemOfFs : this.openedZipStoreList.entrySet() ){
+                key = itemOfFs.getKey();
+                removeZipStorageItem = this.openedZipStoreList.remove(key);
+                removeZipStorageItem = null;
+                key = null;
+            }
+            this.openedZipStoreList.clear();
+            for( Map.Entry<Integer, URI> itemOfURI : this.storagesUriList.entrySet() ){
+                key = itemOfURI.getKey();
+                removeUriStorageItem = this.storagesUriList.remove(key);
+                removeUriStorageItem = null;
+                key = null;
+            }
+            this.storagesUriList.clear();
+            for( Map.Entry<Integer, Path> itemOfPath : this.zipStoreFileList.entrySet() ){
+                key = itemOfPath.getKey();
+                removePathStorageItem = this.zipStoreFileList.remove(key);
+                removeZipStorageItem = null;
+                key = null;
+            }
+            this.zipStoreFileList.clear();
+        } finally {
+            removePathStorageItem = null;
+            removeZipStorageItem = null;
+            removeUriStorageItem = null;
+            key = null;
+        }
     }
     private static Path buildZipStoragesPath(Path parenForStorage, String prefixStorage){
         Path forReturnStorage = null;

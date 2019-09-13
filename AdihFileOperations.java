@@ -18,6 +18,7 @@ package ru.newcontrol.ncfv;
 import java.io.IOError;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.ClosedFileSystemException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemAlreadyExistsException;
@@ -737,6 +738,47 @@ public class AdihFileOperations {
             fsForOpen = null;
             pathIsFile = null;
         }
+    }
+    protected static Boolean closeOpenedStorage(FileSystem openedStorage){
+        String openedStorageToString = openedStorage.toString();
+        Boolean isOpened = openedStorage.isOpen();
+        try {
+            if(isOpened){
+                try {
+                    openedStorage.close();
+                    return Boolean.TRUE;
+                } catch(ClosedFileSystemException exClose){
+                    System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for close storage for index in file "
+                            + openedStorageToString + ", reason "
+                            + exClose.getMessage());
+                    exClose.printStackTrace();
+                } catch(UnsupportedOperationException exUnSupEx){
+                    System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for close storage for index in file "
+                            + openedStorageToString + ", reason "
+                            + exUnSupEx.getMessage());
+                    exUnSupEx.printStackTrace();
+                }  catch(SecurityException exSec){
+                    System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for close storage for index in file "
+                            + openedStorageToString + ", reason "
+                            + exSec.getMessage());
+                    exSec.printStackTrace();
+                } catch (IOException exIo) {
+                    System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for close storage for index in file "
+                            + openedStorageToString + ", reason "
+                            + exIo.getMessage());
+                    exIo.printStackTrace();
+                }
+            }
+            return Boolean.FALSE;
+        } finally {
+            isOpened = null;
+            AdihUtilization.utilizeStringValues(new String[]{openedStorageToString});
+            openedStorageToString = null;
+}
     }
     /**
      * 
