@@ -49,24 +49,23 @@ public class AdihZipStorages {
     }
     /**
      * <ul>
-     * <li>   0 -   Main
-     * <li>   1 -   Index
-     * <li>   2 -   DirListManager
-     * <li>   3 -   DirListRead
-     * <li>   4 -   DirListWrite
-     * <li>   5 -   FileListBuild
+     * <li>   0 -   UserHome
+     * <li>   1 -   ClassPathApplicationDirectory
+     * <li>   2 -   indexDirList
+     * <li>   3 -   indexTempData
+     * <li>   4 -   indexJournal
+     * <li>   5 -   indexFileList
      *              
-     * <li>   6 -   WordStorageFilter
-     * <li>   7 -   WordStorageRouter
-     * <li>   8 -   WordStorageReader
-     * <li>   9 -   WordStorageWriter
-     *              
-     * <li>  10 -   WordRouter
-     * <li>  11 -   WordReader
-     * <li>  12 -   WordWriter
-     * <li>  13 -   WordEvent
+     * <li>   6 -   indexFileType
+     * <li>   7 -   indexFileHash
+     * <li>   8 -   indexFileExist
+     * 
+     * <li>   9 -   indexWord
+     * <li>  10 -   indexStorageWord
+     * <li>  11 -   indexLongWordList
+     * <li>  12 -   indexLongWordData
      * </ul> 
-     * This list of parameters changed in {@link ru.newcontrol.ncfv.AdilHelper#getParamNames AdilHelper.getParamNames()}
+     * This list of parameters changed in {@link ru.newcontrol.ncfv.AdihHelper#getParamNames AdihHelper.getParamNames()}
      * Return code of parameter by his number, calculeted from some fileds
      * @param numParam
      * @return hashCode for Parameter by his number
@@ -118,7 +117,7 @@ public class AdihZipStorages {
      * @return name of param by his number
      * @throws IllegalArgumentException when inputed number of parameter
      * out of bounds or not natural number <code>numParam &lt 0 (Zero)</code>
-     * @see ru.newcontrol.ncfv.AdihHelper#getParamNames AdilHelper.getParamNames()
+     * @see ru.newcontrol.ncfv.AdihHelper#getParamNames AdihHelper.getParamNames()
      */
     private String getParamNameByNumber(int numParam){
         String[] paramNames;

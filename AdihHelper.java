@@ -26,6 +26,26 @@ package ru.newcontrol.ncfv;
  * @author wladimirowichbiaran
  */
 public class AdihHelper {
+    /**
+     * <ul>
+     * <li>   0 -   UserHome
+     * <li>   1 -   ClassPathApplicationDirectory
+     * <li>   2 -   indexDirList
+     * <li>   3 -   indexTempData
+     * <li>   4 -   indexJournal
+     * <li>   5 -   indexFileList
+     *              
+     * <li>   6 -   indexFileType
+     * <li>   7 -   indexFileHash
+     * <li>   8 -   indexFileExist
+     * 
+     * <li>   9 -   indexWord
+     * <li>  10 -   indexStorageWord
+     * <li>  11 -   indexLongWordList
+     * <li>  12 -   indexLongWordData
+     * </ul>
+     * @return 
+     */
     protected static String[] getParamNames(){
         String[] namesForReturn = new String[] {};
         try {
