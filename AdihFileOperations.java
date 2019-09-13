@@ -46,25 +46,29 @@ public class AdihFileOperations {
                 Files.createDirectories(inputedDirName);
                 return Boolean.TRUE;
             } catch (FileAlreadyExistsException exAlreadyExist) {
-                System.err.println("[ERROR] Directory create not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Directory create not complete path is " 
                         + inputedDirName.toString() 
                         + AdilConstants.EXCEPTION_MSG 
                         + exAlreadyExist.getMessage());
                 exAlreadyExist.printStackTrace();
             } catch (SecurityException exSecurity) {
-                System.err.println("[ERROR] Directory create not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Directory create not complete path is " 
                         + inputedDirName.toString() 
                         + AdilConstants.EXCEPTION_MSG 
                         + exSecurity.getMessage());
                 exSecurity.printStackTrace();
             } catch (UnsupportedOperationException exUnSupp) {
-                System.err.println("[ERROR] Directory create not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Directory create not complete path is " 
                         + inputedDirName.toString() 
                         + AdilConstants.EXCEPTION_MSG 
                         + exUnSupp.getMessage());
                 exUnSupp.printStackTrace();
             } catch (IOException exIoExist) {
-                System.err.println("[ERROR] Directory create not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Directory create not complete path is " 
                         + inputedDirName.toString() 
                         + AdilConstants.EXCEPTION_MSG 
                         + exIoExist.getMessage());
@@ -85,7 +89,8 @@ public class AdihFileOperations {
             try {
                 isExist = Files.exists(innerWorkPath, LinkOption.NOFOLLOW_LINKS);
             } catch(SecurityException exSecury) {
-                System.err.println("[ERROR] File or Directory exist check not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] File or Directory exist check not complete path is " 
                         + innerWorkPath.toString() 
                         + AdilConstants.EXCEPTION_MSG 
                         + exSecury.getMessage()
@@ -98,7 +103,8 @@ public class AdihFileOperations {
             try {
                 isDirectory = Files.isDirectory(innerWorkPath, LinkOption.NOFOLLOW_LINKS);
             } catch(SecurityException exSecury) {
-                System.err.println("[ERROR] File or Directory exist check not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] File or Directory exist check not complete path is " 
                         + innerWorkPath.toString() + " "
                         + AdilConstants.EXCEPTION_MSG 
                         + exSecury.getMessage()
@@ -125,7 +131,8 @@ public class AdihFileOperations {
             try {
                 isExist = Files.exists(innerWorkPath, LinkOption.NOFOLLOW_LINKS);
             } catch(SecurityException exSecury) {
-                System.err.println("[ERROR] File or Directory exist check not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] File or Directory exist check not complete path is " 
                         + innerWorkPath.toString() 
                         + AdilConstants.EXCEPTION_MSG 
                         + exSecury.getMessage()
@@ -138,7 +145,8 @@ public class AdihFileOperations {
             try {
                 isDirectory = Files.isDirectory(innerWorkPath, LinkOption.NOFOLLOW_LINKS);
             } catch(SecurityException exSecury) {
-                System.err.println("[ERROR] File or Directory exist check not complite path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] File or Directory exist check not complite path is " 
                         + innerWorkPath.toString() + " "
                         + AdilConstants.EXCEPTION_MSG 
                         + exSecury.getMessage()
@@ -166,7 +174,8 @@ public class AdihFileOperations {
             try {
                 isReadable = Files.isReadable(innerWorkPath);
             } catch(SecurityException exSecury) {
-                System.err.println("[ERROR] File or Directory readable check not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] File or Directory readable check not complete path is " 
                         + innerWorkPath.toString() 
                         + AdilConstants.EXCEPTION_MSG 
                         + exSecury.getMessage()
@@ -179,7 +188,8 @@ public class AdihFileOperations {
             try {
                 isWritable = Files.isWritable(innerWorkPath);
             } catch(SecurityException exSecury) {
-                System.err.println("[ERROR] File or Directory readable check not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] File or Directory readable check not complete path is " 
                         + innerWorkPath.toString() 
                         + AdilConstants.EXCEPTION_MSG 
                         + exSecury.getMessage()
@@ -192,7 +202,8 @@ public class AdihFileOperations {
             try {
                 isSymbolicLink = Files.isSymbolicLink(innerWorkPath);
             } catch(SecurityException exSecury) {
-                System.err.println("[ERROR] File or Directory readable check not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] File or Directory readable check not complete path is " 
                         + innerWorkPath.toString() 
                         + AdilConstants.EXCEPTION_MSG 
                         + exSecury.getMessage()
@@ -218,7 +229,33 @@ public class AdihFileOperations {
         try {
             toReturn = getApplicationPath();
             if( toReturn == null ){
-                System.err.println("getApplicationPath returned null");
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "getApplicationPath returned null");
+                System.exit(0);
+            }
+            Boolean isDirectory = AdihFileOperations.pathIsDirectory(toReturn);
+            Boolean isReadWriteNotLink = AdihFileOperations.pathIsReadWriteNotLink(toReturn);
+            if( isDirectory ){
+                if( isReadWriteNotLink ) {
+                    return toReturn;
+                }
+            }
+            return null;
+        } finally {
+            toReturn = null;
+        }
+    }
+    /**
+     * 
+     * @return User home path or null if check not successful
+     */
+    protected static Path getUserHomeCheckedPath(){
+        Path toReturn;
+        try {
+            toReturn = getUserHomePath();
+            if( toReturn == null ){
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "getUserHomeCheckedPath returned null");
                 System.exit(0);
             }
             Boolean isDirectory = AdihFileOperations.pathIsDirectory(toReturn);
@@ -253,7 +290,8 @@ public class AdihFileOperations {
                     return toReturn;
                 }
             }
-            System.err.println("getForLogDirectory returned " 
+            System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "getForLogDirectory returned " 
                     + toReturn.toString()
                     + " isDirectory " + String.valueOf(isDirectory)
                     + " isReadWriteNotLink " + String.valueOf(isReadWriteNotLink)
@@ -267,7 +305,8 @@ public class AdihFileOperations {
                     return toReturn;
                 }
             }
-            System.err.println("getForLogDirectory returned " 
+            System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "getForLogDirectory returned " 
                     + toReturn.toString()
                     + " isDirectory " + String.valueOf(isDirectory)
                     + " isReadWriteNotLink " + String.valueOf(isReadWriteNotLink)
@@ -282,7 +321,7 @@ public class AdihFileOperations {
     }
     /**
      * 
-     * @return Application path or null if exceptions or errors for normalize... etc
+     * @return String to normalize, absolute, real path or null if exceptions or errors for normalize... etc
      */
     protected static Path getNormAbsRealPath(String inputedPath){
         String processedStrPath = new String();
@@ -295,7 +334,8 @@ public class AdihFileOperations {
             try {
                 parentForFs = Paths.get(processedStrPath);
             } catch(InvalidPathException exInvPath) {
-                System.err.println("[ERROR] Application Directory build not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Application Directory build not complete path is " 
                         + processedStrPath
                         + AdilConstants.EXCEPTION_MSG 
                         + exInvPath.getMessage()
@@ -307,7 +347,8 @@ public class AdihFileOperations {
             try {
                 parentForFsAbsolute = parentForFsNormal.toAbsolutePath();
             } catch(SecurityException exSec) {
-                System.err.println("[ERROR] Application Directory absolute path build not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Application Directory absolute path build not complete path is " 
                         + processedStrPath
                         + AdilConstants.EXCEPTION_MSG 
                         + exSec.getMessage()
@@ -315,7 +356,8 @@ public class AdihFileOperations {
                 exSec.printStackTrace();
                 return null;
             } catch(IOError errIo) {
-                System.err.println("[ERROR] Application Directory absolute path build not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Application Directory absolute path build not complete path is " 
                         + processedStrPath 
                         + AdilConstants.EXCEPTION_MSG 
                         + errIo.getMessage()
@@ -326,7 +368,8 @@ public class AdihFileOperations {
             try {
                 parentForFsReal = parentForFsAbsolute.toRealPath(LinkOption.NOFOLLOW_LINKS);
             } catch(SecurityException exSec) {
-                System.err.println("[ERROR] Application Directory absolute path build not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Application Directory absolute path build not complete path is " 
                         + processedStrPath
                         + AdilConstants.EXCEPTION_MSG 
                         + exSec.getMessage()
@@ -334,7 +377,8 @@ public class AdihFileOperations {
                 exSec.printStackTrace();
                 return null;
             } catch(IOException exIo) {
-                System.err.println("[ERROR] Application Directory absolute path build not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Application Directory absolute path build not complete path is " 
                         + processedStrPath 
                         + AdilConstants.EXCEPTION_MSG 
                         + exIo.getMessage()
@@ -366,7 +410,8 @@ public class AdihFileOperations {
             try {
                 parentForFs = Paths.get(appPath);
             } catch(InvalidPathException exInvPath) {
-                System.err.println("[ERROR] Application Directory build not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Application Directory build not complete path is " 
                         + appPath 
                         + AdilConstants.EXCEPTION_MSG 
                         + exInvPath.getMessage()
@@ -378,7 +423,8 @@ public class AdihFileOperations {
             try {
                 parentForFsAbsolute = parentForFsNormal.toAbsolutePath();
             } catch(SecurityException exSec) {
-                System.err.println("[ERROR] Application Directory absolute path build not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Application Directory absolute path build not complete path is " 
                         + appPath 
                         + AdilConstants.EXCEPTION_MSG 
                         + exSec.getMessage()
@@ -386,7 +432,8 @@ public class AdihFileOperations {
                 exSec.printStackTrace();
                 return null;
             } catch(IOError errIo) {
-                System.err.println("[ERROR] Application Directory absolute path build not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Application Directory absolute path build not complete path is " 
                         + appPath 
                         + AdilConstants.EXCEPTION_MSG 
                         + errIo.getMessage()
@@ -397,7 +444,8 @@ public class AdihFileOperations {
             try {
                 parentForFsReal = parentForFsAbsolute.toRealPath(LinkOption.NOFOLLOW_LINKS);
             } catch(SecurityException exSec) {
-                System.err.println("[ERROR] Application Directory absolute path build not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Application Directory absolute path build not complete path is " 
                         + appPath 
                         + AdilConstants.EXCEPTION_MSG 
                         + exSec.getMessage()
@@ -405,7 +453,8 @@ public class AdihFileOperations {
                 exSec.printStackTrace();
                 return null;
             } catch(IOException exIo) {
-                System.err.println("[ERROR] Application Directory absolute path build not complete path is " 
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Application Directory absolute path build not complete path is " 
                         + appPath 
                         + AdilConstants.EXCEPTION_MSG 
                         + exIo.getMessage()
@@ -422,7 +471,82 @@ public class AdihFileOperations {
             AdihUtilization.utilizeStringValues(new String[]{appPath});
         }
     }
-    
+    /**
+     * 
+     * @return User home path or null if exceptions or errors for normalize... etc
+     */
+    protected static Path getUserHomePath(){
+        String userHomePath = new String();
+        Path parentForFs;
+        Path parentForFsNormal;
+        Path parentForFsAbsolute;
+        Path parentForFsReal;
+        try {
+            userHomePath = getSystemPropertyUserHome();
+            try {
+                parentForFs = Paths.get(userHomePath);
+            } catch(InvalidPathException exInvPath) {
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Application Directory build not complete path is " 
+                        + userHomePath 
+                        + AdilConstants.EXCEPTION_MSG 
+                        + exInvPath.getMessage()
+                );
+                exInvPath.printStackTrace();
+                return null;
+            }
+            parentForFsNormal = parentForFs.normalize();
+            try {
+                parentForFsAbsolute = parentForFsNormal.toAbsolutePath();
+            } catch(SecurityException exSec) {
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Application Directory absolute path build not complete path is " 
+                        + userHomePath 
+                        + AdilConstants.EXCEPTION_MSG 
+                        + exSec.getMessage()
+                );
+                exSec.printStackTrace();
+                return null;
+            } catch(IOError errIo) {
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Application Directory absolute path build not complete path is " 
+                        + userHomePath 
+                        + AdilConstants.EXCEPTION_MSG 
+                        + errIo.getMessage()
+                );
+                errIo.printStackTrace();
+                return null;
+            }
+            try {
+                parentForFsReal = parentForFsAbsolute.toRealPath(LinkOption.NOFOLLOW_LINKS);
+            } catch(SecurityException exSec) {
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Application Directory absolute path build not complete path is " 
+                        + userHomePath 
+                        + AdilConstants.EXCEPTION_MSG 
+                        + exSec.getMessage()
+                );
+                exSec.printStackTrace();
+                return null;
+            } catch(IOException exIo) {
+                System.err.println(AdihFileOperations.class.getCanonicalName() 
+                        + "[ERROR] Application Directory absolute path build not complete path is " 
+                        + userHomePath 
+                        + AdilConstants.EXCEPTION_MSG 
+                        + exIo.getMessage()
+                );
+                exIo.printStackTrace();
+                return null;
+            }
+            return parentForFsReal;
+        } finally {
+            parentForFs = null;
+            parentForFsNormal = null;
+            parentForFsAbsolute = null;
+            parentForFsReal = null;
+            AdihUtilization.utilizeStringValues(new String[]{userHomePath});
+        }
+    }
     /**
      * 
      * @return 

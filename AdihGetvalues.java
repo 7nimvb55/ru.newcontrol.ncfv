@@ -25,7 +25,7 @@ import java.util.Date;
  * <li>Automated
  * <li>data
  * <li>indexing
- * <li>helper File Operations
+ * <li>helper Get values from system properties
  * </ul>
  * @author wladimirowichbiaran
  */
