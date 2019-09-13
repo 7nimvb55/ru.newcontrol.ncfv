@@ -146,6 +146,14 @@ public class AdihZipStorages {
             paramName = null;
         }
     }
+    private void fillAllListFromFoundedStorages(){
+        Boolean isFoundOnFileSystem = Boolean.FALSE;
+        if( !isFoundOnFileSystem ){
+            createStoragesList();
+        } else {
+            
+        }
+    }
     /**
      * generate list of typed bus for temporary cache lines for log
      */
@@ -217,8 +225,6 @@ public class AdihZipStorages {
             pathIsFile = null;
             storageFileSystem = null;
         }
-        //for close procedure
-        //for add path from index dir procedure
     }
     /**
      * 
@@ -236,6 +242,9 @@ public class AdihZipStorages {
             closeOpenedStorage = null;
         }
     }
+    /**
+     * 
+     */
     protected void utilizeAllLists(){
         Integer key;
         FileSystem removeZipStorageItem;
@@ -276,6 +285,7 @@ public class AdihZipStorages {
         String parentDir = new String();
         String buildedName = new String();
         try{
+            //search in default file system exizting files by mask, create path and return
             parentDir = parenForStorage.toString();
             buildedName = prefixStorage
                     .concat(AdihGetvalues.getNowTimeStringMillisFsNames())
