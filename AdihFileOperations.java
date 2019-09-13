@@ -17,12 +17,20 @@ package ru.newcontrol.ncfv;
 
 import java.io.IOError;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.ProviderNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Adih
@@ -572,5 +580,183 @@ public class AdihFileOperations {
         } finally {
             AdihUtilization.utilizeStringValues(new String[]{property});
         }
+    }
+    /**
+     * 
+     * @param storageFileOuter
+     * @param fsForOpenOuter
+     * @return FileSystem or null if it not must be opened
+     */
+    protected static FileSystem getStorageFileSystem(Path storageFileOuter, URI fsForOpenOuter){
+        if( storageFileOuter == null ){
+            return null;
+        }
+        if( fsForOpenOuter == null ){
+            return null;
+        }
+        FileSystem fileSystemOpened = null;
+        Path storageFile = null;
+        URI fsForOpen = null;
+        Boolean pathIsFile = Boolean.TRUE;
+        try {
+            storageFile = (Path) storageFileOuter;
+            fsForOpen = (URI) fsForOpenOuter;
+
+            pathIsFile = AdihFileOperations.pathIsFile(storageFile);
+            if(pathIsFile){
+                try {
+                    fileSystemOpened = FileSystems.getFileSystem(fsForOpen);
+                } catch(FileSystemAlreadyExistsException exAlExist){
+                    System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for open storage for index in file "
+                            + pathIsFile.toString() + ", reason " 
+                            + exAlExist.getMessage());
+                    exAlExist.printStackTrace();
+                } catch(FileSystemNotFoundException exFsNotExist){
+                    System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for open storage for index in file "
+                            + pathIsFile.toString() + ", reason " 
+                            + exFsNotExist.getMessage());
+                    exFsNotExist.printStackTrace();
+                } catch(ProviderNotFoundException exProvNotFound){
+                    System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for open storage for index in file "
+                            + pathIsFile.toString() + ", reason "
+                            + exProvNotFound.getMessage());
+                    exProvNotFound.printStackTrace();
+                } catch(IllegalArgumentException exIllArg){
+                    System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for open storage for index in file "
+                            + pathIsFile.toString() + ", reason "
+                            + exIllArg.getMessage());
+                    exIllArg.printStackTrace();
+                } catch(SecurityException exSec){
+                    System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for open storage for index in file "
+                            + pathIsFile.toString() + ", reason "
+                            + exSec.getMessage());
+                    exSec.printStackTrace();
+                }
+                if( fileSystemOpened != null ){
+                    return null;
+                }
+                if( fileSystemOpened.isOpen() ){
+                    return fileSystemOpened;
+                } else {
+                    try {
+                        fileSystemOpened = FileSystems.newFileSystem(fsForOpen, getFsPropExist());
+                        if( fileSystemOpened.isOpen() ){
+                            return fileSystemOpened;
+                        }
+                    } catch(FileSystemAlreadyExistsException exAlExist){
+                        System.err.println(AdihHelper.class.getCanonicalName() 
+                                + " error for open storage for index in file "
+                                + pathIsFile.toString() + ", reason " 
+                                + exAlExist.getMessage());
+                        exAlExist.printStackTrace();
+                    } catch(FileSystemNotFoundException exFsNotExist){
+                        System.err.println(AdihHelper.class.getCanonicalName() 
+                                + " error for open storage for index in file "
+                                + pathIsFile.toString() + ", reason " 
+                                + exFsNotExist.getMessage());
+                        exFsNotExist.printStackTrace();
+                    } catch(ProviderNotFoundException exProvNotFound){
+                        System.err.println(AdihHelper.class.getCanonicalName() 
+                                + " error for open storage for index in file "
+                                + pathIsFile.toString() + ", reason " 
+                                + exProvNotFound.getMessage());
+                        exProvNotFound.printStackTrace();
+                    } catch(IllegalArgumentException exIllArg){
+                        System.err.println(AdihHelper.class.getCanonicalName() 
+                                + " error for open storage for index in file "
+                                + pathIsFile.toString() + ", reason "
+                                + exIllArg.getMessage());
+                        exIllArg.printStackTrace();
+                    } catch(SecurityException exSec){
+                        System.err.println(AdihHelper.class.getCanonicalName() 
+                                + " error for open storage for index in file "
+                                + pathIsFile.toString() + ", reason " 
+                                + exSec.getMessage());
+                        exSec.printStackTrace();
+                    } catch (IOException exIo) {
+                        System.err.println(AdihHelper.class.getCanonicalName() 
+                                + " error for open storage for index in file "
+                                + pathIsFile.toString() + ", reason "
+                                + exIo.getMessage());
+                        exIo.printStackTrace();
+                    }
+                }
+            } else {
+                try {
+                    fileSystemOpened = FileSystems.newFileSystem(fsForOpen, getFsPropCreate());
+                    if( fileSystemOpened.isOpen() ){
+                        return fileSystemOpened;
+                    }
+                } catch(FileSystemAlreadyExistsException exAlExist){
+                    System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for open storage for index in file "
+                            + pathIsFile.toString() + ", reason "
+                            + exAlExist.getMessage());
+                    exAlExist.printStackTrace();
+                } catch(FileSystemNotFoundException exFsNotExist){
+                    System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for open storage for index in file "
+                            + pathIsFile.toString() + ", reason "
+                            + exFsNotExist.getMessage());
+                    exFsNotExist.printStackTrace();
+                } catch(ProviderNotFoundException exProvNotFound){
+                    System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for open storage for index in file "
+                            + pathIsFile.toString() + ", reason "
+                            + exProvNotFound.getMessage());
+                    exProvNotFound.printStackTrace();
+                } catch(IllegalArgumentException exIllArg){
+                    System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for open storage for index in file "
+                            + pathIsFile.toString() + ", reason "
+                            + exIllArg.getMessage());
+                    exIllArg.printStackTrace();
+                } catch(SecurityException exSec){
+                    System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for open storage for index in file "
+                            + pathIsFile.toString() + ", reason "
+                            + exSec.getMessage());
+                    exSec.printStackTrace();
+                } catch (IOException exIo) {
+                    System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for open storage for index in file "
+                            + pathIsFile.toString() + ", reason "
+                            + exIo.getMessage());
+                    exIo.printStackTrace();
+                }
+            }
+            return fileSystemOpened;
+        } finally {
+            fileSystemOpened = null;
+            storageFile = null;
+            fsForOpen = null;
+            pathIsFile = null;
+        }
+    }
+    /**
+     * 
+     * @return 
+     */
+    private static Map<String, String> getFsPropCreate(){
+        Map<String, String> zipfsPropeties = new HashMap<>();
+        zipfsPropeties.put("create","true");
+        zipfsPropeties.put("encoding","UTF-8");
+        
+        return zipfsPropeties;
+    }
+    /**
+     * 
+     * @return 
+     */
+    private static Map<String, String> getFsPropExist(){
+        Map<String, String> zipfsPropeties = new HashMap<>();
+        zipfsPropeties.put("create","false");
+        zipfsPropeties.put("encoding","UTF-8");
+        return zipfsPropeties;
     }
 }

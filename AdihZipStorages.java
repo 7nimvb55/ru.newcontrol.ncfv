@@ -25,6 +25,7 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.spi.FileSystemProvider;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -45,34 +46,34 @@ public class AdihZipStorages {
         this.zipStoreFileList = new ConcurrentSkipListMap<Integer, Path>();
         this.openedZipStoreList = new ConcurrentSkipListMap<Integer, FileSystem>();
     }
-    private static void putUserHomePath(){
-        Path userHomeCheckedPath = AdihFileOperations.getUserHomeCheckedPath();
-    }
+
     /**
      * <ul>
      * <li>   0 -   UserHome
      * <li>   1 -   ClassPathApplicationDirectory
-     * <li>   2 -   indexDirList
-     * <li>   3 -   indexTempData
-     * <li>   4 -   indexJournal
-     * <li>   5 -   indexFileList
-     *              
-     * <li>   6 -   indexFileType
-     * <li>   7 -   indexFileHash
-     * <li>   8 -   indexFileExist
+     * <li>   2 -   ncidxfvSubDirIndex
      * 
-     * <li>   9 -   indexWord
-     * <li>  10 -   indexStorageWord
-     * <li>  11 -   indexLongWordList
-     * <li>  12 -   indexLongWordData
-     * </ul> 
+     * <li>   3 -   di-indexDirList
+     * <li>   4 -   t-indexTempData
+     * <li>   5 -   j-indexJournal
+     * <li>   6 -   fl-indexFileList
+     *              
+     * <li>   7 -   ft-indexFileType
+     * <li>   8 -   fh-indexFileHash
+     * <li>   9 -   fx-indexFileExist
+     * 
+     * <li>  10 -   w-indexWord
+     * <li>  11 -   sw-indexStorageWord
+     * <li>  12 -   lw-indexLongWordList
+     * <li>  13 -   ln-indexLongWordData
+     * </ul>
      * This list of parameters changed in {@link ru.newcontrol.ncfv.AdihHelper#getParamNames AdihHelper.getParamNames()}
      * Return code of parameter by his number, calculeted from some fileds
      * @param numParam
      * @return hashCode for Parameter by his number
      * @throws IllegalArgumentException when inputed number of parameter
      * out of bounds or not natural number <code>numParam &lt 0 (Zero)</code>
-     * @see ru.newcontrol.ncfv.AdihHelper#getParamNames AdilHelper.getParamNames()
+     * @see ru.newcontrol.ncfv.AdihHelper#getParamNames AdihHelper.getParamNames()
      */
     private Integer getParamCodeByNumber(int numParam){
         String[] paramNames;
@@ -150,6 +151,8 @@ public class AdihZipStorages {
      */
     private void createStoragesList(){
         Path toAddIntoList = null;
+        Path subDirIndex = null;
+        URI uriZipIndexStorage;
         String prefixStorageByNumber = new String();
         Integer paramCodeByNumber;
         Integer countParamsDataFsForSet;
@@ -157,24 +160,81 @@ public class AdihZipStorages {
         try {
             countParamsDataFsForSet = getParamCount();
             
+            prefixStorageByNumber = AdihHelper.getPrefixStorageByNumber(0);
+            paramCodeByNumber = getParamCodeByNumber(0);
+            toAddIntoList = AdihFileOperations.getUserHomeCheckedPath();
+            this.zipStoreFileList.put(paramCodeByNumber, toAddIntoList);
+            
+            prefixStorageByNumber = AdihHelper.getPrefixStorageByNumber(1);
+            paramCodeByNumber = getParamCodeByNumber(1);
+            toAddIntoList = AdihFileOperations.getAppCheckedPath();
+            this.zipStoreFileList.put(paramCodeByNumber, toAddIntoList);
+            
             prefixStorageByNumber = AdihHelper.getPrefixStorageByNumber(2);
             paramCodeByNumber = getParamCodeByNumber(2);
             toAddIntoList = createIfNotExistSubDirIndex();
+            subDirIndex = toAddIntoList;
             this.zipStoreFileList.put(paramCodeByNumber, toAddIntoList);
             
             for(idx = 3; idx < countParamsDataFsForSet; idx++ ){
-                //buildStorageName
-                
                 prefixStorageByNumber = AdihHelper.getPrefixStorageByNumber(idx);
+                toAddIntoList = buildZipStoragesPath(subDirIndex, prefixStorageByNumber);
+                uriZipIndexStorage = URI.create(AppFileNamesConstants.PREFIX_TO_URI_STORAGES + toAddIntoList.toUri());
                 paramCodeByNumber = getParamCodeByNumber(idx);
                 this.zipStoreFileList.put(paramCodeByNumber, toAddIntoList);
+                this.storagesUriList.put(paramCodeByNumber, uriZipIndexStorage);
             }
         } finally {
-            idx = null;
+            toAddIntoList = null;
+            subDirIndex = null;
+            uriZipIndexStorage = null;
+            AdihUtilization.utilizeStringValues(new String[]{prefixStorageByNumber});
+            prefixStorageByNumber = null;
             paramCodeByNumber = null;
             countParamsDataFsForSet = null;
+            idx = null;
         }
     }
+    private void fillOpenStoreList(){
+        for( Map.Entry<Integer, URI> itemOfURI : this.storagesUriList.entrySet() ){
+            Path storageFile = this.zipStoreFileList.get(itemOfURI.getKey());
+            URI valueForStorage = itemOfURI.getValue();
+            Boolean pathIsFile = AdihFileOperations.pathIsFile(storageFile);
+            FileSystem storageFileSystem = AdihFileOperations.getStorageFileSystem(storageFile, valueForStorage);
+            this.openedZipStoreList.put(itemOfURI.getKey(), storageFileSystem);
+        }
+    }
+    private static Path buildZipStoragesPath(Path parenForStorage, String prefixStorage){
+        Path forReturnStorage = null;
+        String parentDir = new String();
+        String buildedName = new String();
+        try{
+            parentDir = parenForStorage.toString();
+            buildedName = prefixStorage
+                    .concat(AdihGetvalues.getNowTimeStringMillisFsNames())
+                    .concat(AppFileNamesConstants.FILE_INDEX_EXT);
+            try {
+                    forReturnStorage = Paths.get(parentDir, buildedName);
+            } catch(InvalidPathException exInvPath) {
+                System.err.println(AdihZipStorages.class.getCanonicalName() 
+                        + "[ERROR] Index SubDirectory build not complete path is " 
+                        + parentDir + " and builded name " + buildedName
+                        + AdilConstants.EXCEPTION_MSG 
+                        + exInvPath.getMessage()
+                );
+                exInvPath.printStackTrace();
+                System.exit(0);
+            }
+            return forReturnStorage;
+        } finally {
+            forReturnStorage = null;
+            AdihUtilization.utilizeStringValues(new String[]{parentDir, buildedName});
+        }
+    }
+    /**
+     * <code>/...pathToUserHome/ncidxfv/</code>
+     * @return 
+     */
     private static Path createIfNotExistSubDirIndex(){
         Boolean createDirIfNotExist = null;
         Path userHomeSubDirIndex = null;
@@ -208,9 +268,13 @@ public class AdihZipStorages {
             }
             return userHomeSubDirIndex;
         } finally {
-            
+            createDirIfNotExist = null;
+            userHomeSubDirIndex = null;
+            userHomeCheckedPath = null;
+            AdihUtilization.utilizeStringValues(new String[]{userHomeStr, prefixStorageByNumber});
         }
     }
+    
     private static Path getPathStorageFile(String prefixStorageName){
         return null;
     }

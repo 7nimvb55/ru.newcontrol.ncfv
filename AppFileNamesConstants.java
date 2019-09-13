@@ -166,8 +166,11 @@ public class AppFileNamesConstants {
      * return ln-
      */
     protected static String FILE_INDEX_PREFIX_LONG_WORD_DATA = "ln-";
-    
+    /**
+     * .zip
+     */
     protected static String FILE_INDEX_EXT = ".zip";
+    protected static String PREFIX_TO_URI_STORAGES = "jar:";
     
     protected static String FILE_JOURNAL_DISK = "/jdisk.dat";
     protected static String FILE_DISK_DATA = "/disks.dat";
