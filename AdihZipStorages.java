@@ -21,6 +21,7 @@ import java.net.URISyntaxException;
 import java.nio.file.FileStore;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.spi.FileSystemProvider;
@@ -144,7 +145,76 @@ public class AdihZipStorages {
             paramName = null;
         }
     }
-    protected static URI getUriStorageByNumber(){
+    /**
+     * generate list of typed bus for temporary cache lines for log
+     */
+    private void createStoragesList(){
+        Path toAddIntoList = null;
+        String prefixStorageByNumber = new String();
+        Integer paramCodeByNumber;
+        Integer countParamsDataFsForSet;
+        Integer idx;
+        try {
+            countParamsDataFsForSet = getParamCount();
+            
+            prefixStorageByNumber = AdihHelper.getPrefixStorageByNumber(2);
+            paramCodeByNumber = getParamCodeByNumber(2);
+            toAddIntoList = createIfNotExistSubDirIndex();
+            this.zipStoreFileList.put(paramCodeByNumber, toAddIntoList);
+            
+            for(idx = 3; idx < countParamsDataFsForSet; idx++ ){
+                //buildStorageName
+                
+                prefixStorageByNumber = AdihHelper.getPrefixStorageByNumber(idx);
+                paramCodeByNumber = getParamCodeByNumber(idx);
+                this.zipStoreFileList.put(paramCodeByNumber, toAddIntoList);
+            }
+        } finally {
+            idx = null;
+            paramCodeByNumber = null;
+            countParamsDataFsForSet = null;
+        }
+    }
+    private static Path createIfNotExistSubDirIndex(){
+        Boolean createDirIfNotExist = null;
+        Path userHomeSubDirIndex = null;
+        Path userHomeCheckedPath = AdihFileOperations.getUserHomeCheckedPath();
+        String userHomeStr = userHomeCheckedPath.toString();
+        String prefixStorageByNumber = AdihHelper.getPrefixStorageByNumber(2);
+        try{
+            try {
+                    userHomeSubDirIndex = Paths.get(userHomeStr,prefixStorageByNumber);
+            } catch(InvalidPathException exInvPath) {
+                System.err.println(AdihZipStorages.class.getCanonicalName() 
+                        + "[ERROR] Index SubDirectory build not complete path is " 
+                        + userHomeStr + " and subDir " + prefixStorageByNumber
+                        + AdilConstants.EXCEPTION_MSG 
+                        + exInvPath.getMessage()
+                );
+                exInvPath.printStackTrace();
+                System.exit(0);
+            }
+
+            createDirIfNotExist = AdihFileOperations.createDirIfNotExist(userHomeSubDirIndex);
+            if( !createDirIfNotExist ){
+                System.err.println(AdihZipStorages.class.getCanonicalName() 
+                            + "[ERROR] Index SubDirectory build not complete path is " 
+                            + userHomeSubDirIndex.toString() + " "
+                            + AdihFileOperations.class.getCanonicalName() 
+                            + ".createDirIfNotExist() return "
+                            + String.valueOf(createDirIfNotExist)
+                    );
+                    System.exit(0);
+            }
+            return userHomeSubDirIndex;
+        } finally {
+            
+        }
+    }
+    private static Path getPathStorageFile(String prefixStorageName){
+        return null;
+    }
+    private static URI getUriStorageByNumber(Path storageFile){
         URI uri;
         try {
             uri = new URI("file:///foo/bar");

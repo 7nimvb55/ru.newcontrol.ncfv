@@ -43,7 +43,10 @@ public class AppFileNamesConstants {
     
     
     // In thread system used for main index directories
-    protected static String DIR_IDX = "/ncidxfv";
+    /**
+     * return <code>ncidxfv</code>
+     */
+    protected static String DIR_IDX = "ncidxfv";
     /**
      * return /
      */
