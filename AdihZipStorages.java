@@ -365,12 +365,15 @@ public class AdihZipStorages {
         fillOpenStoreList();
     }
     protected void printAllList(){
+        System.out.println("*** *** *** list opened storages");
         for( Map.Entry<Integer, FileSystem> entrySet : this.openedZipStoreList.entrySet() ){
             System.out.println("key " + String.valueOf(entrySet.getKey()) + " storage " + entrySet.getValue().toString());
         }
+        System.out.println("*** *** *** list URI for storage files");
         for( Map.Entry<Integer, URI> entrySet : this.storagesUriList.entrySet() ){
             System.out.println("key " + String.valueOf(entrySet.getKey()) + " storage " + entrySet.getValue().toString());
         }
+        System.out.println("*** *** *** list Path for storage files");
         for( Map.Entry<Integer, Path> entrySet : this.zipStoreFileList.entrySet() ){
             System.out.println("key " + String.valueOf(entrySet.getKey()) + " storage " + entrySet.getValue().toString());
         }

@@ -48,8 +48,19 @@ public class Ncfv {
     
     public static void main(String[] args) {
         AppEtcSecurityHelper.createNewSecurity();
+        ThIndexRule thIndexRule = new ThIndexRule();
+        AdihZipStorages storeNew = new AdihZipStorages(thIndexRule);
+        System.out.println("*|*|* *|*|* *|*|* print created storages");
+        storeNew.printAllList();
+        storeNew.updateStorageList();
+        System.out.println("*|*|* *|*|* *|*|* print updated list of storages");
+        storeNew.printAllList();
+        
+        storeNew.utilizeAllLists();
+        System.out.println("*|*|* *|*|* *|*|* print utilized list of storages");
+        storeNew.printAllList();
         //runIndexMakeWordIntoZipByThreads();
-        runIndexMakeAndDirList();
+        //runIndexMakeAndDirList();
         //outputToConsoleStrings();
     }
 
