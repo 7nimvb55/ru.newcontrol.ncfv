@@ -41,7 +41,7 @@ public class AdihZipStorages {
         this.zipStoreFileList = new ConcurrentSkipListMap<Integer, Path>();
         this.openedZipStoreList = new ConcurrentSkipListMap<Integer, FileSystem>();
         createStoragesList();
-        fillOpenStoreList();
+        //fillOpenStoreList();
     }
 
     /**
@@ -191,19 +191,68 @@ public class AdihZipStorages {
         }
     }
     /**
+     * <ul>
+     * <li>   0 -   UserHome
+     * <li>   1 -   ClassPathApplicationDirectory
+     * <li>   2 -   ncidxfvSubDirIndex
+     * 
+     * <li>   3 -   di-indexDirList
+     * <li>   4 -   t-indexTempData
+     * <li>   5 -   j-indexJournal
+     * <li>   6 -   fl-indexFileList
+     *              
+     * <li>   7 -   ft-indexFileType
+     * <li>   8 -   fh-indexFileHash
+     * <li>   9 -   fx-indexFileExist
+     * 
+     * <li>  10 -   w-indexWord
+     * <li>  11 -   sw-indexStorageWord
+     * <li>  12 -   lw-indexLongWordList
+     * <li>  13 -   ln-indexLongWordData
+     * </ul>
+     * @param numberOfPrefixList
+     * @return 
+     */
+    protected FileSystem getStoreFileSystemByNumber(Integer numberOfPrefixList){
+        if( (numberOfPrefixList < 3) || (numberOfPrefixList > 13) ){
+            return null;
+        }
+        Integer paramCodeByNumber = getParamCodeByNumber(numberOfPrefixList);
+        FileSystem getOpenedStore = this.openedZipStoreList.get(paramCodeByNumber);
+        Path storageFile;
+        URI uriForStorage;
+        try {
+            if( getOpenedStore == null ){
+                storageFile = this.zipStoreFileList.get(paramCodeByNumber);
+                uriForStorage = this.storagesUriList.get(paramCodeByNumber);
+                getOpenedStore = AdihFileOperations.getStorageFileSystem(storageFile, uriForStorage);
+                this.openedZipStoreList.put(paramCodeByNumber, getOpenedStore);
+            }
+        return getOpenedStore;
+        } finally {
+            paramCodeByNumber = null;
+            getOpenedStore = null;
+            storageFile = null;
+            uriForStorage = null;
+        }
+    }
+    protected FileSystem getStoreFileSystemByPrefix(String prefixStr){
+        return null;
+    }
+    /**
      * 
      */
     private void fillOpenStoreList(){
         Path storageFile;
-        URI valueForStorage;
+        URI uriForStorage;
         Boolean pathIsFile;
         FileSystem storageFileSystem;
         try {
             for( Map.Entry<Integer, URI> itemOfURI : this.storagesUriList.entrySet() ){
                 storageFile = this.zipStoreFileList.get(itemOfURI.getKey());
                 if( storageFile != null ){
-                    valueForStorage = itemOfURI.getValue();
-                    storageFileSystem = AdihFileOperations.getStorageFileSystem(storageFile, valueForStorage);
+                    uriForStorage = itemOfURI.getValue();
+                    storageFileSystem = AdihFileOperations.getStorageFileSystem(storageFile, uriForStorage);
                     if( storageFileSystem != null ){
                         this.openedZipStoreList.put(itemOfURI.getKey(), storageFileSystem);
                     }
@@ -211,7 +260,7 @@ public class AdihZipStorages {
             }
         } finally {
             storageFile = null;
-            valueForStorage = null;
+            uriForStorage = null;
             pathIsFile = null;
             storageFileSystem = null;
         }
@@ -285,9 +334,6 @@ public class AdihZipStorages {
         try{
             searchinIndexDirStorageByPrefix = AdihFileOperations.searchinIndexDirStorageByPrefix(parenForStorage, prefixStorage);
             if( searchinIndexDirStorageByPrefix != null ){
-                System.out.println(AdihZipStorages.class.getCanonicalName()
-                        + ".buildZipStoragesPath() from AdihFileOperations.searchinIndexDirStorageByPrefix "
-                        + " search zip file result " + searchinIndexDirStorageByPrefix.toString());
                 return searchinIndexDirStorageByPrefix;
             }
             parentDir = parenForStorage.toString();
@@ -364,6 +410,9 @@ public class AdihZipStorages {
         createStoragesList();
         fillOpenStoreList();
     }
+    /**
+     * 
+     */
     protected void printAllList(){
         System.out.println("*** *** *** list opened storages");
         for( Map.Entry<Integer, FileSystem> entrySet : this.openedZipStoreList.entrySet() ){

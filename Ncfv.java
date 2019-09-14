@@ -18,6 +18,7 @@
 package ru.newcontrol.ncfv;
 
 import java.io.File;
+import java.nio.file.FileSystem;
 import java.security.AccessControlException;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -51,9 +52,24 @@ public class Ncfv {
         ThIndexRule thIndexRule = new ThIndexRule();
         AdihZipStorages storeNew = new AdihZipStorages(thIndexRule);
         System.out.println("*|*|* *|*|* *|*|* print created storages");
-        storeNew.printAllList();
-        storeNew.updateStorageList();
-        System.out.println("*|*|* *|*|* *|*|* print updated list of storages");
+        //storeNew.printAllList();
+        //storeNew.updateStorageList();
+        //System.out.println("*|*|* *|*|* *|*|* print updated list of storages");
+        FileSystem storeFileSystemByNumber = storeNew.getStoreFileSystemByNumber(3);
+        System.out.println("*|"
+                + storeFileSystemByNumber.toString()
+                + "*|* *| opened "
+                + storeFileSystemByNumber.isOpen());
+        FileSystem storeFileSystemByNumber1 = storeNew.getStoreFileSystemByNumber(10);
+        System.out.println("*|"
+                + storeFileSystemByNumber1.toString()
+                + "*|* *| opened "
+                + storeFileSystemByNumber1.isOpen());
+        FileSystem storeFileSystemByNumber2 = storeNew.getStoreFileSystemByNumber(11);
+        System.out.println("*|"
+                + storeFileSystemByNumber2.toString()
+                + "*|* *| opened "
+                + storeFileSystemByNumber2.isOpen());
         storeNew.printAllList();
         
         storeNew.utilizeAllLists();
