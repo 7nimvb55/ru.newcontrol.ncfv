@@ -15,9 +15,12 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.LinkedTransferQueue;
 
 /**
  * Adih
@@ -69,6 +72,30 @@ public class AdihUtilization {
         } finally {
             keyForDelete = null;
             removedData = null;
+        }
+    }
+    protected static void utilizeArrayList(ArrayList<Path> inputedValueForUtilize){
+        if( inputedValueForUtilize != null ){
+            for( Path itemOfListVal : inputedValueForUtilize ){
+                itemOfListVal = null;
+            }
+            inputedValueForUtilize.clear();
+        }
+        inputedValueForUtilize = null;
+    }
+    protected static void utilizeLinkedTransferQueue(LinkedTransferQueue<Path> inputedValueForUtilize){
+        Path pollElement = null;
+        try {
+            if( inputedValueForUtilize != null ){
+                do {
+                    pollElement = inputedValueForUtilize.poll();
+                    pollElement = null;
+                } while( !inputedValueForUtilize.isEmpty() );
+                inputedValueForUtilize.clear();
+            }
+        } finally {
+            pollElement = null;
+            inputedValueForUtilize = null;
         }
     }
     /**

@@ -19,6 +19,8 @@ import java.io.IOError;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.ClosedFileSystemException;
+import java.nio.file.DirectoryIteratorException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemAlreadyExistsException;
@@ -27,11 +29,14 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.LinkOption;
+import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.ProviderNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.LinkedTransferQueue;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Adih
@@ -608,31 +613,31 @@ public class AdihFileOperations {
                 try {
                     fileSystemOpened = FileSystems.getFileSystem(fsForOpen);
                 } catch(FileSystemAlreadyExistsException exAlExist){
-                    System.err.println(AdihHelper.class.getCanonicalName() 
+                    System.err.println(AdihFileOperations.class.getCanonicalName() 
                             + " error for open storage for index in file "
                             + pathIsFile.toString() + ", reason " 
                             + exAlExist.getMessage());
                     exAlExist.printStackTrace();
                 } catch(FileSystemNotFoundException exFsNotExist){
-                    System.err.println(AdihHelper.class.getCanonicalName() 
+                    System.err.println(AdihFileOperations.class.getCanonicalName() 
                             + " error for open storage for index in file "
                             + pathIsFile.toString() + ", reason " 
                             + exFsNotExist.getMessage());
                     exFsNotExist.printStackTrace();
                 } catch(ProviderNotFoundException exProvNotFound){
-                    System.err.println(AdihHelper.class.getCanonicalName() 
+                    System.err.println(AdihFileOperations.class.getCanonicalName() 
                             + " error for open storage for index in file "
                             + pathIsFile.toString() + ", reason "
                             + exProvNotFound.getMessage());
                     exProvNotFound.printStackTrace();
                 } catch(IllegalArgumentException exIllArg){
-                    System.err.println(AdihHelper.class.getCanonicalName() 
+                    System.err.println(AdihFileOperations.class.getCanonicalName() 
                             + " error for open storage for index in file "
                             + pathIsFile.toString() + ", reason "
                             + exIllArg.getMessage());
                     exIllArg.printStackTrace();
                 } catch(SecurityException exSec){
-                    System.err.println(AdihHelper.class.getCanonicalName() 
+                    System.err.println(AdihFileOperations.class.getCanonicalName() 
                             + " error for open storage for index in file "
                             + pathIsFile.toString() + ", reason "
                             + exSec.getMessage());
@@ -650,37 +655,37 @@ public class AdihFileOperations {
                             return fileSystemOpened;
                         }
                     } catch(FileSystemAlreadyExistsException exAlExist){
-                        System.err.println(AdihHelper.class.getCanonicalName() 
+                        System.err.println(AdihFileOperations.class.getCanonicalName() 
                                 + " error for open storage for index in file "
                                 + pathIsFile.toString() + ", reason " 
                                 + exAlExist.getMessage());
                         exAlExist.printStackTrace();
                     } catch(FileSystemNotFoundException exFsNotExist){
-                        System.err.println(AdihHelper.class.getCanonicalName() 
+                        System.err.println(AdihFileOperations.class.getCanonicalName() 
                                 + " error for open storage for index in file "
                                 + pathIsFile.toString() + ", reason " 
                                 + exFsNotExist.getMessage());
                         exFsNotExist.printStackTrace();
                     } catch(ProviderNotFoundException exProvNotFound){
-                        System.err.println(AdihHelper.class.getCanonicalName() 
+                        System.err.println(AdihFileOperations.class.getCanonicalName() 
                                 + " error for open storage for index in file "
                                 + pathIsFile.toString() + ", reason " 
                                 + exProvNotFound.getMessage());
                         exProvNotFound.printStackTrace();
                     } catch(IllegalArgumentException exIllArg){
-                        System.err.println(AdihHelper.class.getCanonicalName() 
+                        System.err.println(AdihFileOperations.class.getCanonicalName() 
                                 + " error for open storage for index in file "
                                 + pathIsFile.toString() + ", reason "
                                 + exIllArg.getMessage());
                         exIllArg.printStackTrace();
                     } catch(SecurityException exSec){
-                        System.err.println(AdihHelper.class.getCanonicalName() 
+                        System.err.println(AdihFileOperations.class.getCanonicalName() 
                                 + " error for open storage for index in file "
                                 + pathIsFile.toString() + ", reason " 
                                 + exSec.getMessage());
                         exSec.printStackTrace();
                     } catch (IOException exIo) {
-                        System.err.println(AdihHelper.class.getCanonicalName() 
+                        System.err.println(AdihFileOperations.class.getCanonicalName() 
                                 + " error for open storage for index in file "
                                 + pathIsFile.toString() + ", reason "
                                 + exIo.getMessage());
@@ -694,37 +699,37 @@ public class AdihFileOperations {
                         return fileSystemOpened;
                     }
                 } catch(FileSystemAlreadyExistsException exAlExist){
-                    System.err.println(AdihHelper.class.getCanonicalName() 
+                    System.err.println(AdihFileOperations.class.getCanonicalName() 
                             + " error for open storage for index in file "
                             + pathIsFile.toString() + ", reason "
                             + exAlExist.getMessage());
                     exAlExist.printStackTrace();
                 } catch(FileSystemNotFoundException exFsNotExist){
-                    System.err.println(AdihHelper.class.getCanonicalName() 
+                    System.err.println(AdihFileOperations.class.getCanonicalName() 
                             + " error for open storage for index in file "
                             + pathIsFile.toString() + ", reason "
                             + exFsNotExist.getMessage());
                     exFsNotExist.printStackTrace();
                 } catch(ProviderNotFoundException exProvNotFound){
-                    System.err.println(AdihHelper.class.getCanonicalName() 
+                    System.err.println(AdihFileOperations.class.getCanonicalName() 
                             + " error for open storage for index in file "
                             + pathIsFile.toString() + ", reason "
                             + exProvNotFound.getMessage());
                     exProvNotFound.printStackTrace();
                 } catch(IllegalArgumentException exIllArg){
-                    System.err.println(AdihHelper.class.getCanonicalName() 
+                    System.err.println(AdihFileOperations.class.getCanonicalName() 
                             + " error for open storage for index in file "
                             + pathIsFile.toString() + ", reason "
                             + exIllArg.getMessage());
                     exIllArg.printStackTrace();
                 } catch(SecurityException exSec){
-                    System.err.println(AdihHelper.class.getCanonicalName() 
+                    System.err.println(AdihFileOperations.class.getCanonicalName() 
                             + " error for open storage for index in file "
                             + pathIsFile.toString() + ", reason "
                             + exSec.getMessage());
                     exSec.printStackTrace();
                 } catch (IOException exIo) {
-                    System.err.println(AdihHelper.class.getCanonicalName() 
+                    System.err.println(AdihFileOperations.class.getCanonicalName() 
                             + " error for open storage for index in file "
                             + pathIsFile.toString() + ", reason "
                             + exIo.getMessage());
@@ -739,6 +744,11 @@ public class AdihFileOperations {
             pathIsFile = null;
         }
     }
+    /**
+     * 
+     * @param openedStorage
+     * @return 
+     */
     protected static Boolean closeOpenedStorage(FileSystem openedStorage){
         String openedStorageToString = openedStorage.toString();
         Boolean isOpened = openedStorage.isOpen();
@@ -748,25 +758,25 @@ public class AdihFileOperations {
                     openedStorage.close();
                     return Boolean.TRUE;
                 } catch(ClosedFileSystemException exClose){
-                    System.err.println(AdihHelper.class.getCanonicalName() 
+                    System.err.println(AdihFileOperations.class.getCanonicalName() 
                             + " error for close storage for index in file "
                             + openedStorageToString + ", reason "
                             + exClose.getMessage());
                     exClose.printStackTrace();
                 } catch(UnsupportedOperationException exUnSupEx){
-                    System.err.println(AdihHelper.class.getCanonicalName() 
+                    System.err.println(AdihFileOperations.class.getCanonicalName() 
                             + " error for close storage for index in file "
                             + openedStorageToString + ", reason "
                             + exUnSupEx.getMessage());
                     exUnSupEx.printStackTrace();
                 }  catch(SecurityException exSec){
-                    System.err.println(AdihHelper.class.getCanonicalName() 
+                    System.err.println(AdihFileOperations.class.getCanonicalName() 
                             + " error for close storage for index in file "
                             + openedStorageToString + ", reason "
                             + exSec.getMessage());
                     exSec.printStackTrace();
                 } catch (IOException exIo) {
-                    System.err.println(AdihHelper.class.getCanonicalName() 
+                    System.err.println(AdihFileOperations.class.getCanonicalName() 
                             + " error for close storage for index in file "
                             + openedStorageToString + ", reason "
                             + exIo.getMessage());
@@ -779,6 +789,131 @@ public class AdihFileOperations {
             AdihUtilization.utilizeStringValues(new String[]{openedStorageToString});
             openedStorageToString = null;
 }
+    }
+    /**
+     * 
+     * @param prefixForFound
+     * @return
+     * @throws IOException 
+     */
+    protected static Path searchinIndexDirStorageByPrefix(Path searchedDirectory, String prefixForFound){
+        if( searchedDirectory == null ){
+            return null;
+        }
+        if( prefixForFound == null ){
+            return null;
+        }
+        if( prefixForFound.isEmpty() ){
+            return null;
+        }
+        Path indexFolder;
+        LinkedTransferQueue<Path> filesByMaskFromDir = null;
+        Path getMaxCompared = (Path) searchedDirectory;
+        Path itemMask = null;
+        Integer compareResult = 0;
+        Boolean isSomeOneFound = Boolean.FALSE;
+        try {
+            indexFolder = (Path) searchedDirectory;
+            filesByMaskFromDir = getFilesByMaskFromDir(indexFolder, 
+                    "{" + prefixForFound + "}*");
+            if( filesByMaskFromDir == null ){
+                return null;
+            }
+            if( filesByMaskFromDir.isEmpty() ){
+                return null;
+            }
+            do {
+                itemMask = filesByMaskFromDir.poll();
+                if( itemMask != null ){
+                    try{
+                        compareResult = getMaxCompared.compareTo(itemMask);
+                    } catch (ClassCastException exClassCast) {
+                        System.err.println(AdihFileOperations.class.getCanonicalName() 
+                            + " error for compare, searched in index directory, file names "
+                            + ", reason "
+                            + exClassCast.getMessage());
+                        exClassCast.printStackTrace();
+                    }
+                    if( compareResult > 0 ){
+                        getMaxCompared = itemMask;
+                        isSomeOneFound = Boolean.TRUE;
+                    }
+                }
+            } while( !filesByMaskFromDir.isEmpty() );
+            if( isSomeOneFound ){
+                return getMaxCompared;
+            }
+            return null;
+        } finally {
+            indexFolder = null;
+            AdihUtilization.utilizeLinkedTransferQueue(filesByMaskFromDir);
+            filesByMaskFromDir = null;
+            getMaxCompared = null;
+            itemMask = null;
+            compareResult = null;
+            isSomeOneFound = null;
+        }
+    }
+    /**
+     * Return contained in directory files, directories... etc (Path object)
+     * by mask equal of regular expression
+     * @param dirForRead
+     * @param maskForReturn
+     * @return 
+     */
+    protected static LinkedTransferQueue<Path> getFilesByMaskFromDir(Path dirForRead, String maskForReturn){
+        LinkedTransferQueue<Path> toReturn = new LinkedTransferQueue<Path>();
+        try {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(dirForRead, maskForReturn)) {
+                for (Path entry : stream) {
+                    toReturn.add(entry);
+                }
+            } catch (PatternSyntaxException exPatternSyntax) {
+                System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for search files by prefix "
+                            + maskForReturn + " index in directory "
+                            + dirForRead.toString() + ", reason "
+                            + exPatternSyntax.getMessage());
+                exPatternSyntax.printStackTrace();
+                return null;
+            } catch (NotDirectoryException  exNotDir) {
+                System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for search files by prefix "
+                            + maskForReturn + " index in directory "
+                            + dirForRead.toString() + ", reason "
+                            + exNotDir.getMessage());
+                exNotDir.printStackTrace();
+                return null;
+            } catch (DirectoryIteratorException exDirIter) {
+                System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for search files by prefix "
+                            + maskForReturn + " index in directory "
+                            + dirForRead.toString() + ", reason "
+                            + exDirIter.getMessage());
+                exDirIter.printStackTrace();
+                return null;
+            } catch (SecurityException  exSec) {
+                System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for search files by prefix "
+                            + maskForReturn + " index in directory "
+                            + dirForRead.toString() + ", reason "
+                            + exSec.getMessage());
+                exSec.printStackTrace();
+                return null;
+            } catch (IOException exIo) {
+                System.err.println(AdihHelper.class.getCanonicalName() 
+                            + " error for search files by prefix "
+                            + maskForReturn + " index in directory "
+                            + dirForRead.toString() + ", reason "
+                            + exIo.getMessage());
+                exIo.printStackTrace();
+                return null;
+            }
+            return toReturn;
+        } finally {
+            AdihUtilization.utilizeLinkedTransferQueue(toReturn);
+            toReturn = null;
+        }
     }
     /**
      * 

@@ -280,12 +280,23 @@ public class AdihZipStorages {
             key = null;
         }
     }
+    /**
+     * 
+     * @param parenForStorage
+     * @param prefixStorage
+     * @return 
+     */
     private static Path buildZipStoragesPath(Path parenForStorage, String prefixStorage){
         Path forReturnStorage = null;
+        Path searchinIndexDirStorageByPrefix = null;
         String parentDir = new String();
         String buildedName = new String();
         try{
-            //search in default file system exizting files by mask, create path and return
+            //search in default file system existing files by mask, create path and return
+            searchinIndexDirStorageByPrefix = AdihFileOperations.searchinIndexDirStorageByPrefix(parenForStorage, prefixStorage);
+            if( searchinIndexDirStorageByPrefix != null ){
+                return searchinIndexDirStorageByPrefix;
+            }
             parentDir = parenForStorage.toString();
             buildedName = prefixStorage
                     .concat(AdihGetvalues.getNowTimeStringMillisFsNames())
@@ -306,6 +317,7 @@ public class AdihZipStorages {
         } finally {
             forReturnStorage = null;
             AdihUtilization.utilizeStringValues(new String[]{parentDir, buildedName});
+            searchinIndexDirStorageByPrefix = null;
         }
     }
     /**
