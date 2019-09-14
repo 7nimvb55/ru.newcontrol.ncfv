@@ -158,17 +158,14 @@ public class AdihZipStorages {
         try {
             countParamsDataFsForSet = getParamCount();
             
-            prefixStorageByNumber = AdihHelper.getPrefixStorageByNumber(0);
             paramCodeByNumber = getParamCodeByNumber(0);
             toAddIntoList = AdihFileOperations.getUserHomeCheckedPath();
             this.zipStoreFileList.put(paramCodeByNumber, toAddIntoList);
             
-            prefixStorageByNumber = AdihHelper.getPrefixStorageByNumber(1);
             paramCodeByNumber = getParamCodeByNumber(1);
             toAddIntoList = AdihFileOperations.getAppCheckedPath();
             this.zipStoreFileList.put(paramCodeByNumber, toAddIntoList);
             
-            prefixStorageByNumber = AdihHelper.getPrefixStorageByNumber(2);
             paramCodeByNumber = getParamCodeByNumber(2);
             toAddIntoList = createIfNotExistSubDirIndex();
             subDirIndex = toAddIntoList;
@@ -288,6 +285,9 @@ public class AdihZipStorages {
         try{
             searchinIndexDirStorageByPrefix = AdihFileOperations.searchinIndexDirStorageByPrefix(parenForStorage, prefixStorage);
             if( searchinIndexDirStorageByPrefix != null ){
+                System.out.println(AdihZipStorages.class.getCanonicalName()
+                        + ".buildZipStoragesPath() from AdihFileOperations.searchinIndexDirStorageByPrefix "
+                        + " search zip file result " + searchinIndexDirStorageByPrefix.toString());
                 return searchinIndexDirStorageByPrefix;
             }
             parentDir = parenForStorage.toString();
@@ -367,7 +367,11 @@ public class AdihZipStorages {
     protected void printAllList(){
         System.out.println("*** *** *** list opened storages");
         for( Map.Entry<Integer, FileSystem> entrySet : this.openedZipStoreList.entrySet() ){
-            System.out.println("key " + String.valueOf(entrySet.getKey()) + " storage " + entrySet.getValue().toString());
+            System.out.println("key " + String.valueOf(entrySet.getKey()) 
+                    + " storage " 
+                    + entrySet.getValue().toString()
+                    + " is open " + String.valueOf(entrySet.getValue().isOpen())
+            );
         }
         System.out.println("*** *** *** list URI for storage files");
         for( Map.Entry<Integer, URI> entrySet : this.storagesUriList.entrySet() ){
