@@ -236,7 +236,111 @@ public class AdihZipStorages {
             uriForStorage = null;
         }
     }
+    /**
+     * 
+     * @return path for user home directory
+     */
+    protected Path getPathUserHome(){
+        Integer paramCodeByNumber;
+        try {
+            paramCodeByNumber = getParamCodeByNumber(0);
+            return this.zipStoreFileList.get(paramCodeByNumber);
+        } finally {
+            paramCodeByNumber = null;
+        }
+    }
+    /**
+     * 
+     * @return path for Application, where run class
+     */
+    protected Path getPathApplicationPath(){
+        Integer paramCodeByNumber;
+        try {
+            paramCodeByNumber = getParamCodeByNumber(1);
+            return this.zipStoreFileList.get(paramCodeByNumber);
+        } finally {
+            paramCodeByNumber = null;
+        }
+    }
+    /**
+     * 
+     * @return path for index subDirectory in user home directory
+     */
+    protected Path getPathIndexSubDir(){
+        Integer paramCodeByNumber;
+        try {
+            paramCodeByNumber = getParamCodeByNumber(2);
+            return this.zipStoreFileList.get(paramCodeByNumber);
+        } finally {
+            paramCodeByNumber = null;
+        }
+    }
+    /**
+     * <ul>
+     * <li>   0 -   UserHome
+     * <li>   1 -   ClassPathApplicationDirectory
+     * <li>   2 -   ncidxfvSubDirIndex
+     * 
+     * <li>   3 -   di-indexDirList
+     * <li>   4 -   t-indexTempData
+     * <li>   5 -   j-indexJournal
+     * <li>   6 -   fl-indexFileList
+     *              
+     * <li>   7 -   ft-indexFileType
+     * <li>   8 -   fh-indexFileHash
+     * <li>   9 -   fx-indexFileExist
+     * 
+     * <li>  10 -   w-indexWord
+     * <li>  11 -   sw-indexStorageWord
+     * <li>  12 -   lw-indexLongWordList
+     * <li>  13 -   ln-indexLongWordData
+     * </ul> 
+     * @param prefixStr
+     * @return 
+     */
     protected FileSystem getStoreFileSystemByPrefix(String prefixStr){
+        if( prefixStr == null ){
+            return null;
+        }
+        if( prefixStr.isEmpty() ){
+            return null;
+        }
+        if( prefixStr.toLowerCase().equalsIgnoreCase(prefixStr) ){
+            return getStoreFileSystemByNumber(3);
+        }
+        if( prefixStr.toLowerCase().equalsIgnoreCase(AppFileNamesConstants.FILE_INDEX_PREFIX_DIR_LIST) ){
+            return getStoreFileSystemByNumber(3);
+        }
+        if( prefixStr.toLowerCase().equalsIgnoreCase(AppFileNamesConstants.FILE_INDEX_PREFIX_TMP) ){
+            return getStoreFileSystemByNumber(3);
+        }
+        if( prefixStr.toLowerCase().equalsIgnoreCase(AppFileNamesConstants.FILE_INDEX_PREFIX_JOURNAL) ){
+            return getStoreFileSystemByNumber(3);
+        }
+        if( prefixStr.toLowerCase().equalsIgnoreCase(AppFileNamesConstants.FILE_INDEX_PREFIX_FILE_LIST) ){
+            return getStoreFileSystemByNumber(3);
+        }
+        if( prefixStr.toLowerCase().equalsIgnoreCase(AppFileNamesConstants.FILE_INDEX_PREFIX_FILE_TYPE) ){
+            return getStoreFileSystemByNumber(3);
+        }
+        if( prefixStr.toLowerCase().equalsIgnoreCase(AppFileNamesConstants.FILE_INDEX_PREFIX_FILE_HASH) ){
+            return getStoreFileSystemByNumber(3);
+        }
+        if( prefixStr.toLowerCase().equalsIgnoreCase(AppFileNamesConstants.FILE_INDEX_PREFIX_FILE_EXIST) ){
+            return getStoreFileSystemByNumber(3);
+        }
+        if( prefixStr.toLowerCase().equalsIgnoreCase(AppFileNamesConstants.FILE_INDEX_PREFIX_WORD) ){
+            return getStoreFileSystemByNumber(3);
+        }
+        if( prefixStr.toLowerCase().equalsIgnoreCase(AppFileNamesConstants.FILE_INDEX_PREFIX_STORAGE_WORD) ){
+            return getStoreFileSystemByNumber(3);
+        }
+        if( prefixStr.toLowerCase().equalsIgnoreCase(AppFileNamesConstants.FILE_INDEX_PREFIX_LONG_WORD_LIST) ){
+            return getStoreFileSystemByNumber(3);
+        }
+        if( prefixStr.toLowerCase().equalsIgnoreCase(AppFileNamesConstants.FILE_INDEX_PREFIX_LONG_WORD_DATA) ){
+            return getStoreFileSystemByNumber(3);
+        }
         return null;
     }
     /**
