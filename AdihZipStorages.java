@@ -15,16 +15,11 @@
  */
 package ru.newcontrol.ncfv;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.FileStore;
 import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.spi.FileSystemProvider;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -45,6 +40,8 @@ public class AdihZipStorages {
         this.storagesUriList = new ConcurrentSkipListMap<Integer, URI>();
         this.zipStoreFileList = new ConcurrentSkipListMap<Integer, Path>();
         this.openedZipStoreList = new ConcurrentSkipListMap<Integer, FileSystem>();
+        createStoragesList();
+        fillOpenStoreList();
     }
 
     /**
@@ -146,14 +143,7 @@ public class AdihZipStorages {
             paramName = null;
         }
     }
-    private void fillAllListFromFoundedStorages(){
-        Boolean isFoundOnFileSystem = Boolean.FALSE;
-        if( !isFoundOnFileSystem ){
-            createStoragesList();
-        } else {
-            
-        }
-    }
+
     /**
      * generate list of typed bus for temporary cache lines for log
      */
@@ -203,6 +193,9 @@ public class AdihZipStorages {
             idx = null;
         }
     }
+    /**
+     * 
+     */
     private void fillOpenStoreList(){
         Path storageFile;
         URI valueForStorage;
@@ -281,7 +274,8 @@ public class AdihZipStorages {
         }
     }
     /**
-     * 
+     * Found on file system zip index storage and add it into list or create new
+     * if it not found
      * @param parenForStorage
      * @param prefixStorage
      * @return 
@@ -292,7 +286,6 @@ public class AdihZipStorages {
         String parentDir = new String();
         String buildedName = new String();
         try{
-            //search in default file system existing files by mask, create path and return
             searchinIndexDirStorageByPrefix = AdihFileOperations.searchinIndexDirStorageByPrefix(parenForStorage, prefixStorage);
             if( searchinIndexDirStorageByPrefix != null ){
                 return searchinIndexDirStorageByPrefix;
@@ -363,44 +356,23 @@ public class AdihZipStorages {
             AdihUtilization.utilizeStringValues(new String[]{userHomeStr, prefixStorageByNumber});
         }
     }
-    
-    private static Path getPathStorageFile(String prefixStorageName){
-        return null;
+    /**
+     * 
+     */
+    protected void updateStorageList(){
+        utilizeAllLists();
+        createStoragesList();
+        fillOpenStoreList();
     }
-    private static URI getUriStorageByNumber(Path storageFile){
-        URI uri;
-        try {
-            uri = new URI("file:///foo/bar");
-        } catch (URISyntaxException ex) {
-            
+    protected void printAllList(){
+        for( Map.Entry<Integer, FileSystem> entrySet : this.openedZipStoreList.entrySet() ){
+            System.out.println("key " + String.valueOf(entrySet.getKey()) + " storage " + entrySet.getValue().toString());
         }
-        return null;
-    }
-    protected static void updateStorageList(){
-        
-    }
-    private static Boolean checkStorageZipFile(){
-        return Boolean.TRUE;
-    }
-    private static void readZipFileList(){
-        
-    }
-    private static void closeOpenedStores(){
-        URI byPrefixGetUri = Paths.get("/", "file.zip").toUri();
-        FileSystem fileSystem = FileSystems.getFileSystem(byPrefixGetUri);
-        FileSystemProvider provider = fileSystem.provider();
-        Boolean open = fileSystem.isOpen();
-        Iterable<FileStore> fileStores = fileSystem.getFileStores();
-        for(FileStore itemFs : fileStores ){
-
+        for( Map.Entry<Integer, URI> entrySet : this.storagesUriList.entrySet() ){
+            System.out.println("key " + String.valueOf(entrySet.getKey()) + " storage " + entrySet.getValue().toString());
         }
-        try {
-            fileSystem.close();
-        } catch (IOException exIo) {
-            System.err.println(ThStorageWordLogicWrite.class.getCanonicalName() 
-                    + " error for open storage for index, reason " 
-                    + exIo.getMessage());
-            exIo.printStackTrace();
+        for( Map.Entry<Integer, Path> entrySet : this.zipStoreFileList.entrySet() ){
+            System.out.println("key " + String.valueOf(entrySet.getKey()) + " storage " + entrySet.getValue().toString());
         }
     }
 }
