@@ -48,36 +48,45 @@ public class Ncfv {
      */
     
     public static void main(String[] args) {
+        
         AppEtcSecurityHelper.createNewSecurity();
         ThIndexRule thIndexRule = new ThIndexRule();
         AdihZipStorages storeNew = new AdihZipStorages(thIndexRule);
-        System.out.println("*|*|* *|*|* *|*|* print created storages");
-        //storeNew.printAllList();
-        //storeNew.updateStorageList();
-        //System.out.println("*|*|* *|*|* *|*|* print updated list of storages");
-        FileSystem storeFileSystemByNumber = storeNew.getStoreFileSystemByNumber(3);
-        System.out.println("*|"
-                + storeFileSystemByNumber.toString()
-                + "*|* *| opened "
-                + storeFileSystemByNumber.isOpen());
-        FileSystem storeFileSystemByNumber1 = storeNew.getStoreFileSystemByNumber(10);
-        System.out.println("*|"
-                + storeFileSystemByNumber1.toString()
-                + "*|* *| opened "
-                + storeFileSystemByNumber1.isOpen());
-        FileSystem storeFileSystemByNumber2 = storeNew.getStoreFileSystemByNumber(11);
-        System.out.println("*|"
-                + storeFileSystemByNumber2.toString()
-                + "*|* *| opened "
-                + storeFileSystemByNumber2.isOpen());
-        storeNew.printAllList();
-        
-        storeNew.utilizeAllLists();
-        System.out.println("*|*|* *|*|* *|*|* print utilized list of storages");
-        storeNew.printAllList();
+        try {
+            System.out.println("*|*|* *|*|* *|*|* print created storages");
+            //storeNew.printAllList();
+            //storeNew.updateStorageList();
+            //System.out.println("*|*|* *|*|* *|*|* print updated list of storages");
+            FileSystem storeFileSystemByNumber = storeNew.getStoreFileSystemByNumber(3);
+            System.out.println("*|"
+                    + storeFileSystemByNumber.toString()
+                    + "*|* *| opened "
+                    + storeFileSystemByNumber.isOpen());
+            FileSystem storeFileSystemByNumber1 = storeNew.getStoreFileSystemByNumber(10);
+            System.out.println("*|"
+                    + storeFileSystemByNumber1.toString()
+                    + "*|* *| opened "
+                    + storeFileSystemByNumber1.isOpen());
+            FileSystem storeFileSystemByNumber2 = storeNew.getStoreFileSystemByNumber(11);
+            System.out.println("*|"
+                    + storeFileSystemByNumber2.toString()
+                    + "*|* *| opened "
+                    + storeFileSystemByNumber2.isOpen());
+            storeNew.printAllList();
+
+            storeNew.utilizeAllLists();
+            System.out.println("*|*|* *|*|* *|*|* print utilized list of storages");
+            storeNew.printAllList();
         //runIndexMakeWordIntoZipByThreads();
         //runIndexMakeAndDirList();
         //outputToConsoleStrings();
+        } catch(Throwable exTrow) {
+            System.out.println(exTrow.getMessage());
+            exTrow.printStackTrace();
+        } finally {
+            storeNew.utilizeAllLists();
+
+        }
     }
 
     private static void runIndexMakeAndDirList(){
