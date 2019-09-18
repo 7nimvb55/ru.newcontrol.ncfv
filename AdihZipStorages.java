@@ -376,9 +376,12 @@ public class AdihZipStorages {
         FileSystem removedStorageItem;
         Boolean closeOpenedStorage;
         try {
-            for( Map.Entry<Integer, FileSystem> itemOfURI : this.openedZipStoreList.entrySet() ){
-                removedStorageItem = itemOfURI.getValue();
+            for( Map.Entry<Integer, FileSystem> itemOfFileSystems : this.openedZipStoreList.entrySet() ){
+                removedStorageItem = itemOfFileSystems.getValue();
                 closeOpenedStorage = AdihFileOperations.closeOpenedStorage(removedStorageItem);
+                if( !closeOpenedStorage ){
+                    //not closed, retry in other procedure or not opened
+                }
             }
         } finally {
             removedStorageItem = null;
@@ -389,38 +392,63 @@ public class AdihZipStorages {
      * 
      */
     protected void utilizeAllLists(){
+        
         Integer key;
         FileSystem removeZipStorageItem;
         URI removeUriStorageItem;
         Path removePathStorageItem;
+        Boolean hasNotClosedStorages = Boolean.FALSE;
         try {
-            closeOpenedAndUtilizeValuesFromList();
-            for( Map.Entry<Integer, FileSystem> itemOfFs : this.openedZipStoreList.entrySet() ){
-                key = itemOfFs.getKey();
-                removeZipStorageItem = this.openedZipStoreList.remove(key);
-                removeZipStorageItem = null;
-                key = null;
+            retryCloseStorage: {
+                hasNotClosedStorages = Boolean.FALSE;
+                closeOpenedAndUtilizeValuesFromList();
+                for( Map.Entry<Integer, FileSystem> itemOfFs : this.openedZipStoreList.entrySet() ){
+                    key = itemOfFs.getKey();
+                    if( !itemOfFs.getValue().isOpen() ){
+                        removeZipStorageItem = this.openedZipStoreList.remove(key);
+                        removeZipStorageItem = null;
+                        key = null;
+                    } else {
+                        hasNotClosedStorages = Boolean.TRUE;
+                    }
+                }
+
+                for( Map.Entry<Integer, URI> itemOfURI : this.storagesUriList.entrySet() ){
+                    key = itemOfURI.getKey();
+                    if( hasNotClosedStorages ){
+                        if( this.openedZipStoreList.containsKey(key) ){
+                            continue;
+                        }
+                    }
+                    removeUriStorageItem = this.storagesUriList.remove(key);
+                    removeUriStorageItem = null;
+                    key = null;
+                }
+
+                for( Map.Entry<Integer, Path> itemOfPath : this.zipStoreFileList.entrySet() ){
+                    key = itemOfPath.getKey();
+                    if( hasNotClosedStorages ){
+                        if( this.openedZipStoreList.containsKey(key) ){
+                            continue;
+                        }
+                    }
+                    removePathStorageItem = this.zipStoreFileList.remove(key);
+                    removeZipStorageItem = null;
+                    key = null;
+                }
+                if( hasNotClosedStorages ){
+                    break retryCloseStorage;
+                }
             }
             this.openedZipStoreList.clear();
-            for( Map.Entry<Integer, URI> itemOfURI : this.storagesUriList.entrySet() ){
-                key = itemOfURI.getKey();
-                removeUriStorageItem = this.storagesUriList.remove(key);
-                removeUriStorageItem = null;
-                key = null;
-            }
             this.storagesUriList.clear();
-            for( Map.Entry<Integer, Path> itemOfPath : this.zipStoreFileList.entrySet() ){
-                key = itemOfPath.getKey();
-                removePathStorageItem = this.zipStoreFileList.remove(key);
-                removeZipStorageItem = null;
-                key = null;
-            }
             this.zipStoreFileList.clear();
         } finally {
             removePathStorageItem = null;
             removeZipStorageItem = null;
             removeUriStorageItem = null;
             key = null;
+            hasNotClosedStorages = null;
         }
     }
     /**

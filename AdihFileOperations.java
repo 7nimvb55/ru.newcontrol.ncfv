@@ -711,7 +711,7 @@ public class AdihFileOperations {
     /**
      * 
      * @param openedStorage
-     * @return 
+     * @return true if close
      */
     protected static Boolean closeOpenedStorage(FileSystem openedStorage){
         String openedStorageToString = openedStorage.toString();

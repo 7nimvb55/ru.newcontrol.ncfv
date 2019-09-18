@@ -85,7 +85,6 @@ public class Ncfv {
             exTrow.printStackTrace();
         } finally {
             storeNew.utilizeAllLists();
-
         }
     }
 
