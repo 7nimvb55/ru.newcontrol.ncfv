@@ -16,14 +16,15 @@
 package ru.newcontrol.ncfv;
 
 /**
-  * 
+ * 
  * <ul>
  * <li>Automated
  * <li>data
  * <li>indexing
  * <li>bus Typed Transfer
  * <ul>
- * Provided some bus 
+ * Provided some bus base on ConcurrentSkipList for transfer between objects in 
+ * runnable in threads and cache data
  * @author wladimirowichbiaran
  */
 public class AdibTypedTransfer {

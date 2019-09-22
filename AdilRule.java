@@ -107,9 +107,14 @@ public class AdilRule {
         }
     }
     protected void needNextRunLogger(){
-        UUID poll = this.queueForRunLogger.poll();
-        if( poll != null ){
-            runAdilWorkWrite();
+        UUID poll;
+        try {
+            poll = this.queueForRunLogger.poll();
+            if( poll != null ){
+                runAdilWorkWrite();
+            }
+        } finally {
+            poll = null;
         }
     }
     /**

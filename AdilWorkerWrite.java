@@ -19,7 +19,7 @@ package ru.newcontrol.ncfv;
  *
  * @author wladimirowichbiaran
  */
-public class AdilWorkerWrite implements Runnable{
+public class AdilWorkerWrite implements Runnable {
     private AdilRule ruleAdilWrite;
     
     AdilWorkerWrite(final AdilRule outerRuleAdilWrite){
