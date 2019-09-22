@@ -81,10 +81,15 @@ public class Ncfv {
         //runIndexMakeAndDirList();
         //outputToConsoleStrings();
         } catch(Throwable exTrow) {
-            System.out.println(exTrow.getMessage());
+            System.err.println(exTrow.getMessage());
             exTrow.printStackTrace();
         } finally {
-            storeNew.utilizeAllLists();
+            try {
+                storeNew.utilizeAllLists();
+            } catch(Throwable exTrowSecond) {
+                System.err.println(exTrowSecond.getMessage());
+                exTrowSecond.printStackTrace();
+            }
         }
     }
 

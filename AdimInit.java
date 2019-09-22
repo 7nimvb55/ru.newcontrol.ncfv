@@ -21,11 +21,21 @@ package ru.newcontrol.ncfv;
  * <li>Automated
  * <li>data
  * <li>indexing
- * <li>word
+ * <li>mechanics
+ * <li>Initialization
  * <ul>
- * 
+ * create objects:
+ *  - Logger objects
+ *  - ZipStorages manager objects
+ *  - Bus for transfer data
+ *  - State objects
+ *  - Main flow objects
+ *  - Event indexing main flow objects
+ *  - Typed runner objects
+ *  - Rule objects
+ *  Return created rule interface object to main class function
  * @author wladimirowichbiaran
  */
-public class AdiwRouter {
+public class AdimInit {
     
 }

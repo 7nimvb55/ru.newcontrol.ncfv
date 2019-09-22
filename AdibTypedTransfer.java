@@ -16,17 +16,16 @@
 package ru.newcontrol.ncfv;
 
 /**
- * Adiws
+  * 
  * <ul>
  * <li>Automated
  * <li>data
  * <li>indexing
- * <li>word
- * <li>storage
+ * <li>bus Typed Transfer
  * <ul>
- * 
+ * Provided some bus 
  * @author wladimirowichbiaran
  */
-public class AdiwsRouter {
+public class AdibTypedTransfer {
     
 }

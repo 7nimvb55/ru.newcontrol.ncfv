@@ -16,16 +16,17 @@
 package ru.newcontrol.ncfv;
 
 /**
- * Adiwl
+ * Adiws
  * <ul>
  * <li>Automated
  * <li>data
  * <li>indexing
- * <li>word
- * <li>long
+ * <li>mechanics
+ * <li>Factory
  * <ul>
+ * Create and run threads with runner logic
  * @author wladimirowichbiaran
  */
-public class AdiwlRouter {
+public class AdimFactory {
     
 }
