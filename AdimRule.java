@@ -28,5 +28,62 @@ package ru.newcontrol.ncfv;
  * @author wladimirowichbiaran
  */
 public class AdimRule {
-    
+    /**
+     * AdilRule
+     */
+    private AdilRule loggerRule;
+    private Boolean isSetAdilRule;
+    public AdimRule(){
+        setFalseAdilRule();
+    }
+    /**
+     * AdilRule
+     * @return 
+     * @throws IllegalArgumentException if not set
+     */
+    protected AdilRule getAdilRule(){
+        if( !this.isAdilRule() ){
+            throw new IllegalArgumentException(AdilRule.class.getCanonicalName() 
+                    + " object not set in " 
+                    + AdimRule.class.getCanonicalName());
+        }
+        return this.loggerRule;
+    }
+    /**
+     * 
+     * @param loggerAdilRuleOuter 
+     */
+    protected void setAdilRule(final AdilRule loggerAdilRuleOuter){
+        if( loggerAdilRuleOuter != null){
+            this.loggerRule = (AdilRule) loggerAdilRuleOuter;
+            setTrueAdilRule();
+        } else {
+            throw new NullPointerException(AdilRule.class.getCanonicalName() 
+                    + " object for set in " 
+                    + AdimRule.class.getCanonicalName() 
+                    + " is null");
+        }
+    }
+    /**
+     * Set in field <code>true</code>
+     */
+    protected void setTrueAdilRule(){
+        this.isSetAdilRule = Boolean.TRUE;
+    }
+    /**
+     * Set in field <code>false</code>
+     */
+    protected void setFalseAdilRule(){
+        this.isSetAdilRule = Boolean.FALSE;
+    }
+    /**
+     * 
+     * @return true if AdilRule object set
+     */
+    protected Boolean isAdilRule(){
+        if( this.isSetAdilRule ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
 }

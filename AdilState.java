@@ -401,6 +401,55 @@ public class AdilState {
      * @param strForLogInputed 
      * @see ru.newcontrol.ncfv.AdilHelper#getParamNames AdilHelper.getParamNames()
      */
+    protected void putLogLineByProcessNumberMsgExceptions(Integer typeBus,
+            String classCanonicalName,
+            String methodName,
+            String messageForLogInputed){
+        LinkedTransferQueue<String> logLinesBusByNumber;
+        String strForInput = new String();
+        try {
+            String instanceStartTimeWithMS = AdilHelper.getNowTimeString();
+            strForInput = messageForLogInputed;
+            logLinesBusByNumber = (LinkedTransferQueue<String>) getLogLinesBusByNumber(typeBus);
+            logLinesBusByNumber.add(
+                    AdilConstants.TIME 
+                    + instanceStartTimeWithMS 
+                    + AdilConstants.MSG
+                    + AdilConstants.EXCEPTION
+                    + AdilConstants.CANONICALNAME
+                    + classCanonicalName
+                    + AdilConstants.METHOD
+                    + methodName
+                    + AdilConstants.EXCEPTION_MSG
+                    + messageForLogInputed);
+        } finally {
+            logLinesBusByNumber = null;
+            ThWordHelper.utilizeStringValues(new String[]{strForInput});
+        }
+    }
+    /**
+     * <ul>
+     * <li>   0 -   Main
+     * <li>   1 -   Index
+     * <li>   2 -   DirListManager
+     * <li>   3 -   DirListRead
+     * <li>   4 -   DirListWrite
+     * <li>   5 -   FileListBuild
+     *              
+     * <li>   6 -   WordStorageFilter
+     * <li>   7 -   WordStorageRouter
+     * <li>   8 -   WordStorageReader
+     * <li>   9 -   WordStorageWriter
+     *              
+     * <li>  10 -   WordRouter
+     * <li>  11 -   WordReader
+     * <li>  12 -   WordWriter
+     * <li>  13 -   WordEvent
+     * </ul> 
+     * @param typeBus
+     * @param strForLogInputed 
+     * @see ru.newcontrol.ncfv.AdilHelper#getParamNames AdilHelper.getParamNames()
+     */
     private LinkedTransferQueue<String> pollLinesByProcessNumber(Integer typeBus){
         LinkedTransferQueue<String> logLinesBusByNumber;
         LinkedTransferQueue<String> strForInput;

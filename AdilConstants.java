@@ -24,7 +24,14 @@ public class AdilConstants {
     protected static Boolean LOGNOWTIMEINHUMANFORMAT = Boolean.TRUE;
     protected static String  APP_LOGIC_NOW = "[APPNOW]";
     protected static String  APP_LOGIC_NEXT_WAY_VAR = "[APPNEXTWAYVAR]";
+    /**
+     * Usaly [TIME]...[MSG][EXCEPTION][CANONICALNAME]...[METHOD]...[EXCEPTION_MSG]...
+     */
     protected static String  EXCEPTION_MSG = "[EXCEPTION_MSG]";
+    /**
+     * Usaly [TIME]...[MSG][EXCEPTION][CANONICALNAME]...[METHOD]...[EXCEPTION_MSG]...
+     */
+    protected static String  EXCEPTION = "[EXCEPTION]";
     protected static String  ERROR = "[ERROR]";
     protected static String  ERROR_CRITICAL = "[ERROR][CRITICAL]";
     protected static String  WARNING = "[WARNING]";
