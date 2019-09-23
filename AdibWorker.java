@@ -15,6 +15,7 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -40,7 +41,7 @@ public class AdibWorker {
     private final ConcurrentSkipListMap<Integer, Thread> workerListCreated;
     private final ConcurrentSkipListMap<Integer, Thread> workerListRunned;
     private final ConcurrentSkipListMap<Integer, Thread> workerListFinished;
-    private final ConcurrentSkipListMap<Integer, Runnable> runnerTypedList;
+    private final ConcurrentSkipListMap<Integer, AdihTemplateRunnable> runnerTypedList;
     
     private final AdimRule ruleAdim;
     private final AdilState adilState;
@@ -58,7 +59,7 @@ public class AdibWorker {
         this.workerListCreated = new ConcurrentSkipListMap<Integer, Thread>();
         this.workerListRunned = new ConcurrentSkipListMap<Integer, Thread>();
         this.workerListFinished = new ConcurrentSkipListMap<Integer, Thread>();
-        this.runnerTypedList = new ConcurrentSkipListMap<Integer, Runnable>();
+        this.runnerTypedList = new ConcurrentSkipListMap<Integer, AdihTemplateRunnable>();
         
         if(  ruleMechanics != null ) {
             this.ruleAdim = (AdimRule) ruleMechanics;
@@ -69,21 +70,162 @@ public class AdibWorker {
                     + AdibWorker.class.getCanonicalName() 
                     + " is null");
         }
+        createWorker();
     }
     /**
      * create new thread object for typed runner and add it into workerListCreated
      */
     private void createWorker(){
-        Integer paramCodeByNumber = null;
+        AdihTemplateRunnable createdRunner;
+        AdihTemplateThread createdWorker;
+        
+        Boolean isWorkerCreated = Boolean.FALSE;
+        Boolean isWorkerRunned = Boolean.FALSE;
+        Boolean isWorkerFinished = Boolean.FALSE;
+        
+        Integer paramCodeByNumber;
+        Integer countParamsDataFsForSet;
+        Integer idx;
+        
+        Thread preRemoveWorker;
+        Thread removeWorker;
         try {
-            paramCodeByNumber = getParamCodeByNumber(10);
+            countParamsDataFsForSet = getParamCount();
+            for(idx = 0; idx < countParamsDataFsForSet; idx++ ){
+                paramCodeByNumber = getParamCodeByNumber(idx);
+                if( !runnerInTypedList(paramCodeByNumber) ){
+                    createdRunner = new AdihTemplateRunnable(idx, this.ruleAdim);
+                    this.runnerTypedList.put(paramCodeByNumber, createdRunner);
+                } else {
+                    createdRunner = this.runnerTypedList.get(paramCodeByNumber);
+                }
+                isWorkerCreated = workerInCreated(paramCodeByNumber);
+                isWorkerRunned = workerInRunned(paramCodeByNumber);
+                isWorkerFinished = workerInFinished(paramCodeByNumber);
+                if( !isWorkerCreated ){
+                    if( !isWorkerRunned ){
+                        if( isWorkerFinished ){
+                            preRemoveWorker = this.workerListCreated.get(paramCodeByNumber);
+                            if( preRemoveWorker.getState() == Thread.State.TERMINATED ){
+                                removeWorker = this.workerListCreated.remove(paramCodeByNumber);
+                                AdihUtilization.utilizeFinishedThread(removeWorker);
+                            }
+                        }
+                        createdWorker = new AdihTemplateThread(idx, this.ruleAdim, createdRunner);
+                        this.workerListCreated.put(paramCodeByNumber, createdWorker);
+                    }
+                }
+            }
         } finally {
+            idx = null;
             paramCodeByNumber = null;
+            countParamsDataFsForSet = null;
+            preRemoveWorker = null;
+            removeWorker = null;
         }
     }
-    private Boolean threadInCreated(Integer inputedKeyForThread){
+    protected void runAllWorker(){
+        Map.Entry<Integer, Thread> pollFirstEntry;
+        Integer keyWorker;
+        Boolean isWorkerRunned;
+        Thread value;
+        try {
+            do{
+                pollFirstEntry = this.workerListCreated.pollFirstEntry();
+                keyWorker = pollFirstEntry.getKey();
+                isWorkerRunned = workerInRunned(keyWorker);
+                if( !isWorkerRunned ){
+                    value = pollFirstEntry.getValue();
+                    if( Thread.State.NEW == value.getState() ){
+                        this.workerListRunned.put(keyWorker, value);
+                        value.start();
+                    } else {
+                        keyWorker = null;
+                        AdihUtilization.utilizeFinishedThread(value);
+                    }
+                }
+            }while( !this.workerListCreated.isEmpty() );
+        } finally {
+            pollFirstEntry = null;
+            keyWorker = null;
+            isWorkerRunned = null;
+            value = null;
+        }
+    }
+    /**
+     * 
+     * @param inputedKeyForThread
+     * @return true if list contains <code>inputedKeyForThread</code>
+     */
+    private Boolean workerInCreated(Integer inputedKeyForThread){
         try {
             return this.workerListCreated.containsKey(inputedKeyForThread);
+        } catch (ClassCastException exClass) {
+            this.adilState.putLogLineByProcessNumberMsgExceptions(this.numberProcessIndexSystem, 
+                    AdibWorker.class.getCanonicalName(), 
+                    "threadInCreated()", 
+                    exClass.getMessage());
+            
+        } catch (NullPointerException exNull) {
+            this.adilState.putLogLineByProcessNumberMsgExceptions(this.numberProcessIndexSystem, 
+                    AdibWorker.class.getCanonicalName(), 
+                    "threadInCreated()", 
+                    exNull.getMessage());
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * 
+     * @param inputedKeyForThread
+     * @return true if list contains <code>inputedKeyForThread</code>
+     */
+    private Boolean workerInRunned(Integer inputedKeyForThread){
+        try {
+            return this.workerListRunned.containsKey(inputedKeyForThread);
+        } catch (ClassCastException exClass) {
+            this.adilState.putLogLineByProcessNumberMsgExceptions(this.numberProcessIndexSystem, 
+                    AdibWorker.class.getCanonicalName(), 
+                    "threadInCreated()", 
+                    exClass.getMessage());
+            
+        } catch (NullPointerException exNull) {
+            this.adilState.putLogLineByProcessNumberMsgExceptions(this.numberProcessIndexSystem, 
+                    AdibWorker.class.getCanonicalName(), 
+                    "threadInCreated()", 
+                    exNull.getMessage());
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * 
+     * @param inputedKeyForThread
+     * @return true if list contains <code>inputedKeyForThread</code>
+     */
+    private Boolean workerInFinished(Integer inputedKeyForThread){
+        try {
+            return this.workerListFinished.containsKey(inputedKeyForThread);
+        } catch (ClassCastException exClass) {
+            this.adilState.putLogLineByProcessNumberMsgExceptions(this.numberProcessIndexSystem, 
+                    AdibWorker.class.getCanonicalName(), 
+                    "threadInCreated()", 
+                    exClass.getMessage());
+            
+        } catch (NullPointerException exNull) {
+            this.adilState.putLogLineByProcessNumberMsgExceptions(this.numberProcessIndexSystem, 
+                    AdibWorker.class.getCanonicalName(), 
+                    "threadInCreated()", 
+                    exNull.getMessage());
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * 
+     * @param inputedKeyForThread
+     * @return true if list contains <code>inputedKeyForThread</code>
+     */
+    private Boolean runnerInTypedList(Integer inputedKeyForThread){
+        try {
+            return this.runnerTypedList.containsKey(inputedKeyForThread);
         } catch (ClassCastException exClass) {
             this.adilState.putLogLineByProcessNumberMsgExceptions(this.numberProcessIndexSystem, 
                     AdibWorker.class.getCanonicalName(), 

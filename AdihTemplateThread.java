@@ -26,8 +26,14 @@ public class AdihTemplateThread extends Thread{
     private final AdimRule ruleAdim;
     private final AdilState adilState;
     private final Runnable runnerForWork;
-    
-    AdihTemplateThread(final Integer processIndexSystemNumber,
+    /**
+     * 
+     * @param processIndexSystemNumber
+     * @param outerRule
+     * @param outerRunner 
+     * @throws UnsupportedOperationException
+     */
+    public AdihTemplateThread(final Integer processIndexSystemNumber,
             final AdimRule outerRule,
             final Runnable outerRunner){
         super(outerRunner, UUID.randomUUID().toString());

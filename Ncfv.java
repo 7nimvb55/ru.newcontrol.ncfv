@@ -77,6 +77,9 @@ public class Ncfv {
             storeNew.utilizeAllLists();
             System.out.println("*|*|* *|*|* *|*|* print utilized list of storages");
             storeNew.printAllList();
+            
+            tempRunNewConcept();
+            System.out.println("end run *** *** *** tempRunNewConcept()");
         //runIndexMakeWordIntoZipByThreads();
         //runIndexMakeAndDirList();
         //outputToConsoleStrings();
@@ -92,7 +95,22 @@ public class Ncfv {
             }
         }
     }
-
+    private static void tempRunNewConcept(){
+        ThIndexRule thIndexRule = new ThIndexRule();
+        
+        AdilRule loggerRule = new AdilRule(thIndexRule);
+        thIndexRule.setAdilRule(loggerRule);
+        AdilState loggerState = new AdilState(loggerRule);
+        loggerRule.setAdilState(loggerState);
+        AdilWorkerWrite loggerWorker = new AdilWorkerWrite(loggerRule);
+        loggerRule.setAdilWorkWrite(loggerWorker);
+        
+        AdimRule ruleAdim = new AdimRule();
+        ruleAdim.setAdilRule(loggerRule);
+        AdibWorker workersTest = new AdibWorker(ruleAdim);
+        workersTest.runAllWorker();
+        loggerRule.runAdilWorkWrite();
+    }
     private static void runIndexMakeAndDirList(){
         /**
          * if run DirListWork(Logic)Manager, get info about storages content

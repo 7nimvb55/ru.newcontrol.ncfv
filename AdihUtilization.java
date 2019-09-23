@@ -108,4 +108,12 @@ public class AdihUtilization {
         }
         valuesForDelete = null;
     }
+    /**
+     * 
+     */
+    protected static void utilizeFinishedThread(Thread workerForUtilize){
+        if( Thread.State.TERMINATED == workerForUtilize.getState() ){
+            workerForUtilize = null;
+        }
+    }
 }

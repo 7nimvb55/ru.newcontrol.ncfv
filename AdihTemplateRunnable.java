@@ -24,24 +24,29 @@ public class AdihTemplateRunnable implements Runnable {
     private final Integer numberProcessIndexSystem;
     private final AdimRule ruleAdim;
     private final AdilState adilState;
-    
-    AdihTemplateRunnable(final Integer processIndexSystemNumber,
+    /**
+     * 
+     * @param processIndexSystemNumber
+     * @param outerRule 
+     * @throws UnsupportedOperationException
+     */
+    public AdihTemplateRunnable(final Integer processIndexSystemNumber,
             final AdimRule outerRule){
         if( outerRule == null ){
             throw new UnsupportedOperationException(AdimRule.class.getCanonicalName() 
                     + " object for set in "
-                    + AdihTemplateThread.class.getCanonicalName()
+                    + AdihTemplateRunnable.class.getCanonicalName()
                     + " is null");
         }
         this.ruleAdim = (AdimRule) outerRule;
         if( processIndexSystemNumber == null ){
             throw new UnsupportedOperationException("processIndexSystemNumber for set in "
-                    + AdihTemplateThread.class.getCanonicalName()
+                    + AdihTemplateRunnable.class.getCanonicalName()
                     + " is null");
         }
         if( processIndexSystemNumber < 0 ){
             throw new UnsupportedOperationException("processIndexSystemNumber for set in "
-                    + AdihTemplateThread.class.getCanonicalName()
+                    + AdihTemplateRunnable.class.getCanonicalName()
                     + " is not natural ( processIndexSystemNumber < 0 (Zero) )");
         }
         this.numberProcessIndexSystem = processIndexSystemNumber;
@@ -51,7 +56,7 @@ public class AdihTemplateRunnable implements Runnable {
     public void run() {
         String msgToLog = AdilConstants.INFO_LOGIC_POSITION
                 + AdilConstants.CANONICALNAME
-                + AdihTemplateThread.class.getCanonicalName()
+                + AdihTemplateRunnable.class.getCanonicalName()
                 + AdilConstants.METHOD
                 + "run()";
         try {
