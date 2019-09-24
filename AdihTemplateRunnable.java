@@ -124,6 +124,38 @@ public class AdihTemplateRunnable implements Runnable {
             Integer sizeDo = adibProcessCommand.commandSizeQueue(1, this.numberProcessIndexSystem);
             while( sizeDo != 0 ){
                 commandPoll = adibProcessCommand.commandPoll(1, this.numberProcessIndexSystem);
+                if( startCommandCode.equals(commandPoll) ){
+                    this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
+                        msgToLog
+                        + AdilConstants.APP_LOGIC_NOW
+                        + AdilConstants.START
+                        + AdilConstants.STATE
+                        + AdilConstants.VARNAME
+                        + "adibProcessCommand.commandPoll(0, this.numberProcessIndexSystem);"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(commandPoll)
+                        + AdilConstants.VARNAME
+                        + "this.numberProcessIndexSystem"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(this.numberProcessIndexSystem)
+                    );
+                }
+                if( stopCommandCode.equals(commandPoll) ){
+                    this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
+                        msgToLog
+                        + AdilConstants.APP_LOGIC_NOW
+                        + AdilConstants.FINISH
+                        + AdilConstants.STATE
+                        + AdilConstants.VARNAME
+                        + "adibProcessCommand.commandPoll(0, this.numberProcessIndexSystem);"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(commandPoll)
+                        + AdilConstants.VARNAME
+                        + "this.numberProcessIndexSystem"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(this.numberProcessIndexSystem)
+                    );
+                }
                 this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
                         msgToLog
                         + AdilConstants.STATE
@@ -141,6 +173,38 @@ public class AdihTemplateRunnable implements Runnable {
             Integer sizeReady = adibProcessCommand.commandSizeQueue(2, this.numberProcessIndexSystem);
             while( sizeReady != 0 ){
                 commandPoll = adibProcessCommand.commandPoll(2, this.numberProcessIndexSystem);
+                if( startCommandCode.equals(commandPoll) ){
+                    this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
+                        msgToLog
+                        + AdilConstants.APP_LOGIC_NOW
+                        + AdilConstants.START
+                        + AdilConstants.STATE
+                        + AdilConstants.VARNAME
+                        + "adibProcessCommand.commandPoll(0, this.numberProcessIndexSystem);"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(commandPoll)
+                        + AdilConstants.VARNAME
+                        + "this.numberProcessIndexSystem"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(this.numberProcessIndexSystem)
+                    );
+                }
+                if( stopCommandCode.equals(commandPoll) ){
+                    this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
+                        msgToLog
+                        + AdilConstants.APP_LOGIC_NOW
+                        + AdilConstants.FINISH
+                        + AdilConstants.STATE
+                        + AdilConstants.VARNAME
+                        + "adibProcessCommand.commandPoll(0, this.numberProcessIndexSystem);"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(commandPoll)
+                        + AdilConstants.VARNAME
+                        + "this.numberProcessIndexSystem"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(this.numberProcessIndexSystem)
+                    );
+                }
                 this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
                         msgToLog
                         + AdilConstants.STATE
