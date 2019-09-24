@@ -47,7 +47,7 @@ public class AdihHelper {
      * </ul>
      * @return 
      */
-    protected static String[] getParamNames(){
+    protected static String[] getStoragesNames(){
         String[] namesForReturn = new String[] {};
         try {
             namesForReturn = null;
@@ -122,6 +122,29 @@ public class AdihHelper {
                 "ClaculatedSlowEnd",
                 "UserSlowStart",
                 "UserSlowEnd",
+            };
+            return namesForReturn;
+        } finally {
+            AdihUtilization.utilizeStringValues(namesForReturn);
+            namesForReturn = null;
+        }
+    }
+    /**
+     * <ul>
+     * <li>   0 -   waitBus
+     * <li>   1 -   doBus
+     * <li>   2 -   readyBus
+     * </ul>
+     * @return 
+     */
+    protected static String[] getBusTypeNames(){
+        String[] namesForReturn = new String[] {};
+        try {
+            namesForReturn = null;
+            namesForReturn = new String[] {
+                "waitBus",
+                "doBus",
+                "readyBus",
             };
             return namesForReturn;
         } finally {

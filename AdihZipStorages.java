@@ -43,7 +43,13 @@ public class AdihZipStorages {
         createStoragesList();
         //fillOpenStoreList();
     }
-
+    /**
+     * This list of parameters changed in {@link ru.newcontrol.ncfv.AdihHelper#getStoragesNames AdihHelper.getStoragesNames()}
+     * @return 
+     */
+    private String[] getStoragesNames(){
+        return AdihHelper.getStoragesNames();
+    }
     /**
      * <ul>
      * <li>   0 -   UserHome
@@ -64,18 +70,18 @@ public class AdihZipStorages {
      * <li>  12 -   lw-indexLongWordList
      * <li>  13 -   ln-indexLongWordData
      * </ul>
-     * This list of parameters changed in {@link ru.newcontrol.ncfv.AdihHelper#getParamNames AdihHelper.getParamNames()}
+     * This list of parameters changed in {@link ru.newcontrol.ncfv.AdihHelper#getStoragesNames AdihHelper.getStoragesNames()}
      * Return code of parameter by his number, calculeted from some fileds
      * @param numParam
      * @return hashCode for Parameter by his number
      * @throws IllegalArgumentException when inputed number of parameter
      * out of bounds or not natural number <code>numParam &lt 0 (Zero)</code>
-     * @see ru.newcontrol.ncfv.AdihHelper#getParamNames AdihHelper.getParamNames()
+     * @see ru.newcontrol.ncfv.AdihHelper#getStoragesNames AdihHelper.getStoragesNames()
      */
     private Integer getParamCodeByNumber(int numParam){
         String[] paramNames;
         try {
-            paramNames = AdihHelper.getParamNames();
+            paramNames = getStoragesNames();
             if( numParam < 0 ){
                 throw new IllegalArgumentException(ThWordStatusError.class.getCanonicalName() 
                                 + " parameters of flow statusMainFlow in StorageWord is not valid, "
@@ -104,7 +110,7 @@ public class AdihZipStorages {
     private Integer getParamCount(){
         String[] paramNames;
         try {
-            paramNames = AdihHelper.getParamNames();
+            paramNames = getStoragesNames();
             return paramNames.length;
         } finally {
             paramNames = null;
@@ -122,7 +128,7 @@ public class AdihZipStorages {
         String[] paramNames;
         String paramName;
         try {
-            paramNames = AdihHelper.getParamNames();
+            paramNames = getStoragesNames();
             if( numParam < 0 ){
                 throw new IllegalArgumentException(ThWordStatusMainFlow.class.getCanonicalName() 
                                 + " parameters of flow statusMainFlow in StorageWord is not valid, "

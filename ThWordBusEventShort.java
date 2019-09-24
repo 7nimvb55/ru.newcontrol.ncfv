@@ -43,6 +43,9 @@ public class ThWordBusEventShort {
         this.readyEventsBus = new ConcurrentSkipListMap<Integer, LinkedTransferQueue<UUID>>();
         initEmptyLists();
     }
+    /**
+     * 
+     */
     private void initEmptyLists(){
         Integer eventCodeByNumber;
         try {
