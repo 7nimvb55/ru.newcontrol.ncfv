@@ -41,7 +41,7 @@ public class AdibProcessCommand {
     private final UUID objectLabel;
     private ConcurrentSkipListMap<Integer, LinkedTransferQueue<Integer>> busProcessCommand;
     
-    AdibProcessCommand(){
+    public AdibProcessCommand(){
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
         this.busProcessCommand = new ConcurrentSkipListMap<Integer, LinkedTransferQueue<Integer>>();

@@ -15,6 +15,8 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.concurrent.ConcurrentSkipListMap;
+
 /**
  *
  * @author wladimirowichbiaran
@@ -59,17 +61,31 @@ public class AdihTemplateRunnable implements Runnable {
                 + AdihTemplateRunnable.class.getCanonicalName()
                 + AdilConstants.METHOD
                 + "run()";
+        AdibProcessCommand adibProcessCommand = this.ruleAdim.getAdibProcessCommand();
+        ConcurrentSkipListMap<Integer, Integer> commandsList = adibProcessCommand.getCommandsList();
         try {
             this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
                 msgToLog
                 + AdilConstants.START);
             
             //@todo runner logic here
-            
+            Integer commandPoll = adibProcessCommand.commandPoll(0, this.numberProcessIndexSystem);
+            Integer getCommandStart = commandsList.get(0);
+            if( commandPoll == Integer.MIN_VALUE ){
+                this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
+                msgToLog
+                + " command pull send Integer.MIN_VALUE ");
+            }
+            if( commandPoll == getCommandStart ){
+                this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
+                msgToLog
+                + " command pull send command for start ");
+            }
         } finally {
             this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
                 msgToLog
                 + AdilConstants.FINISH);
+            adibProcessCommand = null;
         }    
     }
     
