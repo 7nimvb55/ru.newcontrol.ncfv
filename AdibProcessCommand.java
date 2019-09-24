@@ -174,6 +174,21 @@ public class AdibProcessCommand {
     private String[] getCommandNames(){
         return AdihHelper.getCommandNames();
     }
+    /**
+     * @todo comand list not valide
+     * check on validate run if workers recived Integer.MIN_VALUE for next command
+     * or other not associeted value
+     * if comand list not valide, algoritm run process rebuild all objects
+     * @return 
+     */
+    protected Boolean isCommandListValide(ConcurrentSkipListMap<Integer, Integer> inputedListForCheck){
+        return Boolean.TRUE;
+    }
+    /**
+     * 
+     * @param inputedCommandNum
+     * @return 
+     */
     private String commandNameByNumber(Integer inputedCommandNum){
         if( inputedCommandNum == null ){
             return new String();
