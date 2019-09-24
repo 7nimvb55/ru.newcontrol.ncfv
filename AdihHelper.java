@@ -73,9 +73,35 @@ public class AdihHelper {
             namesForReturn = null;
         }
     }
+    /**
+     * return from {@link AdilHelper#getParamNames() AdilHelper.getParamNames()}
+     * @return 
+     */
     protected static String[] getProcessNames(){
         return AdilHelper.getParamNames();
     }
+    /**
+     * <ul>
+     * <li>   0 -   Start - - - not released
+     * <li>   1 -   Stop - - - not released
+     * <li>   2 -   PauseFromUser - - - not released
+     * <li>   3 -   Cancel - - - not released
+     * <li>   4 -   Status - - - not released
+     * <li>   5 -   Statistic - - - not released
+     * <li>   6 -   ReinitVariables - - - not released
+     *              
+     * <li>   7 -   ReinitDataBus - - - not released
+     * <li>   8 -   ReinitDataBusInput - - - not released
+     * <li>   9 -   ReinitDataBusOutput - - - not released
+     * 
+     * <li>  10 -   ReinitSelf - - - not released
+     * <li>  11 -   ClaculatedSlowStart - - - not released
+     * <li>  12 -   ClaculatedSlowEnd - - - not released
+     * <li>  13 -   UserSlowStart - - - not released
+     * <li>  14 -   UserSlowEnd - - - not released
+     * </ul>
+     * @return 
+     */
     protected static String[] getCommandNames(){
         String[] namesForReturn = new String[] {};
         try {
@@ -83,15 +109,19 @@ public class AdihHelper {
             namesForReturn = new String[] {
                 "Start",
                 "Stop",
-                "Pause",
+                "PauseFromUser",
                 "Cancel",
+                "Status",
+                "Statistic",
                 "ReinitVariables",
                 "ReinitDataBus",
                 "ReinitDataBusInput",
                 "ReinitDataBusOutput",
                 "ReinitSelf",
-                "Status",
-                "Statistic",
+                "ClaculatedSlowStart",
+                "ClaculatedSlowEnd",
+                "UserSlowStart",
+                "UserSlowEnd",
             };
             return namesForReturn;
         } finally {

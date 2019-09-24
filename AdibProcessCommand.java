@@ -25,7 +25,7 @@ package ru.newcontrol.ncfv;
  * </ul>
  * Contains Bus with commands for runners (runnable inside workers), 
  * Type bus:  wait, do, ready
- * process number: 0..13 from {@link AdihHelper#getParamNames() AdihHelper.getParamNames()}
+ * process number: 0..13 from {@link AdihHelper#getProcessNames() AdihHelper.getProcessNames()}
  * command code: 0..13 from {@link AdihHelper#getCommandNames() AdihHelper.getCommandNames()}
  * 
  * @author wladimirowichbiaran
