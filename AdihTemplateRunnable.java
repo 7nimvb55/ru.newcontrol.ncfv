@@ -70,17 +70,43 @@ public class AdihTemplateRunnable implements Runnable {
             
             //@todo runner logic here
             Integer commandPoll = adibProcessCommand.commandPoll(0, this.numberProcessIndexSystem);
+            this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
+                msgToLog
+                + " *** command pull "
+                + String.valueOf(commandPoll) + " send command for start process number "
+                + String.valueOf(this.numberProcessIndexSystem));
             Integer getCommandStart = commandsList.get(0);
             if( commandPoll == Integer.MIN_VALUE ){
                 this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
                 msgToLog
-                + " command pull send Integer.MIN_VALUE ");
+                + " command pull send Integer.MIN_VALUE process number "
+                + String.valueOf(this.numberProcessIndexSystem));
             }
             if( commandPoll == getCommandStart ){
                 this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
                 msgToLog
-                + " command pull send command for start ");
+                + " command pull send command for start process number "
+                + String.valueOf(this.numberProcessIndexSystem));
             }
+            commandPoll = adibProcessCommand.commandPoll(1, this.numberProcessIndexSystem);
+            this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
+                msgToLog
+                + " *** command pull "
+                + String.valueOf(commandPoll) + " send command for start process number "
+                + String.valueOf(this.numberProcessIndexSystem));
+            if( commandPoll == getCommandStart ){
+                this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
+                msgToLog
+                + " command pull send command for start process number "
+                + String.valueOf(this.numberProcessIndexSystem));
+            }
+            
+            Boolean commandListValide = adibProcessCommand.isCommandListValide(commandsList);
+            this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
+                msgToLog
+                + " command pull isValide "
+                + String.valueOf(commandListValide) + " process number "
+                + String.valueOf(this.numberProcessIndexSystem));
         } finally {
             this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
                 msgToLog

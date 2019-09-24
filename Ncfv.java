@@ -118,6 +118,14 @@ public class Ncfv {
         
         processCommandAdim.commandPut(0, 3, 0);
         
+        processCommandAdim.commandPut(0, 1, 1);
+        
+        processCommandAdim.commandPut(1, 2, 1);
+        
+        processCommandAdim.commandPut(1, 3, 1);
+        
+        processCommandAdim.commandPut(0, 3, 1);
+        
         AdibWorker workersTest = new AdibWorker(ruleAdim);
         workersTest.runAllWorker();
         loggerRule.runAdilWorkWrite();
