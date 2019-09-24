@@ -116,4 +116,26 @@ public class AdihUtilization {
             workerForUtilize = null;
         }
     }
+    /**
+     * 
+     * @param forUtilizationData 
+     */
+    protected static void utilizeSkipListMap(ConcurrentSkipListMap<?, ?> forUtilizationData){
+        Object keyForDelete;
+        Object removedData;
+        try {
+            for( Map.Entry<?, ?> deletingItem : forUtilizationData.entrySet() ){
+                keyForDelete = deletingItem.getKey();
+                removedData = forUtilizationData.remove(keyForDelete);
+                if( removedData instanceof String ){
+                    utilizeStringValues(new String[]{(String) removedData});
+                }
+                removedData = null;
+            }
+            forUtilizationData = null;
+        } finally {
+            keyForDelete = null;
+            removedData = null;
+        }
+    }
 }

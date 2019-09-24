@@ -38,25 +38,119 @@ import java.util.concurrent.LinkedTransferQueue;
 public class AdibProcessCommand {
     private final Long timeCreation;
     private final UUID objectLabel;
-    private ConcurrentSkipListMap<Integer, LinkedTransferQueue<UUID>> busProcessCommand;
+    private ConcurrentSkipListMap<Integer, LinkedTransferQueue<Integer>> busProcessCommand;
     
     AdibProcessCommand(){
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
-        this.busProcessCommand = new ConcurrentSkipListMap<Integer, LinkedTransferQueue<UUID>>();
+        this.busProcessCommand = new ConcurrentSkipListMap<Integer, LinkedTransferQueue<Integer>>();
         initEmptyLists();
     }
+    /**
+     * 
+     */
     private void initEmptyLists(){
         Integer typedProcessCodeByNumber;
         try {
             for( Integer idxBusType = 0; idxBusType < getBusTypeNamesCount(); idxBusType++ ){
                 for(Integer idxProcess = 0; idxProcess < getProcessNamesCount(); idxProcess++ ){
                     typedProcessCodeByNumber = getTypedProcessCodeByNumber(idxBusType, idxProcess);
-                    this.busProcessCommand.put(typedProcessCodeByNumber, new LinkedTransferQueue<UUID>());
+                    this.busProcessCommand.put(typedProcessCodeByNumber, new LinkedTransferQueue<Integer>());
                 }
             }
         } finally {
             typedProcessCodeByNumber = null;
+        }
+    }
+    /**
+     * 
+     * @param inputedBusType
+     * @param inputedProcess
+     * @param commandForPut
+     * @return 
+     */
+    protected Boolean commandPut(final Integer inputedBusType, 
+            final Integer inputedProcess,
+            final Integer commandForPut){
+        Integer typedProcessCodeByNumber;
+        LinkedTransferQueue<Integer> typedProcessCommandList;
+        try {
+            if( commandForPut == null ){
+                return Boolean.FALSE;
+            }
+            if( commandForPut == Integer.MIN_VALUE ){
+                return Boolean.FALSE;
+            }
+            if( inputedBusType == null ){
+                return Boolean.FALSE;
+            }
+            if( inputedBusType == Integer.MIN_VALUE ){
+                return Boolean.FALSE;
+            }
+            if( inputedProcess == null ){
+                return Boolean.FALSE;
+            }
+            if( inputedProcess == Integer.MIN_VALUE ){
+                return Boolean.FALSE;
+            }
+            typedProcessCodeByNumber = getTypedProcessCodeByNumber(inputedBusType, inputedProcess);
+            typedProcessCommandList = this.busProcessCommand.get(typedProcessCodeByNumber);
+            if( typedProcessCommandList == null ){
+                return Boolean.FALSE;
+            }
+            typedProcessCommandList.put(getCommandCodeByNumber(commandForPut));
+            return Boolean.TRUE;
+        } finally {
+            typedProcessCodeByNumber = null;
+            typedProcessCommandList = null;
+        }
+    }
+    /**
+     * 
+     * @param inputedBusType
+     * @param inputedProcess
+     * @return 
+     */
+    protected Integer commandPoll(final Integer inputedBusType, final Integer inputedProcess){
+        Integer typedProcessCodeByNumber;
+        LinkedTransferQueue<Integer> typedProcessCommandList;
+        Integer returnedCommand = null;
+        try {
+            typedProcessCodeByNumber = getTypedProcessCodeByNumber(inputedBusType, inputedProcess);
+            typedProcessCommandList = this.busProcessCommand.get(typedProcessCodeByNumber);
+            if( typedProcessCommandList == null ){
+                return Integer.MIN_VALUE;
+            }
+            returnedCommand = typedProcessCommandList.poll();
+            if( returnedCommand == null ){
+                return Integer.MIN_VALUE;
+            }
+            return new Integer(returnedCommand);
+        } finally {
+            typedProcessCodeByNumber = null;
+            typedProcessCommandList = null;
+            returnedCommand = null;
+        }
+    }
+    /**
+     * 
+     * @param inputedBusType
+     * @param inputedProcess
+     * @return 
+     */
+    protected Integer commandSizeQueue(final Integer inputedBusType, final Integer inputedProcess){
+        Integer typedProcessCodeByNumber;
+        LinkedTransferQueue<Integer> typedProcessCommandList;
+        try {
+            typedProcessCodeByNumber = getTypedProcessCodeByNumber(inputedBusType, inputedProcess);
+            typedProcessCommandList = this.busProcessCommand.get(typedProcessCodeByNumber);
+            if( typedProcessCommandList == null ){
+                return Integer.MIN_VALUE;
+            }
+            return new Integer(typedProcessCommandList.size());
+        } finally {
+            typedProcessCodeByNumber = null;
+            typedProcessCommandList = null;
         }
     }
     /**
@@ -80,6 +174,117 @@ public class AdibProcessCommand {
     private String[] getCommandNames(){
         return AdihHelper.getCommandNames();
     }
+    private String commandNameByNumber(Integer inputedCommandNum){
+        if( inputedCommandNum == null ){
+            return new String();
+        }
+        if( inputedCommandNum < 0 ){
+            return new String();
+        }
+        Integer commandNum = inputedCommandNum;
+        String[] oneOfReturnedCommand;
+        oneOfReturnedCommand = getCommandNames();
+        if( oneOfReturnedCommand == null ){
+            return new String();
+        }
+        try {
+            
+            if( commandNum < 0 ){
+                return new String();
+            }
+            if( oneOfReturnedCommand.length == 0 ){
+                return new String();
+            }
+            if( commandNum > (oneOfReturnedCommand.length - 1) ){
+                return new String();
+            }
+            return new String(oneOfReturnedCommand[commandNum]);
+        }finally {
+            commandNum = null;
+            AdihUtilization.utilizeStringValues(oneOfReturnedCommand);
+        }
+    }
+    private Integer getCommandCodeByNumber(Integer inputedCommandNum){
+        if( inputedCommandNum == null ){
+            return Integer.MIN_VALUE;
+        }
+        if( inputedCommandNum < 0 ){
+            return Integer.MIN_VALUE;
+        }
+        Integer commandNum = inputedCommandNum;
+        String[] oneOfReturnedCommand;
+        oneOfReturnedCommand = getCommandNames();
+        if( oneOfReturnedCommand == null ){
+            return Integer.MIN_VALUE;
+        }
+        Integer forReturnCodeCommand = null;
+        try {
+            
+            if( commandNum < 0 ){
+                return Integer.MIN_VALUE;
+            }
+            if( oneOfReturnedCommand.length == 0 ){
+                return Integer.MIN_VALUE;
+            }
+            if( commandNum > (oneOfReturnedCommand.length - 1) ){
+                return Integer.MIN_VALUE;
+            }
+            forReturnCodeCommand = oneOfReturnedCommand[commandNum]
+                    .concat(String.valueOf(this.timeCreation))
+                    .concat(this.objectLabel.toString()).hashCode();
+            if( forReturnCodeCommand == Integer.MIN_VALUE ){
+                    forReturnCodeCommand = oneOfReturnedCommand[commandNum]
+                    .concat(String.valueOf(this.timeCreation))
+                    .concat(this.objectLabel.toString()).concat(String.valueOf(Integer.MIN_VALUE)).hashCode();
+            }
+            if( forReturnCodeCommand == Integer.MIN_VALUE ){
+                forReturnCodeCommand = oneOfReturnedCommand[commandNum]
+                    .concat(String.valueOf(this.timeCreation))
+                    .concat(this.objectLabel.toString()).concat(String.valueOf(Integer.MIN_VALUE)).concat(String.valueOf(Integer.MAX_VALUE)).hashCode();
+            }
+            return forReturnCodeCommand;
+        }finally {
+            commandNum = null;
+            forReturnCodeCommand = null;
+            AdihUtilization.utilizeStringValues(oneOfReturnedCommand);
+        }
+    }
+    protected ConcurrentSkipListMap<Integer, Integer> getCommandsList(){
+        String[] oneOfReturnedCommand;
+        oneOfReturnedCommand = getCommandNames();
+        if( oneOfReturnedCommand == null ){
+            return null;
+        }
+        if( oneOfReturnedCommand.length == 0 ){
+                return null;
+        }
+        ConcurrentSkipListMap<Integer, Integer> listCommandsForReturn = new ConcurrentSkipListMap<Integer, Integer>();
+        Integer idxForList;
+        Integer commandValue;
+        try {
+            for( idxForList = 0; idxForList < oneOfReturnedCommand.length; idxForList++ ){
+                commandValue = oneOfReturnedCommand[idxForList]
+                    .concat(String.valueOf(this.timeCreation))
+                    .concat(this.objectLabel.toString()).hashCode();
+                if( commandValue == Integer.MIN_VALUE ){
+                    commandValue = oneOfReturnedCommand[idxForList]
+                    .concat(String.valueOf(this.timeCreation))
+                    .concat(this.objectLabel.toString()).concat(String.valueOf(Integer.MIN_VALUE)).hashCode();
+                }
+                if( commandValue == Integer.MIN_VALUE ){
+                    commandValue = oneOfReturnedCommand[idxForList]
+                        .concat(String.valueOf(this.timeCreation))
+                        .concat(this.objectLabel.toString()).concat(String.valueOf(Integer.MIN_VALUE)).concat(String.valueOf(Integer.MAX_VALUE)).hashCode();
+                }
+                listCommandsForReturn.put(idxForList, commandValue);
+            }
+            return listCommandsForReturn;
+        }finally {
+            idxForList = null;
+            commandValue = null;
+            AdihUtilization.utilizeStringValues(oneOfReturnedCommand);
+        }
+    }
     /**
      * <ul>
      * <li> 0 - wait
@@ -89,11 +294,15 @@ public class AdibProcessCommand {
      * @param typeNum
      * @return 
      */
-    private String busTypeName(Integer typeNum){
-        String[] oneOfReturnedType;
-        if( typeNum < 0 ){
+    private String busTypeName(Integer inputedTypeNum){
+        if( inputedTypeNum == null ){
             return new String();
         }
+        String[] oneOfReturnedType;
+        if( inputedTypeNum < 0 ){
+            return new String();
+        }
+        Integer typeNum = inputedTypeNum;
         oneOfReturnedType = getBusTypeNames();
         if( oneOfReturnedType == null ){
             return new String();
@@ -108,8 +317,9 @@ public class AdibProcessCommand {
             if( typeNum > (oneOfReturnedType.length - 1) ){
                 return new String();
             }
-            return oneOfReturnedType[typeNum];
+            return new String(oneOfReturnedType[typeNum]);
         }finally {
+            typeNum = null;
             AdihUtilization.utilizeStringValues(oneOfReturnedType);
         }
     }
