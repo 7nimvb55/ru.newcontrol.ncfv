@@ -191,22 +191,27 @@ public class AdibProcessCommand {
         }
         Integer prevKey = 0;
         Boolean isFirstKey = Boolean.TRUE;
-        for(Map.Entry<Integer, Integer> itemChecked : inputedListForCheck.entrySet()){
-            if( isFirstKey ){
-                if( itemChecked.getKey() != 0 ){
+        try {
+            for(Map.Entry<Integer, Integer> itemChecked : inputedListForCheck.entrySet()){
+                if( isFirstKey ){
+                    if( itemChecked.getKey() != 0 ){
+                        return Boolean.FALSE;
+                    }
+                    isFirstKey = Boolean.FALSE;
+                }
+                if( (itemChecked.getKey() - 1 - prevKey) != 0 ){
                     return Boolean.FALSE;
                 }
-                isFirstKey = Boolean.FALSE;
+                prevKey = itemChecked.getKey();
+                if( getCommandCodeByNumber(prevKey) != itemChecked.getValue() ){
+                    return Boolean.FALSE;
+                }
             }
-            if( (itemChecked.getKey() - 1 - prevKey) != 0 ){
-                return Boolean.FALSE;
-            }
-            prevKey = itemChecked.getKey();
-            if( getCommandCodeByNumber(prevKey) != itemChecked.getValue() ){
-                return Boolean.FALSE;
-            }
+            return Boolean.TRUE;
+        } finally {
+            prevKey = null;
+            isFirstKey = null;
         }
-        return Boolean.TRUE;
     }
     /**
      * 
