@@ -32,7 +32,7 @@ import java.util.concurrent.LinkedTransferQueue;
  * Type bus:  wait, do, ready
  * process number: 0..13 from {@link AdihHelper#getProcessNames() AdihHelper.getProcessNames()}
  * command code: 0..13 from {@link AdihHelper#getCommandNames() AdihHelper.getCommandNames()}
- * {@code typedProcessCode = this.timeCreation + this.objectLabel = sufFix + ([busTypeCode]*[processCode])}
+ * {@code typedProcessCode = this.timeCreation + this.objectLabel + sufFix = ([busTypeCode]*[processCode])}
  * {@code <Integer  typedProcessCode, <Integer commandCode>>}
  * @author wladimirowichbiaran
  */
@@ -66,8 +66,50 @@ public class AdibProcessCommand {
     /**
      * 
      * @param inputedBusType
+     * <ul>
+     * <li>   0 -   waitBus
+     * <li>   1 -   doBus
+     * <li>   2 -   readyBus
+     * </ul>
      * @param inputedProcess
+     * <ul>
+     * <li>   0 -   Main
+     * <li>   1 -   Index
+     * <li>   2 -   DirListManager
+     * <li>   3 -   DirListRead
+     * <li>   4 -   DirListWrite
+     * <li>   5 -   FileListBuild
+     *              
+     * <li>   6 -   WordStorageFilter
+     * <li>   7 -   WordStorageRouter
+     * <li>   8 -   WordStorageReader
+     * <li>   9 -   WordStorageWriter
+     *              
+     * <li>  10 -   WordRouter
+     * <li>  11 -   WordReader
+     * <li>  12 -   WordWriter
+     * <li>  13 -   WordEvent
+     * </ul> 
      * @param commandForPut
+     * <ul>
+     * <li>   0 -   Start - - - not released
+     * <li>   1 -   Stop - - - not released
+     * <li>   2 -   PauseFromUser - - - not released
+     * <li>   3 -   Cancel - - - not released
+     * <li>   4 -   Status - - - not released
+     * <li>   5 -   Statistic - - - not released
+     * <li>   6 -   ReinitVariables - - - not released
+     *              
+     * <li>   7 -   ReinitDataBus - - - not released
+     * <li>   8 -   ReinitDataBusInput - - - not released
+     * <li>   9 -   ReinitDataBusOutput - - - not released
+     * 
+     * <li>  10 -   ReinitSelf - - - not released
+     * <li>  11 -   ClaculatedSlowStart - - - not released
+     * <li>  12 -   ClaculatedSlowEnd - - - not released
+     * <li>  13 -   UserSlowStart - - - not released
+     * <li>  14 -   UserSlowEnd - - - not released
+     * </ul>
      * @return 
      */
     protected Boolean commandPut(final Integer inputedBusType, 
@@ -109,7 +151,30 @@ public class AdibProcessCommand {
     /**
      * 
      * @param inputedBusType
+     * <ul>
+     * <li>   0 -   waitBus
+     * <li>   1 -   doBus
+     * <li>   2 -   readyBus
+     * </ul>
      * @param inputedProcess
+     * <ul>
+     * <li>   0 -   Main
+     * <li>   1 -   Index
+     * <li>   2 -   DirListManager
+     * <li>   3 -   DirListRead
+     * <li>   4 -   DirListWrite
+     * <li>   5 -   FileListBuild
+     *              
+     * <li>   6 -   WordStorageFilter
+     * <li>   7 -   WordStorageRouter
+     * <li>   8 -   WordStorageReader
+     * <li>   9 -   WordStorageWriter
+     *              
+     * <li>  10 -   WordRouter
+     * <li>  11 -   WordReader
+     * <li>  12 -   WordWriter
+     * <li>  13 -   WordEvent
+     * </ul> 
      * @return 
      */
     protected Integer commandPoll(final Integer inputedBusType, final Integer inputedProcess){
@@ -136,7 +201,30 @@ public class AdibProcessCommand {
     /**
      * 
      * @param inputedBusType
+     * <ul>
+     * <li>   0 -   waitBus
+     * <li>   1 -   doBus
+     * <li>   2 -   readyBus
+     * </ul>
      * @param inputedProcess
+     * <ul>
+     * <li>   0 -   Main
+     * <li>   1 -   Index
+     * <li>   2 -   DirListManager
+     * <li>   3 -   DirListRead
+     * <li>   4 -   DirListWrite
+     * <li>   5 -   FileListBuild
+     *              
+     * <li>   6 -   WordStorageFilter
+     * <li>   7 -   WordStorageRouter
+     * <li>   8 -   WordStorageReader
+     * <li>   9 -   WordStorageWriter
+     *              
+     * <li>  10 -   WordRouter
+     * <li>  11 -   WordReader
+     * <li>  12 -   WordWriter
+     * <li>  13 -   WordEvent
+     * </ul> 
      * @return 
      */
     protected Integer commandSizeQueue(final Integer inputedBusType, final Integer inputedProcess){
@@ -214,7 +302,25 @@ public class AdibProcessCommand {
         }
     }
     /**
+     * <ul>
+     * <li>   0 -   Start - - - not released
+     * <li>   1 -   Stop - - - not released
+     * <li>   2 -   PauseFromUser - - - not released
+     * <li>   3 -   Cancel - - - not released
+     * <li>   4 -   Status - - - not released
+     * <li>   5 -   Statistic - - - not released
+     * <li>   6 -   ReinitVariables - - - not released
+     *              
+     * <li>   7 -   ReinitDataBus - - - not released
+     * <li>   8 -   ReinitDataBusInput - - - not released
+     * <li>   9 -   ReinitDataBusOutput - - - not released
      * 
+     * <li>  10 -   ReinitSelf - - - not released
+     * <li>  11 -   ClaculatedSlowStart - - - not released
+     * <li>  12 -   ClaculatedSlowEnd - - - not released
+     * <li>  13 -   UserSlowStart - - - not released
+     * <li>  14 -   UserSlowEnd - - - not released
+     * </ul>
      * @param inputedCommandNum
      * @return 
      */
@@ -248,6 +354,29 @@ public class AdibProcessCommand {
             AdihUtilization.utilizeStringValues(oneOfReturnedCommand);
         }
     }
+    /**
+     * <ul>
+     * <li>   0 -   Start - - - not released
+     * <li>   1 -   Stop - - - not released
+     * <li>   2 -   PauseFromUser - - - not released
+     * <li>   3 -   Cancel - - - not released
+     * <li>   4 -   Status - - - not released
+     * <li>   5 -   Statistic - - - not released
+     * <li>   6 -   ReinitVariables - - - not released
+     *              
+     * <li>   7 -   ReinitDataBus - - - not released
+     * <li>   8 -   ReinitDataBusInput - - - not released
+     * <li>   9 -   ReinitDataBusOutput - - - not released
+     * 
+     * <li>  10 -   ReinitSelf - - - not released
+     * <li>  11 -   ClaculatedSlowStart - - - not released
+     * <li>  12 -   ClaculatedSlowEnd - - - not released
+     * <li>  13 -   UserSlowStart - - - not released
+     * <li>  14 -   UserSlowEnd - - - not released
+     * </ul>
+     * @param inputedCommandNum
+     * @return 
+     */
     private Integer getCommandCodeByNumber(Integer inputedCommandNum){
         if( inputedCommandNum == null ){
             return Integer.MIN_VALUE;
@@ -293,6 +422,28 @@ public class AdibProcessCommand {
             AdihUtilization.utilizeStringValues(oneOfReturnedCommand);
         }
     }
+    /**
+     * <ul>
+     * <li>   0 -   Start - - - not released
+     * <li>   1 -   Stop - - - not released
+     * <li>   2 -   PauseFromUser - - - not released
+     * <li>   3 -   Cancel - - - not released
+     * <li>   4 -   Status - - - not released
+     * <li>   5 -   Statistic - - - not released
+     * <li>   6 -   ReinitVariables - - - not released
+     *              
+     * <li>   7 -   ReinitDataBus - - - not released
+     * <li>   8 -   ReinitDataBusInput - - - not released
+     * <li>   9 -   ReinitDataBusOutput - - - not released
+     * 
+     * <li>  10 -   ReinitSelf - - - not released
+     * <li>  11 -   ClaculatedSlowStart - - - not released
+     * <li>  12 -   ClaculatedSlowEnd - - - not released
+     * <li>  13 -   UserSlowStart - - - not released
+     * <li>  14 -   UserSlowEnd - - - not released
+     * </ul>
+     * @return 
+     */
     protected ConcurrentSkipListMap<Integer, Integer> getCommandsList(){
         String[] oneOfReturnedCommand;
         oneOfReturnedCommand = getCommandNames();
@@ -368,22 +519,32 @@ public class AdibProcessCommand {
         }
     }
     /**
-     * {@code [prefixNumber]*[numEventReadyNameInputed]+sufFix=indexName}
-     * @param prefixNumber
+     * {@code getTypedProcessCodeByNumber = this.timeCreation + this.objectLabel + sufFix = ([busTypeCode]*[processCode])}
+     * @param typeBusNumber
      * <ul>
-     * <li> 0 - wait
-     * <li> 1 - do
-     * <li> 2 - ready
+     * <li>   0 -   waitBus
+     * <li>   1 -   doBus
+     * <li>   2 -   readyBus
      * </ul>
-     * @param numEventReadyNameInputed
+     * @param numProcessNameInputed
      * <ul>
-     * <li>  0  - DeleteOldDataFromStorage
-     * <li>  1  - ReadDataFromStorage
-     * <li>  2  - WriteDataToStorage
-     * <li>  3  - InsertIntoCache
-     * <li>  4  - CleanReadedCache
-     * <li>  5  - CleanCache
-     * </ul>
+     * <li>   0 -   Main
+     * <li>   1 -   Index
+     * <li>   2 -   DirListManager
+     * <li>   3 -   DirListRead
+     * <li>   4 -   DirListWrite
+     * <li>   5 -   FileListBuild
+     *              
+     * <li>   6 -   WordStorageFilter
+     * <li>   7 -   WordStorageRouter
+     * <li>   8 -   WordStorageReader
+     * <li>   9 -   WordStorageWriter
+     *              
+     * <li>  10 -   WordRouter
+     * <li>  11 -   WordReader
+     * <li>  12 -   WordWriter
+     * <li>  13 -   WordEvent
+     * </ul> 
      * @return 
      */
     private Integer getTypedProcessCodeByNumber(final Integer typeBusNumber, final Integer numProcessNameInputed){
