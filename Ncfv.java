@@ -135,6 +135,24 @@ public class Ncfv {
                 ex.printStackTrace();
                 System.out.println(ex.getMessage());
         }
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException ex){
+                ex.printStackTrace();
+                System.out.println(ex.getMessage());
+        }
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException ex){
+                ex.printStackTrace();
+                System.out.println(ex.getMessage());
+        }
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException ex){
+                ex.printStackTrace();
+                System.out.println(ex.getMessage());
+        }
         /**
          * @todo add to logger linked transfer queue list all created names for thread
          * finished workWrite new procedure find in stack trace not finished threads

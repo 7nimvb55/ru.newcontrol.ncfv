@@ -69,44 +69,72 @@ public class AdihTemplateRunnable implements Runnable {
                 + AdilConstants.START);
             
             //@todo runner logic here
-            Integer commandPoll = adibProcessCommand.commandPoll(0, this.numberProcessIndexSystem);
-            this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
-                msgToLog
-                + " *** command pull "
-                + String.valueOf(commandPoll) + " send command for start process number "
-                + String.valueOf(this.numberProcessIndexSystem));
-            Integer getCommandStart = commandsList.get(0);
-            if( commandPoll == Integer.MIN_VALUE ){
+            Integer commandPoll;
+            Integer sizeWait = adibProcessCommand.commandSizeQueue(0, this.numberProcessIndexSystem);
+            while( sizeWait != 0 ){
+                commandPoll = adibProcessCommand.commandPoll(0, this.numberProcessIndexSystem);
                 this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
-                msgToLog
-                + " command pull send Integer.MIN_VALUE process number "
-                + String.valueOf(this.numberProcessIndexSystem));
+                        msgToLog
+                        + AdilConstants.STATE
+                        + AdilConstants.VARNAME
+                        + "adibProcessCommand.commandPoll(0, this.numberProcessIndexSystem);"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(commandPoll)
+                        + AdilConstants.VARNAME
+                        + "this.numberProcessIndexSystem"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(this.numberProcessIndexSystem)
+                    );
+                sizeWait = adibProcessCommand.commandSizeQueue(0, this.numberProcessIndexSystem);
             }
-            if( commandPoll == getCommandStart ){
+            Integer sizeDo = adibProcessCommand.commandSizeQueue(1, this.numberProcessIndexSystem);
+            while( sizeDo != 0 ){
+                commandPoll = adibProcessCommand.commandPoll(1, this.numberProcessIndexSystem);
                 this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
-                msgToLog
-                + " command pull send command for start process number "
-                + String.valueOf(this.numberProcessIndexSystem));
+                        msgToLog
+                        + AdilConstants.STATE
+                        + AdilConstants.VARNAME
+                        + "adibProcessCommand.commandPoll(1, this.numberProcessIndexSystem);"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(commandPoll)
+                        + AdilConstants.VARNAME
+                        + "this.numberProcessIndexSystem"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(this.numberProcessIndexSystem)
+                    );
+                sizeDo = adibProcessCommand.commandSizeQueue(1, this.numberProcessIndexSystem);
             }
-            commandPoll = adibProcessCommand.commandPoll(1, this.numberProcessIndexSystem);
-            this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
-                msgToLog
-                + " *** command pull "
-                + String.valueOf(commandPoll) + " send command for start process number "
-                + String.valueOf(this.numberProcessIndexSystem));
-            if( commandPoll == getCommandStart ){
+            Integer sizeReady = adibProcessCommand.commandSizeQueue(2, this.numberProcessIndexSystem);
+            while( sizeReady != 0 ){
+                commandPoll = adibProcessCommand.commandPoll(2, this.numberProcessIndexSystem);
                 this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
-                msgToLog
-                + " command pull send command for start process number "
-                + String.valueOf(this.numberProcessIndexSystem));
+                        msgToLog
+                        + AdilConstants.STATE
+                        + AdilConstants.VARNAME
+                        + "adibProcessCommand.commandPoll(2, this.numberProcessIndexSystem);"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(commandPoll)
+                        + AdilConstants.VARNAME
+                        + "this.numberProcessIndexSystem"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(this.numberProcessIndexSystem)
+                    );
+                sizeReady = adibProcessCommand.commandSizeQueue(2, this.numberProcessIndexSystem);
             }
+            
             
             Boolean commandListValide = adibProcessCommand.isCommandListValide(commandsList);
             this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
                 msgToLog
-                + " command pull isValide "
-                + String.valueOf(commandListValide) + " process number "
-                + String.valueOf(this.numberProcessIndexSystem));
+                        + AdilConstants.STATE
+                        + AdilConstants.VARNAME
+                        + "adibProcessCommand.isCommandListValide(commandsList)"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(commandListValide)
+                        + AdilConstants.VARNAME
+                        + "this.numberProcessIndexSystem"
+                        + AdilConstants.VARVAL
+                        + String.valueOf(this.numberProcessIndexSystem));
         } finally {
             this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
                 msgToLog
