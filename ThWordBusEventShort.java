@@ -34,6 +34,7 @@ public class ThWordBusEventShort {
     private ConcurrentSkipListMap<Integer, LinkedTransferQueue<UUID>> waitEventsBus;
     private ConcurrentSkipListMap<Integer, LinkedTransferQueue<UUID>> doEventsBus;
     private ConcurrentSkipListMap<Integer, LinkedTransferQueue<UUID>> readyEventsBus;
+    
     ThWordBusEventShort(){
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();

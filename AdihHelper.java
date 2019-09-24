@@ -73,6 +73,32 @@ public class AdihHelper {
             namesForReturn = null;
         }
     }
+    protected static String[] getProcessNames(){
+        return AdilHelper.getParamNames();
+    }
+    protected static String[] getCommandNames(){
+        String[] namesForReturn = new String[] {};
+        try {
+            namesForReturn = null;
+            namesForReturn = new String[] {
+                "Start",
+                "Stop",
+                "Pause",
+                "Cancel",
+                "ReinitVariables",
+                "ReinitDataBus",
+                "ReinitDataBusInput",
+                "ReinitDataBusOutput",
+                "ReinitSelf",
+                "Status",
+                "Statistic",
+            };
+            return namesForReturn;
+        } finally {
+            AdihUtilization.utilizeStringValues(namesForReturn);
+            namesForReturn = null;
+        }
+    }
     /**
      * 
      * @return 

@@ -253,7 +253,7 @@ public class AdibWorker {
         
     }
     private String[] getNamesArray(){
-        return AdilHelper.getParamNames();
+        return AdihHelper.getProcessNames();
     }
     /**
      * <ul>

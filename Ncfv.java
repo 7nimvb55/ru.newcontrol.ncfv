@@ -110,6 +110,18 @@ public class Ncfv {
         AdibWorker workersTest = new AdibWorker(ruleAdim);
         workersTest.runAllWorker();
         loggerRule.runAdilWorkWrite();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException ex){
+                ex.printStackTrace();
+                System.out.println(ex.getMessage());
+        }
+        /**
+         * @todo add to logger linked transfer queue list all created names for thread
+         * finished workWrite new procedure find in stack trace not finished threads
+         * wait for finish and write log
+         */
+        loggerRule.runAdilWorkWrite();
     }
     private static void runIndexMakeAndDirList(){
         /**
