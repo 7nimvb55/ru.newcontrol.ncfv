@@ -15,6 +15,7 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.LinkedTransferQueue;
@@ -182,6 +183,29 @@ public class AdibProcessCommand {
      * @return 
      */
     protected Boolean isCommandListValide(ConcurrentSkipListMap<Integer, Integer> inputedListForCheck){
+        if( inputedListForCheck == null ){
+            return Boolean.FALSE;
+        }
+        if( inputedListForCheck.isEmpty() ){
+            return Boolean.FALSE;
+        }
+        Integer prevKey = 0;
+        Boolean isFirstKey = Boolean.TRUE;
+        for(Map.Entry<Integer, Integer> itemChecked : inputedListForCheck.entrySet()){
+            if( isFirstKey ){
+                if( itemChecked.getKey() != 0 ){
+                    return Boolean.FALSE;
+                }
+                isFirstKey = Boolean.FALSE;
+            }
+            if( (itemChecked.getKey() - 1 - prevKey) != 0 ){
+                return Boolean.FALSE;
+            }
+            prevKey = itemChecked.getKey();
+            if( getCommandCodeByNumber(prevKey) != itemChecked.getValue() ){
+                return Boolean.FALSE;
+            }
+        }
         return Boolean.TRUE;
     }
     /**
