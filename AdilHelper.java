@@ -78,4 +78,23 @@ public class AdilHelper {
         }
         return AppFileOperationsSimple.getNowTimeStringWithMS();
     }
+    protected static String variableNameValue(String[] inputedValues){
+        String strForReturn = new String();
+        Boolean isName = Boolean.TRUE;
+        try {
+            for(String itemVars : inputedValues){
+                if( isName ){
+                    strForReturn = strForReturn.concat(AdilConstants.VARNAME).concat(itemVars);
+                    isName = Boolean.FALSE;
+                } else {
+                    strForReturn = strForReturn.concat(AdilConstants.VARVAL).concat(itemVars);
+                    isName = Boolean.TRUE;
+                }
+            }
+            return strForReturn;
+        } finally {
+            AdihUtilization.utilizeStringValues(new String[]{strForReturn});
+            AdihUtilization.utilizeStringValues(inputedValues);
+        }
+    }
 }

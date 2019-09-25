@@ -54,8 +54,37 @@ public class AdihTemplateRunnable implements Runnable {
         this.numberProcessIndexSystem = processIndexSystemNumber;
         this.adilState = (AdilState) this.ruleAdim.getAdilRule().getAdilState();
     }
+    /**
+     * @todo read command into static method of switch (AdimProcessCommand) class, log recived
+     * command and call control object (AdimFactory) method with logic for command do
+     * 
+     * worker list controlled by main class by stacktrace, app and after finished all runned workers,
+     * log after that
+     */
+    
+    
     @Override
-    public void run() {
+    public void run(){
+        String msgToLog = AdilConstants.INFO_LOGIC_POSITION
+                + AdilConstants.CANONICALNAME
+                + AdihTemplateRunnable.class.getCanonicalName()
+                + AdilConstants.METHOD
+                + "run()";
+        ConcurrentSkipListMap<Integer, Integer> commandDetectorResult = null;
+        try {
+            this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
+                msgToLog
+                + AdilConstants.START);
+            commandDetectorResult = 
+                    AdimProcessCommand.commandDetector(this.ruleAdim, this.numberProcessIndexSystem);
+        } finally {
+            this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
+                msgToLog
+                + AdilConstants.FINISH);
+            commandDetectorResult = null;
+        } 
+    }
+    /*public void run() {
         String msgToLog = AdilConstants.INFO_LOGIC_POSITION
                 + AdilConstants.CANONICALNAME
                 + AdihTemplateRunnable.class.getCanonicalName()
@@ -67,13 +96,7 @@ public class AdihTemplateRunnable implements Runnable {
             this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
                 msgToLog
                 + AdilConstants.START);
-            /**
-             * @todo read command into static method of switch (AdimProcessCommand) class, log recived
-             * command and call control object (AdimFactory) method with logic for command do
-             * 
-             * worker list controlled by main class by stacktrace, app and after finished all runned workers,
-             * log after that
-             */
+            
             Integer startCommandCode = commandsList.get(0);
             Integer stopCommandCode = commandsList.get(1);
             Integer commandPoll;
@@ -248,6 +271,6 @@ public class AdihTemplateRunnable implements Runnable {
                 + AdilConstants.FINISH);
             adibProcessCommand = null;
         }    
-    }
+    }*/
     
 }

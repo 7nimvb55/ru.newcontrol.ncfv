@@ -42,6 +42,7 @@ public class AdilConstants {
     protected static String  MSG_WARNING = "[MSG][WARNING]";
     protected static String  MSG_INFO = "[MSG][INFO]";
     protected static String  MSG = "[MSG]";
+    protected static String  DESCRIPTION = "[DESCRIPTION]";
     protected static String  VARVAL = "[VARVAL]";
     protected static String  VALUE = "[VALUE]";
     protected static String  VARNAME = "[VARNAME]";
