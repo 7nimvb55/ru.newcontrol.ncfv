@@ -152,6 +152,23 @@ public class AdibWorker {
             value = null;
         }
     }
+    protected Boolean isHasRunnedWorkers(){
+        Boolean isEmpty = Boolean.FALSE;
+        for( Map.Entry<Integer, Thread> itemOfRunnedList : this.workerListRunned.entrySet() ){
+            Thread valueRunnedWorker = itemOfRunnedList.getValue();
+            if( valueRunnedWorker.getState() != Thread.State.TERMINATED ) {
+                String nameState = valueRunnedWorker.getState().name();
+                String name = valueRunnedWorker.getName();
+                System.out.println("Worker runned " + name + " state is " + nameState);
+                isEmpty = Boolean.TRUE;
+            } else {
+                Integer key = itemOfRunnedList.getKey();
+                Thread remove = this.workerListRunned.remove(key);
+                this.workerListFinished.put(key, remove);
+            }
+        }
+        return isEmpty;
+    }
     /**
      * 
      * @param inputedKeyForThread

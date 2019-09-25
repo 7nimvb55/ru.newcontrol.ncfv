@@ -66,16 +66,16 @@ public class AdihTemplateRunnable implements Runnable {
     
     @Override
     public void run(){
-        String msgToLog = AdilConstants.INFO_LOGIC_POSITION
-                + AdilConstants.CANONICALNAME
-                + AdihTemplateRunnable.class.getCanonicalName()
-                + AdilConstants.METHOD
-                + "run()";
+        String msgToLog = new String().concat(AdilConstants.CANONICALNAME
+                .concat(AdihTemplateRunnable.class.getCanonicalName()))
+                .concat(AdilConstants.METHOD)
+                .concat("run()");
         ConcurrentSkipListMap<Integer, Integer> commandDetectorResult = null;
         try {
             this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
                 msgToLog
                 + AdilConstants.START);
+            this.adilState.logStackTrace(this.numberProcessIndexSystem);
             commandDetectorResult = 
                     AdimProcessCommand.commandDetector(this.ruleAdim, this.numberProcessIndexSystem);
         } finally {

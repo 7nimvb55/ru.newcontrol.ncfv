@@ -42,8 +42,7 @@ public class AdimProcessCommand {
         AdibProcessCommand adibProcessCommand = (AdibProcessCommand) ruleAdimFunc.getAdibProcessCommand();
         ConcurrentSkipListMap<Integer, Integer> commandsList = adibProcessCommand.getCommandsList();
         Boolean commandListValide = adibProcessCommand.isCommandListValide(commandsList);
-        String msgLog = new String().concat(AdilConstants.INFO_LOGIC_POSITION
-                .concat(AdilConstants.CANONICALNAME)
+        String msgLog = new String().concat(AdilConstants.CANONICALNAME
                 .concat(AdimProcessCommand.class.getCanonicalName()))
                 .concat(AdilConstants.METHOD)
                 .concat("commandDetector()");
@@ -52,6 +51,7 @@ public class AdimProcessCommand {
         Integer commandPoll = Integer.MIN_VALUE;
         Integer startCommandCode = commandsList.get(0);
         Integer stopCommandCode = commandsList.get(1);
+        Integer pauseFromUserCommandCode = commandsList.get(2);
         try {
             adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, msgLog.concat(AdilConstants.START));
             if( commandListValide ){
@@ -78,7 +78,21 @@ public class AdimProcessCommand {
                                         String.valueOf(commandPoll),
                                         "commandQueueSize",
                                         String.valueOf(commandQueueSize),
-                                    })).concat(AdilConstants.DESCRIPTION).concat("commandStart"));
+                                    })).concat(AdilConstants.DESCRIPTION).concat("commandStop"));
+                            adilStateFunc.logStackTrace(numberProcess);
+                            //@todo AdimFactory logic procedure key number put into returned list for exit from this procedure
+                            resultProcessorCommand.put(1, numberProcess);
+                        }
+                        if( pauseFromUserCommandCode.equals(commandPoll) ){
+                            adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, 
+                                    msgLog.concat(AdilHelper.variableNameValue(new String[]{
+                                        "commandPoll",
+                                        String.valueOf(commandPoll),
+                                        "commandQueueSize",
+                                        String.valueOf(commandQueueSize),
+                                    })).concat(AdilConstants.DESCRIPTION).concat("pauseFromUser"));
+                            adilStateFunc.logStackTrace(numberProcess);
+                            AdimFactory.workerSleep();
                             adilStateFunc.logStackTrace(numberProcess);
                             //@todo AdimFactory logic procedure key number put into returned list for exit from this procedure
                             resultProcessorCommand.put(1, numberProcess);

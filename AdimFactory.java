@@ -29,5 +29,13 @@ package ru.newcontrol.ncfv;
  * @author wladimirowichbiaran
  */
 public class AdimFactory {
-    
+    protected static void workerSleep(){
+        try {
+            Thread currentThread = Thread.currentThread();
+            currentThread.sleep(AdihGetvalues.getDefaultSleepValue());
+        } catch (InterruptedException ex){
+                ex.printStackTrace();
+                System.out.println(ex.getMessage());
+        }
+    }
 }

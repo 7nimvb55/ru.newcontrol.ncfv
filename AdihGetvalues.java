@@ -144,4 +144,7 @@ public class AdihGetvalues {
             df = null;
         }
     }
+    protected static int getDefaultSleepValue(){
+        return 50000;
+    }
 }

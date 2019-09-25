@@ -127,33 +127,22 @@ public class Ncfv {
         
         processCommandAdim.commandPut(0, 3, 1);
         
+        processCommandAdim.commandPut(1, 7, 2);
+        
         AdibWorker workersTest = new AdibWorker(ruleAdim);
         workersTest.runAllWorker();
         loggerRule.runAdilWorkWrite();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException ex){
-                ex.printStackTrace();
-                System.out.println(ex.getMessage());
-        }
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException ex){
-                ex.printStackTrace();
-                System.out.println(ex.getMessage());
-        }
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException ex){
-                ex.printStackTrace();
-                System.out.println(ex.getMessage());
-        }
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException ex){
-                ex.printStackTrace();
-                System.out.println(ex.getMessage());
-        }
+        do {
+            System.out.println(" *** --- *** "
+                + AdihGetvalues.getNowTimeStringMillisHuman() + " *** --- *** *** --- *** *** --- ***Start sleep 500 *** --- ***");
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex){
+                    ex.printStackTrace();
+                    System.out.println(ex.getMessage());
+            }
+        } while(workersTest.isHasRunnedWorkers());
+        
         /**
          * @todo add to logger linked transfer queue list all created names for thread
          * finished workWrite new procedure find in stack trace not finished threads
