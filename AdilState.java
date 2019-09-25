@@ -33,12 +33,26 @@ public class AdilState {
     private final Long timeCreation;
     private final UUID objectLabel;
     private final ConcurrentSkipListMap<Integer, LinkedTransferQueue<String>> logLinesTypedBus;
+    private Boolean logWithStackTrace;
     
     AdilState(final AdilRule outerRule){
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
         this.logLinesTypedBus = new ConcurrentSkipListMap<Integer, LinkedTransferQueue<String>>();
         createLogLinesBus();
+        setFalseLogWithTrace();
+    }
+    protected void setTrueLogWithTrace(){
+        this.logWithStackTrace = Boolean.TRUE;
+    }
+    protected void setFalseLogWithTrace(){
+        this.logWithStackTrace = Boolean.FALSE;
+    }
+    protected Boolean isLogWithTrace(){
+        if( this.logWithStackTrace ) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
     /**
      * <ul>
@@ -427,36 +441,49 @@ public class AdilState {
             ThWordHelper.utilizeStringValues(new String[]{strForInput});
         }
     }
+    /**
+     * 
+     * @param typeBus 
+     */
     protected void logStackTrace(Integer typeBus){
-        LinkedTransferQueue<String> logLinesBusByNumber;
-        String strForInput = new String();
-        String instanceStartTimeWithMS = AdilHelper.getNowTimeString();
-        logLinesBusByNumber = (LinkedTransferQueue<String>) getLogLinesBusByNumber(typeBus);
-        try {
-            strForInput = strForInput.concat(AdilConstants.TIME) 
-                        .concat(instanceStartTimeWithMS) 
-                        .concat(AdilConstants.STACK);
+        if( isLogWithTrace() ){
+            LinkedTransferQueue<String> logLinesBusByNumber;
+            String strForInput = new String();
+            String instanceStartTimeWithMS = AdilHelper.getNowTimeString();
+            logLinesBusByNumber = (LinkedTransferQueue<String>) getLogLinesBusByNumber(typeBus);
+            Integer stackNum = 0;
             try {
-                throw new Throwable();
-            } catch (Throwable t) {
-                StackTraceElement[] stackTrace = t.getStackTrace();
-                for( StackTraceElement itemStack : stackTrace ){
-                    logLinesBusByNumber.add(strForInput
-                        .concat(AdilConstants.CLASSNAME) 
-                        .concat(itemStack.getClassName())
-                        .concat(AdilConstants.CANONICALNAME) 
-                        .concat(itemStack.getClass().getCanonicalName())
-                        .concat(AdilConstants.METHODNAME)
-                        .concat(itemStack.getMethodName())
-                        .concat(AdilConstants.FILENAME) 
-                        .concat(itemStack.getFileName())
-                        .concat(AdilConstants.LINENUM)
-                        .concat(String.valueOf(itemStack.getLineNumber())));
+                strForInput = strForInput.concat(AdilConstants.TIME) 
+                            .concat(instanceStartTimeWithMS) 
+                            .concat(AdilConstants.STACK);
+                try {
+                    throw new Throwable();
+                } catch (Throwable t) {
+                    StackTraceElement[] stackTrace = t.getStackTrace();
+                    for( StackTraceElement itemStack : stackTrace ){
+                        logLinesBusByNumber.add(strForInput
+                            .concat("[").concat(String.valueOf(stackNum++)).concat("]")
+                            .concat(AdilConstants.CLASSNAME) 
+                            .concat(itemStack.getClassName())
+                            .concat(AdilConstants.CANONICALNAME) 
+                            .concat(itemStack.getClass().getCanonicalName())
+                            .concat(AdilConstants.METHODNAME)
+                            .concat(itemStack.getMethodName())
+                            .concat(AdilConstants.FILENAME) 
+                            .concat(itemStack.getFileName())
+                            .concat(AdilConstants.LINENUM)
+                            .concat(String.valueOf(itemStack.getLineNumber()))
+                            .concat(AdilConstants.NATIVE)
+                            .concat(String.valueOf(itemStack.isNativeMethod()))
+                            .concat(AdilConstants.TOSTRING)
+                            .concat(itemStack.toString())    
+                        );
+                    }
                 }
+            } finally {
+                logLinesBusByNumber = null;
+                ThWordHelper.utilizeStringValues(new String[]{strForInput, instanceStartTimeWithMS});
             }
-        } finally {
-            logLinesBusByNumber = null;
-            ThWordHelper.utilizeStringValues(new String[]{strForInput, instanceStartTimeWithMS});
         }
     }
     /**

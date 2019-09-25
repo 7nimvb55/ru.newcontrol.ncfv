@@ -101,6 +101,7 @@ public class Ncfv {
         AdilRule loggerRule = new AdilRule(thIndexRule);
         thIndexRule.setAdilRule(loggerRule);
         AdilState loggerState = new AdilState(loggerRule);
+        loggerState.setTrueLogWithTrace();
         loggerRule.setAdilState(loggerState);
         AdilWorkerWrite loggerWorker = new AdilWorkerWrite(loggerRule);
         loggerRule.setAdilWorkWrite(loggerWorker);
