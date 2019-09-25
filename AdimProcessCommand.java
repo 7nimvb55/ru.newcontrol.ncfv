@@ -67,6 +67,7 @@ public class AdimProcessCommand {
                                         "commandQueueSize",
                                         String.valueOf(commandQueueSize),
                                     })).concat(AdilConstants.DESCRIPTION).concat("commandStart"));
+                            adilStateFunc.logStackTrace(numberProcess);
                             //@todo AdimFactory logic procedure key number put into returned list for exit from this procedure
                             resultProcessorCommand.put(0, numberProcess);
                         }
@@ -78,6 +79,7 @@ public class AdimProcessCommand {
                                         "commandQueueSize",
                                         String.valueOf(commandQueueSize),
                                     })).concat(AdilConstants.DESCRIPTION).concat("commandStart"));
+                            adilStateFunc.logStackTrace(numberProcess);
                             //@todo AdimFactory logic procedure key number put into returned list for exit from this procedure
                             resultProcessorCommand.put(1, numberProcess);
                         }

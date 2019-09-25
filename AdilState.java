@@ -427,6 +427,38 @@ public class AdilState {
             ThWordHelper.utilizeStringValues(new String[]{strForInput});
         }
     }
+    protected void logStackTrace(Integer typeBus){
+        LinkedTransferQueue<String> logLinesBusByNumber;
+        String strForInput = new String();
+        String instanceStartTimeWithMS = AdilHelper.getNowTimeString();
+        logLinesBusByNumber = (LinkedTransferQueue<String>) getLogLinesBusByNumber(typeBus);
+        try {
+            strForInput = strForInput.concat(AdilConstants.TIME) 
+                        .concat(instanceStartTimeWithMS) 
+                        .concat(AdilConstants.STACK);
+            try {
+                throw new Throwable();
+            } catch (Throwable t) {
+                StackTraceElement[] stackTrace = t.getStackTrace();
+                for( StackTraceElement itemStack : stackTrace ){
+                    logLinesBusByNumber.add(strForInput
+                        .concat(AdilConstants.CLASSNAME) 
+                        .concat(itemStack.getClassName())
+                        .concat(AdilConstants.CANONICALNAME) 
+                        .concat(itemStack.getClass().getCanonicalName())
+                        .concat(AdilConstants.METHODNAME)
+                        .concat(itemStack.getMethodName())
+                        .concat(AdilConstants.FILENAME) 
+                        .concat(itemStack.getFileName())
+                        .concat(AdilConstants.LINENUM)
+                        .concat(String.valueOf(itemStack.getLineNumber())));
+                }
+            }
+        } finally {
+            logLinesBusByNumber = null;
+            ThWordHelper.utilizeStringValues(new String[]{strForInput, instanceStartTimeWithMS});
+        }
+    }
     /**
      * <ul>
      * <li>   0 -   Main

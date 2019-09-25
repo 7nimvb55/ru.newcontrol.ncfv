@@ -84,6 +84,7 @@ public class AdihTemplateThread extends Thread{
                         AdihTemplateThread.class.getCanonicalName(), 
                         this.runnerForWork.getClass().getCanonicalName() + ".run()", 
                         trEx.getMessage());
+                this.adilState.logStackTrace(this.numberProcessIndexSystem);
                 //@todo log stack trace to other dir
                 //trEx.getStackTrace();
             }
