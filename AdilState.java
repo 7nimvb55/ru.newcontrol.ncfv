@@ -463,10 +463,10 @@ public class AdilState {
                     for( StackTraceElement itemStack : stackTrace ){
                         logLinesBusByNumber.add(strForInput
                             .concat("[").concat(String.valueOf(stackNum++)).concat("]")
+                            .concat(AdilConstants.TOSTRING)
+                            .concat(itemStack.toString())    
                             .concat(AdilConstants.CLASSNAME) 
                             .concat(itemStack.getClassName())
-                            .concat(AdilConstants.CANONICALNAME) 
-                            .concat(itemStack.getClass().getCanonicalName())
                             .concat(AdilConstants.METHODNAME)
                             .concat(itemStack.getMethodName())
                             .concat(AdilConstants.FILENAME) 
@@ -475,8 +475,6 @@ public class AdilState {
                             .concat(String.valueOf(itemStack.getLineNumber()))
                             .concat(AdilConstants.NATIVE)
                             .concat(String.valueOf(itemStack.isNativeMethod()))
-                            .concat(AdilConstants.TOSTRING)
-                            .concat(itemStack.toString())    
                         );
                     }
                 }
