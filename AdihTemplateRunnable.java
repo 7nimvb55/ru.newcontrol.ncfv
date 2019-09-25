@@ -67,8 +67,13 @@ public class AdihTemplateRunnable implements Runnable {
             this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
                 msgToLog
                 + AdilConstants.START);
-            
-            //@todo runner logic here
+            /**
+             * @todo read command into static method of switch (AdimProcessCommand) class, log recived
+             * command and call control object (AdimFactory) method with logic for command do
+             * 
+             * worker list controlled by main class by stacktrace, app and after finished all runned workers,
+             * log after that
+             */
             Integer startCommandCode = commandsList.get(0);
             Integer stopCommandCode = commandsList.get(1);
             Integer commandPoll;

@@ -16,18 +16,11 @@
 package ru.newcontrol.ncfv;
 
 /**
- * Adiws
- * <ul>
- * <li>Automated
- * <li>data
- * <li>indexing
- * <li>mechanics
- * <li>Factory
- * <ul>
- * Create and run threads with runner logic
- * runner and worker logic released in this class
+ *
  * @author wladimirowichbiaran
  */
-public class AdimFactory {
-    
+public class AdimProcessCommand {
+    protected static void commandDetector(){
+        
+    }
 }

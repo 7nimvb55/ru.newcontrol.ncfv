@@ -277,21 +277,27 @@ public class AdibProcessCommand {
         if( inputedListForCheck.isEmpty() ){
             return Boolean.FALSE;
         }
-        Integer prevKey = 0;
+        Integer prevKey = -1;
         Boolean isFirstKey = Boolean.TRUE;
+        Integer nowKeyValue;
+        Integer checkedCommand;
+        Integer generatedForCheckValue;
         try {
             for(Map.Entry<Integer, Integer> itemChecked : inputedListForCheck.entrySet()){
+                nowKeyValue = itemChecked.getKey();
                 if( isFirstKey ){
-                    if( itemChecked.getKey() != 0 ){
+                    if( !nowKeyValue.equals(0) ){
                         return Boolean.FALSE;
                     }
                     isFirstKey = Boolean.FALSE;
                 }
-                if( (itemChecked.getKey() - 1 - prevKey) != 0 ){
+                if( (nowKeyValue - 1 - prevKey) != 0 ){
                     return Boolean.FALSE;
                 }
-                prevKey = itemChecked.getKey();
-                if( getCommandCodeByNumber(prevKey) != itemChecked.getValue() ){
+                prevKey = nowKeyValue;
+                generatedForCheckValue = getCommandCodeByNumber(prevKey);
+                checkedCommand = itemChecked.getValue();
+                if( !generatedForCheckValue.equals(checkedCommand) ){
                     return Boolean.FALSE;
                 }
             }
@@ -299,6 +305,9 @@ public class AdibProcessCommand {
         } finally {
             prevKey = null;
             isFirstKey = null;
+            nowKeyValue = null;
+            checkedCommand = null;
+            generatedForCheckValue = null;
         }
     }
     /**
