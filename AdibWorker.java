@@ -153,25 +153,25 @@ public class AdibWorker {
         }
     }
     protected Boolean isHasRunnedWorkers(){
-        Boolean isEmptyRunnedList = Boolean.FALSE;
         Integer keyThreadForRemove;
         Thread removedThread;
+        Thread valueRunnedWorker;
         try {
             for( Map.Entry<Integer, Thread> itemOfRunnedList : this.workerListRunned.entrySet() ){
-                Thread valueRunnedWorker = itemOfRunnedList.getValue();
+                valueRunnedWorker = itemOfRunnedList.getValue();
                 if( valueRunnedWorker.getState() != Thread.State.TERMINATED ) {
-                    isEmptyRunnedList = Boolean.TRUE;
+                    return Boolean.TRUE;
                 } else {
                     keyThreadForRemove = itemOfRunnedList.getKey();
                     removedThread = this.workerListRunned.remove(keyThreadForRemove);
                     this.workerListFinished.put(keyThreadForRemove, removedThread);
                 }
             }
-            return isEmptyRunnedList;
+            return Boolean.FALSE;
         } finally {
-            isEmptyRunnedList = Boolean.FALSE;
             keyThreadForRemove = null;
             removedThread = null;
+            valueRunnedWorker = null;
         }
     }
     /**

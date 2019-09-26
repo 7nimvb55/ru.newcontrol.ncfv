@@ -130,27 +130,41 @@ public class Ncfv {
         processCommandAdim.commandPut(1, 7, 2);
         processCommandAdim.commandPut(1, 5, 2);
         
+        processCommandAdim.commandPut(1, 9, 2);
+        
         AdibWorker workersTest = new AdibWorker(ruleAdim);
         workersTest.runAllWorker();
         loggerRule.runAdilWorkWrite();
         Integer countSleepRouter = 0;
         Integer countSleepFileListBuild = 0;
+        Integer countSleepWordStorageWriter = 0;
+        Integer countloggerWriter = 0;
         do {
             try {
-                Thread.sleep(500);
-                countSleepRouter++;
+                Thread currentThread = Thread.currentThread();
+                currentThread.sleep(100);
+                //countSleepRouter++;
                 countSleepFileListBuild++;
+                countSleepWordStorageWriter++;
+                countloggerWriter++;
             } catch (InterruptedException ex){
                     ex.printStackTrace();
                     System.out.println(ex.getMessage());
             }
-            if( countSleepRouter == 20 ){
+            if( (int) countSleepRouter == 20 ){
                 processCommandAdim.commandPut(1, 7, 3);
             }
-            if( countSleepFileListBuild == 350 ){
+            if( (int) countSleepFileListBuild == 350 ){
                 processCommandAdim.commandPut(1, 5, 0);
             }
-        } while(workersTest.isHasRunnedWorkers());
+            if( (int) countSleepWordStorageWriter == 550 ){
+                processCommandAdim.commandPut(1, 9, 1);
+            }
+            if( countloggerWriter.equals(3000) ){
+                countloggerWriter = 0;
+                loggerRule.runAdilWorkWrite();
+            }
+        } while( workersTest.isHasRunnedWorkers() );
         
         /**
          * @todo add to logger linked transfer queue list all created names for thread

@@ -50,6 +50,7 @@ public class AdimProcessCommand {
         Integer commandType = 0;
         Integer commandQueueSize = 0;
         Integer commandPoll = Integer.MIN_VALUE;
+        Integer commandOldValue =  Integer.MIN_VALUE;
         Integer startCommandCode = commandsList.get(0);
         Integer stopCommandCode = commandsList.get(1);
         Integer setPauseFromUserCommandCode = commandsList.get(2);
@@ -61,10 +62,22 @@ public class AdimProcessCommand {
                 for( commandType = 0; commandType < 3; commandType++ ){
                     do {
                         readNextCommandAfterSleepPause: {
+                            if( isSetPauseFromUser ){
+                                commandOldValue = commandPoll;
+                            }
                             commandPoll = adibProcessCommand.commandPoll(commandType, numberProcess);
                             commandQueueSize = adibProcessCommand.commandSizeQueue(commandType, numberProcess);
+                            if( commandPoll.equals(Integer.MIN_VALUE) ){
+                                if( isSetPauseFromUser ){
+                                     commandPoll = commandOldValue;
+                                }
+                            }
                             adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, 
                                         msgLog.concat(AdilHelper.variableNameValue(new String[]{
+                                            "isSetPauseFromUser",
+                                            String.valueOf(isSetPauseFromUser),
+                                            "numberProcess",
+                                            String.valueOf(numberProcess),
                                             "commandPoll",
                                             String.valueOf(commandPoll),
                                             "commandQueueSize",
