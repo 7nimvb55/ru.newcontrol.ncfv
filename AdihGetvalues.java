@@ -145,6 +145,6 @@ public class AdihGetvalues {
         }
     }
     protected static int getDefaultSleepValue(){
-        return 50000;
+        return 500;
     }
 }

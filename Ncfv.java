@@ -133,8 +133,6 @@ public class Ncfv {
         workersTest.runAllWorker();
         loggerRule.runAdilWorkWrite();
         do {
-            System.out.println(" *** --- *** "
-                + AdihGetvalues.getNowTimeStringMillisHuman() + " *** --- *** *** --- *** *** --- ***Start sleep 500 *** --- ***");
             try {
                 Thread.sleep(500);
             } catch (InterruptedException ex){

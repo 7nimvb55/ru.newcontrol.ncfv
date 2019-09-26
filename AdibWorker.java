@@ -153,21 +153,26 @@ public class AdibWorker {
         }
     }
     protected Boolean isHasRunnedWorkers(){
-        Boolean isEmpty = Boolean.FALSE;
-        for( Map.Entry<Integer, Thread> itemOfRunnedList : this.workerListRunned.entrySet() ){
-            Thread valueRunnedWorker = itemOfRunnedList.getValue();
-            if( valueRunnedWorker.getState() != Thread.State.TERMINATED ) {
-                String nameState = valueRunnedWorker.getState().name();
-                String name = valueRunnedWorker.getName();
-                System.out.println("Worker runned " + name + " state is " + nameState);
-                isEmpty = Boolean.TRUE;
-            } else {
-                Integer key = itemOfRunnedList.getKey();
-                Thread remove = this.workerListRunned.remove(key);
-                this.workerListFinished.put(key, remove);
+        Boolean isEmptyRunnedList = Boolean.FALSE;
+        Integer keyThreadForRemove;
+        Thread removedThread;
+        try {
+            for( Map.Entry<Integer, Thread> itemOfRunnedList : this.workerListRunned.entrySet() ){
+                Thread valueRunnedWorker = itemOfRunnedList.getValue();
+                if( valueRunnedWorker.getState() != Thread.State.TERMINATED ) {
+                    isEmptyRunnedList = Boolean.TRUE;
+                } else {
+                    keyThreadForRemove = itemOfRunnedList.getKey();
+                    removedThread = this.workerListRunned.remove(keyThreadForRemove);
+                    this.workerListFinished.put(keyThreadForRemove, removedThread);
+                }
             }
+            return isEmptyRunnedList;
+        } finally {
+            isEmptyRunnedList = Boolean.FALSE;
+            keyThreadForRemove = null;
+            removedThread = null;
         }
-        return isEmpty;
     }
     /**
      * 
