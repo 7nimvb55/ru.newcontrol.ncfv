@@ -109,8 +109,8 @@ public class AdihHelper {
             namesForReturn = new String[] {
                 "Start",
                 "Stop",
-                "PauseFromUser",
-                "Cancel",
+                "SetPauseFromUser",
+                "CancelPauseFromUser",
                 "Status",
                 "Statistic",
                 "ReinitVariables",

@@ -88,9 +88,14 @@ public class AdihTemplateRunnable implements Runnable {
                         commandForProcess = itemCommands.getValue();
                         if( commandForProcess.equals(this.numberProcessIndexSystem) ){
                             decocedCommand = itemCommands.getKey();
-                            if( decocedCommand.equals(6) ){
+                            if( decocedCommand.equals(1) ){
                                 notDoCommnadStop = Boolean.FALSE;
                                 break forDoCommandStop;
+                            }
+                            if( decocedCommand.equals(0) ){
+                                this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
+                                msgToLog
+                                + AdilConstants.START.concat("command logic start"));
                             }
                         }
                     }

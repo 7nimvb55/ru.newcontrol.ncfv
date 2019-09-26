@@ -52,51 +52,92 @@ public class AdimProcessCommand {
         Integer commandPoll = Integer.MIN_VALUE;
         Integer startCommandCode = commandsList.get(0);
         Integer stopCommandCode = commandsList.get(1);
-        Integer pauseFromUserCommandCode = commandsList.get(2);
+        Integer setPauseFromUserCommandCode = commandsList.get(2);
+        Integer cancelPauseFromUserCommandCode = commandsList.get(3);
+        Boolean isSetPauseFromUser = Boolean.FALSE;
         try {
             adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, msgLog.concat(AdilConstants.START));
             if( commandListValide ){
                 for( commandType = 0; commandType < 3; commandType++ ){
                     do {
-                        commandPoll = adibProcessCommand.commandPoll(commandType, numberProcess);
-                        commandQueueSize = adibProcessCommand.commandSizeQueue(commandType, numberProcess);
-                        if( startCommandCode.equals(commandPoll) ){
+                        readNextCommandAfterSleepPause: {
+                            commandPoll = adibProcessCommand.commandPoll(commandType, numberProcess);
+                            commandQueueSize = adibProcessCommand.commandSizeQueue(commandType, numberProcess);
                             adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, 
-                                    msgLog.concat(AdilHelper.variableNameValue(new String[]{
-                                        "commandPoll",
-                                        String.valueOf(commandPoll),
-                                        "commandQueueSize",
-                                        String.valueOf(commandQueueSize),
-                                    })).concat(AdilConstants.DESCRIPTION).concat("commandStart"));
-                            adilStateFunc.logStackTrace(numberProcess);
-                            //@todo AdimFactory logic procedure key number put into returned list for exit from this procedure
-                            resultProcessorCommand.put(0, numberProcess);
-                        }
-                        if( stopCommandCode.equals(commandPoll) ){
-                            adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, 
-                                    msgLog.concat(AdilHelper.variableNameValue(new String[]{
-                                        "commandPoll",
-                                        String.valueOf(commandPoll),
-                                        "commandQueueSize",
-                                        String.valueOf(commandQueueSize),
-                                    })).concat(AdilConstants.DESCRIPTION).concat("commandStop"));
-                            adilStateFunc.logStackTrace(numberProcess);
-                            //@todo AdimFactory logic procedure key number put into returned list for exit from this procedure
-                            resultProcessorCommand.put(1, numberProcess);
-                        }
-                        if( pauseFromUserCommandCode.equals(commandPoll) ){
-                            adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, 
-                                    msgLog.concat(AdilHelper.variableNameValue(new String[]{
-                                        "commandPoll",
-                                        String.valueOf(commandPoll),
-                                        "commandQueueSize",
-                                        String.valueOf(commandQueueSize),
-                                    })).concat(AdilConstants.DESCRIPTION).concat("pauseFromUser"));
-                            adilStateFunc.logStackTrace(numberProcess);
-                            AdimFactory.workerSleep();
-                            adilStateFunc.logStackTrace(numberProcess);
-                            //@todo AdimFactory logic procedure key number put into returned list for exit from this procedure
-                            resultProcessorCommand.put(1, numberProcess);
+                                        msgLog.concat(AdilHelper.variableNameValue(new String[]{
+                                            "commandPoll",
+                                            String.valueOf(commandPoll),
+                                            "commandQueueSize",
+                                            String.valueOf(commandQueueSize),
+                                        })).concat(AdilConstants.DESCRIPTION).concat("new command readed, decode command"));
+                            if( isSetPauseFromUser ){
+                                if( startCommandCode.equals(commandPoll) ){
+                                    isSetPauseFromUser = Boolean.FALSE;
+                                }
+                                if( stopCommandCode.equals(commandPoll) ){
+                                    isSetPauseFromUser = Boolean.FALSE;
+                                }
+                                if( !cancelPauseFromUserCommandCode.equals(commandPoll) ){
+                                    commandPoll = setPauseFromUserCommandCode;
+                                }
+                            }
+                            if( startCommandCode.equals(commandPoll) ){
+                                adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, 
+                                        msgLog.concat(AdilHelper.variableNameValue(new String[]{
+                                            "commandPoll",
+                                            String.valueOf(commandPoll),
+                                            "commandQueueSize",
+                                            String.valueOf(commandQueueSize),
+                                        })).concat(AdilConstants.DESCRIPTION).concat("commandStart"));
+                                adilStateFunc.logStackTrace(numberProcess);
+                                //@todo AdimFactory logic procedure key number put into returned list for exit from this procedure
+                                resultProcessorCommand.put(0, numberProcess);
+                            }
+                            if( stopCommandCode.equals(commandPoll) ){
+                                adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, 
+                                        msgLog.concat(AdilHelper.variableNameValue(new String[]{
+                                            "commandPoll",
+                                            String.valueOf(commandPoll),
+                                            "commandQueueSize",
+                                            String.valueOf(commandQueueSize),
+                                        })).concat(AdilConstants.DESCRIPTION).concat("commandStop"));
+                                adilStateFunc.logStackTrace(numberProcess);
+                                //@todo AdimFactory logic procedure key number put into returned list for exit from this procedure
+                                resultProcessorCommand.put(1, numberProcess);
+                            }
+                            if( setPauseFromUserCommandCode.equals(commandPoll) ){
+                                isSetPauseFromUser = Boolean.TRUE;
+                                adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, 
+                                        msgLog.concat(AdilHelper.variableNameValue(new String[]{
+                                            "commandPoll",
+                                            String.valueOf(commandPoll),
+                                            "commandQueueSize",
+                                            String.valueOf(commandQueueSize),
+                                        })).concat(AdilConstants.DESCRIPTION).concat("SetPauseFromUser goto sleep"));
+                                adilStateFunc.logStackTrace(numberProcess);
+                                AdimFactory.workerSleep();
+                                adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, 
+                                        msgLog.concat(AdilHelper.variableNameValue(new String[]{
+                                            "commandPoll",
+                                            String.valueOf(commandPoll),
+                                            "commandQueueSize",
+                                            String.valueOf(commandQueueSize),
+                                        })).concat(AdilConstants.DESCRIPTION).concat("SetPauseFromUser wakeup"));
+                                adilStateFunc.logStackTrace(numberProcess);
+                                break readNextCommandAfterSleepPause;
+                            }
+                            if( cancelPauseFromUserCommandCode.equals(commandPoll) ){
+                                isSetPauseFromUser = Boolean.FALSE;
+                                adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, 
+                                        msgLog.concat(AdilHelper.variableNameValue(new String[]{
+                                            "commandPoll",
+                                            String.valueOf(commandPoll),
+                                            "commandQueueSize",
+                                            String.valueOf(commandQueueSize),
+                                        })).concat(AdilConstants.DESCRIPTION).concat("CancelPauseFromUser"));
+                                adilStateFunc.logStackTrace(numberProcess);
+                                resultProcessorCommand.put(0, numberProcess);
+                            }
                         }
                     }while( commandQueueSize > 0 );
                 }

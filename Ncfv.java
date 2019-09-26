@@ -128,16 +128,27 @@ public class Ncfv {
         processCommandAdim.commandPut(0, 3, 1);
         
         processCommandAdim.commandPut(1, 7, 2);
+        processCommandAdim.commandPut(1, 5, 2);
         
         AdibWorker workersTest = new AdibWorker(ruleAdim);
         workersTest.runAllWorker();
         loggerRule.runAdilWorkWrite();
+        Integer countSleepRouter = 0;
+        Integer countSleepFileListBuild = 0;
         do {
             try {
                 Thread.sleep(500);
+                countSleepRouter++;
+                countSleepFileListBuild++;
             } catch (InterruptedException ex){
                     ex.printStackTrace();
                     System.out.println(ex.getMessage());
+            }
+            if( countSleepRouter == 20 ){
+                processCommandAdim.commandPut(1, 7, 3);
+            }
+            if( countSleepFileListBuild == 350 ){
+                processCommandAdim.commandPut(1, 5, 0);
             }
         } while(workersTest.isHasRunnedWorkers());
         
