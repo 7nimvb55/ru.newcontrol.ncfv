@@ -24,6 +24,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 public class AdimProcessCommand {
     /**
      * Check list of commands if it is valide return list result numbers
+     * {@code <Integer commandRunnerInterpritation, Integer numberProcess>}
      * @param ruleAdimInputed
      * @param numberProcessInputed
      * @return 

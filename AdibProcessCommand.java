@@ -94,8 +94,8 @@ public class AdibProcessCommand {
      * <ul>
      * <li>   0 -   Start - - - not released
      * <li>   1 -   Stop - - - not released
-     * <li>   2 -   PauseFromUser - - - not released
-     * <li>   3 -   Cancel - - - not released
+     * <li>   2 -   SetPauseFromUser - - - not released
+     * <li>   3 -   CancelPauseFromUser - - - not released
      * <li>   4 -   Status - - - not released
      * <li>   5 -   Statistic - - - not released
      * <li>   6 -   ReinitVariables - - - not released

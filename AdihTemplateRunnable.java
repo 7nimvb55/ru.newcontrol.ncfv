@@ -15,6 +15,7 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
@@ -66,18 +67,37 @@ public class AdihTemplateRunnable implements Runnable {
     
     @Override
     public void run(){
+        Boolean notDoCommnadStop = Boolean.TRUE;
         String msgToLog = new String().concat(AdilConstants.CANONICALNAME
                 .concat(AdihTemplateRunnable.class.getCanonicalName()))
                 .concat(AdilConstants.METHOD)
                 .concat("run()");
         ConcurrentSkipListMap<Integer, Integer> commandDetectorResult = null;
+        Integer decocedCommand;
+        Integer commandForProcess;
         try {
-            this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
-                msgToLog
-                + AdilConstants.START);
-            this.adilState.logStackTrace(this.numberProcessIndexSystem);
-            commandDetectorResult = 
-                    AdimProcessCommand.commandDetector(this.ruleAdim, this.numberProcessIndexSystem);
+            forDoCommandStop: {
+                if( notDoCommnadStop ){
+                    this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
+                        msgToLog
+                        + AdilConstants.START);
+                    this.adilState.logStackTrace(this.numberProcessIndexSystem);
+                    commandDetectorResult = 
+                            AdimProcessCommand.commandDetector(this.ruleAdim, this.numberProcessIndexSystem);
+                    for(Map.Entry<Integer, Integer> itemCommands : commandDetectorResult.entrySet()){
+                        commandForProcess = itemCommands.getValue();
+                        if( commandForProcess.equals(this.numberProcessIndexSystem) ){
+                            decocedCommand = itemCommands.getKey();
+                            if( decocedCommand.equals(6) ){
+                                notDoCommnadStop = Boolean.FALSE;
+                                break forDoCommandStop;
+                            }
+                        }
+                    }
+                } else {
+                    notDoCommnadStop = Boolean.TRUE;
+                }
+            }
         } finally {
             this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
                 msgToLog
