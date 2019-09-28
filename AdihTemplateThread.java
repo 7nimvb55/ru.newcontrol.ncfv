@@ -81,6 +81,7 @@ public class AdihTemplateThread extends Thread{
             } catch(Throwable trEx) {
                 this.adilState.putLogLineByProcessNumberMsgExceptions(
                         this.numberProcessIndexSystem, 
+                        Throwable.class.getCanonicalName(),
                         AdihTemplateThread.class.getCanonicalName(), 
                         this.runnerForWork.getClass().getCanonicalName() + ".run()", 
                         trEx.getMessage());

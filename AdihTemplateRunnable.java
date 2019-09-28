@@ -16,6 +16,7 @@
 package ru.newcontrol.ncfv;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
@@ -23,7 +24,8 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * @author wladimirowichbiaran
  */
 public class AdihTemplateRunnable implements Runnable {
-
+    private final Long timeCreation;
+    private final UUID objectLabel;
     private final Integer numberProcessIndexSystem;
     private final AdimRule ruleAdim;
     private final AdilState adilState;
@@ -35,6 +37,8 @@ public class AdihTemplateRunnable implements Runnable {
      */
     public AdihTemplateRunnable(final Integer processIndexSystemNumber,
             final AdimRule outerRule){
+        this.timeCreation = System.nanoTime();
+        this.objectLabel = UUID.randomUUID();
         if( outerRule == null ){
             throw new UnsupportedOperationException(AdimRule.class.getCanonicalName() 
                     + " object for set in "
@@ -67,7 +71,7 @@ public class AdihTemplateRunnable implements Runnable {
     
     @Override
     public void run(){
-        Boolean notDoCommnadStop = Boolean.TRUE;
+        Boolean isDoCommnadStop = Boolean.FALSE;
         String msgToLog = new String().concat(AdilConstants.CANONICALNAME
                 .concat(AdihTemplateRunnable.class.getCanonicalName()))
                 .concat(AdilConstants.METHOD)
@@ -77,7 +81,7 @@ public class AdihTemplateRunnable implements Runnable {
         Integer commandForProcess;
         try {
             forDoCommandStop: {
-                if( notDoCommnadStop ){
+                if( isDoCommnadStop ){
                     this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
                         msgToLog
                         + AdilConstants.START);
@@ -89,7 +93,7 @@ public class AdihTemplateRunnable implements Runnable {
                         if( commandForProcess.equals(this.numberProcessIndexSystem) ){
                             decocedCommand = itemCommands.getKey();
                             if( decocedCommand.equals(1) ){
-                                notDoCommnadStop = Boolean.FALSE;
+                                isDoCommnadStop = Boolean.TRUE;
                                 break forDoCommandStop;
                             }
                             if( decocedCommand.equals(0) ){
@@ -100,7 +104,7 @@ public class AdihTemplateRunnable implements Runnable {
                         }
                     }
                 } else {
-                    notDoCommnadStop = Boolean.TRUE;
+                    isDoCommnadStop = Boolean.FALSE;
                 }
             }
         } finally {

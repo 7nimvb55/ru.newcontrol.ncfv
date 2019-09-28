@@ -39,6 +39,7 @@ public class AdilHelper {
      * <li>  11 -   WordReader
      * <li>  12 -   WordWriter
      * <li>  13 -   WordEvent
+     * <li>  14 -   AdibWorker
      * </ul> 
      * @return 
      */
@@ -62,6 +63,7 @@ public class AdilHelper {
                 "WordReader",
                 "WordWriter",
                 "WordEvent",
+                "ProcessControll",
             };
             return namesForReturn;
         } finally {

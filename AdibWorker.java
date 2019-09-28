@@ -38,9 +38,9 @@ public class AdibWorker {
     private final UUID objectLabel;
     private final Integer numberProcessIndexSystem;
     
-    private final ConcurrentSkipListMap<Integer, Thread> workerListCreated;
-    private final ConcurrentSkipListMap<Integer, Thread> workerListRunned;
-    private final ConcurrentSkipListMap<Integer, Thread> workerListFinished;
+    private final ConcurrentSkipListMap<Integer, AdihTemplateThread> workerListCreated;
+    private final ConcurrentSkipListMap<Integer, AdihTemplateThread> workerListRunned;
+    private final ConcurrentSkipListMap<Integer, AdihTemplateThread> workerListFinished;
     private final ConcurrentSkipListMap<Integer, AdihTemplateRunnable> runnerTypedList;
     
     private final AdimRule ruleAdim;
@@ -54,11 +54,11 @@ public class AdibWorker {
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
         
-        this.numberProcessIndexSystem = 10;
+        this.numberProcessIndexSystem = 14;
         
-        this.workerListCreated = new ConcurrentSkipListMap<Integer, Thread>();
-        this.workerListRunned = new ConcurrentSkipListMap<Integer, Thread>();
-        this.workerListFinished = new ConcurrentSkipListMap<Integer, Thread>();
+        this.workerListCreated = new ConcurrentSkipListMap<Integer, AdihTemplateThread>();
+        this.workerListRunned = new ConcurrentSkipListMap<Integer, AdihTemplateThread>();
+        this.workerListFinished = new ConcurrentSkipListMap<Integer, AdihTemplateThread>();
         this.runnerTypedList = new ConcurrentSkipListMap<Integer, AdihTemplateRunnable>();
         
         if(  ruleMechanics != null ) {
@@ -87,8 +87,8 @@ public class AdibWorker {
         Integer countParamsDataFsForSet;
         Integer idx;
         
-        Thread preRemoveWorker;
-        Thread removeWorker;
+        AdihTemplateThread preRemoveWorker;
+        AdihTemplateThread removeWorker;
         try {
             countParamsDataFsForSet = getParamCount();
             for(idx = 0; idx < countParamsDataFsForSet; idx++ ){
@@ -125,10 +125,10 @@ public class AdibWorker {
         }
     }
     protected void runAllWorker(){
-        Map.Entry<Integer, Thread> pollFirstEntry;
+        Map.Entry<Integer, AdihTemplateThread> pollFirstEntry;
         Integer keyWorker;
         Boolean isWorkerRunned;
-        Thread value;
+        AdihTemplateThread value;
         try {
             do{
                 pollFirstEntry = this.workerListCreated.pollFirstEntry();
@@ -136,7 +136,7 @@ public class AdibWorker {
                 isWorkerRunned = workerInRunned(keyWorker);
                 if( !isWorkerRunned ){
                     value = pollFirstEntry.getValue();
-                    if( Thread.State.NEW == value.getState() ){
+                    if( AdihTemplateThread.State.NEW == value.getState() ){
                         this.workerListRunned.put(keyWorker, value);
                         value.start();
                     } else {
@@ -154,10 +154,10 @@ public class AdibWorker {
     }
     protected Boolean isHasRunnedWorkers(){
         Integer keyThreadForRemove;
-        Thread removedThread;
-        Thread valueRunnedWorker;
+        AdihTemplateThread removedThread;
+        AdihTemplateThread valueRunnedWorker;
         try {
-            for( Map.Entry<Integer, Thread> itemOfRunnedList : this.workerListRunned.entrySet() ){
+            for( Map.Entry<Integer, AdihTemplateThread> itemOfRunnedList : this.workerListRunned.entrySet() ){
                 valueRunnedWorker = itemOfRunnedList.getValue();
                 if( valueRunnedWorker.getState() != Thread.State.TERMINATED ) {
                     return Boolean.TRUE;
@@ -184,12 +184,14 @@ public class AdibWorker {
             return this.workerListCreated.containsKey(inputedKeyForThread);
         } catch (ClassCastException exClass) {
             this.adilState.putLogLineByProcessNumberMsgExceptions(this.numberProcessIndexSystem, 
+                    ClassCastException.class.getCanonicalName(), 
                     AdibWorker.class.getCanonicalName(), 
                     "threadInCreated()", 
                     exClass.getMessage());
             
         } catch (NullPointerException exNull) {
             this.adilState.putLogLineByProcessNumberMsgExceptions(this.numberProcessIndexSystem, 
+                    NullPointerException.class.getCanonicalName(), 
                     AdibWorker.class.getCanonicalName(), 
                     "threadInCreated()", 
                     exNull.getMessage());
@@ -206,12 +208,14 @@ public class AdibWorker {
             return this.workerListRunned.containsKey(inputedKeyForThread);
         } catch (ClassCastException exClass) {
             this.adilState.putLogLineByProcessNumberMsgExceptions(this.numberProcessIndexSystem, 
+                    ClassCastException.class.getCanonicalName(), 
                     AdibWorker.class.getCanonicalName(), 
                     "threadInCreated()", 
                     exClass.getMessage());
             
         } catch (NullPointerException exNull) {
             this.adilState.putLogLineByProcessNumberMsgExceptions(this.numberProcessIndexSystem, 
+                    NullPointerException.class.getCanonicalName(), 
                     AdibWorker.class.getCanonicalName(), 
                     "threadInCreated()", 
                     exNull.getMessage());
@@ -228,12 +232,14 @@ public class AdibWorker {
             return this.workerListFinished.containsKey(inputedKeyForThread);
         } catch (ClassCastException exClass) {
             this.adilState.putLogLineByProcessNumberMsgExceptions(this.numberProcessIndexSystem, 
+                    ClassCastException.class.getCanonicalName(), 
                     AdibWorker.class.getCanonicalName(), 
                     "threadInCreated()", 
                     exClass.getMessage());
             
         } catch (NullPointerException exNull) {
             this.adilState.putLogLineByProcessNumberMsgExceptions(this.numberProcessIndexSystem, 
+                    NullPointerException.class.getCanonicalName(), 
                     AdibWorker.class.getCanonicalName(), 
                     "threadInCreated()", 
                     exNull.getMessage());
@@ -250,12 +256,14 @@ public class AdibWorker {
             return this.runnerTypedList.containsKey(inputedKeyForThread);
         } catch (ClassCastException exClass) {
             this.adilState.putLogLineByProcessNumberMsgExceptions(this.numberProcessIndexSystem, 
+                    ClassCastException.class.getCanonicalName(), 
                     AdibWorker.class.getCanonicalName(), 
                     "threadInCreated()", 
                     exClass.getMessage());
             
         } catch (NullPointerException exNull) {
             this.adilState.putLogLineByProcessNumberMsgExceptions(this.numberProcessIndexSystem, 
+                    NullPointerException.class.getCanonicalName(), 
                     AdibWorker.class.getCanonicalName(), 
                     "threadInCreated()", 
                     exNull.getMessage());

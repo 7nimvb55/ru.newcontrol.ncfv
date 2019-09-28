@@ -58,6 +58,10 @@ public class AdimProcessCommand {
         Boolean isSetPauseFromUser = Boolean.FALSE;
         try {
             adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, msgLog.concat(AdilConstants.START));
+            /**
+             * @todo if command part code into static procedures
+             * worker state flags into flow control objects...
+             */
             if( commandListValide ){
                 for( commandType = 0; commandType < 3; commandType++ ){
                     do {

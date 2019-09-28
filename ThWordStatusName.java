@@ -44,7 +44,7 @@ public class ThWordStatusName {
     private final UUID objectLabel;
     private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, String>> poolStatusName;
     
-    ThWordStatusName(){
+    public ThWordStatusName(){
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
         this.poolStatusName = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, String>>();

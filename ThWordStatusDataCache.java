@@ -60,7 +60,7 @@ public class ThWordStatusDataCache {
      */
     private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Integer>> poolStatusDataCache;
     
-    ThWordStatusDataCache(){
+    public ThWordStatusDataCache(){
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
         this.poolStatusDataCache = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Integer>>();

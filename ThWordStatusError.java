@@ -33,7 +33,7 @@ public class ThWordStatusError {
      */
     private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Integer>> poolStatusError;
     
-    ThWordStatusError(){
+    public ThWordStatusError(){
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
         this.poolStatusError = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Integer>>();

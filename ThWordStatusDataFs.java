@@ -39,7 +39,7 @@ public class ThWordStatusDataFs {
      */
     private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Integer>> poolStatusDataFs;
     
-    ThWordStatusDataFs(){
+    public ThWordStatusDataFs(){
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
         this.poolStatusDataFs = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Integer>>();

@@ -60,7 +60,7 @@ public class ThWordStatusWorkers {
     private final UUID objectLabel;
     private ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Boolean>> poolStatusWorkers;
     
-    ThWordStatusWorkers(){
+    public ThWordStatusWorkers(){
         this.timeCreation = System.nanoTime();
         this.objectLabel = UUID.randomUUID();
         this.poolStatusWorkers = new ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, Boolean>>();

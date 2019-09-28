@@ -15,6 +15,8 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.UUID;
+
 /**
  * Adih
  * <ul>
@@ -369,5 +371,39 @@ public class AdihHelper {
             }
             return new String();
     }
-    
+    /**
+     * 
+     * @param workerInputed
+     * @return 
+     */
+    protected static UUID getUuidWorkerFromName(AdihTemplateThread workerInputed){
+        if( workerInputed == null ){
+            return null;
+        }
+        try {
+            return UUID.fromString(workerInputed.getName());
+        } catch (IllegalArgumentException exIll){
+            System.err.println(AdihHelper.class.getCanonicalName() 
+                    + " can`t detect worker name for object "
+                    + workerInputed.toString() + ", reason " 
+                    + exIll.getMessage());
+            exIll = null;
+        }
+        UUID returnedValue = UUID.randomUUID();
+        try {
+            try {
+                workerInputed.setName(returnedValue.toString());
+                return returnedValue;
+            } catch(SecurityException exSec) {
+                System.err.println(AdihHelper.class.getCanonicalName() 
+                    + " can`t set worker name for object "
+                    + workerInputed.toString() + ", reason " 
+                    + exSec.getMessage());
+                exSec = null;
+            }
+            return null;
+        } finally {
+            returnedValue = null;
+        }
+    }
 }

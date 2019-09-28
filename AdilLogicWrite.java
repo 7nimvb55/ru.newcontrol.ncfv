@@ -32,7 +32,7 @@ import java.util.concurrent.LinkedTransferQueue;
 public class AdilLogicWrite {
     private String iterationStartTime;
     AdilLogicWrite(){
-        iterationStartTime = AppFileOperationsSimple.getNowTimeStringWithMS();
+        this.iterationStartTime = AppFileOperationsSimple.getNowTimeStringWithMS();
     }
     /**
      * 

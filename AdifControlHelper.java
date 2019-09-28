@@ -16,26 +16,28 @@
 package ru.newcontrol.ncfv;
 
 /**
- * AdimFactory
- * <ul>
- * <li>Automated
- * <li>data
- * <li>indexing
- * <li>mechanics
- * <li>Factory
- * <ul>
- * Create and run threads with runner logic
- * runner and worker logic released in this class
+ *
  * @author wladimirowichbiaran
  */
-public class AdimFactory {
-    protected static void workerSleep(){
+public class AdifControlHelper {
+    /**
+     * default values for this list Boolean.FALSE
+     * <ul>
+     * <li>0 - isNotDoCommandStop
+     * <li>1 - isSetPauseFromUser
+     * </ul>
+     * @return 
+     */
+    protected static String[] getRunnerFlagNames(){
+        String[] namesForReturn;
         try {
-            Thread currentThread = Thread.currentThread();
-            currentThread.sleep(AdihGetvalues.getDefaultSleepValue());
-        } catch (InterruptedException ex){
-                ex.printStackTrace();
-                System.out.println(ex.getMessage());
+            namesForReturn = new String[] {
+                "isNotDoCommandStop",
+                "isSetPauseFromUser",
+            };
+            return namesForReturn;
+        } finally {
+            namesForReturn = null;
         }
     }
 }
