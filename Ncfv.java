@@ -134,7 +134,7 @@ public class Ncfv {
         processCommandAdim.commandPut(1, 5, 2);
         
         processCommandAdim.commandPut(1, 9, 2);
-        
+        System.out.println("--- --- --- all commands in processCommand bus");
         AdibWorker workersTest = new AdibWorker(ruleAdim);
         workersTest.runAllWorker();
         loggerRule.runAdilWorkWrite();
@@ -145,28 +145,32 @@ public class Ncfv {
         do {
             try {
                 Thread currentThread = Thread.currentThread();
-                currentThread.sleep(100);
-                //countSleepRouter++;
+                currentThread.sleep(5000);
+                countSleepRouter++;
                 countSleepFileListBuild++;
                 countSleepWordStorageWriter++;
                 countloggerWriter++;
             } catch (InterruptedException ex){
                     ex.printStackTrace();
-                    System.out.println(ex.getMessage());
+                    System.err.println(ex.getMessage());
             }
-            if( (int) countSleepRouter == 20 ){
+            if( countSleepRouter.equals(20) ){
                 processCommandAdim.commandPut(1, 7, 3);
+                System.out.println("send inDoBus for WordStorageRouter command CancelPauseFromUser");
             }
-            if( (int) countSleepFileListBuild == 350 ){
+            if( countSleepFileListBuild.equals(950) ){
                 processCommandAdim.commandPut(1, 5, 0);
+                System.out.println("send inDoBus for FileListBuild command Start");
             }
-            if( (int) countSleepWordStorageWriter == 550 ){
+            if( countSleepWordStorageWriter.equals(1550) ){
                 processCommandAdim.commandPut(1, 9, 1);
+                System.out.println("send inDoBus for WordStorageWriter command Stop");
             }
-            if( countloggerWriter.equals(3000) ){
+            if( countloggerWriter.equals(500) ){
                 countloggerWriter = 0;
                 loggerRule.runAdilWorkWrite();
             }
+            System.out.println("workersTest.isHasRunnedWorkers() ".concat(String.valueOf(workersTest.isHasRunnedWorkers())));
         } while( workersTest.isHasRunnedWorkers() );
         
         /**

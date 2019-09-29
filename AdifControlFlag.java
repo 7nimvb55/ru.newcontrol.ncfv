@@ -483,7 +483,7 @@ public class AdifControlFlag {
                 flagsForRunner = (ConcurrentSkipListMap<Integer, Boolean>) getRunnerFlagForKeyPointFlow(keyPointFlowWorkersFunc);
                 sizeRec = (Integer) flagsForRunner.size();
                 flagCount = (Integer) getFlagCount();
-                if( sizeRec != flagCount ){
+                if( !sizeRec.equals(flagCount) ){
                     this.adilState.putLogLineByProcessNumberMsgWarning(
                         this.numberProcessIndexSystem, 
                         AdifControlFlag.class.getCanonicalName().concat( 

@@ -74,7 +74,11 @@ public class AdihTemplateRunnable implements Runnable {
         AdifControlFlag adifControlFlag = this.ruleAdim.getAdifControlFlag();
         UUID runnerId = UUID.fromString(Thread.currentThread().getName());
         adifControlFlag.createForRunnerUuidFlagList(runnerId);
-        Boolean isDoCommnadStop = adifControlFlag.getRunnerFlagByNumber(runnerId, 0);
+        Boolean isDoCommnadStop = Boolean.FALSE;
+        Boolean flowFlagIsDoCommnadStop = adifControlFlag.getRunnerFlagByNumber(runnerId, 0);
+        if( flowFlagIsDoCommnadStop != null ){
+            isDoCommnadStop = flowFlagIsDoCommnadStop;
+        }
         String msgToLog = new String().concat(AdilConstants.CANONICALNAME
                 .concat(AdihTemplateRunnable.class.getCanonicalName()))
                 .concat(AdilConstants.METHOD)
@@ -84,7 +88,7 @@ public class AdihTemplateRunnable implements Runnable {
         Integer commandForProcess;
         try {
             forDoCommandStop: {
-                if( isDoCommnadStop ){
+                if( !isDoCommnadStop ){
                     this.adilState.putLogLineByProcessNumberMsg(this.numberProcessIndexSystem, 
                         msgToLog
                         + AdilConstants.START);

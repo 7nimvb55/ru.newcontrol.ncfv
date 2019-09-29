@@ -39,8 +39,35 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * @author wladimirowichbiaran
  */
 public class AdifControl {
+    private final Long timeCreation;
+    private final UUID objectLabel;
+    private final Integer numberProcessIndexSystem;
     private final ConcurrentSkipListMap<Integer, UUID> processNumberedList;
-    public AdifControl(){
+    private final AdimRule ruleAdim;
+    private final AdilState adilState;
+    public AdifControl(final Integer processIndexSystemNumber,
+            final AdimRule outerRule){
+        this.timeCreation = System.nanoTime();
+        this.objectLabel = UUID.randomUUID();
+        if( outerRule == null ){
+            throw new UnsupportedOperationException(AdimRule.class.getCanonicalName() 
+                    + " object for set in "
+                    + AdihTemplateRunnable.class.getCanonicalName()
+                    + " is null");
+        }
+        this.ruleAdim = (AdimRule) outerRule;
+        if( processIndexSystemNumber == null ){
+            throw new UnsupportedOperationException("processIndexSystemNumber for set in "
+                    + AdihTemplateRunnable.class.getCanonicalName()
+                    + " is null");
+        }
+        if( processIndexSystemNumber < 0 ){
+            throw new UnsupportedOperationException("processIndexSystemNumber for set in "
+                    + AdihTemplateRunnable.class.getCanonicalName()
+                    + " is not natural ( processIndexSystemNumber < 0 (Zero) )");
+        }
+        this.numberProcessIndexSystem = processIndexSystemNumber;
+        this.adilState = (AdilState) this.ruleAdim.getAdilRule().getAdilState();
         this.processNumberedList = new ConcurrentSkipListMap<Integer, UUID>();
     }
 }

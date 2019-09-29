@@ -41,19 +41,24 @@ public class AdimProcessCommand {
         }
         Integer numberProcess = numberProcessInputed;
         AdimRule ruleAdimFunc = (AdimRule) ruleAdimInputed;
+        AdilState adilStateFunc = (AdilState) ruleAdimFunc.getAdilRule().getAdilState();
+        String msgLog = new String().concat(AdilConstants.CANONICALNAME
+                .concat(AdimProcessCommand.class.getCanonicalName()))
+                .concat(AdilConstants.METHOD)
+                .concat("commandDetector()");
+        adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, msgLog.concat(AdilConstants.START));
         
         AdifControlFlag adifControlFlag = ruleAdimFunc.getAdifControlFlag();
         UUID runnerId = UUID.fromString(Thread.currentThread().getName());
         adifControlFlag.createForRunnerUuidFlagList(runnerId);
         
-        AdilState adilStateFunc = (AdilState) ruleAdimFunc.getAdilRule().getAdilState();
+        
+        
+        
         AdibProcessCommand adibProcessCommand = (AdibProcessCommand) ruleAdimFunc.getAdibProcessCommand();
         ConcurrentSkipListMap<Integer, Integer> commandsList = adibProcessCommand.getCommandsList();
         Boolean commandListValide = adibProcessCommand.isCommandListValide(commandsList);
-        String msgLog = new String().concat(AdilConstants.CANONICALNAME
-                .concat(AdimProcessCommand.class.getCanonicalName()))
-                .concat(AdilConstants.METHOD)
-                .concat("commandDetector()");
+        
         Integer commandType = 0;
         Integer commandQueueSize = 0;
         Integer commandPoll = Integer.MIN_VALUE;
@@ -63,8 +68,13 @@ public class AdimProcessCommand {
         Integer setPauseFromUserCommandCode = commandsList.get(2);
         Integer cancelPauseFromUserCommandCode = commandsList.get(3);
         Boolean isSetPauseFromUser = adifControlFlag.getRunnerFlagByNumber(runnerId, 1);
+        adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, 
+                                        msgLog.concat(AdilHelper.variableNameValue(new String[]{
+                                            "isSetPauseFromUser",
+                                            String.valueOf(isSetPauseFromUser),
+                                        })).concat(AdilConstants.DESCRIPTION).concat("get flags from flow control"));
         try {
-            adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, msgLog.concat(AdilConstants.START));
+            
             /**
              * @todo if command part code into static procedures
              * worker state flags into flow control objects...
@@ -72,12 +82,23 @@ public class AdimProcessCommand {
             if( commandListValide ){
                 for( commandType = 0; commandType < 3; commandType++ ){
                     do {
-                        readNextCommandAfterSleepPause: {
+                        //readNextCommandAfterSleepPause: {
                             if( isSetPauseFromUser ){
                                 commandOldValue = commandPoll;
                             }
                             commandPoll = adibProcessCommand.commandPoll(commandType, numberProcess);
                             commandQueueSize = adibProcessCommand.commandSizeQueue(commandType, numberProcess);
+                            adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, 
+                                        msgLog.concat(AdilHelper.variableNameValue(new String[]{
+                                            "isSetPauseFromUser",
+                                            String.valueOf(isSetPauseFromUser),
+                                            "commandQueueSize",
+                                            String.valueOf(commandQueueSize),
+                                            "commandPoll",
+                                            String.valueOf(commandPoll),
+                                            "commandOldValue",
+                                            String.valueOf(commandOldValue),
+                                        })).concat(AdilConstants.DESCRIPTION).concat("poll command from processCommand"));
                             if( commandPoll.equals(Integer.MIN_VALUE) ){
                                 if( isSetPauseFromUser ){
                                      commandPoll = commandOldValue;
@@ -151,7 +172,7 @@ public class AdimProcessCommand {
                                             String.valueOf(commandQueueSize),
                                         })).concat(AdilConstants.DESCRIPTION).concat("SetPauseFromUser wakeup"));
                                 adilStateFunc.logStackTrace(numberProcess);
-                                break readNextCommandAfterSleepPause;
+                                //break readNextCommandAfterSleepPause;
                             }
                             if( cancelPauseFromUserCommandCode.equals(commandPoll) ){
                                 isSetPauseFromUser = Boolean.FALSE;
@@ -166,13 +187,15 @@ public class AdimProcessCommand {
                                 adilStateFunc.logStackTrace(numberProcess);
                                 resultProcessorCommand.put(0, numberProcess);
                             }
-                        }
-                    }while( commandQueueSize > 0 );
+                        //}
+                    }while( ((int) commandQueueSize > 0) || (setPauseFromUserCommandCode.equals(commandPoll)) );
                 }
             }
             return resultProcessorCommand;
         } finally {
             adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, msgLog.concat(AdilConstants.FINISH));
+            adifControlFlag = null;
+            runnerId = null;
             numberProcess = null;
             ruleAdimFunc = null;
             adilStateFunc = null;
