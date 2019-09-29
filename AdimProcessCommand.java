@@ -15,6 +15,7 @@
  */
 package ru.newcontrol.ncfv;
 
+import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
@@ -30,6 +31,7 @@ public class AdimProcessCommand {
      * @return 
      */
     protected static ConcurrentSkipListMap<Integer, Integer> commandDetector(AdimRule ruleAdimInputed, Integer numberProcessInputed){
+        
         ConcurrentSkipListMap<Integer, Integer> resultProcessorCommand = new ConcurrentSkipListMap<Integer, Integer>();
         if( ruleAdimInputed == null ){
             return resultProcessorCommand;
@@ -39,6 +41,11 @@ public class AdimProcessCommand {
         }
         Integer numberProcess = numberProcessInputed;
         AdimRule ruleAdimFunc = (AdimRule) ruleAdimInputed;
+        
+        AdifControlFlag adifControlFlag = ruleAdimFunc.getAdifControlFlag();
+        UUID runnerId = UUID.fromString(Thread.currentThread().getName());
+        adifControlFlag.createForRunnerUuidFlagList(runnerId);
+        
         AdilState adilStateFunc = (AdilState) ruleAdimFunc.getAdilRule().getAdilState();
         AdibProcessCommand adibProcessCommand = (AdibProcessCommand) ruleAdimFunc.getAdibProcessCommand();
         ConcurrentSkipListMap<Integer, Integer> commandsList = adibProcessCommand.getCommandsList();
@@ -55,7 +62,7 @@ public class AdimProcessCommand {
         Integer stopCommandCode = commandsList.get(1);
         Integer setPauseFromUserCommandCode = commandsList.get(2);
         Integer cancelPauseFromUserCommandCode = commandsList.get(3);
-        Boolean isSetPauseFromUser = Boolean.FALSE;
+        Boolean isSetPauseFromUser = adifControlFlag.getRunnerFlagByNumber(runnerId, 1);
         try {
             adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, msgLog.concat(AdilConstants.START));
             /**
@@ -90,9 +97,11 @@ public class AdimProcessCommand {
                             if( isSetPauseFromUser ){
                                 if( startCommandCode.equals(commandPoll) ){
                                     isSetPauseFromUser = Boolean.FALSE;
+                                    adifControlFlag.changeFlagValueByNumber(runnerId, 1, isSetPauseFromUser);
                                 }
                                 if( stopCommandCode.equals(commandPoll) ){
                                     isSetPauseFromUser = Boolean.FALSE;
+                                    adifControlFlag.changeFlagValueByNumber(runnerId, 1, isSetPauseFromUser);
                                 }
                                 if( !cancelPauseFromUserCommandCode.equals(commandPoll) ){
                                     commandPoll = setPauseFromUserCommandCode;
@@ -124,6 +133,7 @@ public class AdimProcessCommand {
                             }
                             if( setPauseFromUserCommandCode.equals(commandPoll) ){
                                 isSetPauseFromUser = Boolean.TRUE;
+                                adifControlFlag.changeFlagValueByNumber(runnerId, 1, isSetPauseFromUser);
                                 adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, 
                                         msgLog.concat(AdilHelper.variableNameValue(new String[]{
                                             "commandPoll",
@@ -145,6 +155,7 @@ public class AdimProcessCommand {
                             }
                             if( cancelPauseFromUserCommandCode.equals(commandPoll) ){
                                 isSetPauseFromUser = Boolean.FALSE;
+                                adifControlFlag.changeFlagValueByNumber(runnerId, 1, isSetPauseFromUser);
                                 adilStateFunc.putLogLineByProcessNumberMsgInfo(numberProcess, 
                                         msgLog.concat(AdilHelper.variableNameValue(new String[]{
                                             "commandPoll",

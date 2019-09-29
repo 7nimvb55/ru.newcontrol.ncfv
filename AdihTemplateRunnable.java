@@ -71,7 +71,10 @@ public class AdihTemplateRunnable implements Runnable {
     
     @Override
     public void run(){
-        Boolean isDoCommnadStop = Boolean.FALSE;
+        AdifControlFlag adifControlFlag = this.ruleAdim.getAdifControlFlag();
+        UUID runnerId = UUID.fromString(Thread.currentThread().getName());
+        adifControlFlag.createForRunnerUuidFlagList(runnerId);
+        Boolean isDoCommnadStop = adifControlFlag.getRunnerFlagByNumber(runnerId, 0);
         String msgToLog = new String().concat(AdilConstants.CANONICALNAME
                 .concat(AdihTemplateRunnable.class.getCanonicalName()))
                 .concat(AdilConstants.METHOD)
@@ -94,6 +97,7 @@ public class AdihTemplateRunnable implements Runnable {
                             decocedCommand = itemCommands.getKey();
                             if( decocedCommand.equals(1) ){
                                 isDoCommnadStop = Boolean.TRUE;
+                                adifControlFlag.changeFlagValueByNumber(runnerId, 0, isDoCommnadStop);
                                 break forDoCommandStop;
                             }
                             if( decocedCommand.equals(0) ){
@@ -105,6 +109,7 @@ public class AdihTemplateRunnable implements Runnable {
                     }
                 } else {
                     isDoCommnadStop = Boolean.FALSE;
+                    adifControlFlag.changeFlagValueByNumber(runnerId, 0, isDoCommnadStop);
                 }
             }
         } finally {

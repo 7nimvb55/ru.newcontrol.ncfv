@@ -194,7 +194,7 @@ public class AdifControlFlag {
     }
     /**
      * <ul>
-     * <li>0 - isNotDoCommandStop
+     * <li>0 - isDoCommandStop
      * <li>1 - isSetPauseFromUser
      * </ul>
      * @param keyRunnerInputed
@@ -346,8 +346,9 @@ public class AdifControlFlag {
         }
     }
     /**
+     * default values for this list Boolean.FALSE
      * <ul>
-     * <li>0 - isNotDoCommandStop
+     * <li>0 - isDoCommnadStop
      * <li>1 - isSetPauseFromUser
      * </ul>
      * see {@link ru.newcontrol.ncfv.AdifControlHelper#getRunnerFlagNames() AdifControlHelper.getRunnerFlagNames()}
@@ -358,6 +359,11 @@ public class AdifControlFlag {
     }
     /**
      * Return code of parameter by his number, calculeted from some fileds
+     * default values for this list Boolean.FALSE
+     * <ul>
+     * <li>0 - isDoCommnadStop
+     * <li>1 - isSetPauseFromUser
+     * </ul>
      * @param numParam
      * @return hashCode for Parameter by his number
      * @see getParamNames()
@@ -396,7 +402,7 @@ public class AdifControlFlag {
         }
     }
     /**
-     * Count records (array.length) returned from {@link #getParamNames }
+     * Count records (array.length) returned from {@link #getFlagNames }
      * @return 
      */
     private Integer getFlagCount(){
@@ -409,7 +415,11 @@ public class AdifControlFlag {
         }
     }
     /**
-     * 
+     * default values for this list Boolean.FALSE
+     * <ul>
+     * <li>0 - isDoCommnadStop
+     * <li>1 - isSetPauseFromUser
+     * </ul>
      * @param numParam
      * @return name of param by his number
      */
@@ -447,7 +457,7 @@ public class AdifControlFlag {
         }
     }
     /**
-     * 
+     *
      * @param keyRunnerFlowFlag
      */
     

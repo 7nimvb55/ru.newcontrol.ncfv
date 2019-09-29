@@ -23,7 +23,7 @@ public class AdifControlHelper {
     /**
      * default values for this list Boolean.FALSE
      * <ul>
-     * <li>0 - isNotDoCommandStop
+     * <li>0 - isDoCommnadStop
      * <li>1 - isSetPauseFromUser
      * </ul>
      * @return 
@@ -32,7 +32,7 @@ public class AdifControlHelper {
         String[] namesForReturn;
         try {
             namesForReturn = new String[] {
-                "isNotDoCommandStop",
+                "isDoCommnadStop",
                 "isSetPauseFromUser",
             };
             return namesForReturn;

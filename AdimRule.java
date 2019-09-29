@@ -34,13 +34,20 @@ public class AdimRule {
     private AdibProcessCommand commandProcess;
     private Boolean isSetAdibProcessCommand;
     /**
+     * AdifControlFlag
+     */
+    private AdifControlFlag controlFlag;
+    private Boolean isSetAdifControlFlag;
+    /**
      * AdilRule
      */
     private AdilRule loggerRule;
     private Boolean isSetAdilRule;
+    
     public AdimRule(){
         setFalseAdilRule();
         setFalseAdibProcessCommand();
+        setFalseAdifControlFlag();
     }
     /**
      * AdilRule
@@ -138,6 +145,56 @@ public class AdimRule {
      */
     protected Boolean isAdibProcessCommand(){
         if( this.isSetAdibProcessCommand ){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    /**
+     * AdifControlFlag
+     * @return 
+     * @throws IllegalArgumentException if not set
+     */
+    protected AdifControlFlag getAdifControlFlag(){
+        if( !this.isAdifControlFlag() ){
+            throw new IllegalArgumentException(AdifControlFlag.class.getCanonicalName() 
+                    + " object not set in " 
+                    + AdimRule.class.getCanonicalName());
+        }
+        return this.controlFlag;
+    }
+    /**
+     * 
+     * @param loggerAdifControlFlagOuter 
+     */
+    protected void setAdifControlFlag(final AdifControlFlag controlAdifControlFlagOuter){
+        if( controlAdifControlFlagOuter != null){
+            this.controlFlag = (AdifControlFlag) controlAdifControlFlagOuter;
+            setTrueAdifControlFlag();
+        } else {
+            throw new NullPointerException(AdifControlFlag.class.getCanonicalName() 
+                    + " object for set in " 
+                    + AdimRule.class.getCanonicalName() 
+                    + " is null");
+        }
+    }
+    /**
+     * Set in field <code>true</code>
+     */
+    protected void setTrueAdifControlFlag(){
+        this.isSetAdifControlFlag = Boolean.TRUE;
+    }
+    /**
+     * Set in field <code>false</code>
+     */
+    protected void setFalseAdifControlFlag(){
+        this.isSetAdifControlFlag = Boolean.FALSE;
+    }
+    /**
+     * 
+     * @return true if AdifControlFlag object set
+     */
+    protected Boolean isAdifControlFlag(){
+        if( this.isSetAdifControlFlag ){
             return Boolean.TRUE;
         }
         return Boolean.FALSE;

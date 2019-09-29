@@ -111,6 +111,9 @@ public class Ncfv {
         
         AdibProcessCommand processCommandAdim = new AdibProcessCommand();
         ruleAdim.setAdibProcessCommand(processCommandAdim);
+        AdifControlFlag controlFlag = new AdifControlFlag(15, ruleAdim);
+        ruleAdim.setAdifControlFlag(controlFlag);
+        
         processCommandAdim.commandPut(0, 1, 0);
         
         processCommandAdim.commandPut(1, 2, 0);
